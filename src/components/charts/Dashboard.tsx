@@ -14,7 +14,8 @@ import {
 } from "recharts";
 
 export default function Dashboard(props: any) {
-  const { capacityFactor, capitalCost, indirectCost, sales } = props;
+  const { capacityFactor, capitalCost, indirectCost, sales, operatingCosts } =
+    props;
   const ticks = [0, 25, 50, 75, 100];
   return (
     <div>
@@ -124,6 +125,47 @@ export default function Dashboard(props: any) {
           stroke="#82ca9d"
         />
       </LineChart>
+      {/* operating costs */}
+      <LineChart
+        width={730}
+        height={550}
+        data={operatingCosts}
+        margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        {/* TODO fix legend to appear on the x axis */}
+        <XAxis
+          dataKey="name"
+          label={{
+            value: "operational year",
+            position: "insidebottom",
+            dy: 15,
+          }}
+          ticks={ticks}
+          unit="%"
+          domain={[0, 100]}
+          interval={0}
+        />
+        <YAxis
+          label={{
+            value: "Operating costs",
+            angle: -90,
+            position: "insideLeft",
+            dy: 100,
+          }}
+          ticks={ticks}
+          unit="%"
+        />
+        <Tooltip />
+        <Legend verticalAlign="top" />
+        <Line name="Powerplant" type="monotone" dataKey="pv" stroke="#8884d8" />
+        <Line
+          name="Electrolizer"
+          type="monotone"
+          dataKey="uv"
+          stroke="#82ca9d"
+        />
+      </LineChart>
     </div>
   );
 }
@@ -146,18 +188,6 @@ Dashboard.defaultProps = {
       uv: 27,
       pv: 39,
     },
-    {
-      uv: 18,
-      pv: 48,
-    },
-    {
-      uv: 23,
-      pv: 38,
-    },
-    {
-      uv: 34,
-      pv: 43,
-    },
   ],
   capitalCost: [
     { name: "A", value: 400 },
@@ -171,7 +201,6 @@ Dashboard.defaultProps = {
     { name: "C", value: 300 },
     { name: "D", value: 200 },
   ],
-
   sales: [
     {
       uv: 40,
@@ -189,17 +218,23 @@ Dashboard.defaultProps = {
       uv: 27,
       pv: 39,
     },
+  ],
+  operatingCosts: [
     {
-      uv: 18,
-      pv: 48,
+      uv: 40,
+      pv: 24,
     },
     {
-      uv: 23,
-      pv: 38,
+      uv: 30,
+      pv: 13,
     },
     {
-      uv: 34,
-      pv: 43,
+      uv: 20,
+      pv: 98,
+    },
+    {
+      uv: 27,
+      pv: 39,
     },
   ],
 };
