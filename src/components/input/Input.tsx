@@ -3,7 +3,8 @@ import InputNumberField from './InputNumberField';
 import InputExpand from './InputExpand';
 import Button from '@mui/material/Button';
 import React, { useState } from 'react';
-import { data } from './data';
+import { data, regionData, technologyData } from './data';
+import InputSelectField from './InputSelectField';
 
 const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
   e.preventDefault();
@@ -18,7 +19,7 @@ export default function Input() {
 
   const [ formData, setFormData ] = useState(defaultState);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: { target: { value: any; name: string } }) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   }
 
@@ -29,16 +30,24 @@ export default function Input() {
       sx={{
         width: "50%",
         height: "50%",
-        '& .MuiTextField-root': { m: 2, width: "45%" },
+        '& .MuiTextField-root': { m: 2, width: "40%" },
+        '& .selectWrapper': { m: 2, width: "40%" },
         '& .MuiButton-root': { m: 2 },
       }}
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e, formData)}
     >
       <InputExpand
+        title="Scope of Analysis"
+        id="scope-of-analysis"
+      >
+        <InputSelectField id="location" label="Location" values={regionData} defaultValue={regionData[0]} onChange={handleChange} />
+      </InputExpand>
+      <InputExpand
         title="System Sizing"
         id="system-sizing"
       >
         <InputNumberField label={data[0].label} name={data[0].id} defaultValue={data[0].defaultValue} adornmentLabel={data[0].adornmentLabel} disabled={data[0].disabled} helperText={data[0].helperText} onChange={handleChange} />
+        <InputSelectField id="technology" label="Technology" values={technologyData} defaultValue={technologyData[0]} onChange={handleChange} />
         <InputNumberField label={data[1].label} name={data[1].id} defaultValue={data[1].defaultValue} adornmentLabel={data[1].adornmentLabel} disabled={data[1].disabled} helperText={data[1].helperText} onChange={handleChange} />
         <InputNumberField label={data[2].label} name={data[2].id} defaultValue={data[2].defaultValue} adornmentLabel={data[2].adornmentLabel} disabled={data[2].disabled} helperText={data[2].helperText} onChange={handleChange} />
         <InputNumberField label={data[3].label} name={data[3].id} defaultValue={data[3].defaultValue} adornmentLabel={data[3].adornmentLabel} disabled={data[3].disabled} helperText={data[3].helperText} onChange={handleChange} />

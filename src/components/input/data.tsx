@@ -113,5 +113,53 @@ export const data: Field[] = [
     defaultValue: 0,
     adornmentLabel: "hr"
   }
+];
 
+export const regionData : string[] = [
+  "Port Hedland, WA",
+  "Geraldton, WA",
+  "Ashburton, WA",
+  "Tennant Creek, NT",
+  "Baines, NT",
+  "McArthur, NT",
+  "North West NSW",
+  "New England",
+  "Central West NSW",
+  "Southern NSW Tablelands",
+  "Broken Hill, NSW",
+  "South West NSW",
+  "Wagga Wagga, NSW",
+  "Tumut, NSW",
+  "Cooma Monaro, NSW",
+  "Far North QLD",
+  "Clean Energy Hub North QLD",
+  "Northern QLD",
+  "Isaac, QLD",
+  "Barcaldine, QLD",
+  "Fitzroy, QLD",
+  "Wide Bay, QLD",
+  "Darling Downs, QLD",
+  "South East, SA",
+  "Riverland, SA",
+  "Mid North SA",
+  "Yorke Peninsula SA",
+  "Northern SA",
+  "Leigh Creek, SA",
+  "Roxby Downs SA",
+  "Eastern Eyre Peninsula, SA",
+  "Western Eyre Peninsula, SA",
+  "North East Tasmania",
+  "North West Tasmania",
+  "Tasmania Midlands",
+  "Ovens Murray, VIC",
+  "Murray River, VIC",
+  "Western VIC",
+  "South West VIC",
+  "Gippsland, VIC",
+  "Central North VIC",
+  "Custom"
+]
+
+export const technologyData : string[] = [
+  "Solar", "Wind", "Hybrid"
 ];
