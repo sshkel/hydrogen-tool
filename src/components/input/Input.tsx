@@ -2,22 +2,26 @@ import Box from '@mui/material/Box';
 import InputNumberField from './InputNumberField';
 import InputExpand from './InputExpand';
 import Button from '@mui/material/Button';
-import React from 'react';
-import { FormEventHandler } from 'react';
+import React, { useState } from 'react';
+import { data } from './data';
 
-
-const kWheLabel = (<p>kWh<sub>e</sub>/kg<sub>H2</sub></p>);
-const kgH2Label = (<p>kg<sub>H2</sub>/kWh<sub>e</sub></p>);
-
-
-const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
   e.preventDefault();
-  console.log(e);
+  console.log(form);
 };
 
-
-
 export default function Input() {
+  const defaultState: any = {}
+  data.forEach(field => {
+    defaultState[field.id] = field.defaultValue;
+  });
+
+  const [ formData, setFormData ] = useState(defaultState);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({...formData, [e.target.name]: e.target.value});
+  }
+
   return (
     <Box
       component="form"
@@ -28,25 +32,19 @@ export default function Input() {
         '& .MuiTextField-root': { m: 2, width: "45%" },
         '& .MuiButton-root': { m: 2 },
       }}
-      onSubmit={onSubmit}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e, formData)}
     >
       <InputExpand
         title="System Sizing"
         id="system-sizing"
       >
-        <InputNumberField label="Nominal Electrolyser Capacity" defaultValue={10} adornment={{ label: "MW", position: "end" }}/>
-        <InputNumberField label="Nominal Solar Capacity" defaultValue={10} adornment={{ label: "MW", position: "end" }}
-                          helperText="Rated capacity of solar farm"/>
-        <InputNumberField label="Nominal Wind Capacity" defaultValue={10} adornment={{ label: "MW", position: "end" }}
-                          helperText="Rated capacity of wind farm"/>
-        <InputNumberField label="Total Nominal Power Plant Capacity" defaultValue={10} disabled adornment={{ label: "MW", position: "end" }}
-                          helperText="Total rated capacity for selected generation type" />
-        <InputNumberField label="Battery Rated Power" defaultValue={0} adornment={{ label: "MW", position: "end" }}
-                          helperText="Rated power capacity of the battery. Sets a limit on how much the battery can charge/ discharge instantaneously." />
-        <InputNumberField label="Duration of Storage" defaultValue={0} adornment={{ label: "hr", position: "end" }}
-                          helperText="Number of hours that the battery takes to charge/ discharge at its max power level" />
-        <InputNumberField label="Nominal Battery Capacity" defaultValue={0} disabled adornment={{ label: "MWh", position: "end" }}
-                          helperText="Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration." />
+        <InputNumberField label={data[0].label} name={data[0].id} defaultValue={data[0].defaultValue} adornmentLabel={data[0].adornmentLabel} disabled={data[0].disabled} helperText={data[0].helperText} onChange={handleChange} />
+        <InputNumberField label={data[1].label} name={data[1].id} defaultValue={data[1].defaultValue} adornmentLabel={data[1].adornmentLabel} disabled={data[1].disabled} helperText={data[1].helperText} onChange={handleChange} />
+        <InputNumberField label={data[2].label} name={data[2].id} defaultValue={data[2].defaultValue} adornmentLabel={data[2].adornmentLabel} disabled={data[2].disabled} helperText={data[2].helperText} onChange={handleChange} />
+        <InputNumberField label={data[3].label} name={data[3].id} defaultValue={data[3].defaultValue} adornmentLabel={data[3].adornmentLabel} disabled={data[3].disabled} helperText={data[3].helperText} onChange={handleChange} />
+        <InputNumberField label={data[4].label} name={data[4].id} defaultValue={data[4].defaultValue} adornmentLabel={data[4].adornmentLabel} disabled={data[4].disabled} helperText={data[4].helperText} onChange={handleChange} />
+        <InputNumberField label={data[5].label} name={data[5].id} defaultValue={data[5].defaultValue} adornmentLabel={data[5].adornmentLabel} disabled={data[5].disabled} helperText={data[5].helperText} onChange={handleChange} />
+        <InputNumberField label={data[6].label} name={data[6].id} defaultValue={data[6].defaultValue} adornmentLabel={data[6].adornmentLabel} disabled={data[6].disabled} helperText={data[6].helperText} onChange={handleChange} />
       </InputExpand>
       <InputExpand
         title="Electrolyser Parameters"
@@ -56,19 +54,19 @@ export default function Input() {
           title="Electrolyser Specific Consumption - SEC"
           id="electrolyser-specific-consumption"
         >
-          <InputNumberField label="SEC At Nominal Load (AE)" defaultValue={50} adornment={{ label: kWheLabel , position: "end" }} />
-          <InputNumberField label="SEC At Nominal Load (PEM)" defaultValue={0.02} disabled adornment={{ label: kgH2Label , position: "end" }} />
-          <InputNumberField label="SEC Correction Factor" defaultValue={100} adornment={{ label: "%" , position: "end" }} />
-          <InputNumberField label="Total System SEC at Nominal Load" defaultValue={50.00} disabled adornment={{ label: kWheLabel , position: "end" }} />
+          <InputNumberField label={data[7].label} name={data[7].id} defaultValue={data[7].defaultValue} adornmentLabel={data[7].adornmentLabel} disabled={data[7].disabled} helperText={data[7].helperText} onChange={handleChange} />
+          <InputNumberField label={data[8].label} name={data[8].id} defaultValue={data[8].defaultValue} adornmentLabel={data[8].adornmentLabel} disabled={data[8].disabled} helperText={data[8].helperText} onChange={handleChange} />
+          <InputNumberField label={data[9].label} name={data[9].id} defaultValue={data[9].defaultValue} adornmentLabel={data[9].adornmentLabel} disabled={data[9].disabled} helperText={data[9].helperText} onChange={handleChange} />
+          <InputNumberField label={data[10].label} name={data[10].id} defaultValue={data[10].defaultValue} adornmentLabel={data[10].adornmentLabel} disabled={data[10].disabled} helperText={data[10].helperText} onChange={handleChange} />
         </InputExpand>
         <InputExpand
           title="Electrolyser Load Range"
           id="electrolyser-load-range"
         >
-          <InputNumberField label="Electrolyser Maximum Load" defaultValue={100} adornment={{ label: "%" , position: "end" }} />
-          <InputNumberField label="Electrolyser Minimum Load" defaultValue={10} adornment={{ label: "%" , position: "end" }} />
-          <InputNumberField label="Maximum Load When Overloading" defaultValue={0} adornment={{ label: "%" , position: "end" }} />
-          <InputNumberField label="Time Between Overloading" defaultValue={0} adornment={{ label: "hr" , position: "end" }} />
+          <InputNumberField label={data[11].label} name={data[11].id} defaultValue={data[11].defaultValue} adornmentLabel={data[11].adornmentLabel} disabled={data[11].disabled} helperText={data[11].helperText} onChange={handleChange} />
+          <InputNumberField label={data[12].label} name={data[12].id} defaultValue={data[12].defaultValue} adornmentLabel={data[12].adornmentLabel} disabled={data[12].disabled} helperText={data[12].helperText} onChange={handleChange} />
+          <InputNumberField label={data[13].label} name={data[13].id} defaultValue={data[13].defaultValue} adornmentLabel={data[13].adornmentLabel} disabled={data[13].disabled} helperText={data[13].helperText} onChange={handleChange} />
+          <InputNumberField label={data[14].label} name={data[14].id} defaultValue={data[14].defaultValue} adornmentLabel={data[14].adornmentLabel} disabled={data[14].disabled} helperText={data[14].helperText} onChange={handleChange} />
         </InputExpand>
       </InputExpand>
       <Button variant="contained" type="submit">Calculate</Button>

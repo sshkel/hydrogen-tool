@@ -3,40 +3,31 @@ import TextField from '@mui/material/TextField';
 import { Adornment } from './types';
 
 interface Props {
-  label: String;
-  defaultValue?: number;
-  helperText?: String;
+  label: string;
+  name: string;
+  defaultValue?: string | number;
+  helperText?: string;
   disabled?: boolean;
   required?: boolean;
-  adornment?: Adornment;
+  adornmentLabel?: string | JSX.Element;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export default function InputNumberField(props: Props) {
-  const { label, defaultValue, helperText, disabled, required, adornment } = props;
-  let startAdornment, endAdornment;
-
-  if (adornment) {
-    if (adornment.position === 'start') {
-      startAdornment = <InputAdornment position="start">{adornment.label}</InputAdornment>
-    }
-
-    if (adornment.position === 'end') {
-      endAdornment = <InputAdornment position="end">{adornment.label}</InputAdornment>;
-    }
-  }
-
+  const { label, name, defaultValue, helperText, disabled, required, onChange, adornmentLabel } = props;
 
   return <TextField
           id="outlined-number"
+          name={name}
           label={label}
           defaultValue={defaultValue}
           helperText={helperText}
           disabled={disabled}
           required={required}
           type="number"
+          onChange={onChange}
           InputProps={{
-            startAdornment: startAdornment,
-            endAdornment: endAdornment
+            endAdornment: <InputAdornment position="end">{adornmentLabel}</InputAdornment>
           }}
         />;
 
