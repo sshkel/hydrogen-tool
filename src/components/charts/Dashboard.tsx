@@ -12,16 +12,31 @@ import {
   Pie,
   Label,
 } from "recharts";
-
+interface Props {
+  data?: {
+    nominalElectrolyserCapacity: number;
+    nominalSolarCapacity: number;
+    nominalWindCapacity: number;
+  };
+}
 export default function Dashboard(props: any) {
-  const { capacityFactor, capitalCost, indirectCost, sales, operatingCosts } =
-    props;
+  const timeline = Array.from(Array(10).keys());
+
+  const linear = timeline.map((e) => {
+    return {
+      electrolizer: (e * props.data.nominalElectrolyserCapacity) % 100,
+      solar: (e * props.data.nominalSolarCapacity) % 100,
+      wind: (e * props.data.nominalWindCapacity) % 100,
+    };
+  });
+  console.log(linear);
+  //   const { capacityFactor, capitalCost, indirectCost, sales, operatingCosts } =props;
   const ticks = [0, 25, 50, 75, 100];
   return (
     <div>
       <PieChart width={730} height={250}>
         <Pie
-          data={capitalCost}
+          data={linear}
           dataKey="value"
           cx="50%"
           cy="50%"
@@ -33,36 +48,18 @@ export default function Dashboard(props: any) {
           <Label value="Total capital Cost" position="center" />
         </Pie>
       </PieChart>
-      <PieChart width={730} height={250}>
-        <Pie
-          data={indirectCost}
-          dataKey="value"
-          cx="50%"
-          cy="50%"
-          innerRadius={70}
-          outerRadius={90}
-          fill="#82ca9d"
-          label
-        >
-          <Label value="Total indirect Cost" position="center" />
-        </Pie>
-      </PieChart>
 
       <LineChart
         width={730}
         height={550}
-        data={capacityFactor}
+        data={linear}
         margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid />
         {/* TODO fix legend to appear on the x axis */}
         <XAxis
           dataKey="name"
           label={{ value: "duraton of year", position: "insidebottom", dy: 15 }}
-          ticks={ticks}
-          unit="%"
-          domain={[0, 100]}
-          interval={0}
         />
         <YAxis
           label={{
@@ -71,170 +68,26 @@ export default function Dashboard(props: any) {
             position: "insideLeft",
             dy: 100,
           }}
-          ticks={ticks}
-          unit="%"
         />
         <Tooltip />
         <Legend verticalAlign="top" />
-        <Line name="Powerplant" type="monotone" dataKey="pv" stroke="#8884d8" />
         <Line
           name="Electrolizer"
           type="monotone"
-          dataKey="uv"
-          stroke="#82ca9d"
+          dataKey="electrolizer"
+          stroke="#8884d8"
         />
-      </LineChart>
-      {/* Sales */}
-      <LineChart
-        width={730}
-        height={550}
-        data={sales}
-        margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        {/* TODO fix legend to appear on the x axis */}
-        <XAxis
-          dataKey="name"
-          label={{
-            value: "operational year",
-            position: "insidebottom",
-            dy: 15,
-          }}
-          ticks={ticks}
-          unit="%"
-          domain={[0, 100]}
-          interval={0}
-        />
-        <YAxis
-          label={{
-            value: "Dollaridoo$",
-            angle: -90,
-            position: "insideLeft",
-            dy: 100,
-          }}
-          ticks={ticks}
-          unit="%"
-        />
-        <Tooltip />
-        <Legend verticalAlign="top" />
-        <Line name="Powerplant" type="monotone" dataKey="pv" stroke="#8884d8" />
-        <Line
-          name="Electrolizer"
-          type="monotone"
-          dataKey="uv"
-          stroke="#82ca9d"
-        />
-      </LineChart>
-      {/* operating costs */}
-      <LineChart
-        width={730}
-        height={550}
-        data={operatingCosts}
-        margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        {/* TODO fix legend to appear on the x axis */}
-        <XAxis
-          dataKey="name"
-          label={{
-            value: "operational year",
-            position: "insidebottom",
-            dy: 15,
-          }}
-          ticks={ticks}
-          unit="%"
-          domain={[0, 100]}
-          interval={0}
-        />
-        <YAxis
-          label={{
-            value: "Operating costs",
-            angle: -90,
-            position: "insideLeft",
-            dy: 100,
-          }}
-          ticks={ticks}
-          unit="%"
-        />
-        <Tooltip />
-        <Legend verticalAlign="top" />
-        <Line name="Powerplant" type="monotone" dataKey="pv" stroke="#8884d8" />
-        <Line
-          name="Electrolizer"
-          type="monotone"
-          dataKey="uv"
-          stroke="#82ca9d"
-        />
+        <Line name="Solar" type="monotone" dataKey="solar" stroke="#82ca9d" />
+        <Line name="Wind" type="monotone" dataKey="wind" stroke="#838ca9d" />
       </LineChart>
     </div>
   );
 }
 
 Dashboard.defaultProps = {
-  capacityFactor: [
-    {
-      uv: 40,
-      pv: 24,
-    },
-    {
-      uv: 30,
-      pv: 13,
-    },
-    {
-      uv: 20,
-      pv: 98,
-    },
-    {
-      uv: 27,
-      pv: 39,
-    },
-  ],
-  capitalCost: [
-    { name: "A", value: 400 },
-    { name: "B", value: 300 },
-    { name: "C", value: 300 },
-    { name: "D", value: 200 },
-  ],
-  indirectCost: [
-    { name: "A", value: 400 },
-    { name: "B", value: 300 },
-    { name: "C", value: 300 },
-    { name: "D", value: 200 },
-  ],
-  sales: [
-    {
-      uv: 40,
-      pv: 24,
-    },
-    {
-      uv: 30,
-      pv: 13,
-    },
-    {
-      uv: 20,
-      pv: 98,
-    },
-    {
-      uv: 27,
-      pv: 39,
-    },
-  ],
-  operatingCosts: [
-    {
-      uv: 40,
-      pv: 24,
-    },
-    {
-      uv: 30,
-      pv: 13,
-    },
-    {
-      uv: 20,
-      pv: 98,
-    },
-    {
-      uv: 27,
-      pv: 39,
-    },
-  ],
+  data: {
+    nominalElectrolyserCapacity: 4,
+    nominalSolarCapacity: 2,
+    nominalWindCapacity: 5,
+  },
 };
