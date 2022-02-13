@@ -6,16 +6,21 @@ import React, { useState } from 'react';
 import { data, regionData, technologyData } from './data';
 import InputSelectField from './InputSelectField';
 
-const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
-  e.preventDefault();
-  console.log(form);
-};
+interface Props {
+  setState: (obj: any) => void;
+}
 
-export default function Input() {
+export default function Input(props: Props) {
   const defaultState: any = {}
   data.forEach(field => {
     defaultState[field.id] = field.defaultValue;
   });
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
+    e.preventDefault();
+    console.log(form);
+    props.setState(form);
+  };
 
   const [ formData, setFormData ] = useState(defaultState);
 

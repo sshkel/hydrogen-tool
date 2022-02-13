@@ -50,7 +50,7 @@ export const data: Field[] = [
   },
   {
     id: "durationOfStorage",
-    label: "durationOfStorage",
+    label: "Duration of Storage",
     defaultValue: 0,
     adornmentLabel: "hr",
     helperText: "Number of hours that the battery takes to charge/discharge at its max power level."
