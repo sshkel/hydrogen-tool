@@ -1,5 +1,3 @@
-import { Paper } from "@mui/material";
-import React from "react";
 import {
   LineChart,
   Line,
@@ -30,14 +28,13 @@ export default function Dashboard(props: any) {
     };
   });
   console.log(linear);
-  //   const { capacityFactor, capitalCost, indirectCost, sales, operatingCosts } =props;
   const ticks = [0, 25, 50, 75, 100];
   return (
     <div>
       <PieChart width={730} height={250}>
         <Pie
           data={linear}
-          dataKey="value"
+          dataKey="electrolizer"
           cx="50%"
           cy="50%"
           innerRadius={70}
@@ -75,10 +72,10 @@ export default function Dashboard(props: any) {
           name="Electrolizer"
           type="monotone"
           dataKey="electrolizer"
-          stroke="#8884d8"
+          stroke="purple"
         />
-        <Line name="Solar" type="monotone" dataKey="solar" stroke="#82ca9d" />
-        <Line name="Wind" type="monotone" dataKey="wind" stroke="#838ca9d" />
+        <Line name="Solar" type="monotone" dataKey="solar" stroke="blue" />
+        <Line name="Wind" type="monotone" dataKey="wind" stroke="green" />
       </LineChart>
     </div>
   );
