@@ -1,6 +1,7 @@
 import { DataFrame, readCSV, Series } from "danfojs-node";
-import { ArrayType1D } from "danfojs/dist/danfojs-base/shared/types";
 interface DataModel {
+  batteryHours: number;
+  batteryPower: number;
   elecOverloadRecharge: number;
   elecOverload: number;
   elecCapacity: number;
@@ -31,6 +32,8 @@ class HydrogenModel {
   data: DataModel;
   elecOverload: number;
   elecOverloadRecharge: number;
+  batteryEnergy: number;
+  batteryHours: number;
 
   constructor(data: DataModel) {
     this.genCapacity = data.solarCapacity + data.windCapacity;
@@ -42,7 +45,8 @@ class HydrogenModel {
     this.specCons = data.specCons;
     this.elecOverload = data.elecOverload/100,
     this.elecOverloadRecharge = data.elecOverloadRecharge;
-
+    this.batteryHours = data.batteryHours
+    this.batteryEnergy = data.batteryPower * this.batteryHours
     this.data = data;
   }
 
@@ -58,7 +62,9 @@ class HydrogenModel {
       this.hydOutput,
       this.specCons,
       this.elecOverload,
-      this.elecOverloadRecharge
+      this.elecOverloadRecharge,
+      this.batteryEnergy,
+      this.batteryHours
     );
     // const operating_outputs = get_tabulated_outputs(working_df);
     return working_df;
@@ -79,8 +85,8 @@ class HydrogenModel {
     specCons: number,
     elecOverload: number,
     elecOverloadRecharge: number,
-    // batteryEnergy: number,
-    // batteryHours: number,
+    batteryEnergy: number,
+    batteryHours: number,
   ) {
     const oversize = genCapacity / elecCapacity;
     var working_df = await this.readDF(
@@ -105,7 +111,7 @@ class HydrogenModel {
     working_df.addColumn("Electrolyser_CF", working_df.column("Generator_CF").apply(
       calculate_electroliser
     ), {inplace:true})  
-    working_df.print()
+    
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
       const electrolyzer_cf = this.overloading_model(
@@ -115,15 +121,22 @@ class HydrogenModel {
         elecOverloadRecharge,
         elecOverload
       );
-      working_df.addColumn("Electrolyser_CF", new Series(electrolyzer_cf.values),{inplace:true})
+      const temp = working_df.drop({ columns:["Electrolyser_CF"]} );
+      working_df = temp.addColumn("Electrolyser_CF", electrolyzer_cf)
     }
     // battery model calc
-
     
+    
+    if (batteryEnergy > 0){
+      const hours = [1, 2, 4, 8]
+      if (!hours.includes(batteryHours)){
+                throw new Error("Battery storage length not valid. Please enter one of 1, 2, 4 or 8");
+      }
+
+      working_df['Electrolyser_CF'] = this.battery_model(oversize, working_df,elecCapacity)
+    }
     // actual hydrogen calc
-    const Hydrogen_prod_fixed = working_df["Electrolyser_CF"]
-    Hydrogen_prod_fixed.print()
-    // .mul(hydOutput).div(specCons)
+    const Hydrogen_prod_fixed = working_df["Electrolyser_CF"].mul(hydOutput).div(specCons)
     working_df.addColumn("Hydrogen_prod_fixed",Hydrogen_prod_fixed,{inplace:true})
     
 
@@ -140,6 +153,16 @@ class HydrogenModel {
 
 
     return working_df;
+  }
+  battery_model(oversize: number, cf_profile_df: DataFrame, elecCapacity:number): Series {
+   cf_profile_df = cf_profile_df.resetIndex()
+   const index_name = cf_profile_df.columns[0]
+   const excess_generation = cf_profile_df["Generator_CF"].mul(oversize).sub(cf_profile_df['Electrolyser_CF'].mul(elecCapacity))
+   cf_profile_df = cf_profile_df.addColumn("Excess_Generation", excess_generation)
+   console.log( cf_profile_df.size)
+   cf_profile_df["Battery_Net_Charge"] = 0.0
+   cf_profile_df.print()
+   return new Series()
   }
 // returns Generator_CF series
   async readDF(
@@ -216,7 +239,9 @@ const defaultProps = {
   elecEff: 83,
   H2VoltoMass: 0.089,
   elecOverload:120,
-  elecOverloadRecharge: 4
+  elecOverloadRecharge: 4,
+  batteryHours: 2, 
+  batteryPower:10
 };
 
 async function model() {
