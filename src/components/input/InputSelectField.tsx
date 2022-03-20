@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   id: string;
@@ -26,11 +26,11 @@ export default function InputTextField(props: Props) {
     }
   };
 
-
   return (
     <FormControl className="selectWrapper">
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
+        key={label}
         labelId={labelId}
         id={id}
         value={value}

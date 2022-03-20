@@ -12,9 +12,9 @@ import {
 } from "recharts";
 interface Props {
   data?: {
-    nominalElectrolyserCapacity: number;
-    nominalSolarCapacity: number;
-    nominalWindCapacity: number;
+    electrolyserNominalCapacity: number;
+    solarNominalCapacity: number;
+    windNominalCapacity: number;
   };
 }
 export default function Dashboard(props: any) {
@@ -22,9 +22,9 @@ export default function Dashboard(props: any) {
 
   const linear = timeline.map((e) => {
     return {
-      electrolizer: (e * props.data.nominalElectrolyserCapacity) % 100,
-      solar: (e * props.data.nominalSolarCapacity) % 100,
-      wind: (e * props.data.nominalWindCapacity) % 100,
+      electrolizer: (e * props.data.electrolyserNominalCapacity) % 100,
+      solar: (e * props.data.solarNominalCapacity) % 100,
+      wind: (e * props.data.windNominalCapacity) % 100,
     };
   });
   console.log(linear);
@@ -83,8 +83,8 @@ export default function Dashboard(props: any) {
 
 Dashboard.defaultProps = {
   data: {
-    nominalElectrolyserCapacity: 4,
-    nominalSolarCapacity: 2,
-    nominalWindCapacity: 5,
+    electrolyserNominalCapacity: 4,
+    solarNominalCapacity: 2,
+    windNominalCapacity: 5,
   },
 };

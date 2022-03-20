@@ -1,6 +1,5 @@
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import { Adornment } from './types';
 
 interface Props {
   label: string;
@@ -18,6 +17,7 @@ export default function InputNumberField(props: Props) {
 
   return <TextField
           id="outlined-number"
+          key={label}
           name={name}
           label={label}
           defaultValue={defaultValue}

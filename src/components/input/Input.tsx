@@ -10,11 +10,20 @@ interface Props {
   setState: (obj: any) => void;
 }
 
-export default function Input(props: Props) {
+
+const getDefaultState = () => {
   const defaultState: any = {}
   data.forEach(field => {
     defaultState[field.id] = field.defaultValue;
   });
+  defaultState['technology'] = technologyData[0];
+  defaultState['region'] = regionData[0];
+  return defaultState;
+}
+
+export default function Input(props: Props) {  
+  const [ formData, setFormData ] = useState(getDefaultState());
+  let pointer: number = 0;
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
     e.preventDefault();
@@ -22,10 +31,14 @@ export default function Input(props: Props) {
     props.setState(form);
   };
 
-  const [ formData, setFormData ] = useState(defaultState);
-
   const handleChange = (e: { target: { value: any; name: string } }) => {
     setFormData({...formData, [e.target.name]: e.target.value});
+  }
+
+  const getData = (index: number) => {
+    ++pointer;
+    const { label, id, defaultValue, adornmentLabel, disabled, helperText } = data[index];
+    return <InputNumberField label={label} name={id} defaultValue={defaultValue} adornmentLabel={adornmentLabel} disabled={disabled} helperText={helperText} onChange={handleChange} />;
   }
 
   return (
@@ -33,7 +46,7 @@ export default function Input(props: Props) {
       component="form"
       autoComplete="off"
       sx={{
-        width: "50%",
+        width: "66%",
         height: "50%",
         '& .MuiTextField-root': { m: 2, width: "40%" },
         '& .selectWrapper': { m: 2, width: "40%" },
@@ -51,16 +64,53 @@ export default function Input(props: Props) {
         title="System Sizing"
         id="system-sizing"
       >
-        <InputNumberField label={data[0].label} name={data[0].id} defaultValue={data[0].defaultValue} adornmentLabel={data[0].adornmentLabel} disabled={data[0].disabled} helperText={data[0].helperText} onChange={handleChange} />
         <InputSelectField id="technology" label="Technology" values={technologyData} defaultValue={technologyData[0]} onChange={handleChange} />
-        <InputNumberField label={data[1].label} name={data[1].id} defaultValue={data[1].defaultValue} adornmentLabel={data[1].adornmentLabel} disabled={data[1].disabled} helperText={data[1].helperText} onChange={handleChange} />
-        <InputNumberField label={data[2].label} name={data[2].id} defaultValue={data[2].defaultValue} adornmentLabel={data[2].adornmentLabel} disabled={data[2].disabled} helperText={data[2].helperText} onChange={handleChange} />
-        <InputNumberField label={data[3].label} name={data[3].id} defaultValue={data[3].defaultValue} adornmentLabel={data[3].adornmentLabel} disabled={data[3].disabled} helperText={data[3].helperText} onChange={handleChange} />
-        <InputNumberField label={data[4].label} name={data[4].id} defaultValue={data[4].defaultValue} adornmentLabel={data[4].adornmentLabel} disabled={data[4].disabled} helperText={data[4].helperText} onChange={handleChange} />
-        <InputNumberField label={data[5].label} name={data[5].id} defaultValue={data[5].defaultValue} adornmentLabel={data[5].adornmentLabel} disabled={data[5].disabled} helperText={data[5].helperText} onChange={handleChange} />
-        <InputNumberField label={data[6].label} name={data[6].id} defaultValue={data[6].defaultValue} adornmentLabel={data[6].adornmentLabel} disabled={data[6].disabled} helperText={data[6].helperText} onChange={handleChange} />
+        {[...Array(7)].map((_) => (getData(pointer)))}
       </InputExpand>
       <InputExpand
+        title="Electrolyser Costs"
+        id="electrolyser-costs"
+      >
+        {[...Array(6)].map((_) => (getData(pointer)))}
+      </InputExpand>
+      <InputExpand
+        title="Power Plant Costs"
+        id="power-plant-costs"
+      >
+        <InputExpand
+          title="Solar Costs"
+          id="solar-costs"
+        >
+        {[...Array(6)].map((_) => (getData(pointer)))}
+        </InputExpand>
+        <InputExpand
+          title="Wind Costs"
+          id="wind-costs"
+        >
+          {[...Array(6)].map((_) => (getData(pointer)))}
+        </InputExpand>
+        <InputExpand
+          title="Costs for Grid Connected Systems"
+          id="costs-for-grid-connected-systems"
+        >
+          {getData(pointer)}
+        </InputExpand>
+      </InputExpand>
+      <InputExpand
+        title="Battery Costs"
+        id="battery-costs"
+      >
+        {[...Array(3)].map((_) => (getData(pointer)))}
+      </InputExpand>
+      <InputExpand
+        title="Additional Costs"
+        id="additional-costs"
+      >
+        {[...Array(2)].map((_) => (getData(pointer)))}
+      </InputExpand>
+
+
+      {/* <InputExpand
         title="Electrolyser Parameters"
         id="electrolyser-parameters"
       >
@@ -82,7 +132,7 @@ export default function Input(props: Props) {
           <InputNumberField label={data[13].label} name={data[13].id} defaultValue={data[13].defaultValue} adornmentLabel={data[13].adornmentLabel} disabled={data[13].disabled} helperText={data[13].helperText} onChange={handleChange} />
           <InputNumberField label={data[14].label} name={data[14].id} defaultValue={data[14].defaultValue} adornmentLabel={data[14].adornmentLabel} disabled={data[14].disabled} helperText={data[14].helperText} onChange={handleChange} />
         </InputExpand>
-      </InputExpand>
+      </InputExpand> */}
       <Button variant="contained" type="submit">Calculate</Button>
     </Box>
   );

@@ -14,20 +14,20 @@ const kgH2Label = (<p>kg<sub>H2</sub>/kWh<sub>e</sub></p>);
 
 export const data: Field[] = [
   {
-    id: "nominalElectrolyserCapacity",
+    id: "electrolyserNominalCapacity",
     label: "Nominal Electrolyser Capacity",
     defaultValue: 10,
     adornmentLabel: "MW"
   },
   {
-    id: "nominalSolarCapacity",
+    id: "solarNominalCapacity",
     label: "Nominal Solar Capacity",
     defaultValue: 10,
     adornmentLabel: "MW",
     helperText: "Rated capacity of solar farm"
   },
   {
-    id: "nominalWindCapacity",
+    id: "windNominalCapacity",
     label: "Nominal Wind Capacity",
     defaultValue: 10,
     adornmentLabel: "MW",
@@ -56,12 +56,164 @@ export const data: Field[] = [
     helperText: "Number of hours that the battery takes to charge/discharge at its max power level."
   },
   {
-    id: "nominalBatteryCapacity",
+    id: "batteryNominalCapacity",
     label: "Nominal Battery Capacity",
     defaultValue: 0,
     disabled: true,
     adornmentLabel: "MWh",
     helperText: "Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration."
+  },
+  {
+    id: "electrolyserReferenceCapacity",
+    label: "Reference Electrolyser Capacity",
+    defaultValue: 10,
+    adornmentLabel: "kW"
+  },
+  {
+    id: "electrolyserReferencePurchaseCost",
+    label: "Reference Electrolyser Purchase Cost",
+    defaultValue: 1000,
+    adornmentLabel: "A$/kW"
+  },
+  {
+    id: "electrolyserCostReductionWithScale",
+    label: "Electrolyser Cost Reduction with Scale",
+    defaultValue: 10,
+    adornmentLabel: "%"
+  },
+  {
+    id: "electrolyserReferenceFoldIncrease",
+    label: "Reference Fold Increase",
+    defaultValue: 10
+  },
+  {
+    id: "electrolyserEpcCosts",
+    label: "EPC Costs",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "electrolyserLandProcurementCost",
+    label: "Land Procurement Cost",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "solarReferenceCapacity",
+    label: "Reference Capacity of Solar Farm",
+    defaultValue: 1000,
+    adornmentLabel: "kW"
+  },
+  {
+    id: "solarPVFarmReferenceCost",
+    label: "Reference Solar PV Farm Cost",
+    defaultValue: 1200,
+    adornmentLabel: "A$/kW"
+  },
+  {
+    id: "solarPVCostReductionWithScale",
+    label: "Solar PV Cost Reduction with Scale",
+    defaultValue: 10,
+    adornmentLabel: "%"
+  },
+  {
+    id: "solarReferenceFoldIncrease",
+    label: "Reference Fold Increase",
+    defaultValue: 10,
+    helperText: "Minimum # of fold increase in solar farm capacity for capital cost reduction due to the above economies of scale"
+  },
+  {
+    id: "solarEpcCosts",
+    label: "EPC Costs",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "solarLandProcurementCost",
+    label: "Land Procurement Cost",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "windReferenceCapacity",
+    label: "Reference Capacity of Wind Farm",
+    defaultValue: 1000,
+    adornmentLabel: "kW"
+  },
+  {
+    id: "windFarmReferenceCost",
+    label: "Reference Wind Farm Cost",
+    defaultValue: 1950,
+    adornmentLabel: "A$/kW"
+  },
+  {
+    id: "windCostReductionWithScale",
+    label: "Wind Cost Reduction with Scale",
+    defaultValue: 10,
+    adornmentLabel: "%"
+  },
+  {
+    id: "windReferenceFoldIncrease",
+    label: "Reference Fold Increase",
+    defaultValue: 10,
+    helperText: "Minimum # of fold increase in wind farm capacity for capital cost reduction due to the above economies of scale"
+  },
+  {
+    id: "windEpcCosts",
+    label: "EPC Costs",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "windLandProcurementCost",
+    label: "Land Procurement Cost",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "gridConnectionCost",
+    label: "Grid Connection Cost",
+    adornmentLabel: "A$",
+    helperText: "Capital cost for transmission connection"
+  },
+  {
+    id: "batteryCosts",
+    label: "Cost of Battery",
+    adornmentLabel: "A$/kWh"
+  },
+  {
+    id: "batteryEpcCosts",
+    label: "EPC Costs",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "batteryLandProcurementCost",
+    label: "Land Procurement Cost",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX"
+  },
+  {
+    id: "additionalUpfrontCosts",
+    label: "Additional Upfront Costs",
+    defaultValue: 0,
+    adornmentLabel: "A$",
+    helperText: "Any other additional costs to include as a once off in the LCH2 calculation"
+  },
+  {
+    id: "additionalAnnualCosts",
+    label: "Additional Annual Costs",
+    defaultValue: 0,
+    adornmentLabel: "A$/yr",
+    helperText: "Any other additional costs to include as an annual cost in the LCH2 calculation"
   },
   {
     id: "secAtNominalLoadAE",
@@ -112,7 +264,7 @@ export const data: Field[] = [
     label: "Time Between Overloading",
     defaultValue: 0,
     adornmentLabel: "hr"
-  }
+  },
 ];
 
 export const regionData : string[] = [

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Input from "./components/input/Input";
 import "./App.css";
-import Dashboard from "./components/charts/Dashboard";
+// import Dashboard from "./components/charts/Dashboard";
+import WorkingData from "./components/charts/WorkingData";
 
 function App() {
   const [state, setState] = useState();
@@ -9,7 +10,7 @@ function App() {
   return (
     <div className="App2">
       <Input setState={setState} />
-      <Dashboard data={state} />
+      <WorkingData data={state} />
     </div>
   );
 }
