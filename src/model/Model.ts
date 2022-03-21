@@ -1,4 +1,4 @@
-import { DataFrame, readCSV, Series } from "danfojs-node";
+import { DataFrame, readCSV } from "danfojs-node";
 interface DataModel {
   battLifetime: number;
   battMin: number;
@@ -80,6 +80,7 @@ class HydrogenModel {
       this.batteryPower,
       this.battMin
     );
+
     // const operating_outputs = get_tabulated_outputs(working_df);
     return working_df;
   }
@@ -113,6 +114,8 @@ class HydrogenModel {
       location
     );
 
+    this.save_as_df({ generator_cf });
+
     // normal electrolyser calculation
     const calculate_electroliser = (x: number): number => {
       if (x * oversize > elecMaxLoad) {
@@ -138,8 +141,8 @@ class HydrogenModel {
         electrolizer_cf
       );
     }
-    // // battery model calc
 
+    // // battery model calc
     if (batteryEnergy > 0) {
       const hours = [1, 2, 4, 8];
       if (!hours.includes(batteryHours)) {
@@ -147,7 +150,6 @@ class HydrogenModel {
           "Battery storage length not valid. Please enter one of 1, 2, 4 or 8"
         );
       }
-
       electrolizer_cf = this.battery_model(
         oversize,
         elecCapacity,
@@ -183,8 +185,7 @@ class HydrogenModel {
       hydrogen_prod_fixed,
       hydrogen_prod_variable,
     };
-    this.as_df(working_df);
-
+    // this.save_as_df(working_df);
     return working_df;
   }
 
@@ -205,7 +206,6 @@ class HydrogenModel {
       (x: number, i: number) =>
         generator_cf[i] * oversize - electrolizer_cf[i] * elecCapacity
     );
-
     const battery_Net_Charge = [0.0 * size];
     const Battery_SOC = [0.0 * size];
     const batt_losses = 1 - (1 - batteryEfficiency) / 2;
@@ -259,8 +259,8 @@ class HydrogenModel {
         elec_cons + batt_discharge_potential < elec_min ||
         (spill == 0 && batt_soc <= battMin)
       ) {
-        // # generation and battery together are insufficient to power the electrolyser or there is no
-        // # spilled generation and the battery is empty
+        //  generation and battery together are insufficient to power the electrolyser or there is no
+        //  spilled generation and the battery is empty
         battery_Net_Charge[hour] = 0;
       } else if (
         spill == 0 &&
@@ -268,11 +268,11 @@ class HydrogenModel {
           (batt_soc - battMin) * batt_losses * batteryEnergy &&
         elec_just_operating
       ) {
-        // # When the electrolyser is operating and the energy to get to max capacity is more than what is stored
+        //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
         battery_Net_Charge[hour] =
           (-1 * batt_discharge_potential * 1) / batt_losses;
       } else if (spill == 0 && elec_just_operating) {
-        // # When the stored power is enough to power the electrolyser at max capacity
+        //  When the stored power is enough to power the electrolyser at max capacity
         battery_Net_Charge[hour] =
           -1 *
           Math.min(batteryPower, ((elec_max - elec_cons) * 1) / batt_losses);
@@ -281,7 +281,7 @@ class HydrogenModel {
       } else {
         throw new Error("Error: battery configuration not accounted for");
       }
-      // # Determine the battery state of charge based on the previous state of charge and the net change
+      //  Determine the battery state of charge based on the previous state of charge and the net change
       Battery_SOC[hour] =
         Battery_SOC[hour - 1] + battery_Net_Charge[hour] / batteryEnergy;
     }
@@ -299,7 +299,7 @@ class HydrogenModel {
       }
     );
 
-    //????
+    //nani??
     //cf_profile_df.set_index(index_name, inplace=True)
     return Electrolyser_CF_batt;
   }
@@ -318,15 +318,20 @@ class HydrogenModel {
     );
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
-
+    console.log(location);
+    const solarDfValues = solarDf[location].values;
+    const windDfValues = windDf[location].values;
     if (solarRatio == 1) {
-      return solarDf[location].values;
+      return solarDfValues;
     } else if (windRatio == 1) {
-      return windDf[location].values;
+      return windDfValues;
     } else {
-      const solarProportion = solarDf[location].mul(solarRatio);
-      const windProportion = windDf[location].mul(windRatio);
-      return solarProportion.add(windProportion).values;
+      return solarDfValues;
+
+      // solarDfValues.map(
+      //   (e: number, i: number) =>
+      //     solarDfValues[i] * solarRatio + windDfValues[i] * windRatio
+      // );
     }
   }
 
@@ -334,6 +339,12 @@ class HydrogenModel {
     const df = new DataFrame(thing);
     df.print();
   }
+
+  save_as_df(thing: object) {
+    const df = new DataFrame(thing);
+    df.toJSON({ filePath: "./output/js.json" });
+  }
+
   overloading_model(
     oversize: number,
     elecMaxLoad: number,
@@ -374,25 +385,190 @@ class HydrogenModel {
     return electrolyser_CF_overload;
   }
 }
-
-const defaultProps = {
+// overload
+const example1 = {
+  //args or defaults
   elecCapacity: 10,
   solarCapacity: 10,
   windCapacity: 10,
   location: "REZ-N1",
+
+  spot_price: 30,
+
+  // defaults
+  batteryPower: 0,
+  batteryHours: 0,
+  spotPrice: 0,
+  ppaPrice: 0,
+
+  // config
   elecMaxLoad: 100,
+  elecReferenceCapacity: 10,
+  elecCostReduction: 1.0,
+  elecEquip: 1.0,
+  elecInstall: 0.0,
+  elecLand: 0.0,
+  // pem
+
   elecMinLoad: 10,
-  specCons: 4.5,
-  elecEff: 83,
-  H2VoltoMass: 0.089,
   elecOverload: 120,
   elecOverloadRecharge: 4,
-  batteryHours: 2,
-  batteryPower: 10,
+  specCons: 4.7,
+  stackLifetime: 60000,
+  electrolyserCapex: 1000,
+  electrolyserOandM: 4,
+  waterNeeds: 10,
+
+  H2VoltoMass: 0.089,
+  elecEff: 83,
+
+  stackDegradation: 0,
+  stackDegMax: 0,
+  solarDegradation: 0,
+  windDegradation: 0,
+
   batteryEfficiency: 85,
   battMin: 0.0,
   battLifetime: 10,
+
+  solarCapex: 1120,
+  solarOpex: 16990,
+  windCapex: 1942,
+  windOpex: 25000,
+  powerplantReferenceCapacity: 1,
+  powerplantCostReduction: 1.0,
+  powerplantEquip: 1.0,
+  powerplantInstall: 0.0,
+  powerplantLand: 0.0,
+  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
+  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
+  batteryReplacement: 100,
+  electrolyserStackCost: 40,
+  waterCost: 5,
+  discountRate: 4,
+  projectLife: 20,
 };
+
+// battery
+const example2 = {
+  elecCapacity: 10,
+  solarCapacity: 15,
+  batteryPower: 10,
+  battery_hours: 2,
+  location: "REZ-N1",
+
+  // defaults
+  windCapacity: 0,
+  batteryHours: 0,
+  spotPrice: 0,
+  ppaPrice: 0,
+
+  // config
+  elecMaxLoad: 100,
+  elecReferenceCapacity: 10,
+  elecCostReduction: 1.0,
+  elecEquip: 1.0,
+  elecInstall: 0.0,
+  elecLand: 0.0,
+  // AE
+  elecMinLoad: 20,
+  elecOverload: 100,
+  elecOverloadRecharge: 0,
+  specCons: 4.5,
+  stackLifetime: 80000,
+  electrolyserCapex: 1000,
+  electrolyserOandM: 2.5,
+  waterNeeds: 10,
+
+  H2VoltoMass: 0.089,
+  elecEff: 83,
+
+  stackDegradation: 0,
+  stackDegMax: 0,
+  solarDegradation: 0,
+  windDegradation: 0,
+
+  batteryEfficiency: 85,
+  battMin: 0.0,
+  battLifetime: 10,
+
+  solarCapex: 1120,
+  solarOpex: 16990,
+  windCapex: 1942,
+  windOpex: 25000,
+  powerplantReferenceCapacity: 1,
+  powerplantCostReduction: 1.0,
+  powerplantEquip: 1.0,
+  powerplantInstall: 0.0,
+  powerplantLand: 0.0,
+  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
+  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
+  batteryReplacement: 100,
+  electrolyserStackCost: 40,
+  waterCost: 5,
+  discountRate: 4,
+  projectLife: 20,
+};
+// normal
+const example3 = {
+  elecCapacity: 10,
+  solarCapacity: 0,
+  windCapacity: 100,
+
+  // defaults
+  location: "REZ-N1",
+  batteryPower: 0,
+  batteryHours: 0,
+  spotPrice: 0,
+  ppaPrice: 0,
+
+  // config
+  elecMaxLoad: 100,
+  elecReferenceCapacity: 10,
+  elecCostReduction: 1.0,
+  elecEquip: 1.0,
+  elecInstall: 0.0,
+  elecLand: 0.0,
+  // AE: {
+  elecMinLoad: 20,
+  elecOverload: 100,
+  elecOverloadRecharge: 0,
+  specCons: 4.5,
+  stackLifetime: 80000,
+  electrolyserCapex: 1000,
+  electrolyserOandM: 2.5,
+  waterNeeds: 10,
+
+  H2VoltoMass: 0.089,
+  elecEff: 83,
+
+  stackDegradation: 0,
+  stackDegMax: 0,
+  solarDegradation: 0,
+  windDegradation: 0,
+
+  batteryEfficiency: 85,
+  battMin: 0.0,
+  battLifetime: 10,
+
+  solarCapex: 1120,
+  solarOpex: 16990,
+  windCapex: 1942,
+  windOpex: 25000,
+  powerplantReferenceCapacity: 1,
+  powerplantCostReduction: 1.0,
+  powerplantEquip: 1.0,
+  powerplantInstall: 0.0,
+  powerplantLand: 0.0,
+  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
+  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
+  batteryReplacement: 100,
+  electrolyserStackCost: 40,
+  waterCost: 5,
+  discountRate: 4,
+  projectLife: 20,
+};
+const defaultProps = example1;
 
 async function model() {
   const model = new HydrogenModel(defaultProps);
