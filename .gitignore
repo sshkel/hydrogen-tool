@@ -24,3 +24,5 @@ yarn-error.log*
 
 .vscode
 __pycache__
+# spaces to ignore to dump some data
+ignore
