@@ -114,8 +114,6 @@ class HydrogenModel {
       location
     );
 
-    this.save_as_df({ generator_cf });
-
     // normal electrolyser calculation
     const calculate_electroliser = (x: number): number => {
       if (x * oversize > elecMaxLoad) {
@@ -141,7 +139,7 @@ class HydrogenModel {
         electrolizer_cf
       );
     }
-
+    // this.save_as_df({ electrolizer_cf });
     // // battery model calc
     if (batteryEnergy > 0) {
       const hours = [1, 2, 4, 8];
@@ -185,7 +183,7 @@ class HydrogenModel {
       hydrogen_prod_fixed,
       hydrogen_prod_variable,
     };
-    // this.save_as_df(working_df);
+    this.save_as_df(working_df);
     return working_df;
   }
 
@@ -204,7 +202,7 @@ class HydrogenModel {
     const size = generator_cf.length;
     const excess_generation = generator_cf.map(
       (x: number, i: number) =>
-        generator_cf[i] * oversize - electrolizer_cf[i] * elecCapacity
+        (generator_cf[i] * oversize - electrolizer_cf[i]) * elecCapacity
     );
     const battery_Net_Charge = [0.0 * size];
     const Battery_SOC = [0.0 * size];
@@ -229,7 +227,6 @@ class HydrogenModel {
         elec_cons > 0 ||
         battery_Net_Charge[hour - 1] < 0 ||
         electrolizer_cf[hour - 1] > 0;
-
       if (
         elec_cons == 0 &&
         spill + batt_discharge_potential > elec_min &&
@@ -311,14 +308,13 @@ class HydrogenModel {
     location: string
   ) {
     let solarDf = await readCSV(
-      "/Users/stanisshkel/work/hydrogen-tool/src/data/solar-traces.csv"
+      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/solar-traces.csv"
     );
     let windDf = await readCSV(
-      "/Users/stanisshkel/work/hydrogen-tool/src/data/wind-traces.csv"
+      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/wind-traces.csv"
     );
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
-    console.log(location);
     const solarDfValues = solarDf[location].values;
     const windDfValues = windDf[location].values;
     if (solarRatio == 1) {
@@ -326,12 +322,10 @@ class HydrogenModel {
     } else if (windRatio == 1) {
       return windDfValues;
     } else {
-      return solarDfValues;
-
-      // solarDfValues.map(
-      //   (e: number, i: number) =>
-      //     solarDfValues[i] * solarRatio + windDfValues[i] * windRatio
-      // );
+      return solarDfValues.map(
+        (e: number, i: number) =>
+          solarDfValues[i] * solarRatio + windDfValues[i] * windRatio
+      );
     }
   }
 
@@ -342,9 +336,8 @@ class HydrogenModel {
 
   save_as_df(thing: object) {
     const df = new DataFrame(thing);
-    df.toJSON({ filePath: "./output/js.json" });
+    df.toCSV({ filePath: "./ignore/js.csv" });
   }
-
   overloading_model(
     oversize: number,
     elecMaxLoad: number,
@@ -353,39 +346,38 @@ class HydrogenModel {
     generator_cf: number[],
     electrolizer_cf: number[]
   ) {
-    let cooldown_remain = 0;
-    const overload = (e: number, index: number): number => {
-      const Generator_CF = 0;
-      const Electrolyser_CF = 1;
-      // check if we can trigger an overload
-      if (generator_cf[index] * oversize > elecMaxLoad) {
-        // trigger an overload if not in cooldown
-        // TODO check for fencepost error
-        if (cooldown_remain == 0) {
-          cooldown_remain = elecOverloadRecharge;
-          // TODO this is using different cols in df generator_cf vs electrolyser_cf
-          // fix it up
-          const energyGenerated = generator_cf[index] * oversize;
-          const energy_for_overloading = Math.min(
-            elecOverload,
-            energyGenerated
-          );
-          return energy_for_overloading;
-        } else {
-          // decrement cooldown period
-          cooldown_remain--;
-          return electrolizer_cf[index];
+    const can_overload = generator_cf.map((x) => x * oversize > elecMaxLoad);
+
+    for (let hour = 1; hour < generator_cf.length; hour++) {
+      for (
+        let hour_i = 1;
+        hour_i < Math.min(hour, elecOverloadRecharge) + 1;
+        hour_i++
+      ) {
+        if (can_overload[hour] && can_overload[hour - hour_i]) {
+          can_overload[hour] = false;
         }
       }
-      return electrolizer_cf[index];
-    };
-    //Electrolyser_CF_overload
-    // double check axis
-    const electrolyser_CF_overload = generator_cf.map(overload);
+    }
+    const maxOverload = elecOverload;
+
+    const electrolyser_CF_overload = can_overload.map(
+      (canOverload: boolean, i: number) => {
+        const energy_generated = generator_cf[i] * oversize;
+        if (canOverload) {
+          //Energy_for_overloading
+          return Math.min(maxOverload, energy_generated);
+        } else {
+          return electrolizer_cf[i];
+        }
+      }
+    );
+
     return electrolyser_CF_overload;
   }
 }
-// overload
+
+// overload -> working correctly :tick:
 const example1 = {
   //args or defaults
   elecCapacity: 10,
@@ -454,12 +446,11 @@ const example2 = {
   elecCapacity: 10,
   solarCapacity: 15,
   batteryPower: 10,
-  battery_hours: 2,
+  batteryHours: 2,
   location: "REZ-N1",
 
   // defaults
   windCapacity: 0,
-  batteryHours: 0,
   spotPrice: 0,
   ppaPrice: 0,
 
@@ -509,7 +500,8 @@ const example2 = {
   discountRate: 4,
   projectLife: 20,
 };
-// normal
+
+// normal -> working correctly :tick:
 const example3 = {
   elecCapacity: 10,
   solarCapacity: 0,
@@ -568,7 +560,7 @@ const example3 = {
   discountRate: 4,
   projectLife: 20,
 };
-const defaultProps = example1;
+const defaultProps = example2;
 
 async function model() {
   const model = new HydrogenModel(defaultProps);
