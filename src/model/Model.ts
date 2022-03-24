@@ -41,9 +41,11 @@ class HydrogenModel {
   batteryPower: number;
   battMin: number;
   battLife: number;
+  elecCapacity: number;
 
   constructor(data: DataModel) {
     this.genCapacity = data.solarCapacity + data.windCapacity;
+    this.elecCapacity = data.elecCapacity;
     this.elecMaxLoad = data.elecMaxLoad / 100;
     this.elecMinLoad = data.elecMinLoad / 100;
     this.elecEff = data.elecEff / 100;
@@ -61,8 +63,8 @@ class HydrogenModel {
     this.data = data;
   }
 
-  calculate_electrolyser_output() {
-    const working_df = this.calculate_hourly_operation(
+  async calculate_electrolyser_output() {
+    const working_df = await this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
       this.data.solarCapacity,
@@ -81,8 +83,19 @@ class HydrogenModel {
       this.battMin
     );
 
+    const operating_outputs = this.get_tabulated_output(
+      working_df.generator_cf,
+      working_df.electrolizer_cf,
+      working_df.hydrogen_prod_fixed,
+      working_df.hydrogen_prod_variable,
+      this.elecCapacity,
+      this.genCapacity,
+      this.kgtoTonne,
+      this.hoursPerYear
+    );
+
     // const operating_outputs = get_tabulated_outputs(working_df);
-    return working_df;
+    return operating_outputs;
   }
 
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
@@ -375,6 +388,53 @@ class HydrogenModel {
 
     return electrolyser_CF_overload;
   }
+
+  get_tabulated_output(
+    generator_cf: number[],
+    electrolizer_cf: number[],
+    hydrogen_prod_fixed: number[],
+    hydrogen_prod_variable: number[],
+    elecCapacity: number,
+    genCapacity: number,
+    kgtoTonne: number,
+    hoursPerYear: number
+  ) {
+    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+    const mean = (arr: number[]) => sum(arr) / arr.length || 0;
+    // Generator Capacity Factor
+    const generator_capacity_factor = mean(generator_cf);
+    // Time Electrolyser is at its Rated Capacity"
+    const time_electroliser =
+      electrolizer_cf.filter((e) => e == this.elecMaxLoad).length /
+      hoursPerYear;
+    //Total Time Electrolyser is Operating
+    const total_ops_time =
+      electrolizer_cf.filter((e) => e > 0).length / hoursPerYear;
+
+    // Achieved Electrolyser Capacity Factor
+    const achieved_electroliser_cf = mean(electrolizer_cf);
+    // Energy in to Electrolyser [MWh/yr]
+    const energy_in_electroliser = sum(electrolizer_cf) * elecCapacity;
+    // Surplus Energy [MWh/yr]
+    const surplus =
+      sum(generator_cf) * genCapacity - sum(electrolizer_cf) * elecCapacity;
+    // Hydrogen Output for Fixed Operation [t/yr]
+    const hydrogen_fixed = sum(hydrogen_prod_fixed) * elecCapacity * kgtoTonne;
+    // Hydrogen Output for Variable Operation [t/yr]
+    const hydrogen_variable =
+      sum(hydrogen_prod_variable) * elecCapacity * kgtoTonne;
+
+    return {
+      "Generator Capacity Factor": generator_capacity_factor,
+      "Time Electrolyser is at its Rated Capacity": time_electroliser,
+      "Total Time Electrolyser is Operating": total_ops_time,
+      "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
+      "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
+      "Surplus Energy [MWh/yr]": surplus,
+      "Hydrogen Output for Fixed Operation [t/yr": hydrogen_fixed,
+      "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
+    };
+  }
 }
 
 // overload -> working correctly :tick:
@@ -560,11 +620,14 @@ const example3 = {
   discountRate: 4,
   projectLife: 20,
 };
-const defaultProps = example2;
+const defaultProps = example3;
 
 async function model() {
   const model = new HydrogenModel(defaultProps);
   const out = await model.calculate_electrolyser_output();
+  for (const [key, value] of Object.entries(out)) {
+    console.log(`${key}: ${value.toFixed(2)}`);
+  }
 }
 
 model();
