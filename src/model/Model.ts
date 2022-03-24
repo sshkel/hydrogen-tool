@@ -441,7 +441,7 @@ const example1 = {
   projectLife: 20,
 };
 
-// battery
+// battery -> working correctly :tick:
 const example2 = {
   elecCapacity: 10,
   solarCapacity: 15,
