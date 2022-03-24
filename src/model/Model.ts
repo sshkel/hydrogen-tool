@@ -287,7 +287,7 @@ class HydrogenModel {
         if (battery_Net_Charge[i] < 0) {
           return (
             electrolizer_cf[i] +
-            (-1 * battery_Net_Charge[i] * batt_losses + excess_generation[0]) /
+            (-1 * battery_Net_Charge[i] * batt_losses + excess_generation[i]) /
               elecCapacity
           );
         } else {
