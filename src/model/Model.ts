@@ -1,4 +1,8 @@
 import { DataFrame, readCSV } from "danfojs-node";
+import Papa from "papaparse";
+import fs from "fs";
+import request from "request";
+
 interface DataModel {
   battLifetime: number;
   battMin: number;
@@ -309,8 +313,6 @@ class HydrogenModel {
       }
     );
 
-    //nani??
-    //cf_profile_df.set_index(index_name, inplace=True)
     return electrolyser_cf_batt;
   }
   // returns Generator_CF series
@@ -320,16 +322,21 @@ class HydrogenModel {
     windCapacity: number,
     location: string
   ) {
-    let solarDf = await readCSV(
-      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/solar-traces.csv"
-    );
-    let windDf = await readCSV(
-      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/wind-traces.csv"
-    );
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
-    const solarDfValues = solarDf[location].values;
-    const windDfValues = windDf[location].values;
+
+    let solarDf = await this.read_csv(
+      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/solar-traces.csv"
+    );
+    let windDf = await this.read_csv(
+      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/wind-traces.csv"
+    );
+    const solarDfValues = solarDf.map(
+      (r: { [x: string]: number }) => r[location]
+    );
+    const windDfValues = windDf.map(
+      (r: { [x: string]: number }) => r[location]
+    );
     if (solarRatio == 1) {
       return solarDfValues;
     } else if (windRatio == 1) {
@@ -434,6 +441,46 @@ class HydrogenModel {
       "Hydrogen Output for Fixed Operation [t/yr": hydrogen_fixed,
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
     };
+  }
+
+  async read_csv(filePath: any, options?: any): Promise<any> {
+    if (filePath.startsWith("http") || filePath.startsWith("https")) {
+      return new Promise((resolve) => {
+        const optionsWithDefaults = {
+          header: true,
+          dynamicTyping: true,
+          ...options,
+        };
+
+        const dataStream = request.get(filePath);
+        const parseStream: any = Papa.parse(
+          Papa.NODE_STREAM_INPUT,
+          optionsWithDefaults
+        );
+        dataStream.pipe(parseStream);
+
+        const data: any = [];
+        parseStream.on("data", (chunk: any) => {
+          data.push(chunk);
+        });
+
+        parseStream.on("finish", () => {
+          resolve(data);
+        });
+      });
+    } else {
+      return new Promise((resolve) => {
+        const fileStream = fs.createReadStream(filePath);
+        Papa.parse(fileStream, {
+          header: true,
+          dynamicTyping: true,
+          ...options,
+          complete: (results) => {
+            resolve(results.data);
+          },
+        });
+      });
+    }
   }
 }
 
@@ -623,6 +670,7 @@ const example3 = {
 const defaultProps = example3;
 
 async function model() {
+  // console.log(solarDF);
   const model = new HydrogenModel(defaultProps);
   const out = await model.calculate_electrolyser_output();
   for (const [key, value] of Object.entries(out)) {
