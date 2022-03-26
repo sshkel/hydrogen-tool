@@ -3,6 +3,7 @@ import { Technology } from "../../types";
 import { HydrogenModel, loadSolar, loadWind } from "../../model/Model";
 import { DataModel } from "../../model/Model";
 import { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
 
 interface Props {
   data?: {
@@ -80,28 +81,29 @@ export default function DurationCurve(props: Props) {
 
   const model = new HydrogenModel(dataModel, data.solarData, data.windData);
   const result = model.calculate_electrolyser_hourly_operation();
+
+  const generatorData = {
+    labels: Array.from(Array(result.generator_cf.length).keys()),
+    datasets: [
+      {
+        label: "Generator",
+        data: result.generator_cf.map((x) => x * 100).sort((a, b) => b - a),
+        fill: true,
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+      },
+    ],
+    options: {
+      ticks: {
+        stepSize: 100,
+      },
+    },
+  };
+
   console.log(result);
   return (
     <div>
-      {/* <CostBreakdownDoughnutChart
-        title="Indirect Cost Breakdown"
-        labels={[
-          "Electrolyser EPC",
-          "Electrolyser Land",
-          "Power Plant EPC",
-          "Power Plant Land",
-          "Battery EPC",
-          "Battery Land",
-        ]}
-        data={[
-          electrolyserEpcCost,
-          electrolyserLandCost,
-          solarEpcCost,
-          solarLandCost,
-          windEpcCost,
-          windLandCost,
-        ]}
-      /> */}
+      <Line data={generatorData} />
     </div>
   );
 }
