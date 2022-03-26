@@ -54,8 +54,10 @@ export class HydrogenModel {
   battMin: number;
   battLife: number;
   elecCapacity: number;
+  solarData: number[];
+  windData: number[];
 
-  constructor(data: DataModel) {
+  constructor(data: DataModel, solarData: number[], windData: number[]) {
     this.genCapacity = data.solarCapacity + data.windCapacity;
     this.elecCapacity = data.elecCapacity;
     this.elecMaxLoad = data.electrolyserMaximumLoad / 100;
@@ -73,11 +75,13 @@ export class HydrogenModel {
     this.battMin = data.battMin / 100;
     this.battLife = data.battLifetime;
     this.data = data;
+    this.solarData = solarData;
+    this.windData = windData;
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  async calculate_electrolyser_hourly_operation() {
-    return await this.calculate_hourly_operation(
+  calculate_electrolyser_hourly_operation() {
+    return this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
       this.data.solarCapacity,
@@ -134,7 +138,7 @@ export class HydrogenModel {
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
-  private async calculate_hourly_operation(
+  private calculate_hourly_operation(
     genCapacity: number,
     elecCapacity: number,
     solarCapacity: number,
@@ -153,7 +157,9 @@ export class HydrogenModel {
     battMin: number
   ) {
     const oversize = genCapacity / elecCapacity;
-    const generator_cf = await this.readDF(
+    const generator_cf = this.parseData(
+      this.solarData,
+      this.windData,
       genCapacity,
       solarCapacity,
       windCapacity,
@@ -344,6 +350,36 @@ export class HydrogenModel {
 
     return electrolyser_cf_batt;
   }
+
+  // returns Generator_CF series
+  parseData(
+    solarData: any[],
+    windData: any[],
+    genCapacity: number,
+    solarCapacity: number,
+    windCapacity: number,
+    location: string
+  ) {
+    const solarRatio = solarCapacity / genCapacity;
+    const windRatio = windCapacity / genCapacity;
+    const solarDfValues = solarData.map(
+      (r: { [x: string]: number }) => r[location]
+    );
+    const windDfValues = windData.map(
+      (r: { [x: string]: number }) => r[location]
+    );
+    if (solarRatio == 1) {
+      return solarDfValues;
+    } else if (windRatio == 1) {
+      return windDfValues;
+    } else {
+      return solarDfValues.map(
+        (e: number, i: number) =>
+          solarDfValues[i] * solarRatio + windDfValues[i] * windRatio
+      );
+    }
+  }
+
   // returns Generator_CF series
   async readDF(
     genCapacity: number,
@@ -354,10 +390,10 @@ export class HydrogenModel {
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
 
-    let solarDf = await this.read_csv(
+    let solarDf = await read_csv(
       "https://hysupply.s3.ap-southeast-2.amazonaws.com/solar-traces.csv"
     );
-    let windDf = await this.read_csv(
+    let windDf = await read_csv(
       "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
     );
     const solarDfValues = solarDf.map(
@@ -462,21 +498,32 @@ export class HydrogenModel {
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
     };
   }
+}
 
-  async read_csv(file: any, options?: any): Promise<any> {
-    return new Promise((resolve) => {
-      Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        ...options,
-        download: true,
-        complete: (results) => {
-          const df = results.data;
-          resolve(df);
-        },
-      });
+export async function loadSolar() {
+  return await read_csv(
+    "https://hysupply.s3.ap-southeast-2.amazonaws.com/solar-traces.csv"
+  );
+}
+export async function loadWind() {
+  return await read_csv(
+    "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
+  );
+}
+
+export async function read_csv(file: any, options?: any): Promise<any[]> {
+  return new Promise((resolve) => {
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      ...options,
+      download: true,
+      complete: (results) => {
+        const df = results.data;
+        resolve(df);
+      },
     });
-  }
+  });
 }
 
 // overload -> working correctly :tick:
@@ -666,7 +713,7 @@ const defaultProps = example3;
 
 async function model() {
   // console.log(solarDF);
-  const model = new HydrogenModel(defaultProps);
+  const model = new HydrogenModel(defaultProps, [], []);
   const out = await model.calculate_electrolyser_output();
   for (const [key, value] of Object.entries(out)) {
     console.log(`${key}: ${value.toFixed(2)}`);

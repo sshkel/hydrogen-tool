@@ -1,6 +1,6 @@
 import "chart.js/auto";
 import { Technology } from "../../types";
-import { HydrogenModel } from "../../model/Model";
+import { HydrogenModel, loadSolar, loadWind } from "../../model/Model";
 import { DataModel } from "../../model/Model";
 import { useEffect, useState } from "react";
 
@@ -16,13 +16,28 @@ interface Props {
     electrolyserNominalCapacity: number;
     solarNominalCapacity: number;
     windNominalCapacity: number;
-    location: string;
+    region: string;
     electrolyserMaximumLoad: number;
     electrolyserMinimumLoad: number;
   };
 }
-
+interface DownloadedData {
+  solarData: any[];
+  windData: any[];
+}
 export default function DurationCurve(props: Props) {
+  const [data, setState] = useState<DownloadedData>({
+    solarData: [],
+    windData: [],
+  });
+
+  useEffect(() => {
+    Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
+      console.log(solar);
+      setState({ solarData: solar, windData: wind });
+    });
+  }, []);
+
   if (!props.data) {
     return null;
   }
@@ -38,7 +53,7 @@ export default function DurationCurve(props: Props) {
     electrolyserNominalCapacity: elecCapacity,
     solarNominalCapacity: solarCapacity,
     windNominalCapacity: windCapacity,
-    location,
+    region: location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
   } = props.data;
@@ -63,14 +78,9 @@ export default function DurationCurve(props: Props) {
     H2VoltoMass: 0.089,
   };
 
-  const model = new HydrogenModel(dataModel);
-  let out = null;
-  const getData = async () => {
-    const output = await model.calculate_electrolyser_hourly_operation();
-  };
-  getData();
-
-  console.log(out);
+  const model = new HydrogenModel(dataModel, data.solarData, data.windData);
+  const result = model.calculate_electrolyser_hourly_operation();
+  console.log(result);
   return (
     <div>
       {/* <CostBreakdownDoughnutChart
