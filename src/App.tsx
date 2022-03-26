@@ -3,7 +3,7 @@ import Input from "./components/input/Input";
 import "./App.css";
 // import Dashboard from "./components/charts/Dashboard";
 import WorkingData from "./components/charts/WorkingData";
-import DurationCurveChart from "./components/charts/DurationCurveChart";
+import DurationCurve from "./components/charts/DurationCurve";
 
 function App() {
   const [state, setState] = useState();
@@ -12,7 +12,7 @@ function App() {
     <div className="App2">
       <Input setState={setState} />
       <WorkingData data={state} />
-      {/* <DurationCurveChart data={state} /> */}
+      <DurationCurve data={state} />
     </div>
   );
 }

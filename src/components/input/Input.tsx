@@ -106,6 +106,22 @@ export default function Input(props: Props) {
       <InputExpand title="Additional Costs" id="additional-costs">
         {[...Array(2)].map((_) => getData(pointer))}
       </InputExpand>
+      <InputExpand
+        title="Electrolyser Specific Consumption(SEC)"
+        id="electrolyser-specific-consumption"
+      >
+        {[...Array(4)].map((_) => getData(pointer))}
+      </InputExpand>
+      <InputExpand title="Electrolyser Load Range" id="electrolyser-load-range">
+        {[...Array(4)].map((_) => getData(pointer))}
+      </InputExpand>
+
+      <InputExpand title="Battery Parameters" id="battery-parameters">
+        {[...Array(2)].map((_) => getData(pointer))}
+      </InputExpand>
+      <InputExpand title="Battery Costs" id="battery-costs">
+        {[...Array(1)].map((_) => getData(pointer))}
+      </InputExpand>
 
       {/* <InputExpand
         title="Electrolyser Parameters"

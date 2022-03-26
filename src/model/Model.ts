@@ -1,28 +1,36 @@
-import { DataFrame, readCSV } from "danfojs-node";
 import Papa from "papaparse";
-import fs from "fs";
-import request from "request";
 
-interface DataModel {
+export interface DataModel {
+  // batteryLifetime
   battLifetime: number;
+  // batteryMinCharge
   battMin: number;
+  // batteryEfficiency
   batteryEfficiency: number;
+  // durationOfStorage
   batteryHours: number;
+  // batteryRatedPower
   batteryPower: number;
+  // timeBetweenOverloading
   elecOverloadRecharge: number;
+  // maximumLoadWhenOverloading
   elecOverload: number;
+  // electrolyserNominalCapacity
   elecCapacity: number;
+  // solarNominalCapacity
   solarCapacity: number;
+  // windNominalCapacity
   windCapacity: number;
   location: string;
-  elecMaxLoad: number;
-  elecMinLoad: number;
+  electrolyserMaximumLoad: number;
+  electrolyserMinimumLoad: number;
+  // no clue about these 3, need to ask
   specCons: number;
   elecEff: number;
   H2VoltoMass: number;
 }
 
-class HydrogenModel {
+export class HydrogenModel {
   // consts
   readonly MWtokW = 1000; // kW/MW
   readonly hoursPerYear = 8760;
@@ -50,14 +58,14 @@ class HydrogenModel {
   constructor(data: DataModel) {
     this.genCapacity = data.solarCapacity + data.windCapacity;
     this.elecCapacity = data.elecCapacity;
-    this.elecMaxLoad = data.elecMaxLoad / 100;
-    this.elecMinLoad = data.elecMinLoad / 100;
+    this.elecMaxLoad = data.electrolyserMaximumLoad / 100;
+    this.elecMinLoad = data.electrolyserMinimumLoad / 100;
     this.elecEff = data.elecEff / 100;
     this.H2VoltoMass = data.H2VoltoMass;
     this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.specCons = data.specCons;
-    (this.elecOverload = data.elecOverload / 100),
-      (this.elecOverloadRecharge = data.elecOverloadRecharge);
+    this.elecOverload = data.elecOverload / 100;
+    this.elecOverloadRecharge = data.elecOverloadRecharge;
     this.batteryHours = data.batteryHours;
     this.batteryEnergy = data.batteryPower * this.batteryHours;
     this.batteryEfficiency = data.batteryEfficiency / 100;
@@ -66,7 +74,28 @@ class HydrogenModel {
     this.battLife = data.battLifetime;
     this.data = data;
   }
-
+  // wrapper around calculate_hourly_operation with passing of all the args.
+  // being lazy here
+  async calculate_electrolyser_hourly_operation() {
+    return await this.calculate_hourly_operation(
+      this.genCapacity,
+      this.data.elecCapacity,
+      this.data.solarCapacity,
+      this.data.windCapacity,
+      this.data.location,
+      this.elecMaxLoad,
+      this.elecMinLoad,
+      this.hydOutput,
+      this.specCons,
+      this.elecOverload,
+      this.elecOverloadRecharge,
+      this.batteryEnergy,
+      this.batteryHours,
+      this.batteryEfficiency,
+      this.batteryPower,
+      this.battMin
+    );
+  }
   async calculate_electrolyser_output() {
     const working_df = await this.calculate_hourly_operation(
       this.genCapacity,
@@ -105,7 +134,7 @@ class HydrogenModel {
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
-  async calculate_hourly_operation(
+  private async calculate_hourly_operation(
     genCapacity: number,
     elecCapacity: number,
     solarCapacity: number,
@@ -156,7 +185,7 @@ class HydrogenModel {
         electrolizer_cf
       );
     }
-    // this.save_as_df({ electrolizer_cf });
+
     // // battery model calc
     if (batteryEnergy > 0) {
       const hours = [1, 2, 4, 8];
@@ -200,7 +229,7 @@ class HydrogenModel {
       hydrogen_prod_fixed,
       hydrogen_prod_variable,
     };
-    this.save_as_df(working_df);
+
     return working_df;
   }
 
@@ -326,10 +355,10 @@ class HydrogenModel {
     const windRatio = windCapacity / genCapacity;
 
     let solarDf = await this.read_csv(
-      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/solar-traces.csv"
+      "https://hysupply.s3.ap-southeast-2.amazonaws.com/solar-traces.csv"
     );
     let windDf = await this.read_csv(
-      "/Users/stanisshkel/work/hydrogen-tool/hysupply_original/Data/wind-traces.csv"
+      "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
     );
     const solarDfValues = solarDf.map(
       (r: { [x: string]: number }) => r[location]
@@ -349,15 +378,6 @@ class HydrogenModel {
     }
   }
 
-  as_df(thing: object) {
-    const df = new DataFrame(thing);
-    df.print();
-  }
-
-  save_as_df(thing: object) {
-    const df = new DataFrame(thing);
-    df.toCSV({ filePath: "./ignore/js.csv" });
-  }
   overloading_model(
     oversize: number,
     elecMaxLoad: number,
@@ -443,44 +463,19 @@ class HydrogenModel {
     };
   }
 
-  async read_csv(filePath: any, options?: any): Promise<any> {
-    if (filePath.startsWith("http") || filePath.startsWith("https")) {
-      return new Promise((resolve) => {
-        const optionsWithDefaults = {
-          header: true,
-          dynamicTyping: true,
-          ...options,
-        };
-
-        const dataStream = request.get(filePath);
-        const parseStream: any = Papa.parse(
-          Papa.NODE_STREAM_INPUT,
-          optionsWithDefaults
-        );
-        dataStream.pipe(parseStream);
-
-        const data: any = [];
-        parseStream.on("data", (chunk: any) => {
-          data.push(chunk);
-        });
-
-        parseStream.on("finish", () => {
-          resolve(data);
-        });
+  async read_csv(file: any, options?: any): Promise<any> {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        header: true,
+        dynamicTyping: true,
+        ...options,
+        download: true,
+        complete: (results) => {
+          const df = results.data;
+          resolve(df);
+        },
       });
-    } else {
-      return new Promise((resolve) => {
-        const fileStream = fs.createReadStream(filePath);
-        Papa.parse(fileStream, {
-          header: true,
-          dynamicTyping: true,
-          ...options,
-          complete: (results) => {
-            resolve(results.data);
-          },
-        });
-      });
-    }
+    });
   }
 }
 
@@ -501,7 +496,7 @@ const example1 = {
   ppaPrice: 0,
 
   // config
-  elecMaxLoad: 100,
+  electrolyserMaximumLoad: 100,
   elecReferenceCapacity: 10,
   elecCostReduction: 1.0,
   elecEquip: 1.0,
@@ -509,7 +504,7 @@ const example1 = {
   elecLand: 0.0,
   // pem
 
-  elecMinLoad: 10,
+  electrolyserMinimumLoad: 10,
   elecOverload: 120,
   elecOverloadRecharge: 4,
   specCons: 4.7,
@@ -562,14 +557,14 @@ const example2 = {
   ppaPrice: 0,
 
   // config
-  elecMaxLoad: 100,
+  electrolyserMaximumLoad: 100,
   elecReferenceCapacity: 10,
   elecCostReduction: 1.0,
   elecEquip: 1.0,
   elecInstall: 0.0,
   elecLand: 0.0,
   // AE
-  elecMinLoad: 20,
+  electrolyserMinimumLoad: 20,
   elecOverload: 100,
   elecOverloadRecharge: 0,
   specCons: 4.5,
@@ -622,14 +617,14 @@ const example3 = {
   ppaPrice: 0,
 
   // config
-  elecMaxLoad: 100,
+  electrolyserMaximumLoad: 100,
   elecReferenceCapacity: 10,
   elecCostReduction: 1.0,
   elecEquip: 1.0,
   elecInstall: 0.0,
   elecLand: 0.0,
   // AE: {
-  elecMinLoad: 20,
+  electrolyserMinimumLoad: 20,
   elecOverload: 100,
   elecOverloadRecharge: 0,
   specCons: 4.5,
@@ -677,5 +672,3 @@ async function model() {
     console.log(`${key}: ${value.toFixed(2)}`);
   }
 }
-
-model();

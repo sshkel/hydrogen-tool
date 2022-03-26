@@ -278,6 +278,26 @@ export const data: Field[] = [
     defaultValue: 0,
     adornmentLabel: "hr",
   },
+  // Battery parameters
+  {
+    id: "batteryEfficiency",
+    label: "Round Trip Efficiency",
+    defaultValue: 85,
+    adornmentLabel: "%",
+  },
+  {
+    id: "batteryMinCharge",
+    label: "Minimum State of Charge",
+    defaultValue: 0,
+    adornmentLabel: "%",
+  },
+  // Battery costs
+  {
+    id: "batteryLifetime",
+    label: "Battery Lifetime",
+    defaultValue: "10",
+    adornmentLabel: "years",
+  },
 ];
 
 export const regionData: string[] = [
