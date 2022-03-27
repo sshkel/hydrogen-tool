@@ -19,6 +19,7 @@ const kgH2Label = (
 );
 
 export const data: Field[] = [
+  // System Sizing
   {
     id: "electrolyserNominalCapacity",
     label: "Nominal Electrolyser Capacity",
@@ -71,6 +72,8 @@ export const data: Field[] = [
     helperText:
       "Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration.",
   },
+  /******* Electrolyser Costs *******/
+  // Electrolyser Capital Costs
   {
     id: "electrolyserReferenceCapacity",
     label: "Reference Electrolyser Capacity",
@@ -107,6 +110,27 @@ export const data: Field[] = [
     defaultValue: 0,
     adornmentLabel: "%",
     helperText: "Percentage of CAPEX",
+  },
+  // Electrolyser Operating Costs
+  {
+    id: "electrolyserOMCost",
+    label: "Electrolyser O&M",
+    defaultValue: 2.5,
+    adornmentLabel: "%/yr",
+    helperText: "Percentage of Electrolyser Purchase Cost",
+  },
+  {
+    id: "electrolyserStackReplacement",
+    label: "Electrolyser Stack Replacement",
+    defaultValue: 40,
+    adornmentLabel: "%",
+    helperText: "Percentage of Electrolyser Purchase Cost",
+  },
+  {
+    id: "electrolyserWaterCost",
+    label: "Water Cost",
+    defaultValue: 5,
+    adornmentLabel: "A$/kL"
   },
   {
     id: "solarReferenceCapacity",
@@ -192,6 +216,27 @@ export const data: Field[] = [
     adornmentLabel: "A$",
     helperText: "Capital cost for transmission connection",
   },
+  /******* Battery *******/
+  // Battery Parameters
+  {
+    id: "batteryEfficiency",
+    label: "Round Trip Efficiency",
+    defaultValue: 85,
+    adornmentLabel: "%",
+  },
+  {
+    id: "batteryMinCharge",
+    label: "Minimum State of Charge",
+    defaultValue: 0,
+    adornmentLabel: "%",
+  },
+  // Battery Costs
+  {
+    id: "batteryLifetime",
+    label: "Battery Lifetime",
+    defaultValue: "10",
+    adornmentLabel: "years",
+  },
   {
     id: "batteryCosts",
     label: "Cost of Battery",
@@ -212,21 +257,19 @@ export const data: Field[] = [
     helperText: "Percentage of CAPEX",
   },
   {
-    id: "additionalUpfrontCosts",
-    label: "Additional Upfront Costs",
-    defaultValue: 0,
-    adornmentLabel: "A$",
-    helperText:
-      "Any other additional costs to include as a once off in the LCH2 calculation",
+    id: "batteryOMCost",
+    label: "Battery O&M",
+    adornmentLabel: "A$/MW/yr",
+    helperText: "Fixed & Variable O&M",
   },
   {
-    id: "additionalAnnualCosts",
-    label: "Additional Annual Costs",
-    defaultValue: 0,
-    adornmentLabel: "A$/yr",
-    helperText:
-      "Any other additional costs to include as an annual cost in the LCH2 calculation",
+    id: "batteryReplacementCost",
+    label: "Replacement Cost",
+    defaultValue: 100,
+    adornmentLabel: "%",
+    helperText: "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
   },
+  /******* Electrolyser Specific Consumption *******/
   {
     id: "secAtNominalLoadAE",
     label: "SEC At Nominal Load (AE)",
@@ -277,26 +320,39 @@ export const data: Field[] = [
     defaultValue: 0,
     adornmentLabel: "hr",
   },
-  // Battery parameters
+  /******* Additional Costs *******/
   {
-    id: "batteryEfficiency",
-    label: "Round Trip Efficiency",
-    defaultValue: 85,
-    adornmentLabel: "%",
-  },
-  {
-    id: "batteryMinCharge",
-    label: "Minimum State of Charge",
+    id: "additionalUpfrontCosts",
+    label: "Additional Upfront Costs",
     defaultValue: 0,
-    adornmentLabel: "%",
+    adornmentLabel: "A$",
+    helperText:
+      "Any other additional costs to include as a once off in the LCH2 calculation",
   },
-  // Battery costs
   {
-    id: "batteryLifetime",
-    label: "Battery Lifetime",
-    defaultValue: "10",
-    adornmentLabel: "years",
+    id: "additionalAnnualCosts",
+    label: "Additional Annual Costs",
+    defaultValue: 0,
+    adornmentLabel: "A$/yr",
+    helperText:
+      "Any other additional costs to include as an annual cost in the LCH2 calculation",
   },
+  /******* Financing Parameters *******/
+  {
+    id: "plantLife",
+    label: "Plant Life",
+    defaultValue: 20,
+    adornmentLabel: "yrs",
+    helperText:
+      "Same for both Powerplant and Electrolyser (Fixed Value). Must be less than or equal to 50.",
+  },
+  {
+    id: "discountRate",
+    label: "Discount Rate",
+    defaultValue: 7,
+    adornmentLabel: "% p.a.",
+    helperText: "Discount rate for NPV analysis and LCH2.",
+  }
 ];
 
 export const regionData: string[] = [

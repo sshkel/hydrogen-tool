@@ -56,7 +56,7 @@ export default function Input(props: Props) {
       component="form"
       autoComplete="off"
       sx={{
-        width: "66%",
+        width: "80%",
         height: "50%",
         "& .MuiTextField-root": { m: 2, width: "40%" },
         "& .selectWrapper": { m: 2, width: "40%" },
@@ -84,7 +84,12 @@ export default function Input(props: Props) {
         {[...Array(7)].map((_) => getData(pointer))}
       </InputExpand>
       <InputExpand title="Electrolyser Costs" id="electrolyser-costs">
-        {[...Array(6)].map((_) => getData(pointer))}
+        <InputExpand title="Electrolyser Capital Costs" id="electrolyser-capital-costs">
+          {[...Array(6)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand title="Electrolyser Operating Costs" id="electrolyser-operating-costs">
+          {[...Array(3)].map((_) => getData(pointer))}
+        </InputExpand>
       </InputExpand>
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
@@ -100,14 +105,16 @@ export default function Input(props: Props) {
           {getData(pointer)}
         </InputExpand>
       </InputExpand>
-      <InputExpand title="Battery Costs" id="battery-costs">
-        {[...Array(3)].map((_) => getData(pointer))}
-      </InputExpand>
-      <InputExpand title="Additional Costs" id="additional-costs">
-        {[...Array(2)].map((_) => getData(pointer))}
+      <InputExpand title="Battery" id="Battery">
+        <InputExpand title="Battery Parameters" id="battery-parameters">
+          {[...Array(2)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand title="Battery Costs" id="battery-costs">
+          {[...Array(6)].map((_) => getData(pointer))}
+        </InputExpand>
       </InputExpand>
       <InputExpand
-        title="Electrolyser Specific Consumption(SEC)"
+        title="Electrolyser Specific Consumption - SEC"
         id="electrolyser-specific-consumption"
       >
         {[...Array(4)].map((_) => getData(pointer))}
@@ -115,37 +122,12 @@ export default function Input(props: Props) {
       <InputExpand title="Electrolyser Load Range" id="electrolyser-load-range">
         {[...Array(4)].map((_) => getData(pointer))}
       </InputExpand>
-
-      <InputExpand title="Battery Parameters" id="battery-parameters">
+      <InputExpand title="Additional Costs" id="additional-costs">
         {[...Array(2)].map((_) => getData(pointer))}
       </InputExpand>
-      <InputExpand title="Battery Costs" id="battery-costs">
-        {[...Array(1)].map((_) => getData(pointer))}
+      <InputExpand title="Financing Parameters" id="financing-parameters">
+        {[...Array(2)].map((_) => getData(pointer))}
       </InputExpand>
-
-      {/* <InputExpand
-        title="Electrolyser Parameters"
-        id="electrolyser-parameters"
-      >
-        <InputExpand
-          title="Electrolyser Specific Consumption - SEC"
-          id="electrolyser-specific-consumption"
-        >
-          <InputNumberField label={data[7].label} name={data[7].id} defaultValue={data[7].defaultValue} adornmentLabel={data[7].adornmentLabel} disabled={data[7].disabled} helperText={data[7].helperText} onChange={handleChange} />
-          <InputNumberField label={data[8].label} name={data[8].id} defaultValue={data[8].defaultValue} adornmentLabel={data[8].adornmentLabel} disabled={data[8].disabled} helperText={data[8].helperText} onChange={handleChange} />
-          <InputNumberField label={data[9].label} name={data[9].id} defaultValue={data[9].defaultValue} adornmentLabel={data[9].adornmentLabel} disabled={data[9].disabled} helperText={data[9].helperText} onChange={handleChange} />
-          <InputNumberField label={data[10].label} name={data[10].id} defaultValue={data[10].defaultValue} adornmentLabel={data[10].adornmentLabel} disabled={data[10].disabled} helperText={data[10].helperText} onChange={handleChange} />
-        </InputExpand>
-        <InputExpand
-          title="Electrolyser Load Range"
-          id="electrolyser-load-range"
-        >
-          <InputNumberField label={data[11].label} name={data[11].id} defaultValue={data[11].defaultValue} adornmentLabel={data[11].adornmentLabel} disabled={data[11].disabled} helperText={data[11].helperText} onChange={handleChange} />
-          <InputNumberField label={data[12].label} name={data[12].id} defaultValue={data[12].defaultValue} adornmentLabel={data[12].adornmentLabel} disabled={data[12].disabled} helperText={data[12].helperText} onChange={handleChange} />
-          <InputNumberField label={data[13].label} name={data[13].id} defaultValue={data[13].defaultValue} adornmentLabel={data[13].adornmentLabel} disabled={data[13].disabled} helperText={data[13].helperText} onChange={handleChange} />
-          <InputNumberField label={data[14].label} name={data[14].id} defaultValue={data[14].defaultValue} adornmentLabel={data[14].adornmentLabel} disabled={data[14].disabled} helperText={data[14].helperText} onChange={handleChange} />
-        </InputExpand>
-      </InputExpand> */}
       <Button variant="contained" type="submit">
         Calculate
       </Button>

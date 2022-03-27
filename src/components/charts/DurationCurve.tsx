@@ -1,5 +1,4 @@
 import "chart.js/auto";
-import { Technology } from "../../types";
 import { HydrogenModel, loadSolar, loadWind } from "../../model/Model";
 import { DataModel } from "../../model/Model";
 import { useEffect, useState } from "react";

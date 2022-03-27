@@ -1,7 +1,8 @@
 import 'chart.js/auto';
 import { Technology } from '../../types';
-import { calculateBatteryCapex, calculateCapex, getIndirectCost } from './cost-functions';
+import { calculateBatteryCapex, calculateCapex, getIndirectCost, getOpexPerYear } from './cost-functions';
 import CostBreakdownDoughnutChart from './CostBreakdownDoughnutChart';
+import CostLineChart from './CostLineChart';
 
 interface Props {
   data?: {
@@ -10,11 +11,14 @@ interface Props {
     batteryLandProcurementCost?: number;
     batteryRatedPower?: number;
     batteryCosts?: number;
+    discountRate: number;
     durationOfStorage: number;
     electrolyserCostReductionWithScale: number;
     electrolyserEpcCosts: number;
     electrolyserLandProcurementCost: number;
     electrolyserReferenceFoldIncrease: number;
+    electrolyserOMCost: number;
+    electrolyserStackReplacement: number;
     gridConnectionCost: number;
     batteryNominalCapacity?: number;
     electrolyserNominalCapacity: number;
@@ -36,6 +40,7 @@ interface Props {
     windEpcCosts: number;
     windLandProcurementCost: number;
     windReferenceFoldIncrease: number;
+    plantLife: number;
   };
 }
 
@@ -46,7 +51,8 @@ export default function WorkingData(props: Props) {
   const { electrolyserNominalCapacity, electrolyserReferenceCapacity, electrolyserReferencePurchaseCost, electrolyserCostReductionWithScale, electrolyserReferenceFoldIncrease,
           solarNominalCapacity, solarReferenceCapacity, solarPVFarmReferenceCost, solarPVCostReductionWithScale, solarReferenceFoldIncrease,
           windNominalCapacity, windReferenceCapacity, windFarmReferenceCost, windCostReductionWithScale, windReferenceFoldIncrease,
-          batteryRatedPower, batteryNominalCapacity, batteryCosts
+          batteryRatedPower, batteryNominalCapacity, batteryCosts,
+          discountRate, plantLife
   } = props.data;
 
   const electrolyserCAPEX = calculateCapex(electrolyserNominalCapacity, electrolyserReferenceCapacity, electrolyserReferencePurchaseCost, electrolyserCostReductionWithScale, electrolyserReferenceFoldIncrease);
@@ -76,6 +82,13 @@ export default function WorkingData(props: Props) {
 
   const totalIndirectCosts = electrolyserEpcCost + electrolyserLandCost + solarEpcCost + solarLandCost + windEpcCost + windLandCost;
 
+  const electrolyserOMCost = (props.data.electrolyserOMCost / 100) * electrolyserCAPEX;
+
+  // TODO: Get correct formula
+  const electrolyserStackReplacementCost = (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
+
+  const electrolyserOpex = getOpexPerYear(electrolyserOMCost + electrolyserStackReplacementCost, discountRate, plantLife);
+
   return (
     <div>
       <CostBreakdownDoughnutChart
@@ -87,6 +100,10 @@ export default function WorkingData(props: Props) {
           title="Indirect Cost Breakdown"
           labels={["Electrolyser EPC", "Electrolyser Land", "Power Plant EPC", "Power Plant Land", "Battery EPC", "Battery Land"]}
           data={[electrolyserEpcCost, electrolyserLandCost, solarEpcCost + windEpcCost, solarLandCost + windLandCost, batteryEpcCost, batteryLandCost]}
+      />
+      <CostLineChart
+        plantLife={plantLife}
+        datapoints={[ { label: "Electrolyser OPEX", data: electrolyserOpex } ]}
       />
     </div>
   );
