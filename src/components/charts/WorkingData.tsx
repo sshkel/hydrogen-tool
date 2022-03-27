@@ -7,7 +7,7 @@ interface Props {
   data?: {
     additionalUpfrontCosts: number;
     batteryEpcCosts?: number;
-    batteryLandProcurementCost: number;
+    batteryLandProcurementCost?: number;
     batteryRatedPower?: number;
     batteryCosts?: number;
     durationOfStorage: number;
@@ -57,7 +57,7 @@ export default function WorkingData(props: Props) {
   const windCAPEX = technology !== 'Solar' ? calculateCapex(windNominalCapacity, windReferenceCapacity, windFarmReferenceCost, windCostReductionWithScale, windReferenceFoldIncrease) : 0;
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 
-  const batteryCAPEX = calculateBatteryCapex(batteryRatedPower, batteryNominalCapacity, batteryRatedPower);
+  const batteryCAPEX = calculateBatteryCapex(batteryRatedPower, batteryNominalCapacity, batteryCosts);
 
   const gridConnectionCost = props.data.gridConnectionCost || 0;
   const additionalUpfrontCosts = props.data.additionalUpfrontCosts;
@@ -71,6 +71,9 @@ export default function WorkingData(props: Props) {
   const windEpcCost = getIndirectCost(windCAPEX, props.data.windEpcCosts);
   const windLandCost = getIndirectCost(windCAPEX, props.data.windLandProcurementCost);
 
+  const batteryEpcCost = getIndirectCost(batteryCAPEX, props.data.batteryEpcCosts);
+  const batteryLandCost = getIndirectCost(batteryCAPEX, props.data.batteryLandProcurementCost);
+
   const totalIndirectCosts = electrolyserEpcCost + electrolyserLandCost + solarEpcCost + solarLandCost + windEpcCost + windLandCost;
 
   return (
@@ -83,7 +86,7 @@ export default function WorkingData(props: Props) {
       <CostBreakdownDoughnutChart
           title="Indirect Cost Breakdown"
           labels={["Electrolyser EPC", "Electrolyser Land", "Power Plant EPC", "Power Plant Land", "Battery EPC", "Battery Land"]}
-          data={[electrolyserEpcCost, electrolyserLandCost, solarEpcCost, solarLandCost, windEpcCost, windLandCost]}
+          data={[electrolyserEpcCost, electrolyserLandCost, solarEpcCost + windEpcCost, solarLandCost + windLandCost, batteryEpcCost, batteryLandCost]}
       />
     </div>
   );

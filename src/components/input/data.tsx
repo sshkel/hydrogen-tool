@@ -67,7 +67,6 @@ export const data: Field[] = [
     id: "batteryNominalCapacity",
     label: "Nominal Battery Capacity",
     defaultValue: 0,
-    disabled: true,
     adornmentLabel: "MWh",
     helperText:
       "Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration.",

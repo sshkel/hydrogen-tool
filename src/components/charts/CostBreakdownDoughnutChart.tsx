@@ -1,14 +1,11 @@
 import 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
-import { Technology } from '../../types';
-import { calculateBatteryCapex, calculateCapex } from './cost-functions';
 
 interface Props {
   title: string;
   labels: string[];
   data: number[];
 }
-
 
 
 // const state = {
@@ -49,14 +46,14 @@ export default function CostBreakdownDoughnutChart(props: Props) {
         '#FF0000',
         '#A21A24'
       ],
-      hoverBackgroundColor: [
-        '#501800',
-        '#4B5000',
-        '#175000',
-        '#003350',
-        '#35014F',
-        '#B21F00',
-      ],
+      // hoverBackgroundColor: [
+      //   '#501800',
+      //   '#4B5000',
+      //   '#175000',
+      //   '#003350',
+      //   '#35014F',
+      //   '#B21F00',
+      // ],
       data: props.data
     }]
   }

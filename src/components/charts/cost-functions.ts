@@ -34,5 +34,5 @@ export const calculateBatteryCapex = (ratedPower: number = 0,
     return roundToNearestThousand(capexCost);
 }
 
-export const getIndirectCost = (capex: number, costAsPercentageOfCapex: number) => roundToNearestThousand(capex * (costAsPercentageOfCapex/100));
+export const getIndirectCost = (capex: number, costAsPercentageOfCapex: number = 0) => roundToNearestThousand(capex * (costAsPercentageOfCapex/100));
 
