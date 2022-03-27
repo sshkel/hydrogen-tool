@@ -34,7 +34,6 @@ export default function DurationCurve(props: Props) {
 
   useEffect(() => {
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
-      console.log(solar);
       setState({ solarData: solar, windData: wind });
     });
   }, []);
@@ -83,7 +82,9 @@ export default function DurationCurve(props: Props) {
   const result = model.calculate_electrolyser_hourly_operation();
 
   const generatorData = {
-    labels: Array.from(Array(result.generator_cf.length).keys()),
+    labels: Array.from(Array(result.generator_cf.length).keys()).map((num) =>
+      ((num / 8760) * 100).toFixed(0)
+    ),
     datasets: [
       {
         label: "Generator",
