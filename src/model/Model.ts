@@ -280,7 +280,7 @@ export class HydrogenModel {
         battery_net_charge[hour - 1] < 0 ||
         electrolizer_cf[hour - 1] > 0;
       if (
-        elec_cons == 0 &&
+        elec_cons === 0 &&
         spill + batt_discharge_potential > elec_min &&
         elec_just_operating
       ) {
@@ -306,13 +306,13 @@ export class HydrogenModel {
         battery_net_charge[hour] = Math.min(batteryPower, spill * batt_losses);
       } else if (
         elec_cons + batt_discharge_potential < elec_min ||
-        (spill == 0 && batt_soc <= battMin)
+        (spill === 0 && batt_soc <= battMin)
       ) {
         //  generation and battery together are insufficient to power the electrolyser or there is no
         //  spilled generation and the battery is empty
         battery_net_charge[hour] = 0;
       } else if (
-        spill == 0 &&
+        spill === 0 &&
         elec_max - elec_cons >
           (batt_soc - battMin) * batt_losses * batteryEnergy &&
         elec_just_operating
@@ -320,12 +320,12 @@ export class HydrogenModel {
         //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
         battery_net_charge[hour] =
           (-1 * batt_discharge_potential * 1) / batt_losses;
-      } else if (spill == 0 && elec_just_operating) {
+      } else if (spill === 0 && elec_just_operating) {
         //  When the stored power is enough to power the electrolyser at max capacity
         battery_net_charge[hour] =
           -1 *
           Math.min(batteryPower, ((elec_max - elec_cons) * 1) / batt_losses);
-      } else if (spill == 0) {
+      } else if (spill === 0) {
         battery_net_charge[hour] = 0;
       } else {
         throw new Error("Error: battery configuration not accounted for");
@@ -368,9 +368,9 @@ export class HydrogenModel {
     const windDfValues = windData.map(
       (r: { [x: string]: number }) => r[location]
     );
-    if (solarRatio == 1) {
+    if (solarRatio === 1) {
       return solarDfValues;
-    } else if (windRatio == 1) {
+    } else if (windRatio === 1) {
       return windDfValues;
     } else {
       return solarDfValues.map(
@@ -402,9 +402,9 @@ export class HydrogenModel {
     const windDfValues = windDf.map(
       (r: { [x: string]: number }) => r[location]
     );
-    if (solarRatio == 1) {
+    if (solarRatio === 1) {
       return solarDfValues;
-    } else if (windRatio == 1) {
+    } else if (windRatio === 1) {
       return windDfValues;
     } else {
       return solarDfValues.map(
@@ -468,7 +468,7 @@ export class HydrogenModel {
     const generator_capacity_factor = mean(generator_cf);
     // Time Electrolyser is at its Rated Capacity"
     const time_electroliser =
-      electrolizer_cf.filter((e) => e == this.elecMaxLoad).length /
+      electrolizer_cf.filter((e) => e === this.elecMaxLoad).length /
       hoursPerYear;
     //Total Time Electrolyser is Operating
     const total_ops_time =
