@@ -80,7 +80,7 @@ export class HydrogenModel {
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  calculate_electrolyser_hourly_operation() {
+  calculate_electrolyser_hourly_operation(): { [key: string]: number[] } {
     return this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
@@ -100,8 +100,8 @@ export class HydrogenModel {
       this.battMin
     );
   }
-  async calculate_electrolyser_output() {
-    const working_df = await this.calculate_hourly_operation(
+  calculate_electrolyser_output(): { [key: string]: number } {
+    const working_df = this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
       this.data.solarCapacity,
@@ -121,10 +121,10 @@ export class HydrogenModel {
     );
 
     const operating_outputs = this.get_tabulated_output(
-      working_df.generator_cf,
-      working_df.electrolizer_cf,
-      working_df.hydrogen_prod_fixed,
-      working_df.hydrogen_prod_variable,
+      working_df.Generator_CF,
+      working_df.Electrolyser_CF,
+      working_df.Hydrogen_prod_fixed,
+      working_df.Hydrogen_prod_variable,
       this.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
@@ -230,10 +230,10 @@ export class HydrogenModel {
       (x: number) => (x * hydOutput) / electrolyser_output_polynomial(x)
     );
     const working_df = {
-      generator_cf,
-      electrolizer_cf,
-      hydrogen_prod_fixed,
-      hydrogen_prod_variable,
+      Generator_CF: generator_cf,
+      Electrolyser_CF: electrolizer_cf,
+      Hydrogen_prod_fixed: hydrogen_prod_fixed,
+      Hydrogen_prod_variable: hydrogen_prod_variable,
     };
 
     return working_df;
@@ -280,7 +280,7 @@ export class HydrogenModel {
         battery_net_charge[hour - 1] < 0 ||
         electrolizer_cf[hour - 1] > 0;
       if (
-        elec_cons == 0 &&
+        elec_cons === 0 &&
         spill + batt_discharge_potential > elec_min &&
         elec_just_operating
       ) {
@@ -306,13 +306,13 @@ export class HydrogenModel {
         battery_net_charge[hour] = Math.min(batteryPower, spill * batt_losses);
       } else if (
         elec_cons + batt_discharge_potential < elec_min ||
-        (spill == 0 && batt_soc <= battMin)
+        (spill === 0 && batt_soc <= battMin)
       ) {
         //  generation and battery together are insufficient to power the electrolyser or there is no
         //  spilled generation and the battery is empty
         battery_net_charge[hour] = 0;
       } else if (
-        spill == 0 &&
+        spill === 0 &&
         elec_max - elec_cons >
           (batt_soc - battMin) * batt_losses * batteryEnergy &&
         elec_just_operating
@@ -320,12 +320,12 @@ export class HydrogenModel {
         //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
         battery_net_charge[hour] =
           (-1 * batt_discharge_potential * 1) / batt_losses;
-      } else if (spill == 0 && elec_just_operating) {
+      } else if (spill === 0 && elec_just_operating) {
         //  When the stored power is enough to power the electrolyser at max capacity
         battery_net_charge[hour] =
           -1 *
           Math.min(batteryPower, ((elec_max - elec_cons) * 1) / batt_losses);
-      } else if (spill == 0) {
+      } else if (spill === 0) {
         battery_net_charge[hour] = 0;
       } else {
         throw new Error("Error: battery configuration not accounted for");
@@ -368,9 +368,9 @@ export class HydrogenModel {
     const windDfValues = windData.map(
       (r: { [x: string]: number }) => r[location]
     );
-    if (solarRatio == 1) {
+    if (solarRatio === 1) {
       return solarDfValues;
-    } else if (windRatio == 1) {
+    } else if (windRatio === 1) {
       return windDfValues;
     } else {
       return solarDfValues.map(
@@ -402,9 +402,9 @@ export class HydrogenModel {
     const windDfValues = windDf.map(
       (r: { [x: string]: number }) => r[location]
     );
-    if (solarRatio == 1) {
+    if (solarRatio === 1) {
       return solarDfValues;
-    } else if (windRatio == 1) {
+    } else if (windRatio === 1) {
       return windDfValues;
     } else {
       return solarDfValues.map(
@@ -468,7 +468,7 @@ export class HydrogenModel {
     const generator_capacity_factor = mean(generator_cf);
     // Time Electrolyser is at its Rated Capacity"
     const time_electroliser =
-      electrolizer_cf.filter((e) => e == this.elecMaxLoad).length /
+      electrolizer_cf.filter((e) => e === this.elecMaxLoad).length /
       hoursPerYear;
     //Total Time Electrolyser is Operating
     const total_ops_time =
@@ -494,7 +494,7 @@ export class HydrogenModel {
       "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
       "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
       "Surplus Energy [MWh/yr]": surplus,
-      "Hydrogen Output for Fixed Operation [t/yr": hydrogen_fixed,
+      "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
     };
   }
@@ -524,198 +524,4 @@ export async function read_csv(file: any, options?: any): Promise<any[]> {
       },
     });
   });
-}
-
-// overload -> working correctly :tick:
-const example1 = {
-  //args or defaults
-  elecCapacity: 10,
-  solarCapacity: 10,
-  windCapacity: 10,
-  location: "REZ-N1",
-
-  spot_price: 30,
-
-  // defaults
-  batteryPower: 0,
-  batteryHours: 0,
-  spotPrice: 0,
-  ppaPrice: 0,
-
-  // config
-  electrolyserMaximumLoad: 100,
-  elecReferenceCapacity: 10,
-  elecCostReduction: 1.0,
-  elecEquip: 1.0,
-  elecInstall: 0.0,
-  elecLand: 0.0,
-  // pem
-
-  electrolyserMinimumLoad: 10,
-  elecOverload: 120,
-  elecOverloadRecharge: 4,
-  specCons: 4.7,
-  stackLifetime: 60000,
-  electrolyserCapex: 1000,
-  electrolyserOandM: 4,
-  waterNeeds: 10,
-
-  H2VoltoMass: 0.089,
-  elecEff: 83,
-
-  stackDegradation: 0,
-  stackDegMax: 0,
-  solarDegradation: 0,
-  windDegradation: 0,
-
-  batteryEfficiency: 85,
-  battMin: 0.0,
-  battLifetime: 10,
-
-  solarCapex: 1120,
-  solarOpex: 16990,
-  windCapex: 1942,
-  windOpex: 25000,
-  powerplantReferenceCapacity: 1,
-  powerplantCostReduction: 1.0,
-  powerplantEquip: 1.0,
-  powerplantInstall: 0.0,
-  powerplantLand: 0.0,
-  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
-  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
-  batteryReplacement: 100,
-  electrolyserStackCost: 40,
-  waterCost: 5,
-  discountRate: 4,
-  projectLife: 20,
-};
-
-// battery -> working correctly :tick:
-const example2 = {
-  elecCapacity: 10,
-  solarCapacity: 15,
-  batteryPower: 10,
-  batteryHours: 2,
-  location: "REZ-N1",
-
-  // defaults
-  windCapacity: 0,
-  spotPrice: 0,
-  ppaPrice: 0,
-
-  // config
-  electrolyserMaximumLoad: 100,
-  elecReferenceCapacity: 10,
-  elecCostReduction: 1.0,
-  elecEquip: 1.0,
-  elecInstall: 0.0,
-  elecLand: 0.0,
-  // AE
-  electrolyserMinimumLoad: 20,
-  elecOverload: 100,
-  elecOverloadRecharge: 0,
-  specCons: 4.5,
-  stackLifetime: 80000,
-  electrolyserCapex: 1000,
-  electrolyserOandM: 2.5,
-  waterNeeds: 10,
-
-  H2VoltoMass: 0.089,
-  elecEff: 83,
-
-  stackDegradation: 0,
-  stackDegMax: 0,
-  solarDegradation: 0,
-  windDegradation: 0,
-
-  batteryEfficiency: 85,
-  battMin: 0.0,
-  battLifetime: 10,
-
-  solarCapex: 1120,
-  solarOpex: 16990,
-  windCapex: 1942,
-  windOpex: 25000,
-  powerplantReferenceCapacity: 1,
-  powerplantCostReduction: 1.0,
-  powerplantEquip: 1.0,
-  powerplantInstall: 0.0,
-  powerplantLand: 0.0,
-  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
-  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
-  batteryReplacement: 100,
-  electrolyserStackCost: 40,
-  waterCost: 5,
-  discountRate: 4,
-  projectLife: 20,
-};
-
-// normal -> working correctly :tick:
-const example3 = {
-  elecCapacity: 10,
-  solarCapacity: 0,
-  windCapacity: 100,
-
-  // defaults
-  location: "REZ-N1",
-  batteryPower: 0,
-  batteryHours: 0,
-  spotPrice: 0,
-  ppaPrice: 0,
-
-  // config
-  electrolyserMaximumLoad: 100,
-  elecReferenceCapacity: 10,
-  elecCostReduction: 1.0,
-  elecEquip: 1.0,
-  elecInstall: 0.0,
-  elecLand: 0.0,
-  // AE: {
-  electrolyserMinimumLoad: 20,
-  elecOverload: 100,
-  elecOverloadRecharge: 0,
-  specCons: 4.5,
-  stackLifetime: 80000,
-  electrolyserCapex: 1000,
-  electrolyserOandM: 2.5,
-  waterNeeds: 10,
-
-  H2VoltoMass: 0.089,
-  elecEff: 83,
-
-  stackDegradation: 0,
-  stackDegMax: 0,
-  solarDegradation: 0,
-  windDegradation: 0,
-
-  batteryEfficiency: 85,
-  battMin: 0.0,
-  battLifetime: 10,
-
-  solarCapex: 1120,
-  solarOpex: 16990,
-  windCapex: 1942,
-  windOpex: 25000,
-  powerplantReferenceCapacity: 1,
-  powerplantCostReduction: 1.0,
-  powerplantEquip: 1.0,
-  powerplantInstall: 0.0,
-  powerplantLand: 0.0,
-  batteryCapex: { 0: 0, 1: 827, 2: 542, 4: 446, 8: 421 },
-  batteryOpex: { 0: 0, 1: 4833, 2: 9717, 4: 19239, 8: 39314 },
-  batteryReplacement: 100,
-  electrolyserStackCost: 40,
-  waterCost: 5,
-  discountRate: 4,
-  projectLife: 20,
-};
-const defaultProps = example3;
-
-async function model() {
-  // console.log(solarDF);
-  const model = new HydrogenModel(defaultProps, [], []);
-  const out = await model.calculate_electrolyser_output();
-  for (const [key, value] of Object.entries(out)) {
-    console.log(`${key}: ${value.toFixed(2)}`);
-  }
 }

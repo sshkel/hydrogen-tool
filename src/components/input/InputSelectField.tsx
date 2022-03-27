@@ -1,9 +1,8 @@
-
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useEffect, useState } from 'react';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useEffect, useState } from "react";
 
 interface Props {
   id: string;
@@ -17,11 +16,11 @@ export default function InputTextField(props: Props) {
   const { id, label, defaultValue, values, onChange } = props;
   const labelId = `${id}-label`;
 
-  const [ value, setValue ] = useState(defaultValue);
+  const [value, setValue] = useState(defaultValue);
 
   const onSelectChange = (event: SelectChangeEvent<string>) => {
     setValue(event.target.value);
-    if (onChange) { 
+    if (onChange) {
       onChange({ target: { name: id, value: event.target.value } });
     }
   };
@@ -37,7 +36,11 @@ export default function InputTextField(props: Props) {
         label={label}
         onChange={onSelectChange}
       >
-        {values.map(item => <MenuItem key={item} value={item}>{item}</MenuItem>)}
+        {values.map((item) => (
+          <MenuItem key={item} value={item}>
+            {item}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
