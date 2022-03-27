@@ -79,7 +79,7 @@ export default function DurationCurve(props: Props) {
   };
 
   const model = new HydrogenModel(dataModel, data.solarData, data.windData);
-  const result = model.calculate_electrolyser_hourly_operation();
+  const result = model.calculateElectrolyserHourlyOperation();
 
   const generatorData = {
     labels: Array.from(Array(result.Generator_CF.length).keys()).map((num) =>

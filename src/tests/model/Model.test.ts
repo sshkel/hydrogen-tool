@@ -222,7 +222,7 @@ function compareToModel(
   outputs: ModelSummary,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
-  const electrolyser_outputs = model.calculate_electrolyser_hourly_operation();
+  const electrolyser_outputs = model.calculateElectrolyserHourlyOperation();
 
   Object.keys(electrolyser_outputs).forEach((key: string) => {
     Object.values(workingdf[key]).forEach((x: number, i: number) =>
@@ -230,7 +230,7 @@ function compareToModel(
     );
   });
 
-  const output = model.calculate_electrolyser_output();
+  const output = model.calculateElectrolyserOutput();
   Object.keys(output).forEach((key: string) => {
     expect(output[key]).toBeCloseTo(outputs[key], 8);
   });

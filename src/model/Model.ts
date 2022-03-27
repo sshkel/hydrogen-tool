@@ -78,8 +78,8 @@ export class HydrogenModel {
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  calculate_electrolyser_hourly_operation(): ModelHourlyOperation {
-    return this.calculate_hourly_operation(
+  calculateElectrolyserHourlyOperation(): ModelHourlyOperation {
+    return this.calculateHourlyOperation(
       this.genCapacity,
       this.parameters.elecCapacity,
       this.parameters.solarCapacity,
@@ -98,8 +98,8 @@ export class HydrogenModel {
       this.battMin
     );
   }
-  calculate_electrolyser_output(): ModelSummary {
-    const working_df = this.calculate_hourly_operation(
+  calculateElectrolyserOutput(): ModelSummary {
+    const hourlyFactors = this.calculateHourlyOperation(
       this.genCapacity,
       this.parameters.elecCapacity,
       this.parameters.solarCapacity,
@@ -118,25 +118,25 @@ export class HydrogenModel {
       this.battMin
     );
 
-    const operating_outputs = this.get_tabulated_output(
-      working_df.Generator_CF,
-      working_df.Electrolyser_CF,
-      working_df.Hydrogen_prod_fixed,
-      working_df.Hydrogen_prod_variable,
+    const operatingOutputs = this.getTabulatedOutput(
+      hourlyFactors.Generator_CF,
+      hourlyFactors.Electrolyser_CF,
+      hourlyFactors.Hydrogen_prod_fixed,
+      hourlyFactors.Hydrogen_prod_variable,
       this.parameters.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
       this.hoursPerYear
     );
 
-    return operating_outputs;
+    return operatingOutputs;
   }
 
-  private get_tabulated_output(
-    generator_cf: number[],
-    electrolizer_cf: number[],
-    hydrogen_prod_fixed: number[],
-    hydrogen_prod_variable: number[],
+  private getTabulatedOutput(
+    generatorCapFactor: number[],
+    electrolyserCapFactor: number[],
+    hydrogenProdFixed: number[],
+    hydrogenProdVariable: number[],
     elecCapacity: number,
     genCapacity: number,
     kgtoTonne: number,
@@ -145,34 +145,35 @@ export class HydrogenModel {
     const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
     const mean = (arr: number[]) => sum(arr) / arr.length || 0;
     // Generator Capacity Factor
-    const generator_capacity_factor = mean(generator_cf);
+    const generator_capacity_factor = mean(generatorCapFactor);
     // Time Electrolyser is at its Rated Capacity"
-    const time_electroliser =
-      electrolizer_cf.filter((e) => e === this.elecMaxLoad).length /
+    const time_electrolyser =
+      electrolyserCapFactor.filter((e) => e === this.elecMaxLoad).length /
       hoursPerYear;
     //Total Time Electrolyser is Operating
     const total_ops_time =
-      electrolizer_cf.filter((e) => e > 0).length / hoursPerYear;
+      electrolyserCapFactor.filter((e) => e > 0).length / hoursPerYear;
 
     // Achieved Electrolyser Capacity Factor
-    const achieved_electroliser_cf = mean(electrolizer_cf);
+    const achieved_electrolyser_cf = mean(electrolyserCapFactor);
     // Energy in to Electrolyser [MWh/yr]
-    const energy_in_electroliser = sum(electrolizer_cf) * elecCapacity;
+    const energy_in_electrolyser = sum(electrolyserCapFactor) * elecCapacity;
     // Surplus Energy [MWh/yr]
     const surplus =
-      sum(generator_cf) * genCapacity - sum(electrolizer_cf) * elecCapacity;
+      sum(generatorCapFactor) * genCapacity -
+      sum(electrolyserCapFactor) * elecCapacity;
     // Hydrogen Output for Fixed Operation [t/yr]
-    const hydrogen_fixed = sum(hydrogen_prod_fixed) * elecCapacity * kgtoTonne;
+    const hydrogen_fixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
     // Hydrogen Output for Variable Operation [t/yr]
     const hydrogen_variable =
-      sum(hydrogen_prod_variable) * elecCapacity * kgtoTonne;
+      sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
 
     return {
       "Generator Capacity Factor": generator_capacity_factor,
-      "Time Electrolyser is at its Rated Capacity": time_electroliser,
+      "Time Electrolyser is at its Rated Capacity": time_electrolyser,
       "Total Time Electrolyser is Operating": total_ops_time,
-      "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
-      "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
+      "Achieved Electrolyser Capacity Factor": achieved_electrolyser_cf,
+      "Energy in to Electrolyser [MWh/yr]": energy_in_electrolyser,
       "Surplus Energy [MWh/yr]": surplus,
       "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
@@ -182,7 +183,7 @@ export class HydrogenModel {
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
-  private calculate_hourly_operation(
+  private calculateHourlyOperation(
     genCapacity: number,
     elecCapacity: number,
     solarCapacity: number,
@@ -211,7 +212,7 @@ export class HydrogenModel {
     );
 
     // normal electrolyser calculation
-    const calculate_electroliser = (x: number): number => {
+    const calculate_electrolyser = (x: number): number => {
       if (x * oversize > elecMaxLoad) {
         return elecMaxLoad;
       }
@@ -222,17 +223,17 @@ export class HydrogenModel {
       return x * oversize;
     };
 
-    let electrolizer_cf = generator_cf.map(calculate_electroliser);
+    let electrolyser_cf = generator_cf.map(calculate_electrolyser);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
-      electrolizer_cf = this.overloading_model(
+      electrolyser_cf = this.overloading_model(
         oversize,
         elecMaxLoad,
         elecOverloadRecharge,
         elecOverload,
         generator_cf,
-        electrolizer_cf
+        electrolyser_cf
       );
     }
 
@@ -244,11 +245,11 @@ export class HydrogenModel {
           "Battery storage length not valid. Please enter one of 1, 2, 4 or 8"
         );
       }
-      electrolizer_cf = this.battery_model(
+      electrolyser_cf = this.battery_model(
         oversize,
         elecCapacity,
         generator_cf,
-        electrolizer_cf,
+        electrolyser_cf,
         batteryEfficiency,
         elecMinLoad,
         elecMaxLoad,
@@ -259,7 +260,7 @@ export class HydrogenModel {
     }
     // actual hydrogen calc
 
-    const hydrogen_prod_fixed = electrolizer_cf.map(
+    const hydrogen_prod_fixed = electrolyser_cf.map(
       (x: number) => (x * hydOutput) / specCons
     );
 
@@ -270,12 +271,12 @@ export class HydrogenModel {
       return 1.25 * x ** 2 - 0.4286 * x + specCons - 0.85;
     };
 
-    const hydrogen_prod_variable = electrolizer_cf.map(
+    const hydrogen_prod_variable = electrolyser_cf.map(
       (x: number) => (x * hydOutput) / electrolyser_output_polynomial(x)
     );
     const working_df = {
       Generator_CF: generator_cf,
-      Electrolyser_CF: electrolizer_cf,
+      Electrolyser_CF: electrolyser_cf,
       Hydrogen_prod_fixed: hydrogen_prod_fixed,
       Hydrogen_prod_variable: hydrogen_prod_variable,
     };
@@ -287,7 +288,7 @@ export class HydrogenModel {
     oversize: number,
     elecCapacity: number,
     generator_cf: number[],
-    electrolizer_cf: number[],
+    electrolyser_cf: number[],
     batteryEfficiency: number,
     elecMinLoad: number,
     elecMaxLoad: number,
@@ -298,7 +299,7 @@ export class HydrogenModel {
     const size = generator_cf.length;
     const excess_generation = generator_cf.map(
       (x: number, i: number) =>
-        (generator_cf[i] * oversize - electrolizer_cf[i]) * elecCapacity
+        (generator_cf[i] * oversize - electrolyser_cf[i]) * elecCapacity
     );
     const battery_net_charge = [0.0 * size];
     const battery_soc = [0.0 * size];
@@ -315,14 +316,14 @@ export class HydrogenModel {
     for (let hour = 1; hour < size; hour++) {
       const batt_soc = battery_soc[hour - 1];
       const spill = excess_generation[hour];
-      const elec_cons = electrolizer_cf[hour] * elecCapacity;
+      const elec_cons = electrolyser_cf[hour] * elecCapacity;
       const batt_discharge_potential =
         Math.min(batteryPower, (batt_soc - battMin) * batteryEnergy) *
         batt_losses;
       const elec_just_operating =
         elec_cons > 0 ||
         battery_net_charge[hour - 1] < 0 ||
-        electrolizer_cf[hour - 1] > 0;
+        electrolyser_cf[hour - 1] > 0;
       if (
         elec_cons === 0 &&
         spill + batt_discharge_potential > elec_min &&
@@ -382,12 +383,12 @@ export class HydrogenModel {
       (e: number, i: number) => {
         if (battery_net_charge[i] < 0) {
           return (
-            electrolizer_cf[i] +
+            electrolyser_cf[i] +
             (-1 * battery_net_charge[i] * batt_losses + excess_generation[i]) /
               elecCapacity
           );
         } else {
-          return electrolizer_cf[i];
+          return electrolyser_cf[i];
         }
       }
     );
@@ -426,7 +427,7 @@ export class HydrogenModel {
     elecOverloadRecharge: number,
     elecOverload: number,
     generator_cf: number[],
-    electrolizer_cf: number[]
+    electrolyser_cf: number[]
   ): number[] {
     const can_overload = generator_cf.map((x) => x * oversize > elecMaxLoad);
 
@@ -450,7 +451,7 @@ export class HydrogenModel {
           //Energy_for_overloading
           return Math.min(maxOverload, energy_generated);
         } else {
-          return electrolizer_cf[i];
+          return electrolyser_cf[i];
         }
       }
     );
