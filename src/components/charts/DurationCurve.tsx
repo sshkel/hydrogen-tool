@@ -101,10 +101,30 @@ export default function DurationCurve(props: Props) {
     },
   };
 
-  console.log(result);
+  const electrolyserData = {
+    labels: Array.from(Array(result.Electrolyser_CF.length).keys()).map((num) =>
+      ((num / 8760) * 100).toFixed(0)
+    ),
+    datasets: [
+      {
+        label: "Electrolyser",
+        data: result.Electrolyser_CF.map((x) => x * 100).sort((a, b) => b - a),
+        fill: true,
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+      },
+    ],
+    options: {
+      ticks: {
+        stepSize: 100,
+      },
+    },
+  };
+
   return (
     <div>
       <Line data={generatorData} />
+      <Line data={electrolyserData} />
     </div>
   );
 }
