@@ -258,7 +258,6 @@ async function readCSV(filePath: string): Promise<any[]> {
     });
   } else {
     return new Promise((resolve, reject) => {
-      console.log(filePath);
       const fileStream = fs.createReadStream(filePath);
       Papa.parse(fileStream, {
         header: true,
