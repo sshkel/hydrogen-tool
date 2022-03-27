@@ -1,6 +1,4 @@
-import Papa from "papaparse";
-
-export interface DataModel {
+export type DataModel = {
   // batteryLifetime
   battLifetime: number;
   // batteryMinCharge
@@ -28,7 +26,11 @@ export interface DataModel {
   specCons: number;
   elecEff: number;
   H2VoltoMass: number;
-}
+};
+
+export type CsvRow = {
+  [x: string]: number;
+};
 
 export class HydrogenModel {
   // consts
@@ -48,10 +50,10 @@ export class HydrogenModel {
   batteryEfficiency: number;
   battMin: number;
   // data from renewables
-  solarData: number[];
-  windData: number[];
+  solarData: CsvRow[];
+  windData: CsvRow[];
 
-  constructor(parameters: DataModel, solarData: number[], windData: number[]) {
+  constructor(parameters: DataModel, solarData: CsvRow[], windData: CsvRow[]) {
     this.parameters = parameters;
     this.solarData = solarData;
     this.windData = windData;
@@ -227,7 +229,7 @@ export class HydrogenModel {
     return working_df;
   }
 
-  battery_model(
+  private battery_model(
     oversize: number,
     elecCapacity: number,
     generator_cf: number[],
@@ -340,9 +342,9 @@ export class HydrogenModel {
   }
 
   // returns Generator_CF series
-  parseData(
-    solarData: any[],
-    windData: any[],
+  private parseData(
+    solarData: CsvRow[],
+    windData: CsvRow[],
     genCapacity: number,
     solarCapacity: number,
     windCapacity: number,
@@ -350,12 +352,8 @@ export class HydrogenModel {
   ) {
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
-    const solarDfValues = solarData.map(
-      (r: { [x: string]: number }) => r[location]
-    );
-    const windDfValues = windData.map(
-      (r: { [x: string]: number }) => r[location]
-    );
+    const solarDfValues = solarData.map((r: CsvRow) => r[location]);
+    const windDfValues = windData.map((r: CsvRow) => r[location]);
     if (solarRatio === 1) {
       return solarDfValues;
     } else if (windRatio === 1) {
@@ -452,30 +450,4 @@ export class HydrogenModel {
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
     };
   }
-}
-
-export async function loadSolar() {
-  return await read_csv(
-    "https://hysupply.s3.ap-southeast-2.amazonaws.com/solar-traces.csv"
-  );
-}
-export async function loadWind() {
-  return await read_csv(
-    "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
-  );
-}
-
-export async function read_csv(file: any, options?: any): Promise<any[]> {
-  return new Promise((resolve) => {
-    Papa.parse(file, {
-      header: true,
-      dynamicTyping: true,
-      ...options,
-      download: true,
-      complete: (results) => {
-        const df = results.data;
-        resolve(df);
-      },
-    });
-  });
 }

@@ -1,5 +1,6 @@
 import "chart.js/auto";
-import { HydrogenModel, loadSolar, loadWind } from "../../model/Model";
+import { HydrogenModel } from "../../model/Model";
+import { loadSolar, loadWind } from "../../model/DataLoader";
 import { DataModel } from "../../model/Model";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
