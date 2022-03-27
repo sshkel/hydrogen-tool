@@ -36,87 +36,76 @@ export class HydrogenModel {
   readonly hoursPerYear = 8760;
   readonly kgtoTonne = 1 / 1000;
 
-  // internal
+  // calculated params
   genCapacity: number;
   elecMaxLoad: number;
   elecMinLoad: number;
   elecEff: number;
-  H2VoltoMass: number;
   hydOutput: number;
-  specCons: number;
-  data: DataModel;
+  parameters: DataModel;
   elecOverload: number;
-  elecOverloadRecharge: number;
   batteryEnergy: number;
-  batteryHours: number;
   batteryEfficiency: number;
-  batteryPower: number;
   battMin: number;
-  battLife: number;
-  elecCapacity: number;
+  // data from renewables
   solarData: number[];
   windData: number[];
 
-  constructor(data: DataModel, solarData: number[], windData: number[]) {
-    this.genCapacity = data.solarCapacity + data.windCapacity;
-    this.elecCapacity = data.elecCapacity;
-    this.elecMaxLoad = data.electrolyserMaximumLoad / 100;
-    this.elecMinLoad = data.electrolyserMinimumLoad / 100;
-    this.elecEff = data.elecEff / 100;
-    this.H2VoltoMass = data.H2VoltoMass;
-    this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
-    this.specCons = data.specCons;
-    this.elecOverload = data.elecOverload / 100;
-    this.elecOverloadRecharge = data.elecOverloadRecharge;
-    this.batteryHours = data.batteryHours;
-    this.batteryEnergy = data.batteryPower * this.batteryHours;
-    this.batteryEfficiency = data.batteryEfficiency / 100;
-    this.batteryPower = data.batteryPower;
-    this.battMin = data.battMin / 100;
-    this.battLife = data.battLifetime;
-    this.data = data;
+  constructor(parameters: DataModel, solarData: number[], windData: number[]) {
+    this.parameters = parameters;
     this.solarData = solarData;
     this.windData = windData;
+
+    // calculated values
+    this.genCapacity = parameters.solarCapacity + parameters.windCapacity;
+    this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
+    this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
+    this.elecEff = parameters.elecEff / 100;
+    this.hydOutput = this.parameters.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
+    this.elecOverload = parameters.elecOverload / 100;
+    this.batteryEnergy = parameters.batteryPower * this.parameters.batteryHours;
+    this.batteryEfficiency = parameters.batteryEfficiency / 100;
+    this.battMin = parameters.battMin / 100;
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
   calculate_electrolyser_hourly_operation(): { [key: string]: number[] } {
     return this.calculate_hourly_operation(
       this.genCapacity,
-      this.data.elecCapacity,
-      this.data.solarCapacity,
-      this.data.windCapacity,
-      this.data.location,
+      this.parameters.elecCapacity,
+      this.parameters.solarCapacity,
+      this.parameters.windCapacity,
+      this.parameters.location,
       this.elecMaxLoad,
       this.elecMinLoad,
       this.hydOutput,
-      this.specCons,
+      this.parameters.specCons,
       this.elecOverload,
-      this.elecOverloadRecharge,
+      this.parameters.elecOverloadRecharge,
       this.batteryEnergy,
-      this.batteryHours,
+      this.parameters.batteryHours,
       this.batteryEfficiency,
-      this.batteryPower,
+      this.parameters.batteryPower,
       this.battMin
     );
   }
   calculate_electrolyser_output(): { [key: string]: number } {
     const working_df = this.calculate_hourly_operation(
       this.genCapacity,
-      this.data.elecCapacity,
-      this.data.solarCapacity,
-      this.data.windCapacity,
-      this.data.location,
+      this.parameters.elecCapacity,
+      this.parameters.solarCapacity,
+      this.parameters.windCapacity,
+      this.parameters.location,
       this.elecMaxLoad,
       this.elecMinLoad,
       this.hydOutput,
-      this.specCons,
+      this.parameters.specCons,
       this.elecOverload,
-      this.elecOverloadRecharge,
+      this.parameters.elecOverloadRecharge,
       this.batteryEnergy,
-      this.batteryHours,
+      this.parameters.batteryHours,
       this.batteryEfficiency,
-      this.batteryPower,
+      this.parameters.batteryPower,
       this.battMin
     );
 
@@ -125,13 +114,12 @@ export class HydrogenModel {
       working_df.Electrolyser_CF,
       working_df.Hydrogen_prod_fixed,
       working_df.Hydrogen_prod_variable,
-      this.elecCapacity,
+      this.parameters.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
       this.hoursPerYear
     );
 
-    // const operating_outputs = get_tabulated_outputs(working_df);
     return operating_outputs;
   }
 
@@ -380,41 +368,7 @@ export class HydrogenModel {
     }
   }
 
-  // returns Generator_CF series
-  async readDF(
-    genCapacity: number,
-    solarCapacity: number,
-    windCapacity: number,
-    location: string
-  ) {
-    const solarRatio = solarCapacity / genCapacity;
-    const windRatio = windCapacity / genCapacity;
-
-    let solarDf = await read_csv(
-      "https://hysupply.s3.ap-southeast-2.amazonaws.com/solar-traces.csv"
-    );
-    let windDf = await read_csv(
-      "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
-    );
-    const solarDfValues = solarDf.map(
-      (r: { [x: string]: number }) => r[location]
-    );
-    const windDfValues = windDf.map(
-      (r: { [x: string]: number }) => r[location]
-    );
-    if (solarRatio === 1) {
-      return solarDfValues;
-    } else if (windRatio === 1) {
-      return windDfValues;
-    } else {
-      return solarDfValues.map(
-        (e: number, i: number) =>
-          solarDfValues[i] * solarRatio + windDfValues[i] * windRatio
-      );
-    }
-  }
-
-  overloading_model(
+  private overloading_model(
     oversize: number,
     elecMaxLoad: number,
     elecOverloadRecharge: number,
