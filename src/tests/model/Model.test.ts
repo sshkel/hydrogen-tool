@@ -1,4 +1,9 @@
-import { DataModel, HydrogenModel } from "../../model/Model";
+import {
+  CsvRow,
+  DataModel,
+  HydrogenModel,
+  ModelSummary,
+} from "../../model/Model";
 import fs from "fs";
 import Papa from "papaparse";
 import workingdf1 from "./resources/example1-workingdf.json";
@@ -8,8 +13,8 @@ import outputs2 from "./resources/example2-outputs.json";
 import workingdf3 from "./resources/example3-workingdf.json";
 import outputs3 from "./resources/example3-outputs.json";
 describe("Hydrogen Model", () => {
-  let solar: number[];
-  let wind: number[];
+  let solar: CsvRow[];
+  let wind: CsvRow[];
   beforeAll(async () => {
     solar = await readCSV(__dirname + "/resources/solar-traces.csv");
     wind = await readCSV(__dirname + "/resources/wind-traces.csv");
@@ -214,24 +219,23 @@ describe("Hydrogen Model", () => {
 });
 function compareToModel(
   model: HydrogenModel,
-  outputs: { [key: string]: number },
+  outputs: ModelSummary,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
   const electrolyser_outputs = model.calculate_electrolyser_hourly_operation();
 
   Object.keys(electrolyser_outputs).forEach((key: string) => {
-    const expected: { [key: string]: { [key: string]: number } } = workingdf;
-    Object.values(expected[key]).forEach((x: number, i: number) =>
+    Object.values(workingdf[key]).forEach((x: number, i: number) =>
       expect(electrolyser_outputs[key][i]).toBeCloseTo(x, 9)
     );
   });
 
-  const expected: { [key: string]: number } = outputs;
   const output = model.calculate_electrolyser_output();
   Object.keys(output).forEach((key: string) => {
-    expect(output[key]).toBeCloseTo(expected[key], 8);
+    expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
 }
+
 async function readCSV(filePath: string): Promise<any[]> {
   if (filePath.startsWith("http") || filePath.startsWith("https")) {
     return new Promise((resolve) => {

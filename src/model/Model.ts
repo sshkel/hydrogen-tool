@@ -29,7 +29,14 @@ export type DataModel = {
 };
 
 export type CsvRow = {
-  [x: string]: number;
+  [k: string]: number;
+};
+
+export type ModelHourlyOperation = {
+  [k: string]: number[];
+};
+export type ModelSummary = {
+  [k: string]: number;
 };
 
 export class HydrogenModel {
@@ -71,7 +78,7 @@ export class HydrogenModel {
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  calculate_electrolyser_hourly_operation(): { [key: string]: number[] } {
+  calculate_electrolyser_hourly_operation(): ModelHourlyOperation {
     return this.calculate_hourly_operation(
       this.genCapacity,
       this.parameters.elecCapacity,
@@ -91,7 +98,7 @@ export class HydrogenModel {
       this.battMin
     );
   }
-  calculate_electrolyser_output(): { [key: string]: number } {
+  calculate_electrolyser_output(): ModelSummary {
     const working_df = this.calculate_hourly_operation(
       this.genCapacity,
       this.parameters.elecCapacity,
@@ -125,6 +132,53 @@ export class HydrogenModel {
     return operating_outputs;
   }
 
+  private get_tabulated_output(
+    generator_cf: number[],
+    electrolizer_cf: number[],
+    hydrogen_prod_fixed: number[],
+    hydrogen_prod_variable: number[],
+    elecCapacity: number,
+    genCapacity: number,
+    kgtoTonne: number,
+    hoursPerYear: number
+  ): ModelSummary {
+    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+    const mean = (arr: number[]) => sum(arr) / arr.length || 0;
+    // Generator Capacity Factor
+    const generator_capacity_factor = mean(generator_cf);
+    // Time Electrolyser is at its Rated Capacity"
+    const time_electroliser =
+      electrolizer_cf.filter((e) => e === this.elecMaxLoad).length /
+      hoursPerYear;
+    //Total Time Electrolyser is Operating
+    const total_ops_time =
+      electrolizer_cf.filter((e) => e > 0).length / hoursPerYear;
+
+    // Achieved Electrolyser Capacity Factor
+    const achieved_electroliser_cf = mean(electrolizer_cf);
+    // Energy in to Electrolyser [MWh/yr]
+    const energy_in_electroliser = sum(electrolizer_cf) * elecCapacity;
+    // Surplus Energy [MWh/yr]
+    const surplus =
+      sum(generator_cf) * genCapacity - sum(electrolizer_cf) * elecCapacity;
+    // Hydrogen Output for Fixed Operation [t/yr]
+    const hydrogen_fixed = sum(hydrogen_prod_fixed) * elecCapacity * kgtoTonne;
+    // Hydrogen Output for Variable Operation [t/yr]
+    const hydrogen_variable =
+      sum(hydrogen_prod_variable) * elecCapacity * kgtoTonne;
+
+    return {
+      "Generator Capacity Factor": generator_capacity_factor,
+      "Time Electrolyser is at its Rated Capacity": time_electroliser,
+      "Total Time Electrolyser is Operating": total_ops_time,
+      "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
+      "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
+      "Surplus Energy [MWh/yr]": surplus,
+      "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
+      "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
+    };
+  }
+
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
@@ -145,7 +199,7 @@ export class HydrogenModel {
     batteryEfficiency: number,
     batteryPower: number,
     battMin: number
-  ) {
+  ): ModelHourlyOperation {
     const oversize = genCapacity / elecCapacity;
     const generator_cf = this.parseData(
       this.solarData,
@@ -240,7 +294,7 @@ export class HydrogenModel {
     batteryPower: number,
     batteryEnergy: number,
     battMin: number
-  ) {
+  ): number[] {
     const size = generator_cf.length;
     const excess_generation = generator_cf.map(
       (x: number, i: number) =>
@@ -349,7 +403,7 @@ export class HydrogenModel {
     solarCapacity: number,
     windCapacity: number,
     location: string
-  ) {
+  ): number[] {
     const solarRatio = solarCapacity / genCapacity;
     const windRatio = windCapacity / genCapacity;
     const solarDfValues = solarData.map((r: CsvRow) => r[location]);
@@ -373,7 +427,7 @@ export class HydrogenModel {
     elecOverload: number,
     generator_cf: number[],
     electrolizer_cf: number[]
-  ) {
+  ): number[] {
     const can_overload = generator_cf.map((x) => x * oversize > elecMaxLoad);
 
     for (let hour = 1; hour < generator_cf.length; hour++) {
@@ -402,52 +456,5 @@ export class HydrogenModel {
     );
 
     return electrolyser_CF_overload;
-  }
-
-  get_tabulated_output(
-    generator_cf: number[],
-    electrolizer_cf: number[],
-    hydrogen_prod_fixed: number[],
-    hydrogen_prod_variable: number[],
-    elecCapacity: number,
-    genCapacity: number,
-    kgtoTonne: number,
-    hoursPerYear: number
-  ) {
-    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-    const mean = (arr: number[]) => sum(arr) / arr.length || 0;
-    // Generator Capacity Factor
-    const generator_capacity_factor = mean(generator_cf);
-    // Time Electrolyser is at its Rated Capacity"
-    const time_electroliser =
-      electrolizer_cf.filter((e) => e === this.elecMaxLoad).length /
-      hoursPerYear;
-    //Total Time Electrolyser is Operating
-    const total_ops_time =
-      electrolizer_cf.filter((e) => e > 0).length / hoursPerYear;
-
-    // Achieved Electrolyser Capacity Factor
-    const achieved_electroliser_cf = mean(electrolizer_cf);
-    // Energy in to Electrolyser [MWh/yr]
-    const energy_in_electroliser = sum(electrolizer_cf) * elecCapacity;
-    // Surplus Energy [MWh/yr]
-    const surplus =
-      sum(generator_cf) * genCapacity - sum(electrolizer_cf) * elecCapacity;
-    // Hydrogen Output for Fixed Operation [t/yr]
-    const hydrogen_fixed = sum(hydrogen_prod_fixed) * elecCapacity * kgtoTonne;
-    // Hydrogen Output for Variable Operation [t/yr]
-    const hydrogen_variable =
-      sum(hydrogen_prod_variable) * elecCapacity * kgtoTonne;
-
-    return {
-      "Generator Capacity Factor": generator_capacity_factor,
-      "Time Electrolyser is at its Rated Capacity": time_electroliser,
-      "Total Time Electrolyser is Operating": total_ops_time,
-      "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
-      "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
-      "Surplus Energy [MWh/yr]": surplus,
-      "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
-      "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
-    };
   }
 }
