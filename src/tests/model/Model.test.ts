@@ -1,11 +1,21 @@
 import { DataModel, HydrogenModel } from "../../model/Model";
-// import fs from "fs";
+import fs from "fs";
 import Papa from "papaparse";
-// import workingdf1 from "./resources/example1-workingdf.json";
-// import outputs1 from "./resources/example1-outputs.json";
-
+import workingdf1 from "./resources/example1-workingdf.json";
+import outputs1 from "./resources/example1-outputs.json";
+import workingdf2 from "./resources/example2-workingdf.json";
+import outputs2 from "./resources/example2-outputs.json";
+import workingdf3 from "./resources/example3-workingdf.json";
+import outputs3 from "./resources/example3-outputs.json";
 describe("Hydrogen Model", () => {
-  it("works for overload model", async () => {
+  let solar: number[];
+  let wind: number[];
+  beforeAll(async () => {
+    solar = await readCSV(__dirname + "/resources/solar-traces.csv");
+    wind = await readCSV(__dirname + "/resources/wind-traces.csv");
+  });
+
+  it("works for overload model", () => {
     // overload -> working correctly :tick:
     const example1: DataModel = {
       //args or defaults
@@ -70,12 +80,8 @@ describe("Hydrogen Model", () => {
       projectLife: 20,
       */
     };
-    // const generator_cf = Object.values(workingdf1["Generator_CF"]);
-    // const solar = await readCSV("../resources/solar-traces.csv");
-    console.log("helo");
-    const model = new HydrogenModel(example1, [], []);
-
-    const output = model.calculate_electrolyser_output();
+    const model = new HydrogenModel(example1, solar, wind);
+    compareToModel(model, outputs1, workingdf1);
   });
   it("works for battery model", () => {
     // battery -> working correctly :tick:
@@ -138,6 +144,8 @@ describe("Hydrogen Model", () => {
       projectLife: 20,
       */
     };
+    const model = new HydrogenModel(example2, solar, wind);
+    compareToModel(model, outputs2, workingdf2);
   });
   it("works for normal model", () => {
     // normal -> working correctly :tick:
@@ -200,21 +208,68 @@ describe("Hydrogen Model", () => {
       projectLife: 20,
       */
     };
+    const model = new HydrogenModel(example3, solar, wind);
+    compareToModel(model, outputs3, workingdf3);
   });
 });
+function compareToModel(
+  model: HydrogenModel,
+  outputs: { [key: string]: number },
+  workingdf: { [key: string]: { [key: string]: number } }
+) {
+  const electrolyser_outputs = model.calculate_electrolyser_hourly_operation();
 
-async function readCSV(filePath: string): Promise<any[]> {
-  return new Promise((resolve) => {
-    const fileStream = fs.createReadStream(filePath);
-    console.log("reading");
-    Papa.parse(fileStream, {
-      header: true,
-      dynamicTyping: true,
-      complete: (results) => {
-        const df = results.data;
-        console.log("resolving");
-        resolve(df);
-      },
-    });
+  Object.keys(electrolyser_outputs).forEach((key: string) => {
+    const expected: { [key: string]: { [key: string]: number } } = workingdf;
+    Object.values(expected[key]).forEach((x: number, i: number) =>
+      expect(electrolyser_outputs[key][i]).toBeCloseTo(x, 9)
+    );
   });
+
+  const expected: { [key: string]: number } = outputs;
+  const output = model.calculate_electrolyser_output();
+  Object.keys(output).forEach((key: string) => {
+    expect(output[key]).toBeCloseTo(expected[key], 8);
+  });
+}
+async function readCSV(filePath: string): Promise<any[]> {
+  if (filePath.startsWith("http") || filePath.startsWith("https")) {
+    return new Promise((resolve) => {
+      const optionsWithDefaults = {
+        header: true,
+        dynamicTyping: true,
+      };
+
+      const dataStream = fs.createReadStream(filePath);
+      const parseStream: any = Papa.parse(
+        Papa.NODE_STREAM_INPUT,
+        optionsWithDefaults
+      );
+      dataStream.pipe(parseStream);
+
+      const data: any = [];
+      parseStream.on("data", (chunk: any) => {
+        data.push(chunk);
+      });
+
+      parseStream.on("finish", () => {
+        resolve(data);
+      });
+    });
+  } else {
+    return new Promise((resolve, reject) => {
+      console.log(filePath);
+      const fileStream = fs.createReadStream(filePath);
+      Papa.parse(fileStream, {
+        header: true,
+        dynamicTyping: true,
+        complete: (results) => {
+          resolve(results.data);
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
+    });
+  }
 }

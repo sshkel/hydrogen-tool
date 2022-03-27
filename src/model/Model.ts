@@ -80,7 +80,7 @@ export class HydrogenModel {
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  calculate_electrolyser_hourly_operation() {
+  calculate_electrolyser_hourly_operation(): { [key: string]: number[] } {
     return this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
@@ -100,7 +100,7 @@ export class HydrogenModel {
       this.battMin
     );
   }
-  calculate_electrolyser_output() {
+  calculate_electrolyser_output(): { [key: string]: number } {
     const working_df = this.calculate_hourly_operation(
       this.genCapacity,
       this.data.elecCapacity,
@@ -121,10 +121,10 @@ export class HydrogenModel {
     );
 
     const operating_outputs = this.get_tabulated_output(
-      working_df.generator_cf,
-      working_df.electrolizer_cf,
-      working_df.hydrogen_prod_fixed,
-      working_df.hydrogen_prod_variable,
+      working_df.Generator_CF,
+      working_df.Electrolyser_CF,
+      working_df.Hydrogen_prod_fixed,
+      working_df.Hydrogen_prod_variable,
       this.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
@@ -230,10 +230,10 @@ export class HydrogenModel {
       (x: number) => (x * hydOutput) / electrolyser_output_polynomial(x)
     );
     const working_df = {
-      generator_cf,
-      electrolizer_cf,
-      hydrogen_prod_fixed,
-      hydrogen_prod_variable,
+      Generator_CF: generator_cf,
+      Electrolyser_CF: electrolizer_cf,
+      Hydrogen_prod_fixed: hydrogen_prod_fixed,
+      Hydrogen_prod_variable: hydrogen_prod_variable,
     };
 
     return working_df;
@@ -494,7 +494,7 @@ export class HydrogenModel {
       "Achieved Electrolyser Capacity Factor": achieved_electroliser_cf,
       "Energy in to Electrolyser [MWh/yr]": energy_in_electroliser,
       "Surplus Energy [MWh/yr]": surplus,
-      "Hydrogen Output for Fixed Operation [t/yr": hydrogen_fixed,
+      "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
       "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
     };
   }

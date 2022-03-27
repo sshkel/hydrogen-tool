@@ -82,13 +82,13 @@ export default function DurationCurve(props: Props) {
   const result = model.calculate_electrolyser_hourly_operation();
 
   const generatorData = {
-    labels: Array.from(Array(result.generator_cf.length).keys()).map((num) =>
+    labels: Array.from(Array(result.Generator_CF.length).keys()).map((num) =>
       ((num / 8760) * 100).toFixed(0)
     ),
     datasets: [
       {
         label: "Generator",
-        data: result.generator_cf.map((x) => x * 100).sort((a, b) => b - a),
+        data: result.Generator_CF.map((x) => x * 100).sort((a, b) => b - a),
         fill: true,
         backgroundColor: "rgba(75,192,192,0.2)",
         borderColor: "rgba(75,192,192,1)",
