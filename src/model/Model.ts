@@ -602,7 +602,7 @@ export class HydrogenModel {
       // TODO check for rounding error
       if (
         Math.floor((op_hours_per_year * year) / stackLifetime) -
-          Math.floor((op_hours_per_year * (year - 1)) / stackLifetime) ==
+          Math.floor((op_hours_per_year * (year - 1)) / stackLifetime) ===
         1.0
       ) {
         stack_years.push(year);
