@@ -5,7 +5,6 @@ import {
   ModelSummary,
   maxDegradationStackReplacementYears,
   cumulativeStackReplacementYears,
-  cumulativeStackReplacementYearsSimple,
 } from "../../model/Model";
 import fs from "fs";
 import Papa from "papaparse";
@@ -246,24 +245,6 @@ describe("Hydrogen Model", () => {
     const expected: number[] = [];
     // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
     expect(actual).toEqual(expected);
-  });
-
-  it("Cumulative electrolyser check", () => {
-    const operatingHoursPerYear = 6_000;
-    const stackLifetime = 10_000;
-    const projectLife = 10;
-    const o = cumulativeStackReplacementYears(
-      operatingHoursPerYear,
-      stackLifetime,
-      projectLife
-    );
-    const n = cumulativeStackReplacementYearsSimple(
-      operatingHoursPerYear,
-      stackLifetime,
-      projectLife
-    );
-    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
-    expect(o).toEqual(n);
   });
 });
 function compareToModel(

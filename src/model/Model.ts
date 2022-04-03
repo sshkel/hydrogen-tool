@@ -619,35 +619,13 @@ export function cumulativeStackReplacementYears(
   for (let year of projectYears(projectLife)) {
     // TODO check for rounding error. should be fine because floors?
     // This is a funny way of calculating this if we are doing it iteratively
-    // I think we can just
+    // Fix it with a simpler version
     if (
       Math.floor((operatingHoursPerYear * year) / stackLifetime) -
         Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ==
       1.0
     ) {
       stackReplacementYears.push(year);
-    }
-  }
-  return stackReplacementYears;
-}
-export function cumulativeStackReplacementYearsSimple(
-  // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
-  operatingHoursPerYear: number,
-  stackLifetime: number,
-  projectLife: number
-): number[] {
-  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
-  //the total operating time surpassing a multiple of the stack lifetime.
-  //"""
-
-  const stackReplacementYears = [];
-  let cumulativeHours = 0;
-  for (let year of projectYears(projectLife)) {
-    cumulativeHours += operatingHoursPerYear;
-
-    if (cumulativeHours > stackLifetime) {
-      stackReplacementYears.push(year);
-      cumulativeHours = operatingHoursPerYear;
     }
   }
   return stackReplacementYears;
