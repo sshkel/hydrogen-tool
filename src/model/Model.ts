@@ -458,4 +458,179 @@ export class HydrogenModel {
 
     return electrolyser_CF_overload;
   }
+
+  private calculate_costs(
+    operating_outputs: ModelSummary,
+    specific_consumption_type: "fixed" | "variable",
+    solarCapex: number,
+    solarCapacity: number,
+    windCapex: number,
+    windCapacity: number,
+    solarOpex: number,
+    windOpex: number,
+    projectLife: number,
+    ppaPrice: number,
+    spotPrice: number,
+    electrolyserCapex: number,
+    elecCapacity: number,
+    electrolyserOandM: number,
+    electrolyserStackCost: number,
+    waterNeeds: number,
+    waterCost: number,
+    batteryCapex: number[],
+    batteryHours: number,
+    batteryEnergy: number,
+    batteryOpex: number[],
+    batteryPower: number,
+    battReplacement: number,
+    kgtoTonne: number,
+    discountRate: number,
+    stackLifetime: number
+  ) {
+    // """Calculates the levelised cost of hydrogen production for the model
+
+    //     Parameters
+    //     ----------
+    //     specific_consumption_type : str, optional
+    //         the method by which the electrolyser specific consumption of energy is calculated. This must be either
+    //         "fixed" for a constant value or "variable" for a value that depends on the operating load.
+
+    //     Returns
+    //     -------
+    //     lcoh
+    //         the LCOH in A$/kg rounded to two decimal places
+    //     """
+
+    let annual_hydrogen = null;
+    if (specific_consumption_type == "variable") {
+      annual_hydrogen =
+        operating_outputs["Hydrogen Output for Variable Operation [t/yr]"];
+    } else if (specific_consumption_type == "fixed") {
+      annual_hydrogen =
+        operating_outputs["Hydrogen Output for Fixed Operation [t/yr]"];
+    } else {
+      throw new Error(
+        "Specific consumption type not valid, please select either 'variable' or 'fixed'"
+      );
+    }
+
+    // # Calculate the annual cash flows as in the 'Costings' tab of the excel tool
+    // cash_flow_df = pd.DataFrame(index=range(self.projectLife + 1), columns=['Year', 'Gen_CAPEX', 'Elec_CAPEX',
+    //                                                                         'Gen_OPEX', 'Elec_OandM', 'Power_cost',
+    //                                                                         'Stack_replacement', 'Water_cost',
+    //                                                                         'Battery_cost', 'Total'])
+
+    const Year = Array.from(Array(projectLife + 1).keys());
+    const gen_capex = solarCapex * solarCapacity + windCapex * windCapacity;
+    const gen_opex = solarOpex * solarCapacity + windOpex * windCapacity;
+    let Power_cost: number[] = [];
+    let Gen_CAPEX: number[] = [];
+    let Gen_OPEX: number[] = [];
+    if (ppaPrice > 0) {
+      Power_cost = buttFirst(
+        operating_outputs["Energy in to Electrolyser [MWh/yr]"] * ppaPrice,
+        projectLife
+      );
+    } else {
+      Gen_CAPEX = first(gen_capex, projectLife);
+
+      Gen_OPEX = buttFirst(gen_opex, projectLife);
+
+      Power_cost = buttFirst(
+        -1 * operating_outputs["Surplus Energy [MWh/yr]"] * spotPrice,
+        projectLife
+      );
+    }
+
+    const Elec_CAPEX = first(electrolyserCapex * elecCapacity, projectLife);
+    const Elec_OandM = buttFirst(electrolyserOandM * elecCapacity, projectLife);
+    const stack_years = this.find_stack_replacement_years(
+      operating_outputs,
+      this.hoursPerYear,
+      projectLife,
+      stackLifetime
+    );
+    // const cash_flow_df.loc[stack_years, 'Stack_replacement'] = self.electrolyserStackCost * self.elecCapacity
+    const Stack_replacement = Array(projectLife).fill(0);
+    stack_years.forEach((x: number) => {
+      Stack_replacement[x] = electrolyserStackCost * elecCapacity;
+    });
+    const Water_cost = buttFirst(
+      annual_hydrogen * waterNeeds * waterCost,
+      projectLife
+    );
+    const Battery_cost = [
+      batteryCapex[batteryHours] * batteryEnergy,
+      ...Array(projectLife).fill(batteryOpex[batteryHours] * batteryPower),
+    ];
+    // TODO figure out wtf?
+    Battery_cost[10] += battReplacement * batteryEnergy;
+
+    // cash flow total
+    const cash_flow_total = Array(projectLife + 1)
+      // do i even need fill?
+      .fill(0)
+      .map((i: number) => {
+        return (
+          Gen_CAPEX[i] +
+          Elec_CAPEX[i] +
+          Gen_OPEX[i] +
+          Elec_OandM[i] +
+          Power_cost[i] +
+          Stack_replacement[i] +
+          Water_cost[i] +
+          Battery_cost[i]
+        );
+      });
+    //# Calculate the annual discounted cash flows for hydrogen and total costs
+    const Hydrogen_kg = buttFirst(annual_hydrogen / kgtoTonne, projectLife);
+    const Hydrogen_kg_Discounted = Hydrogen_kg.map((x: number, i: number) => {
+      return Hydrogen_kg[i] * (1 / (1 + discountRate)) ** Year[i];
+    });
+    const cash_flow_discounted = cash_flow_total.map((x: number, i: number) => {
+      return cash_flow_total[i] * (1 / (1 + discountRate)) ** Year[i];
+    });
+    //  Calculate the LCH2 as the total discounted costs divided by the total discounted hydrogen produced over the
+    // project lifetime
+    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+
+    const lcoh = sum(cash_flow_discounted) / sum(Hydrogen_kg_Discounted);
+    return lcoh.toFixed(2);
+  }
+
+  private find_stack_replacement_years(
+    operating_outputs: ModelSummary,
+    hoursPerYear: number,
+    projectLife: number,
+    stackLifetime: number
+  ): number[] {
+    // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
+    //the total operating time surpassing a multiple of the stack lifetime.
+    //"""
+
+    const op_hours_per_year =
+      operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
+
+    const stack_years = [];
+    // TODO off by one error? In python range is not inclusive
+    for (let year of Array.from(Array(projectLife).keys()).slice(1)) {
+      // TODO check for rounding error
+      if (
+        Math.floor((op_hours_per_year * year) / stackLifetime) -
+          Math.floor((op_hours_per_year * (year - 1)) / stackLifetime) ==
+        1.0
+      ) {
+        stack_years.push(year);
+      }
+    }
+    return stack_years;
+  }
+}
+
+function first(element: number, projectLife: number) {
+  return [element].concat(Array(projectLife).fill(0));
+}
+
+function buttFirst(element: number, projectLife: number) {
+  return [0].concat(Array(projectLife).fill(element));
 }
