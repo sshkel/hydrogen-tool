@@ -529,11 +529,11 @@ export class HydrogenModel {
 
     const Elec_CAPEX = first(electrolyserCapex * elecCapacity, projectLife);
     const Elec_OandM = buttFirst(electrolyserOandM * elecCapacity, projectLife);
-    const stack_years = this.find_stack_replacement_years(
-      operating_outputs,
-      this.hoursPerYear,
-      projectLife,
-      stackLifetime
+    const stack_years = cumulativeStackReplacementYears(
+      operating_outputs["Total Time Electrolyser is Operating"] *
+        this.hoursPerYear,
+      stackLifetime,
+      projectLife
     );
     // const cash_flow_df.loc[stack_years, 'Stack_replacement'] = self.electrolyserStackCost * self.elecCapacity
     const Stack_replacement = Array(projectLife).fill(0);
@@ -582,34 +582,75 @@ export class HydrogenModel {
     const lcoh = sum(cash_flow_discounted) / sum(Hydrogen_kg_Discounted);
     return lcoh.toFixed(2);
   }
+}
 
-  private find_stack_replacement_years(
-    operating_outputs: ModelSummary,
-    hoursPerYear: number,
-    projectLife: number,
-    stackLifetime: number
-  ): number[] {
-    // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
-    //the total operating time surpassing a multiple of the stack lifetime.
-    //"""
-
-    const op_hours_per_year =
-      operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
-
-    const stack_years = [];
-    // TODO off by one error? In python range is not inclusive
-    for (let year of Array.from(Array(projectLife).keys()).slice(1)) {
-      // TODO check for rounding error
-      if (
-        Math.floor((op_hours_per_year * year) / stackLifetime) -
-          Math.floor((op_hours_per_year * (year - 1)) / stackLifetime) ===
-        1.0
-      ) {
-        stack_years.push(year);
-      }
+// VisibleForTesting
+export function maxDegradationStackReplacementYears(
+  yearlyElecDegradation: number,
+  maxElexDegradation: number,
+  projectLife: number
+): number[] {
+  let runningYear = 1;
+  const replacementYears = [];
+  for (let year of projectYears(projectLife)) {
+    const stackDegradationForYear =
+      1 - 1 / (1 + yearlyElecDegradation) ** runningYear;
+    if (stackDegradationForYear > maxElexDegradation) {
+      runningYear = 1;
+      replacementYears.push(year);
+    } else {
+      runningYear++;
     }
-    return stack_years;
   }
+  return replacementYears;
+}
+
+export function cumulativeStackReplacementYears(
+  // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
+  operatingHoursPerYear: number,
+  stackLifetime: number,
+  projectLife: number
+): number[] {
+  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
+  //the total operating time surpassing a multiple of the stack lifetime.
+  //"""
+
+  const stackReplacementYears = [];
+  for (let year of projectYears(projectLife)) {
+    // TODO check for rounding error. should be fine because floors?
+    // This is a funny way of calculating this if we are doing it iteratively
+    // I think we can just
+    if (
+      Math.floor((operatingHoursPerYear * year) / stackLifetime) -
+        Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ==
+      1.0
+    ) {
+      stackReplacementYears.push(year);
+    }
+  }
+  return stackReplacementYears;
+}
+export function cumulativeStackReplacementYearsSimple(
+  // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
+  operatingHoursPerYear: number,
+  stackLifetime: number,
+  projectLife: number
+): number[] {
+  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
+  //the total operating time surpassing a multiple of the stack lifetime.
+  //"""
+
+  const stackReplacementYears = [];
+  let cumulativeHours = 0;
+  for (let year of projectYears(projectLife)) {
+    cumulativeHours += operatingHoursPerYear;
+
+    if (cumulativeHours > stackLifetime) {
+      stackReplacementYears.push(year);
+      cumulativeHours = operatingHoursPerYear;
+    }
+  }
+  return stackReplacementYears;
 }
 
 function first(element: number, projectLife: number) {
@@ -618,4 +659,9 @@ function first(element: number, projectLife: number) {
 
 function buttFirst(element: number, projectLife: number) {
   return [0].concat(Array(projectLife).fill(element));
+}
+
+function projectYears(projectLife: number): number[] {
+  // gives you array of years starting from 1 and ending in projectLife
+  return Array.from({ length: projectLife }, (_, i) => i + 1);
 }
