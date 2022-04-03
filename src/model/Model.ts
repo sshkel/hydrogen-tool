@@ -529,7 +529,7 @@ export class HydrogenModel {
 
     const Elec_CAPEX = first(electrolyserCapex * elecCapacity, projectLife);
     const Elec_OandM = buttFirst(electrolyserOandM * elecCapacity, projectLife);
-    const stack_years = this.find_stack_replacement_years(
+    const stack_years = this.cumulativeStackReplacementYears(
       operating_outputs,
       this.hoursPerYear,
       projectLife,
@@ -583,7 +583,7 @@ export class HydrogenModel {
     return lcoh.toFixed(2);
   }
 
-  private find_stack_replacement_years(
+  private cumulativeStackReplacementYears(
     operating_outputs: ModelSummary,
     hoursPerYear: number,
     projectLife: number,
@@ -593,23 +593,43 @@ export class HydrogenModel {
     //the total operating time surpassing a multiple of the stack lifetime.
     //"""
 
-    const op_hours_per_year =
+    const operatingHoursPerYear =
       operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
 
-    const stack_years = [];
-    // TODO off by one error? In python range is not inclusive
-    for (let year of Array.from(Array(projectLife).keys()).slice(1)) {
-      // TODO check for rounding error
+    const stackReplacementYears = [];
+    for (let year of projectYears(projectLife)) {
+      // TODO check for rounding error. should be fine because floors?
       if (
-        Math.floor((op_hours_per_year * year) / stackLifetime) -
-          Math.floor((op_hours_per_year * (year - 1)) / stackLifetime) ==
+        Math.floor((operatingHoursPerYear * year) / stackLifetime) -
+          Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ==
         1.0
       ) {
-        stack_years.push(year);
+        stackReplacementYears.push(year);
       }
     }
-    return stack_years;
+    return stackReplacementYears;
   }
+}
+
+// VisibleForTesting
+export function maxDegradationStackReplacementYears(
+  yearlyElecDegradation: number,
+  maxElexDegradation: number,
+  projectLife: number
+): number[] {
+  let runningYear = 1;
+  const replacementYears = [];
+  for (let year of projectYears(projectLife)) {
+    const stackDegradationForYear =
+      1 - 1 / (1 + yearlyElecDegradation) ** runningYear;
+    if (stackDegradationForYear > maxElexDegradation) {
+      runningYear = 1;
+      replacementYears.push(year);
+    } else {
+      runningYear++;
+    }
+  }
+  return replacementYears;
 }
 
 function first(element: number, projectLife: number) {
@@ -618,4 +638,9 @@ function first(element: number, projectLife: number) {
 
 function buttFirst(element: number, projectLife: number) {
   return [0].concat(Array(projectLife).fill(element));
+}
+
+function projectYears(projectLife: number): number[] {
+  // gives you array of years starting from 1 and ending in projectLife
+  return Array.from({ length: projectLife }, (_, i) => i + 1);
 }
