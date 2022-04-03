@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { loadSolar, loadWind } from "../../model/DataLoader";
 import { DataModel, HydrogenModel } from "../../model/Model";
-import { Technology } from "../../types";
+import { SECType, Technology } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -54,18 +54,22 @@ interface Props {
     solarOpex?: number;
     technology: Technology;
     totalNominalPowerPlantCapacity: number;
+    electrolyserWaterCost: number;
     windCostReductionWithScale: number;
     windEpcCosts: number;
     windLandProcurementCost: number;
     windReferenceFoldIncrease: number;
     windOpex?: number;
     plantLife: number;
-
+    additionalTransmissionCharges?: number;
+    principalPPACost?: number;
+    profile: SECType;
     region: string;
     electrolyserMaximumLoad: number;
     electrolyserMinimumLoad: number;
     timeBetweenOverloading: number;
     maximumLoadWhenOverloading: number;
+    waterRequirementOfElectrolyser: number;
   };
 }
 
@@ -84,8 +88,20 @@ export default function WorkingData(props: Props) {
   });
 
   // TODO: Error handling if we can't load solar and wind data
+  // TODO: Add some validation for correct number of rows
   useEffect(() => {
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
+      // TODO: Remove once AWS data is fixed
+      solar.pop();
+      wind.pop();
+      if (solar.length !== 8760) {
+        console.error('Solar data is not 8760 rows in length');
+      }
+
+      if (wind.length !== 8760) {
+        console.error('Wind data is not 8760 rows in length');
+      }
+
       setState({ solarData: solar, windData: wind });
     });
   }, []);
@@ -128,23 +144,9 @@ export default function WorkingData(props: Props) {
     electrolyserMinimumLoad,
     electrolyserMaximumLoad,
     region,
+    electrolyserWaterCost,
+    waterRequirementOfElectrolyser,
   } = props.data;
-
-  // let {
-  //   batteryLifetime: battLifetime,
-  //   batteryMinCharge: battMin,
-  //   batteryEfficiency,
-  //   durationOfStorage: batteryHours,
-  //   batteryRatedPower: batteryPower,
-  //   timeBetweenOverloading: elecOverloadRecharge,
-  //   maximumLoadWhenOverloading: elecOverload,
-  //   electrolyserNominalCapacity: elecCapacity,
-  //   solarNominalCapacity: solarCapacity,
-  //   windNominalCapacity: windCapacity,
-  //   region: location,
-  //   electrolyserMaximumLoad,
-  //   electrolyserMinimumLoad,
-  // } = props.data;
 
   const dataModel: DataModel = {
     batteryLifetime,
@@ -215,6 +217,7 @@ export default function WorkingData(props: Props) {
     },
   };
 
+  // CAPEX charts
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
@@ -227,21 +230,21 @@ export default function WorkingData(props: Props) {
 
   const solarCAPEX = isSolar(technology)
     ? calculateCapex(
-        solarNominalCapacity,
-        solarReferenceCapacity,
-        solarPVFarmReferenceCost,
-        solarPVCostReductionWithScale,
-        solarReferenceFoldIncrease
-      )
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarPVFarmReferenceCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease
+    )
     : 0;
   const windCAPEX = isWind(technology)
     ? calculateCapex(
-        windNominalCapacity,
-        windReferenceCapacity,
-        windFarmReferenceCost,
-        windCostReductionWithScale,
-        windReferenceFoldIncrease
-      )
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmReferenceCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease
+    )
     : 0;
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 
@@ -294,14 +297,18 @@ export default function WorkingData(props: Props) {
   const electrolyserOMCost =
     (props.data.electrolyserOMCost / 100) * electrolyserCAPEX;
 
+  const actualOperatingHours = summary['Total Time Electrolyser is Operating'] * 8760;
+
+  // Stack Lifetime
+  const stackLifeConsumed = [...Array(plantLife).keys()].map(year => actualOperatingHours * year);
+
   // Actual Operating Hours (S3.L) = get_tabulated_outputs().['Total Time Electrolyser is Operating'] * 8760;
   // Stack Life Consumed (S3.N) = Actual Operating Hours * $year / stackLifetime [ input ]
 
   // Total Energy Output (S3.H) = get_tabulated_outputs().['Generator Capacity Factor'] * 100 * 8760 * nominalPowerPlantCapacity
 
   // TODO: Get correct formula
-  const electrolyserStackReplacementCost =
-    (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
+  const electrolyserStackReplacementCost = (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
   const electrolyserOpex = getOpexPerYear(
     electrolyserOMCost + electrolyserStackReplacementCost,
@@ -338,13 +345,20 @@ export default function WorkingData(props: Props) {
   const batteryOpex =
     batteryRatedPower > 0
       ? getOpexPerYearWithAdditionalCostPredicate(
-          batteryOMCost,
-          discountRate,
-          plantLife,
-          shouldAddBatteryReplacementCost,
-          actualBatteryReplacementCost
-        )
+        batteryOMCost,
+        discountRate,
+        plantLife,
+        shouldAddBatteryReplacementCost,
+        actualBatteryReplacementCost
+      )
       : Array(plantLife).fill(0);
+
+  // Check for PPA Agreement
+  const totalPPACost = (props.data.principalPPACost || 0) + (props.data.additionalTransmissionCharges || 0);
+  const electricityPurchase = getOpexPerYear(summary['Energy in to Electrolyser [MWh/yr]'] * totalPPACost, discountRate, plantLife);
+
+  const hydrogenCost = props.data.profile === 'Fixed' ? summary['Hydrogen Output for Fixed Operation [t/yr]'] : summary['Hydrogen Output for Variable Operation [t/yr'];
+  const waterCost = getOpexPerYear(hydrogenCost * electrolyserWaterCost * waterRequirementOfElectrolyser, discountRate, plantLife);
 
   return (
     <div>
@@ -395,6 +409,8 @@ export default function WorkingData(props: Props) {
           { label: "Powerplant OPEX", data: powerplantOpex },
           { label: "Battery OPEX", data: batteryOpex },
           { label: "Additional Annual Costs", data: additionalOpex },
+          { label: "Electricity Purchase", data: electricityPurchase },
+          { label: "Water Cost", data: waterCost },
         ]}
       />
     </div>

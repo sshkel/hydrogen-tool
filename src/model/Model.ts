@@ -487,10 +487,10 @@ export class HydrogenModel {
     //     """
 
     let annual_hydrogen = null;
-    if (specific_consumption_type == "variable") {
+    if (specific_consumption_type === "variable") {
       annual_hydrogen =
         operating_outputs["Hydrogen Output for Variable Operation [t/yr]"];
-    } else if (specific_consumption_type == "fixed") {
+    } else if (specific_consumption_type === "fixed") {
       annual_hydrogen =
         operating_outputs["Hydrogen Output for Fixed Operation [t/yr]"];
     } else {

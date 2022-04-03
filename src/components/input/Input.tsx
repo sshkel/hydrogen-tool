@@ -3,7 +3,7 @@ import InputNumberField from "./InputNumberField";
 import InputExpand from "./InputExpand";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
-import { data, regionData, technologyData } from "./data";
+import { data, profileData, regionData, replacementTypeData, technologyData } from "./data";
 import InputSelectField from "./InputSelectField";
 
 interface Props {
@@ -15,6 +15,8 @@ const getDefaultState = () => {
   data.forEach((field) => {
     defaultState[field.id] = field.defaultValue;
   });
+  defaultState["profile"] = profileData[0];
+  defaultState["replacementType"] = replacementTypeData[0];
   defaultState["technology"] = technologyData[0];
   defaultState["region"] = regionData[0];
   return defaultState;
@@ -40,6 +42,7 @@ export default function Input(props: Props) {
       data[index];
     return (
       <InputNumberField
+        key={id}
         label={label}
         name={id}
         defaultValue={defaultValue}
@@ -102,7 +105,7 @@ export default function Input(props: Props) {
           title="Costs for Grid Connected Systems"
           id="costs-for-grid-connected-systems"
         >
-          {getData(pointer)}
+          {[...Array(3)].map((_) => getData(pointer))}
         </InputExpand>
       </InputExpand>
       <InputExpand title="Battery" id="Battery">
@@ -113,14 +116,33 @@ export default function Input(props: Props) {
           {[...Array(6)].map((_) => getData(pointer))}
         </InputExpand>
       </InputExpand>
-      <InputExpand
-        title="Electrolyser Specific Consumption - SEC"
-        id="electrolyser-specific-consumption"
-      >
-        {[...Array(4)].map((_) => getData(pointer))}
-      </InputExpand>
-      <InputExpand title="Electrolyser Load Range" id="electrolyser-load-range">
-        {[...Array(4)].map((_) => getData(pointer))}
+      <InputExpand title="Electrolyser Parameters" id="electrolyser-parameters">
+        <InputExpand
+          title="Electrolyser Specific Consumption - SEC"
+          id="electrolyser-specific-consumption"
+        >
+          <InputSelectField
+            id="profile"
+            label="SEC vs Load Profile"
+            values={profileData}
+            defaultValue={profileData[0]}
+            onChange={handleChange}
+          />
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand title="Electrolyser Load Range" id="electrolyser-load-range">
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand title="Other Operational Factors" id="other-operational-factors">
+          <InputSelectField
+            id="replacementType"
+            label="Stack Replacement Type"
+            values={replacementTypeData}
+            defaultValue={replacementTypeData[0]}
+            onChange={handleChange}
+          />
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
       </InputExpand>
       <InputExpand title="Additional Costs" id="additional-costs">
         {[...Array(2)].map((_) => getData(pointer))}

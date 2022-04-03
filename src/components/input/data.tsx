@@ -232,6 +232,18 @@ export const data: Field[] = [
     adornmentLabel: "A$",
     helperText: "Capital cost for transmission connection",
   },
+  {
+    id: "additionalTransmissionCharges",
+    label: "Additional Transmission Charges",
+    adornmentLabel: "A$/MWh",
+    helperText: "Any additional charges for using grid services, e.g. Transmission Use of System (TUOS) Charges.",
+  },
+  {
+    id: "principalPPACost",
+    label: "Principal PPA Cost",
+    adornmentLabel: "A$/MWh",
+    helperText: "Fixed price for electricity bought from the grid.",
+  },
   /******* Battery *******/
   // Battery Parameters
   {
@@ -285,7 +297,8 @@ export const data: Field[] = [
     adornmentLabel: "%",
     helperText: "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
   },
-  /******* Electrolyser Specific Consumption *******/
+  /******* Electrolyser Parameters *******/
+  // Electrolyser Specific Consumption
   {
     id: "secAtNominalLoadAE",
     label: "SEC At Nominal Load (AE)",
@@ -312,6 +325,7 @@ export const data: Field[] = [
     adornmentLabel: kWheLabel,
     disabled: true,
   },
+  // Electrolyser Load Range
   {
     id: "electrolyserMaximumLoad",
     label: "Electrolyser Maximum Load",
@@ -335,6 +349,35 @@ export const data: Field[] = [
     label: "Time Between Overloading",
     defaultValue: 0,
     adornmentLabel: "hr",
+  },
+  // Other Operational Factors
+  {
+    id: "stackLifetime",
+    label: "Stack Lifetime",
+    defaultValue: 60000,
+    adornmentLabel: "hrs",
+    helperText: "Cumulative hours of operation before stack replacement is due."
+  },
+  {
+    id: "stackDegradation",
+    label: "Stack Degradation",
+    defaultValue: 0.00,
+    adornmentLabel: "%/yr",
+    helperText: "Decrease in stack output per year."
+  },
+  {
+    id: "maximumDegradationBeforeReplacement",
+    label: "Maximum Degradation Before Replacement",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Maximum allowable degradation before stack must be replaced."
+  },
+  {
+    id: "waterRequirementOfElectrolyser",
+    label: "Water Requirement of Electrolyser",
+    defaultValue: 10,
+    adornmentLabel: "L/kg",
+    helperText: "Water consumed per kg of hydrogen produced - independent of load."
   },
   /******* Additional Costs *******/
   {
@@ -417,3 +460,5 @@ export const regionData: string[] = [
 ];
 
 export const technologyData: string[] = ["Solar", "Wind", "Hybrid"];
+export const profileData: string[] = ["Fixed", "Variable"];
+export const replacementTypeData: string[] = ["Cumulative Hours", "Maximum Degradation Level"];

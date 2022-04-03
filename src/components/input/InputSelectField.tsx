@@ -30,7 +30,7 @@ export default function InputTextField(props: Props) {
     <FormControl className="selectWrapper">
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
-        key={label}
+        key={id}
         labelId={labelId}
         id={id}
         value={value}
