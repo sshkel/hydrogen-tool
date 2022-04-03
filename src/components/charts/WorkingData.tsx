@@ -2,8 +2,8 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { loadSolar, loadWind } from "../../model/DataLoader";
-import { DataModel, HydrogenModel } from "../../model/Model";
-import { SECType, Technology } from "../../types";
+import { cumulativeStackReplacementYears, DataModel, HydrogenModel, maxDegradationStackReplacementYears } from "../../model/Model";
+import { SECType, StackReplacementType, Technology } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -52,6 +52,10 @@ interface Props {
     solarPVCostReductionWithScale: number;
     solarReferenceFoldIncrease: number;
     solarOpex?: number;
+    stackReplacementType: StackReplacementType;    
+    stackLifetime: number;
+    stackDegradation: number;
+    maximumDegradationBeforeReplacement: number;
     technology: Technology;
     totalNominalPowerPlantCapacity: number;
     electrolyserWaterCost: number;
@@ -145,6 +149,10 @@ export default function WorkingData(props: Props) {
     electrolyserMaximumLoad,
     region,
     electrolyserWaterCost,
+    stackReplacementType,
+    stackLifetime,
+    stackDegradation,
+    maximumDegradationBeforeReplacement,
     waterRequirementOfElectrolyser,
   } = props.data;
 
@@ -297,23 +305,19 @@ export default function WorkingData(props: Props) {
   const electrolyserOMCost =
     (props.data.electrolyserOMCost / 100) * electrolyserCAPEX;
 
-  const actualOperatingHours = summary['Total Time Electrolyser is Operating'] * 8760;
-
   // Stack Lifetime
-  const stackLifeConsumed = [...Array(plantLife).keys()].map(year => actualOperatingHours * year);
+  const stackReplacementYears: number[] = stackReplacementType == 'Cumulative Hours'
+                                        ? cumulativeStackReplacementYears(summary['Total Time Electrolyser is Operating'] * 8760, stackLifetime, plantLife)
+                                        : maxDegradationStackReplacementYears(stackDegradation, maximumDegradationBeforeReplacement, plantLife);
 
-  // Actual Operating Hours (S3.L) = get_tabulated_outputs().['Total Time Electrolyser is Operating'] * 8760;
-  // Stack Life Consumed (S3.N) = Actual Operating Hours * $year / stackLifetime [ input ]
-
-  // Total Energy Output (S3.H) = get_tabulated_outputs().['Generator Capacity Factor'] * 100 * 8760 * nominalPowerPlantCapacity
-
-  // TODO: Get correct formula
   const electrolyserStackReplacementCost = (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
-  const electrolyserOpex = getOpexPerYear(
-    electrolyserOMCost + electrolyserStackReplacementCost,
+  const electrolyserOpex = getOpexPerYearWithAdditionalCostPredicate(
+    electrolyserOMCost,
     discountRate,
-    plantLife
+    plantLife,
+    (year: number): boolean => (stackReplacementYears.includes(year)),
+    electrolyserStackReplacementCost
   );
 
   const solarOpexCost = isSolar(technology)
