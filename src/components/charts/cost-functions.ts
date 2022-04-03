@@ -14,7 +14,7 @@ export const calculateCapex = (nominalCapacity: number,
                         referenceFoldIncrease: number): number => {
     const foldIncreaseInCapacity = getBaseLog((nominalCapacity * 1000)/referenceCapacity, referenceFoldIncrease);
 
-    const capitalCostReductionFactor = 1 - Math.pow(1 - (costReductionWithScale/100), foldIncreaseInCapacity);
+    const capitalCostReductionFactor = 1 - (1 - costReductionWithScale/100) ** foldIncreaseInCapacity;
 
     const scaledPurchaseCost = referencePurchaseCost * (1 - capitalCostReductionFactor);
 
@@ -37,13 +37,13 @@ export const calculateBatteryCapex = (ratedPower: number = 0,
 export const getIndirectCost = (capex: number, costAsPercentageOfCapex: number = 0) => roundToNearestThousand(capex * (costAsPercentageOfCapex/100));
 
 // Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + discountRate)^year)
-export const getOpexPerYear = (cost: number, discountRate: number, years: number): number[] => [...Array(years).keys()].map(i => cost * Math.pow((1 + discountRate/100), (i + 1)));
+export const getOpexPerYear = (cost: number, discountRate: number, years: number): number[] => [...Array(years).keys()].map(i => cost * (1 + discountRate/100) ** (i + 1));
 
 export const getOpexPerYearWithAdditionalCostPredicate = (cost: number, discountRate: number, years: number, shouldIncludeAdditionalCost: (year: number) => boolean, additionalCost: number): number[] => {
    return [...Array(years).keys()].map(i => {
         const year = i + 1;
         const extras = shouldIncludeAdditionalCost(year) ? additionalCost : 0;
 
-        return (cost * Math.pow((1 + discountRate/100), year)) + extras;
+        return (cost * (1 + discountRate/100) ** year) + extras;
     });
 }
