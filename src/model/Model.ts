@@ -66,13 +66,15 @@ export class HydrogenModel {
     this.windData = windData;
 
     // calculated values
-    this.genCapacity = parameters.solarNominalCapacity + parameters.windNominalCapacity;
+    this.genCapacity =
+      parameters.solarNominalCapacity + parameters.windNominalCapacity;
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = parameters.elecEff / 100;
     this.hydOutput = this.parameters.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
-    this.batteryEnergy = parameters.batteryRatedPower * this.parameters.durationOfStorage;
+    this.batteryEnergy =
+      parameters.batteryRatedPower * this.parameters.durationOfStorage;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = parameters.batteryMinCharge / 100;
   }
@@ -98,31 +100,14 @@ export class HydrogenModel {
       this.battMin
     );
   }
-  calculateElectrolyserOutput(): ModelSummary {
-    const hourlyFactors = this.calculateHourlyOperation(
-      this.genCapacity,
-      this.parameters.electrolyserNominalCapacity,
-      this.parameters.solarNominalCapacity,
-      this.parameters.windNominalCapacity,
-      this.parameters.region,
-      this.elecMaxLoad,
-      this.elecMinLoad,
-      this.hydOutput,
-      this.parameters.specCons,
-      this.elecOverload,
-      this.parameters.timeBetweenOverloading,
-      this.batteryEnergy,
-      this.parameters.durationOfStorage,
-      this.batteryEfficiency,
-      this.parameters.batteryRatedPower,
-      this.battMin
-    );
-
+  calculateElectrolyserOutput(
+    hourlyOperation: ModelHourlyOperation
+  ): ModelSummary {
     const operatingOutputs = this.getTabulatedOutput(
-      hourlyFactors.Generator_CF,
-      hourlyFactors.Electrolyser_CF,
-      hourlyFactors.Hydrogen_prod_fixed,
-      hourlyFactors.Hydrogen_prod_variable,
+      hourlyOperation.Generator_CF,
+      hourlyOperation.Electrolyser_CF,
+      hourlyOperation.Hydrogen_prod_fixed,
+      hourlyOperation.Hydrogen_prod_variable,
       this.parameters.electrolyserNominalCapacity,
       this.genCapacity,
       this.kgtoTonne,

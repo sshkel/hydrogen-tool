@@ -230,7 +230,9 @@ function compareToModel(
     );
   });
 
-  const output = model.calculateElectrolyserOutput();
+  const output = model.calculateElectrolyserOutput(
+    model.calculateElectrolyserHourlyOperation()
+  );
   Object.keys(output).forEach((key: string) => {
     expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
