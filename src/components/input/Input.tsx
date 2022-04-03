@@ -93,10 +93,10 @@ export default function Input(props: Props) {
       </InputExpand>
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
-          {[...Array(6)].map((_) => getData(pointer))}
+          {[...Array(7)].map((_) => getData(pointer))}
         </InputExpand>
         <InputExpand title="Wind Costs" id="wind-costs">
-          {[...Array(6)].map((_) => getData(pointer))}
+          {[...Array(7)].map((_) => getData(pointer))}
         </InputExpand>
         <InputExpand
           title="Costs for Grid Connected Systems"

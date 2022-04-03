@@ -24,16 +24,16 @@ describe("Hydrogen Model", () => {
     // overload -> working correctly :tick:
     const example1: DataModel = {
       //args or defaults
-      elecCapacity: 10,
-      solarCapacity: 10,
-      windCapacity: 10,
-      location: "North West NSW",
+      electrolyserNominalCapacity: 10,
+      solarNominalCapacity: 10,
+      windNominalCapacity: 10,
+      region: "North West NSW",
 
       // spot_price: 30,
 
       // defaults
-      batteryPower: 0,
-      batteryHours: 0,
+      batteryRatedPower: 0,
+      durationOfStorage: 0,
       // spotPrice: 0,
       // ppaPrice: 0,
 
@@ -47,8 +47,8 @@ describe("Hydrogen Model", () => {
       // pem
 
       electrolyserMinimumLoad: 10,
-      elecOverload: 120,
-      elecOverloadRecharge: 4,
+      maximumLoadWhenOverloading: 120,
+      timeBetweenOverloading: 4,
       specCons: 4.7,
       // stackLifetime: 60000,
       // electrolyserCapex: 1000,
@@ -64,8 +64,8 @@ describe("Hydrogen Model", () => {
       // windDegradation: 0,
 
       batteryEfficiency: 85,
-      battMin: 0.0,
-      battLifetime: 10,
+      batteryMinCharge: 0.0,
+      batteryLifetime: 10,
       /*
       solarCapex: 1120,
       solarOpex: 16990,
@@ -91,14 +91,14 @@ describe("Hydrogen Model", () => {
   it("works for battery model", () => {
     // battery -> working correctly :tick:
     const example2: DataModel = {
-      elecCapacity: 10,
-      solarCapacity: 15,
-      batteryPower: 10,
-      batteryHours: 2,
-      location: "North West NSW",
+      electrolyserNominalCapacity: 10,
+      solarNominalCapacity: 15,
+      batteryRatedPower: 10,
+      durationOfStorage: 2,
+      region: "North West NSW",
 
       // defaults
-      windCapacity: 0,
+      windNominalCapacity: 0,
       // spotPrice: 0,
       // ppaPrice: 0,
 
@@ -111,8 +111,8 @@ describe("Hydrogen Model", () => {
       // elecLand: 0.0,
       // AE
       electrolyserMinimumLoad: 20,
-      elecOverload: 100,
-      elecOverloadRecharge: 0,
+      maximumLoadWhenOverloading: 100,
+      timeBetweenOverloading: 0,
       specCons: 4.5,
       // stackLifetime: 80000,
       // electrolyserCapex: 1000,
@@ -128,8 +128,8 @@ describe("Hydrogen Model", () => {
       // windDegradation: 0,
 
       batteryEfficiency: 85,
-      battMin: 0.0,
-      battLifetime: 10,
+      batteryMinCharge: 0.0,
+      batteryLifetime: 10,
       /*
       solarCapex: 1120,
       solarOpex: 16990,
@@ -155,14 +155,14 @@ describe("Hydrogen Model", () => {
   it("works for normal model", () => {
     // normal -> working correctly :tick:
     const example3: DataModel = {
-      elecCapacity: 10,
-      solarCapacity: 0,
-      windCapacity: 100,
+      electrolyserNominalCapacity: 10,
+      solarNominalCapacity: 0,
+      windNominalCapacity: 100,
 
       // defaults
-      location: "North West NSW",
-      batteryPower: 0,
-      batteryHours: 0,
+      region: "North West NSW",
+      batteryRatedPower: 0,
+      durationOfStorage: 0,
       // spotPrice: 0,
       // ppaPrice: 0,
 
@@ -175,8 +175,8 @@ describe("Hydrogen Model", () => {
       // elecLand: 0.0,
       // AE: {
       electrolyserMinimumLoad: 20,
-      elecOverload: 100,
-      elecOverloadRecharge: 0,
+      maximumLoadWhenOverloading: 100,
+      timeBetweenOverloading: 0,
       specCons: 4.5,
       // stackLifetime: 80000,
       // electrolyserCapex: 1000,
@@ -192,8 +192,8 @@ describe("Hydrogen Model", () => {
       // windDegradation: 0,
 
       batteryEfficiency: 85,
-      battMin: 0.0,
-      battLifetime: 10,
+      batteryMinCharge: 0.0,
+      batteryLifetime: 10,
       /*
       solarCapex: 1120,
       solarOpex: 16990,

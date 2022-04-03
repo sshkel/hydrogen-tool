@@ -58,27 +58,27 @@ export default function DurationCurve(props: Props) {
     electrolyserMinimumLoad,
   } = props.data;
 
-  const dataModel: DataModel = {
-    battLifetime,
-    battMin,
-    batteryEfficiency,
-    batteryHours,
-    batteryPower,
-    elecOverloadRecharge,
-    elecOverload,
-    elecCapacity,
-    solarCapacity,
-    windCapacity,
-    location,
-    electrolyserMaximumLoad,
-    electrolyserMinimumLoad,
-    // no clue what these are in the excel
-    specCons: 4.5,
-    elecEff: 83,
-    H2VoltoMass: 0.089,
-  };
+  // const dataModel: DataModel = {
+  //   batteryLifetime: battLifetime,
+  //   batteryMinCharge: battMin,
+  //   batteryEfficiency,
+  //   durationOfStorage: batteryHours,
+  //   batteryRatedPower: batteryPower,
+  //   timeBetweenOverloading: elecOverloadRecharge,
+  //   maximumLoadWhenOverloading: elecOverload,
+  //   electrolyserNominalCapacity: elecCapacity,
+  //   solarNominalCapacity: solarCapacity,
+  //   windNominalCapacity: windCapacity,
+  //   region: location,
+  //   electrolyserMaximumLoad,
+  //   electrolyserMinimumLoad,
+  //   // no clue what these are in the excel
+  //   specCons: 4.5,
+  //   elecEff: 83,
+  //   H2VoltoMass: 0.089,
+  // };
 
-  const model = new HydrogenModel(dataModel, data.solarData, data.windData);
+  const model = new HydrogenModel({} as DataModel,  data.solarData, data.windData);
   const result = model.calculateElectrolyserHourlyOperation();
 
   const generatorData = {

@@ -132,6 +132,8 @@ export const data: Field[] = [
     defaultValue: 5,
     adornmentLabel: "A$/kL"
   },
+  /******* Power Plant Costs *******/
+  // Solar Costs
   {
     id: "solarReferenceCapacity",
     label: "Reference Capacity of Solar Farm",
@@ -172,6 +174,13 @@ export const data: Field[] = [
     helperText: "Percentage of CAPEX",
   },
   {
+    id: "solarOpex",
+    label: "OPEX (Fixed & Variable O&M)",
+    defaultValue: 17000,
+    adornmentLabel: "A$/MW/yr"
+  },
+  // Wind Costs
+  {
     id: "windReferenceCapacity",
     label: "Reference Capacity of Wind Farm",
     defaultValue: 1000,
@@ -210,6 +219,13 @@ export const data: Field[] = [
     adornmentLabel: "%",
     helperText: "Percentage of CAPEX",
   },
+  {
+    id: "windOpex",
+    label: "OPEX (Fixed & Variable O&M)",
+    defaultValue: 25000,
+    adornmentLabel: "A$/MW/yr"
+  },
+  // Costs for Grid Connected Systems
   {
     id: "gridConnectionCost",
     label: "Grid Connection Cost",

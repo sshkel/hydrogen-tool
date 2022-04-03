@@ -38,3 +38,12 @@ export const getIndirectCost = (capex: number, costAsPercentageOfCapex: number =
 
 // Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + discountRate)^year)
 export const getOpexPerYear = (cost: number, discountRate: number, years: number): number[] => [...Array(years).keys()].map(i => cost * Math.pow((1 + discountRate/100), (i + 1)));
+
+export const getOpexPerYearWithAdditionalCostPredicate = (cost: number, discountRate: number, years: number, shouldIncludeAdditionalCost: (year: number) => boolean, additionalCost: number): number[] => {
+   return [...Array(years).keys()].map(i => {
+        const year = i + 1;
+        const extras = shouldIncludeAdditionalCost(year) ? additionalCost : 0;
+
+        return (cost * Math.pow((1 + discountRate/100), year)) + extras;
+    });
+}
