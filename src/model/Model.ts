@@ -622,7 +622,7 @@ export function cumulativeStackReplacementYears(
     // Fix it with a simpler version
     if (
       Math.floor((operatingHoursPerYear * year) / stackLifetime) -
-        Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ==
+        Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ===
       1.0
     ) {
       stackReplacementYears.push(year);

@@ -80,7 +80,7 @@ const applyDiscount = (discountRate: number) => {
       // i corresponds to year
       (x: number, i: number) => {
         // zero-th year is always skipped as it signifies upfront costs rather than actual operations
-        if (i == 0) {
+        if (i === 0) {
           return x;
         }
         return x / (1 + discountRate) ** i;

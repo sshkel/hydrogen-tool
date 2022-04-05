@@ -312,7 +312,7 @@ export default function WorkingData(props: Props) {
 
   // Stack Lifetime
   const stackReplacementYears: number[] =
-    stackReplacementType == "Cumulative Hours"
+    stackReplacementType === "Cumulative Hours"
       ? cumulativeStackReplacementYears(
           summary["Total Time Electrolyser is Operating"] * 8760,
           stackLifetime,
@@ -496,7 +496,7 @@ const applyInflation = (rate: number) => {
       // i corresponds to year
       (x: number, i: number) => {
         // zero-th year is always skipped as it signifies upfront costs rather than actual operations
-        if (i == 0) {
+        if (i === 0) {
           return x;
         }
         return x / (1 + rate) ** i;
