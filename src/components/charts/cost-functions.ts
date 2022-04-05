@@ -74,7 +74,7 @@ export const getOpexPerYearWithAdditionalCostPredicate = (
 // const withDiscount = withDiscountRate(discountRate);
 // const discountedOpex = withDiscount(opex);
 // the only weird one is hydrogen produced that also multiplies things by 1000
-const withDiscountRate = (discountRate: number) => {
+const applyDiscount = (discountRate: number) => {
   return (values: number[]) => {
     return values.map(
       // i corresponds to year

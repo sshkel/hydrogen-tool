@@ -448,3 +448,58 @@ export default function WorkingData(props: Props) {
     </div>
   );
 }
+
+function cashFlowAnalysis(
+  inflationRate: number,
+  h2RetailPrice: number,
+  oxygenRetailPrice: number,
+  averageElectricitySpotPrice: number,
+  h2Produced: number[],
+  electricityProduced: number[],
+  electricityConsumed: number[]
+) {
+  const inflation = applyInflation(inflationRate);
+  // sales
+  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
+
+  const electricitySales = inflation(
+    electricityProduced.map(
+      (_: number, i: number) =>
+        (electricityProduced[i] - electricityConsumed[i]) *
+        averageElectricitySpotPrice
+    )
+  );
+  const oxygenSales = inflation(
+    h2Produced.map(
+      (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
+    )
+  );
+
+  const salesTotal = h2Sales.map(
+    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
+  );
+  // The values above can be used to create sales graphs. What's below would be necessary for cash flow analysis
+
+  // net investments
+  // loan liabilities
+  // fixed opex
+  // variable opex
+  // depreciation
+  // tax liabilities
+  // net cash flows
+}
+
+const applyInflation = (rate: number) => {
+  return (values: number[]) => {
+    return values.map(
+      // i corresponds to year
+      (x: number, i: number) => {
+        // zero-th year is always skipped as it signifies upfront costs rather than actual operations
+        if (i == 0) {
+          return x;
+        }
+        return x / (1 + rate) ** i;
+      }
+    );
+  };
+};
