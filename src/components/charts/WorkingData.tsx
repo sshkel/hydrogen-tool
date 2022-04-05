@@ -479,6 +479,7 @@ function cashFlowAnalysis(
     (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
   );
   // The values above can be used to create sales graphs. What's below would be necessary for cash flow analysis
+  // although need to double check if we should use values without inflation
 
   // net investments
   // loan liabilities
