@@ -2,7 +2,12 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { loadSolar, loadWind } from "../../model/DataLoader";
-import { cumulativeStackReplacementYears, DataModel, HydrogenModel, maxDegradationStackReplacementYears } from "../../model/Model";
+import {
+  cumulativeStackReplacementYears,
+  DataModel,
+  HydrogenModel,
+  maxDegradationStackReplacementYears,
+} from "../../model/Model";
 import { SECType, StackReplacementType, Technology } from "../../types";
 import {
   calculateBatteryCapex,
@@ -52,7 +57,7 @@ interface Props {
     solarPVCostReductionWithScale: number;
     solarReferenceFoldIncrease: number;
     solarOpex?: number;
-    stackReplacementType: StackReplacementType;    
+    stackReplacementType: StackReplacementType;
     stackLifetime: number;
     stackDegradation: number;
     maximumDegradationBeforeReplacement: number;
@@ -99,11 +104,11 @@ export default function WorkingData(props: Props) {
       solar.pop();
       wind.pop();
       if (solar.length !== 8760) {
-        console.error('Solar data is not 8760 rows in length');
+        console.error("Solar data is not 8760 rows in length");
       }
 
       if (wind.length !== 8760) {
-        console.error('Wind data is not 8760 rows in length');
+        console.error("Wind data is not 8760 rows in length");
       }
 
       setState({ solarData: solar, windData: wind });
@@ -238,21 +243,21 @@ export default function WorkingData(props: Props) {
 
   const solarCAPEX = isSolar(technology)
     ? calculateCapex(
-      solarNominalCapacity,
-      solarReferenceCapacity,
-      solarPVFarmReferenceCost,
-      solarPVCostReductionWithScale,
-      solarReferenceFoldIncrease
-    )
+        solarNominalCapacity,
+        solarReferenceCapacity,
+        solarPVFarmReferenceCost,
+        solarPVCostReductionWithScale,
+        solarReferenceFoldIncrease
+      )
     : 0;
   const windCAPEX = isWind(technology)
     ? calculateCapex(
-      windNominalCapacity,
-      windReferenceCapacity,
-      windFarmReferenceCost,
-      windCostReductionWithScale,
-      windReferenceFoldIncrease
-    )
+        windNominalCapacity,
+        windReferenceCapacity,
+        windFarmReferenceCost,
+        windCostReductionWithScale,
+        windReferenceFoldIncrease
+      )
     : 0;
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 
@@ -306,17 +311,27 @@ export default function WorkingData(props: Props) {
     (props.data.electrolyserOMCost / 100) * electrolyserCAPEX;
 
   // Stack Lifetime
-  const stackReplacementYears: number[] = stackReplacementType == 'Cumulative Hours'
-                                        ? cumulativeStackReplacementYears(summary['Total Time Electrolyser is Operating'] * 8760, stackLifetime, plantLife)
-                                        : maxDegradationStackReplacementYears(stackDegradation, maximumDegradationBeforeReplacement, plantLife);
+  const stackReplacementYears: number[] =
+    stackReplacementType == "Cumulative Hours"
+      ? cumulativeStackReplacementYears(
+          summary["Total Time Electrolyser is Operating"] * 8760,
+          stackLifetime,
+          plantLife
+        )
+      : maxDegradationStackReplacementYears(
+          stackDegradation,
+          maximumDegradationBeforeReplacement,
+          plantLife
+        );
 
-  const electrolyserStackReplacementCost = (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
+  const electrolyserStackReplacementCost =
+    (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
   const electrolyserOpex = getOpexPerYearWithAdditionalCostPredicate(
     electrolyserOMCost,
     discountRate,
     plantLife,
-    (year: number): boolean => (stackReplacementYears.includes(year)),
+    (year: number): boolean => stackReplacementYears.includes(year),
     electrolyserStackReplacementCost
   );
 
@@ -349,20 +364,33 @@ export default function WorkingData(props: Props) {
   const batteryOpex =
     batteryRatedPower > 0
       ? getOpexPerYearWithAdditionalCostPredicate(
-        batteryOMCost,
-        discountRate,
-        plantLife,
-        shouldAddBatteryReplacementCost,
-        actualBatteryReplacementCost
-      )
+          batteryOMCost,
+          discountRate,
+          plantLife,
+          shouldAddBatteryReplacementCost,
+          actualBatteryReplacementCost
+        )
       : Array(plantLife).fill(0);
 
   // Check for PPA Agreement
-  const totalPPACost = (props.data.principalPPACost || 0) + (props.data.additionalTransmissionCharges || 0);
-  const electricityPurchase = getOpexPerYear(summary['Energy in to Electrolyser [MWh/yr]'] * totalPPACost, discountRate, plantLife);
+  const totalPPACost =
+    (props.data.principalPPACost || 0) +
+    (props.data.additionalTransmissionCharges || 0);
+  const electricityPurchase = getOpexPerYear(
+    summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost,
+    discountRate,
+    plantLife
+  );
 
-  const hydrogenCost = props.data.profile === 'Fixed' ? summary['Hydrogen Output for Fixed Operation [t/yr]'] : summary['Hydrogen Output for Variable Operation [t/yr'];
-  const waterCost = getOpexPerYear(hydrogenCost * electrolyserWaterCost * waterRequirementOfElectrolyser, discountRate, plantLife);
+  const hydrogenCost =
+    props.data.profile === "Fixed"
+      ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
+      : summary["Hydrogen Output for Variable Operation [t/yr"];
+  const waterCost = getOpexPerYear(
+    hydrogenCost * electrolyserWaterCost * waterRequirementOfElectrolyser,
+    discountRate,
+    plantLife
+  );
 
   return (
     <div>
