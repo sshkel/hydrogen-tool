@@ -10,7 +10,9 @@ export async function loadWind() {
     "https://hysupply.s3.ap-southeast-2.amazonaws.com/wind-traces.csv"
   );
 }
-
+// to use these run
+// npx http-server in hydrogen-tool/src/tests/model/resources
+// you will also need to replace loading methods in WorkingData
 export async function loadLocalSolar() {
   return await read_csv("http://127.0.0.1:8080/solar-traces.csv");
 }
