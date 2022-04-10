@@ -499,7 +499,7 @@ const applyInflation = (rate: number) => {
         if (i === 0) {
           return x;
         }
-        return x / (1 + rate) ** i;
+        return x * (1 + rate) ** i;
       }
     );
   };
