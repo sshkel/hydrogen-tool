@@ -103,9 +103,6 @@ export default function WorkingData(props: Props) {
   // TODO: Add some validation for correct number of rows
   useEffect(() => {
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
-      // TODO: Remove once AWS data is fixed
-      solar.pop();
-      wind.pop();
       if (solar.length !== 8760) {
         console.error("Solar data is not 8760 rows in length");
       }
