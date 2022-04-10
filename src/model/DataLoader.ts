@@ -11,6 +11,13 @@ export async function loadWind() {
   );
 }
 
+export async function loadLocalSolar() {
+  return await read_csv("http://127.0.0.1:8080/solar-traces.csv");
+}
+export async function loadLocalWind() {
+  return await read_csv("http://127.0.0.1:8080/wind-traces.csv");
+}
+
 export async function read_csv(file: any, options?: any): Promise<any[]> {
   return new Promise((resolve) => {
     Papa.parse(file, {
