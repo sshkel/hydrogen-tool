@@ -7,6 +7,9 @@ import {
   DataModel,
   HydrogenModel,
   maxDegradationStackReplacementYears,
+  first,
+  decomissioning,
+  projectYears,
 } from "../../model/Model";
 import { SECType, StackReplacementType, Technology } from "../../types";
 import {
@@ -290,6 +293,9 @@ export default function WorkingData(props: Props) {
     props.data.windLandProcurementCost
   );
 
+  const powerPlantEpcCost = solarEpcCost + windEpcCost;
+  const powerPlantLandCost = solarLandCost + windLandCost;
+
   const batteryEpcCost = getIndirectCost(
     batteryCAPEX,
     props.data.batteryEpcCosts
@@ -456,7 +462,35 @@ function cashFlowAnalysis(
   averageElectricitySpotPrice: number,
   h2Produced: number[],
   electricityProduced: number[],
-  electricityConsumed: number[]
+  electricityConsumed: number[],
+  electrolyserCAPEX: number,
+  powerPlantCAPEX: number,
+  batteryCAPEX: number,
+  additionalUpfrontCosts: number,
+  gridConnectionCost: number,
+  electrolyserEpcCost: number,
+  powerPlantEpcCost: number,
+  batteryEpcCost: number,
+  electrolyserLandCost: number,
+  powerPlantLandCost: number,
+  batteryLandCost: number,
+  shareOfTotalInvestmentFinancedViaEquity: number, // input
+  directEquityShare: number, // input
+  indirectEquityShare: number, // input
+  shareOfTotalInvestmentFinancedViaLoan: number, // input
+  salvageCostShare: number, // input
+  decommissioningCostShare: number, // input
+  loanTerm: number, // input
+  interestOnLoan: number, // input
+  electrolyserOPEX: number[], // the one with stack replacement cost
+  powerPlantOpex: number[],
+  batteryOpex: number[],
+  additionalOpex: number[],
+  waterCost: number[],
+  electricityPurchase: number[],
+  capitalDepreciaitonProfile: string, // inputs
+  taxRate: number, // number
+  projectLife: number
 ) {
   const inflation = applyInflation(inflationRate);
   // sales
@@ -481,13 +515,133 @@ function cashFlowAnalysis(
   // The values above can be used to create sales graphs. What's below would be necessary for cash flow analysis
   // although need to double check if we should use values without inflation
 
+  // TODO double check that all arrays have 0th and decomissioning years
+  // TODO double check what needs to be added and what is subtracted. I defs screwed up somewhere.
   // net investments
+  // direct equity payment
+  const totalCapexCost =
+    electrolyserCAPEX +
+    powerPlantCAPEX +
+    batteryCAPEX +
+    additionalUpfrontCosts +
+    gridConnectionCost;
+  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+  const totalLandCost =
+    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+  const totalInvestmentRequired = totalCapexCost + totalEpcCost + totalLandCost;
+  const totalEquity = roundToNearestThousand(
+    shareOfTotalInvestmentFinancedViaEquity * totalInvestmentRequired
+  );
+  const directEquityPayment = first(
+    roundToNearestThousand(totalEquity * directEquityShare),
+    projectLife
+  );
+
+  // indirect equity
+
+  const indirectEquity = first(
+    roundToNearestThousand(totalEquity * indirectEquityShare),
+    projectLife
+  );
+  // cost financed via loan
+  const totalLoan =
+    totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
+  const totalLoanCost = first(totalLoan, projectLife);
+
+  // salvage cost
+  const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
+  const salvageCost = decomissioning(totalSalvageCost, projectLife);
+
+  // decomissioning cost
+  const decomissioningCost = decomissioning(
+    totalInvestmentRequired * decommissioningCostShare,
+    projectLife
+  );
+
+  const netInvestment = directEquityPayment.map(
+    (x: number, i: number) =>
+      -directEquityPayment[i] +
+      indirectEquity[i] -
+      totalLoanCost[i] +
+      salvageCost[i] -
+      decomissioningCost[i]
+  );
+
   // loan liabilities
+  // loan repayment
+  const loanRepayment = totalLoan / loanTerm;
+  const totalLoanRepayment = projectYears(projectLife).map((year: number) => {
+    if (year < loanTerm) {
+      return -loanRepayment;
+    }
+    return 0;
+  });
+  // interest paid on loan
+  const interestPaidOnLoan = projectYears(projectLife).map((year: number) => {
+    if (year < loanTerm) {
+      return -loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
+    }
+    return 0;
+  });
   // fixed opex
+  // TODO all opex should be negative
+  const electrolyserOpexWithInflation = inflation(electrolyserOPEX);
+  const powerPlantOpexWithInflation = inflation(powerPlantOpex);
+  const batteryOpexWithInflation = inflation(batteryOpex);
+  const additionalAnnualCostsWithInflation = inflation(additionalOpex);
   // variable opex
+  const waterCostWithInflation = inflation(waterCost);
+  const electricityPurchaseWithInflation = inflation(electricityPurchase);
   // depreciation
+  const incomePreDepreciation = directEquityPayment.map(
+    (x: number, i: number) => {
+      if (i == 0) {
+        return directEquityPayment[i] - indirectEquity[i];
+      }
+      return (
+        salesTotal[i] +
+        netInvestment[i] +
+        totalLoanRepayment[i] +
+        interestPaidOnLoan[i] -
+        electrolyserOpexWithInflation[i] -
+        powerPlantOpexWithInflation[i] -
+        batteryOpexWithInflation[i] -
+        additionalAnnualCostsWithInflation[i] -
+        waterCostWithInflation[i] -
+        electricityPurchaseWithInflation[i]
+      );
+    }
+  );
+  const totalDepreciableCapex = totalCapexCost + totalEpcCost;
+  const conversionFactors = getConversionFactors(capitalDepreciaitonProfile);
+  const depreciation = projectYears(projectLife).map(
+    (x: number, i: number) => totalDepreciableCapex + conversionFactors[i]
+  );
   // tax liabilities
+  const taxableIncome = incomePreDepreciation.map(
+    (x: number, i: number) =>
+      // check if this is correct
+      incomePreDepreciation[i] + depreciation[i] - totalLoanRepayment[i]
+  );
+
+  const tax = taxableIncome.map((x: number, i: number) => {
+    if (taxableIncome[i] < 0) {
+      return 0;
+    }
+    return -taxableIncome[i] * taxRate;
+  });
   // net cash flows
+  // after tax and depreciation
+  const incomeAfterTaxAndPreDepreciation = incomePreDepreciation.map(
+    (x: number, i: number) => incomePreDepreciation[i] + tax[i]
+  );
+
+  const cumulativeSum = (
+    (sum: number) => (value: number) =>
+      (sum += value)
+  )(0);
+  const cumulativeCashFlow =
+    incomeAfterTaxAndPreDepreciation.map(cumulativeSum);
 }
 
 const applyInflation = (rate: number) => {
@@ -503,4 +657,11 @@ const applyInflation = (rate: number) => {
       }
     );
   };
+};
+
+const getConversionFactors = (capitalDepreciaitonProfile: string) => {
+  // come from conversion factors tab
+  // can probs use the formula instead of hardcoded table
+  // https://xplaind.com/370120/macrs
+  return [];
 };
