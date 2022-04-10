@@ -630,16 +630,22 @@ export function cumulativeStackReplacementYears(
   }
   return stackReplacementYears;
 }
-
-function first(element: number, projectLife: number) {
-  return [element].concat(Array(projectLife).fill(0));
+// + 1 for decomissioning years
+export function first(element: number, projectLife: number) {
+  return [element].concat(Array(projectLife + 1).fill(0));
 }
 
-function buttFirst(element: number, projectLife: number) {
-  return [0].concat(Array(projectLife).fill(element));
+export function buttFirst(element: number, projectLife: number) {
+  return [0].concat(Array(projectLife).fill(element)).concat([0]);
 }
 
-function projectYears(projectLife: number): number[] {
+export function decomissioning(element: number, projectLife: number) {
+  return Array(projectLife + 1)
+    .fill(0)
+    .concat([element]);
+}
+
+export function projectYears(projectLife: number): number[] {
   // gives you array of years starting from 1 and ending in projectLife
   return Array.from({ length: projectLife }, (_, i) => i + 1);
 }
