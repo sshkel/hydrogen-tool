@@ -11,7 +11,7 @@ import {
   decomissioning,
   projectYears,
 } from "../../model/Model";
-import { SECType, StackReplacementType, Technology } from "../../types";
+import { InputFields, SECType, StackReplacementType, Technology } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -23,66 +23,8 @@ import {
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 
-interface Props {
-  data?: {
-    additionalUpfrontCosts: number;
-    additionalAnnualCosts: number;
-    batteryEpcCosts?: number;
-    batteryEfficiency: number;
-    batteryMinCharge?: number;
-    batteryLandProcurementCost?: number;
-    batteryRatedPower?: number;
-    batteryCosts?: number;
-    batteryOMCost?: number;
-    batteryReplacementCost?: number;
-    batteryLifetime?: number;
-    discountRate: number;
-    durationOfStorage: number;
-    electrolyserCostReductionWithScale: number;
-    electrolyserEpcCosts: number;
-    electrolyserLandProcurementCost: number;
-    electrolyserReferenceFoldIncrease: number;
-    electrolyserOMCost: number;
-    electrolyserStackReplacement: number;
-    gridConnectionCost: number;
-    batteryNominalCapacity?: number;
-    electrolyserNominalCapacity: number;
-    solarNominalCapacity: number;
-    windNominalCapacity: number;
-    solarReferenceCapacity: number;
-    windReferenceCapacity: number;
-    electrolyserReferenceCapacity: number;
-    electrolyserReferencePurchaseCost: number;
-    solarPVFarmReferenceCost: number;
-    windFarmReferenceCost: number;
-    solarEpcCosts: number;
-    solarLandProcurementCost: number;
-    solarPVCostReductionWithScale: number;
-    solarReferenceFoldIncrease: number;
-    solarOpex?: number;
-    stackReplacementType: StackReplacementType;
-    stackLifetime: number;
-    stackDegradation: number;
-    maximumDegradationBeforeReplacement: number;
-    technology: Technology;
-    totalNominalPowerPlantCapacity: number;
-    electrolyserWaterCost: number;
-    windCostReductionWithScale: number;
-    windEpcCosts: number;
-    windLandProcurementCost: number;
-    windReferenceFoldIncrease: number;
-    windOpex?: number;
-    plantLife: number;
-    additionalTransmissionCharges?: number;
-    principalPPACost?: number;
-    profile: SECType;
-    region: string;
-    electrolyserMaximumLoad: number;
-    electrolyserMinimumLoad: number;
-    timeBetweenOverloading: number;
-    maximumLoadWhenOverloading: number;
-    waterRequirementOfElectrolyser: number;
-  };
+export interface Props {
+  data?: InputFields;
 }
 
 interface DownloadedData {
@@ -289,9 +231,6 @@ export default function WorkingData(props: Props) {
     windCAPEX,
     props.data.windLandProcurementCost
   );
-
-  const powerPlantEpcCost = solarEpcCost + windEpcCost;
-  const powerPlantLandCost = solarLandCost + windLandCost;
 
   const batteryEpcCost = getIndirectCost(
     batteryCAPEX,

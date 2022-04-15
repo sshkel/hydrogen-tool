@@ -58,7 +58,7 @@ export default function CostBreakdownDoughnutChart(props: Props) {
     }]
   }
   
-  console.log(props.title, ' props ', props.data);
+  console.log(props.title, ' labels ', props.labels, ' props ', props.data);
 
   return (
     <div style={{height:"60vh",position:"relative", marginBottom:"1%", padding:"1%"}}>

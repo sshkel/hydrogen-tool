@@ -2,7 +2,7 @@ export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);
 
 export const roundToNearestThousand = (n: number) =>
-  Math.round(n / 1000) * 1000;
+  Math.round(n / 1000) * 1000 || 0;
 
 export const calculateCapex = (
   nominalCapacity: number,

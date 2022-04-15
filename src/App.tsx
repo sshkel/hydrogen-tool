@@ -11,7 +11,6 @@ function App() {
     <div className="App2">
       <Input setState={setState} />
       <WorkingData data={state} />
-      {/* <DurationCurve data={state} /> */}
     </div>
   );
 }

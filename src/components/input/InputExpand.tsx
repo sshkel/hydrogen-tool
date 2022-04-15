@@ -60,7 +60,7 @@ export default function InputExpand(props: ExpandProps) {
     };
 
   return (
-    <Accordion expanded={expanded === id} onChange={handleChange(id)}>
+    <Accordion key={id} expanded={expanded === id} onChange={handleChange(id)}>
       <AccordionSummary aria-controls={id + "-content"} id={id + "-header"}>
         <Typography>{title}</Typography>
       </AccordionSummary>
