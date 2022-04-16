@@ -528,6 +528,15 @@ export default function WorkingData(props: Props) {
           { label: "Water Cost", data: waterCost },
         ]}
       />
+      <CostLineChart
+        plantLife={plantLife}
+        datapoints={[
+          { label: "Hydrogen Sales", data: h2Sales },
+          { label: "Electricity Sales", data: electricitySales },
+          { label: "Oxygen Sales", data: oxygenSales },
+          { label: "Total Sales", data: annualSales },
+        ]}
+      />
     </div>
   );
 }
