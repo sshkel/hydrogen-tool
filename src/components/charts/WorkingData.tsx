@@ -21,6 +21,7 @@ import {
   getOpexPerYearWithAdditionalCostPredicate,
   roundToNearestThousand,
 } from "./cost-functions";
+import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 
@@ -83,7 +84,6 @@ interface Props {
     timeBetweenOverloading: number;
     maximumLoadWhenOverloading: number;
     waterRequirementOfElectrolyser: number;
-
     h2RetailPrice: number;
     oxygenRetailPrice: number;
     averageElectricitySpotPrice: number;
@@ -537,10 +537,14 @@ export default function WorkingData(props: Props) {
           { label: "Total Sales", data: annualSales },
         ]}
       />
+      <CostBarChart
+        plantLife={plantLife}
+        datapoints={[{ label: "Cash Flow Analysis", data: cumulativeCashFlow }]}
+      />
     </div>
   );
 }
-
+// TODO percentages need to be fixed
 function cashFlowAnalysis(
   annualSales: number[],
   totalOpex: number[],
@@ -727,8 +731,8 @@ const getConversionFactors = (
 ) => {
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
-
   switch (capitalDepreciaitonProfile) {
+    // TODO when default to straight line it breaks with undefined
     case "Straight Line": {
       return Array(projectLife).fill(1 / projectLife);
     }
