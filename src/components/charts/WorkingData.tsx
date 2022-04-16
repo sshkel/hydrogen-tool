@@ -454,12 +454,7 @@ export default function WorkingData(props: Props) {
 
 function cashFlowAnalysis(
   inflationRate: number,
-  h2RetailPrice: number,
-  oxygenRetailPrice: number,
-  averageElectricitySpotPrice: number,
-  h2Produced: number[],
-  electricityProduced: number[],
-  electricityConsumed: number[],
+  annualSales: number[],
   electrolyserCAPEX: number,
   powerPlantCAPEX: number,
   batteryCAPEX: number,
@@ -491,24 +486,7 @@ function cashFlowAnalysis(
 ) {
   const inflation = applyInflation(inflationRate);
   // sales
-  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
-
-  const electricitySales = inflation(
-    electricityProduced.map(
-      (_: number, i: number) =>
-        (electricityProduced[i] - electricityConsumed[i]) *
-        averageElectricitySpotPrice
-    )
-  );
-  const oxygenSales = inflation(
-    h2Produced.map(
-      (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
-    )
-  );
-
-  const salesTotal = h2Sales.map(
-    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
-  );
+  const salesTotal = inflation(annualSales);
   // The values above can be used to create sales graphs. What's below would be necessary for cash flow analysis
   // although need to double check if we should use values without inflation
 
@@ -639,6 +617,31 @@ function cashFlowAnalysis(
   )(0);
   const cumulativeCashFlow =
     incomeAfterTaxAndPreDepreciation.map(cumulativeSum);
+}
+
+function sales(
+  h2RetailPrice: number,
+  oxygenRetailPrice: number,
+  averageElectricitySpotPrice: number,
+  h2Produced: number[],
+  electricityProduced: number[],
+  electricityConsumed: number[]
+) {
+  const h2Sales = h2Produced.map((x) => x * 1000 * h2RetailPrice);
+
+  const electricitySales = electricityProduced.map(
+    (_: number, i: number) =>
+      (electricityProduced[i] - electricityConsumed[i]) *
+      averageElectricitySpotPrice
+  );
+  const oxygenSales = h2Produced.map(
+    (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
+  );
+
+  const annualSales = h2Sales.map(
+    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
+  );
+  return annualSales;
 }
 
 const applyInflation = (rate: number) => {
