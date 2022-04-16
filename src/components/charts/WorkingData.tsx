@@ -89,8 +89,6 @@ interface Props {
     averageElectricitySpotPrice: number;
     shareOfTotalInvestmentFinancedViaEquity: number;
     directEquityShare: number;
-    indirectEquityShare: number;
-    shareOfTotalInvestmentFinancedViaLoan: number;
     salvageCostShare: number;
     decommissioningCostShare: number;
     loanTerm: number;
@@ -180,8 +178,6 @@ export default function WorkingData(props: Props) {
     averageElectricitySpotPrice,
     shareOfTotalInvestmentFinancedViaEquity,
     directEquityShare,
-    indirectEquityShare,
-    shareOfTotalInvestmentFinancedViaLoan,
     salvageCostShare,
     decommissioningCostShare,
     loanTerm,
@@ -470,8 +466,6 @@ export default function WorkingData(props: Props) {
     totalLandCost,
     shareOfTotalInvestmentFinancedViaEquity,
     directEquityShare,
-    indirectEquityShare,
-    shareOfTotalInvestmentFinancedViaLoan,
     salvageCostShare,
     decommissioningCostShare,
     loanTerm,
@@ -546,8 +540,6 @@ function cashFlowAnalysis(
   totalLandCost: number,
   shareOfTotalInvestmentFinancedViaEquity: number,
   directEquityShare: number,
-  indirectEquityShare: number,
-  shareOfTotalInvestmentFinancedViaLoan: number,
   salvageCostShare: number,
   decommissioningCostShare: number,
   loanTerm: number,
@@ -575,11 +567,14 @@ function cashFlowAnalysis(
   );
 
   // indirect equity
+  const indirectEquityShare = 100 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
   const indirectEquity = first(
     roundToNearestThousand(totalEquity * indirectEquityShare),
     projectLife
   );
+  const shareOfTotalInvestmentFinancedViaLoan =
+    100 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
   const totalLoan =
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;

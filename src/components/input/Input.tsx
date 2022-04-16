@@ -3,7 +3,14 @@ import InputNumberField from "./InputNumberField";
 import InputExpand from "./InputExpand";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
-import { data, profileData, regionData, replacementTypeData, technologyData } from "./data";
+import {
+  data,
+  profileData,
+  regionData,
+  replacementTypeData,
+  technologyData,
+  capitalDepreciaitonProfile,
+} from "./data";
 import InputSelectField from "./InputSelectField";
 
 interface Props {
@@ -87,10 +94,16 @@ export default function Input(props: Props) {
         {[...Array(7)].map((_) => getData(pointer))}
       </InputExpand>
       <InputExpand title="Electrolyser Costs" id="electrolyser-costs">
-        <InputExpand title="Electrolyser Capital Costs" id="electrolyser-capital-costs">
+        <InputExpand
+          title="Electrolyser Capital Costs"
+          id="electrolyser-capital-costs"
+        >
           {[...Array(6)].map((_) => getData(pointer))}
         </InputExpand>
-        <InputExpand title="Electrolyser Operating Costs" id="electrolyser-operating-costs">
+        <InputExpand
+          title="Electrolyser Operating Costs"
+          id="electrolyser-operating-costs"
+        >
           {[...Array(3)].map((_) => getData(pointer))}
         </InputExpand>
       </InputExpand>
@@ -130,10 +143,16 @@ export default function Input(props: Props) {
           />
           {[...Array(4)].map((_) => getData(pointer))}
         </InputExpand>
-        <InputExpand title="Electrolyser Load Range" id="electrolyser-load-range">
+        <InputExpand
+          title="Electrolyser Load Range"
+          id="electrolyser-load-range"
+        >
           {[...Array(4)].map((_) => getData(pointer))}
         </InputExpand>
-        <InputExpand title="Other Operational Factors" id="other-operational-factors">
+        <InputExpand
+          title="Other Operational Factors"
+          id="other-operational-factors"
+        >
           <InputSelectField
             id="replacementType"
             label="Stack Replacement Type"
@@ -147,8 +166,43 @@ export default function Input(props: Props) {
       <InputExpand title="Additional Costs" id="additional-costs">
         {[...Array(2)].map((_) => getData(pointer))}
       </InputExpand>
+      <InputExpand
+        title="Additional Revenue streams"
+        id="additional-revenue-streams"
+      >
+        {[...Array(3)].map((_) => getData(pointer))}
+      </InputExpand>
       <InputExpand title="Financing Parameters" id="financing-parameters">
         {[...Array(2)].map((_) => getData(pointer))}
+        <InputExpand title="Investment Breakdown" id="investment-breakdown">
+          <InputExpand title="Equity Share" id="equity-share">
+            {[...Array(2)].map((_) => getData(pointer))}
+          </InputExpand>
+          <InputExpand title="Loan Share" id="loan-share">
+            {[...Array(2)].map((_) => getData(pointer))}
+          </InputExpand>
+          <InputExpand
+            title="Post Project Cash Flows"
+            id="post-project-cash-flows"
+          >
+            {[...Array(2)].map((_) => getData(pointer))}
+          </InputExpand>
+          <InputExpand
+            title="Additional Liabilities"
+            id="additional-liabilities"
+          >
+            {[...Array(2)].map((_) => getData(pointer))}
+          </InputExpand>
+          <InputExpand title="Depreciation" id="depreciation">
+            <InputSelectField
+              id="capitalDepreciaitonProfile"
+              label="DepreciationProfile"
+              values={capitalDepreciaitonProfile}
+              defaultValue={capitalDepreciaitonProfile[0]}
+              onChange={handleChange}
+            />
+          </InputExpand>
+        </InputExpand>
       </InputExpand>
       <Button variant="contained" type="submit">
         Calculate
