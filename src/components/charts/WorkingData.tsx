@@ -26,78 +26,78 @@ import CostLineChart from "./CostLineChart";
 
 interface Props {
   data?: {
-    additionalUpfrontCosts;
-    additionalAnnualCosts;
-    batteryEpcCosts?;
-    batteryEfficiency;
-    batteryMinCharge?;
-    batteryLandProcurementCost?;
-    batteryRatedPower?;
-    batteryCosts?;
-    batteryOMCost?;
-    batteryReplacementCost?;
-    batteryLifetime?;
-    discountRate;
-    durationOfStorage;
-    electrolyserCostReductionWithScale;
-    electrolyserEpcCosts;
-    electrolyserLandProcurementCost;
-    electrolyserReferenceFoldIncrease;
-    electrolyserOMCost;
-    electrolyserStackReplacement;
-    gridConnectionCost;
-    batteryNominalCapacity?;
-    electrolyserNominalCapacity;
-    solarNominalCapacity;
-    windNominalCapacity;
-    solarReferenceCapacity;
-    windReferenceCapacity;
-    electrolyserReferenceCapacity;
-    electrolyserReferencePurchaseCost;
-    solarPVFarmReferenceCost;
-    windFarmReferenceCost;
-    solarEpcCosts;
-    solarLandProcurementCost;
-    solarPVCostReductionWithScale;
-    solarReferenceFoldIncrease;
-    solarOpex?;
+    additionalUpfrontCosts: number;
+    additionalAnnualCosts: number;
+    batteryEpcCosts?: number;
+    batteryEfficiency: number;
+    batteryMinCharge?: number;
+    batteryLandProcurementCost?: number;
+    batteryRatedPower?: number;
+    batteryCosts?: number;
+    batteryOMCost?: number;
+    batteryReplacementCost?: number;
+    batteryLifetime?: number;
+    discountRate: number;
+    durationOfStorage: number;
+    electrolyserCostReductionWithScale: number;
+    electrolyserEpcCosts: number;
+    electrolyserLandProcurementCost: number;
+    electrolyserReferenceFoldIncrease: number;
+    electrolyserOMCost: number;
+    electrolyserStackReplacement: number;
+    gridConnectionCost: number;
+    batteryNominalCapacity?: number;
+    electrolyserNominalCapacity: number;
+    solarNominalCapacity: number;
+    windNominalCapacity: number;
+    solarReferenceCapacity: number;
+    windReferenceCapacity: number;
+    electrolyserReferenceCapacity: number;
+    electrolyserReferencePurchaseCost: number;
+    solarPVFarmReferenceCost: number;
+    windFarmReferenceCost: number;
+    solarEpcCosts: number;
+    solarLandProcurementCost: number;
+    solarPVCostReductionWithScale: number;
+    solarReferenceFoldIncrease: number;
+    solarOpex?: number;
     stackReplacementType: StackReplacementType;
-    stackLifetime;
-    stackDegradation;
-    maximumDegradationBeforeReplacement;
+    stackLifetime: number;
+    stackDegradation: number;
+    maximumDegradationBeforeReplacement: number;
     technology: Technology;
-    totalNominalPowerPlantCapacity;
-    electrolyserWaterCost;
-    windCostReductionWithScale;
-    windEpcCosts;
-    windLandProcurementCost;
-    windReferenceFoldIncrease;
-    windOpex?;
-    plantLife;
-    additionalTransmissionCharges?;
-    principalPPACost?;
+    totalNominalPowerPlantCapacity: number;
+    electrolyserWaterCost: number;
+    windCostReductionWithScale: number;
+    windEpcCosts: number;
+    windLandProcurementCost: number;
+    windReferenceFoldIncrease: number;
+    windOpex?: number;
+    plantLife: number;
+    additionalTransmissionCharges?: number;
+    principalPPACost?: number;
     profile: SECType;
     region: string;
-    electrolyserMaximumLoad;
-    electrolyserMinimumLoad;
-    timeBetweenOverloading;
-    maximumLoadWhenOverloading;
-    waterRequirementOfElectrolyser;
-    h2RetailPrice;
-    oxygenRetailPrice;
-    averageElectricitySpotPrice;
-    shareOfTotalInvestmentFinancedViaEquity;
-    directEquityShare;
-    indirectEquityShare;
-    shareOfTotalInvestmentFinancedViaLoan;
-    salvageCostShare;
-    decommissioningCostShare;
-    loanTerm;
-    interestOnLoan;
+    electrolyserMaximumLoad: number;
+    electrolyserMinimumLoad: number;
+    timeBetweenOverloading: number;
+    maximumLoadWhenOverloading: number;
+    waterRequirementOfElectrolyser: number;
+
+    h2RetailPrice: number;
+    oxygenRetailPrice: number;
+    averageElectricitySpotPrice: number;
+    shareOfTotalInvestmentFinancedViaEquity: number;
+    directEquityShare: number;
+    indirectEquityShare: number;
+    shareOfTotalInvestmentFinancedViaLoan: number;
+    salvageCostShare: number;
+    decommissioningCostShare: number;
+    loanTerm: number;
+    interestOnLoan: number;
     capitalDepreciaitonProfile: string;
-    taxRate;
-    projectLife;
-    inflationRate;
+    taxRate: number;
+    inflationRate: number;
   };
 }
 
@@ -188,7 +188,6 @@ export default function WorkingData(props: Props) {
     interestOnLoan,
     capitalDepreciaitonProfile,
     taxRate,
-    projectLife,
     inflationRate,
   } = props.data;
 
@@ -479,7 +478,7 @@ export default function WorkingData(props: Props) {
     interestOnLoan,
     capitalDepreciaitonProfile,
     taxRate,
-    projectLife,
+    plantLife,
     inflationRate
   );
   return (
@@ -724,7 +723,7 @@ const getConversionFactors = (
 ) => {
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
-  // https://xplaind.com/370120/macrs
+
   switch (capitalDepreciaitonProfile) {
     case "Straight Line": {
       return Array(projectLife).fill(1 / projectLife);
