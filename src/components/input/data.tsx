@@ -551,7 +551,7 @@ export const replacementTypeData: string[] = [
   "Maximum Degradation Level",
 ];
 
-export const capitalDepreciaitonProfile: string[] = [
+export const capitalDepreciationProfile: string[] = [
   "Straight Line",
   "MACRs - 3 year Schedule",
   "MACRs - 5 year Schedule",

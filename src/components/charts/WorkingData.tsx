@@ -12,7 +12,7 @@ import {
   projectYears,
   buttFirst,
 } from "../../model/Model";
-import { InputFields } from "../../types";
+import { DepreciationProfile, InputFields } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -112,7 +112,7 @@ export default function WorkingData(props: Props) {
     decommissioningCostShare,
     loanTerm,
     interestOnLoan,
-    capitalDepreciaitonProfile,
+    capitalDepreciationProfile,
     taxRate,
     inflationRate,
   } = props.data;
@@ -400,7 +400,7 @@ export default function WorkingData(props: Props) {
     decommissioningCostShare,
     loanTerm,
     interestOnLoan,
-    capitalDepreciaitonProfile,
+    capitalDepreciationProfile,
     taxRate,
     plantLife,
     inflationRate
@@ -487,7 +487,7 @@ function cashFlowAnalysis(
   decommissioningCostShare: number,
   loanTerm: number,
   interestOnLoan: number,
-  capitalDepreciaitonProfile: string,
+  capitalDepreciationProfile: DepreciationProfile,
   taxRate: number,
   projectLife: number,
   inflationRate: number
@@ -576,7 +576,7 @@ function cashFlowAnalysis(
   );
   const totalDepreciableCapex = totalCapexCost + totalEpcCost;
   const conversionFactors = getConversionFactors(
-    capitalDepreciaitonProfile,
+    capitalDepreciationProfile,
     projectLife
   );
   const depreciation = projectYears(projectLife).map(
@@ -656,12 +656,12 @@ const applyInflation = (rate: number) => {
 };
 
 const getConversionFactors = (
-  capitalDepreciaitonProfile: string,
+  capitalDepreciationProfile: DepreciationProfile,
   projectLife: number
 ) => {
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
-  switch (capitalDepreciaitonProfile) {
+  switch (capitalDepreciationProfile) {
     // TODO when default to straight line it breaks with undefined
     case "Straight Line": {
       return Array(projectLife).fill(1 / projectLife);
@@ -695,7 +695,7 @@ const getConversionFactors = (
       ];
     }
     default: {
-      throw new Error("Unknow depreciation profile");
+      throw new Error("Unknown depreciation profile");
     }
   }
 };

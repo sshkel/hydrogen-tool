@@ -498,7 +498,7 @@ const defaultInputData: InputFields = {
   decommissioningCostShare: 0,
   loanTerm: 0,
   interestOnLoan: 0,
-  capitalDepreciaitonProfile: "test", // TODO: ask what values
+  capitalDepreciationProfile: "Straight Line",
   taxRate: 0,
   inflationRate: 0,
 };

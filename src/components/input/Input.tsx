@@ -9,7 +9,7 @@ import {
   regionData,
   replacementTypeData,
   technologyData,
-  capitalDepreciaitonProfile,
+  capitalDepreciationProfile,
 } from "./data";
 import InputSelectField from "./InputSelectField";
 
@@ -26,6 +26,7 @@ const getDefaultState = () => {
   defaultState["replacementType"] = replacementTypeData[0];
   defaultState["technology"] = technologyData[0];
   defaultState["region"] = regionData[0];
+  defaultState["capitalDepreciationProfile"] = capitalDepreciationProfile[0];
   return defaultState;
 };
 
@@ -195,10 +196,10 @@ export default function Input(props: Props) {
           </InputExpand>
           <InputExpand title="Depreciation" id="depreciation">
             <InputSelectField
-              id="capitalDepreciaitonProfile"
+              id="capitalDepreciationProfile"
               label="DepreciationProfile"
-              values={capitalDepreciaitonProfile}
-              defaultValue={capitalDepreciaitonProfile[0]}
+              values={capitalDepreciationProfile}
+              defaultValue={capitalDepreciationProfile[0]}
               onChange={handleChange}
             />
           </InputExpand>

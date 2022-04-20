@@ -4,6 +4,15 @@ export type StackReplacementType =
   | "Cumulative Hours"
   | "Maximum Degradation Level";
 
+export type DepreciationProfile =
+  | "Straight Line"
+  | "MACRs - 3 year Schedule"
+  | "MACRs - 5 year Schedule"
+  | "MACRs - 7 year Schedule"
+  | "MACRs - 10 year Schedule"
+  | "MACRs - 15 year Schedule"
+  | "MACRs - 20 year Schedule";
+
 export type ChartData = { label: string; data: number[] };
 
 export interface InputFields {
@@ -73,7 +82,7 @@ export interface InputFields {
   decommissioningCostShare: number;
   loanTerm: number;
   interestOnLoan: number;
-  capitalDepreciaitonProfile: string;
+  capitalDepreciationProfile: DepreciationProfile;
   taxRate: number;
   inflationRate: number;
 }
