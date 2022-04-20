@@ -137,7 +137,7 @@ export default function WorkingData(props: Props) {
     H2VoltoMass: 0.089,
   };
 
-  const model = new HydrogenModel(dataModel, data.solarData, data.windData);
+  const model = new HydrogenModel(dataModel, [], []);
   const hourlyOperations = model.calculateElectrolyserHourlyOperation();
   const summary = model.calculateElectrolyserOutput(hourlyOperations);
 
