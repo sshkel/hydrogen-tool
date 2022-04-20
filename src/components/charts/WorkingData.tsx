@@ -10,8 +10,9 @@ import {
   first,
   decomissioning,
   projectYears,
+  buttFirst,
 } from "../../model/Model";
-import { InputFields, SECType, StackReplacementType, Technology } from "../../types";
+import { InputFields } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -20,6 +21,7 @@ import {
   getOpexPerYearWithAdditionalCostPredicate,
   roundToNearestThousand,
 } from "./cost-functions";
+import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 
@@ -101,6 +103,18 @@ export default function WorkingData(props: Props) {
     stackDegradation,
     maximumDegradationBeforeReplacement,
     waterRequirementOfElectrolyser,
+    h2RetailPrice,
+    oxygenRetailPrice,
+    averageElectricitySpotPrice,
+    shareOfTotalInvestmentFinancedViaEquity,
+    directEquityShare,
+    salvageCostShare,
+    decommissioningCostShare,
+    loanTerm,
+    interestOnLoan,
+    capitalDepreciaitonProfile,
+    taxRate,
+    inflationRate,
   } = props.data;
 
   const dataModel: DataModel = {
@@ -232,6 +246,9 @@ export default function WorkingData(props: Props) {
     props.data.windLandProcurementCost
   );
 
+  const powerPlantEpcCost = solarEpcCost + windEpcCost;
+  const powerPlantLandCost = solarLandCost + windLandCost;
+
   const batteryEpcCost = getIndirectCost(
     batteryCAPEX,
     props.data.batteryEpcCosts
@@ -334,6 +351,60 @@ export default function WorkingData(props: Props) {
     plantLife
   );
 
+  // guessing because I don't have excel but I think these come from summary
+  const h2Produced =
+    props.data.profile === "Fixed"
+      ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
+      : summary["Hydrogen Output for Variable Operation [t/yr"];
+  const electricityProduced = summary["Surplus Energy [MWh/yr]"];
+  // TODO definitly wrong, but not sure what it is without excel
+  const electricityConsumed = summary["Surplus Energy [MWh/yr]"];
+  const { h2Sales, electricitySales, oxygenSales, annualSales } = sales(
+    h2RetailPrice,
+    oxygenRetailPrice,
+    averageElectricitySpotPrice,
+    buttFirst(h2Produced, plantLife),
+    buttFirst(electricityProduced, plantLife),
+    buttFirst(electricityConsumed, plantLife)
+  );
+
+  const totalCapexCost =
+    electrolyserCAPEX +
+    powerPlantCAPEX +
+    batteryCAPEX +
+    additionalUpfrontCosts +
+    gridConnectionCost;
+  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+  const totalLandCost =
+    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+  const totalOpex = electrolyserOpex.map(
+    (_: number, i: number) =>
+      electrolyserOpex[i] +
+      powerplantOpex[i] +
+      batteryOpex[i] +
+      waterCost[i] +
+      electricityPurchase[i] +
+      // TODO check if this is correct. Strangely taking not discounted cost here.
+      additionalAnnualCosts
+  );
+
+  const cumulativeCashFlow = cashFlowAnalysis(
+    annualSales,
+    totalOpex,
+    totalCapexCost,
+    totalEpcCost,
+    totalLandCost,
+    shareOfTotalInvestmentFinancedViaEquity,
+    directEquityShare,
+    salvageCostShare,
+    decommissioningCostShare,
+    loanTerm,
+    interestOnLoan,
+    capitalDepreciaitonProfile,
+    taxRate,
+    plantLife,
+    inflationRate
+  );
   return (
     <div>
       <Line data={generatorData} />
@@ -387,86 +458,51 @@ export default function WorkingData(props: Props) {
           { label: "Water Cost", data: waterCost },
         ]}
       />
+      <CostLineChart
+        plantLife={plantLife}
+        datapoints={[
+          { label: "Hydrogen Sales", data: h2Sales },
+          { label: "Electricity Sales", data: electricitySales },
+          { label: "Oxygen Sales", data: oxygenSales },
+          { label: "Total Sales", data: annualSales },
+        ]}
+      />
+      <CostBarChart
+        plantLife={plantLife}
+        datapoints={[{ label: "Cash Flow Analysis", data: cumulativeCashFlow }]}
+      />
     </div>
   );
 }
-
+// TODO percentages need to be fixed
 function cashFlowAnalysis(
-  inflationRate: number,
-  h2RetailPrice: number,
-  oxygenRetailPrice: number,
-  averageElectricitySpotPrice: number,
-  h2Produced: number[],
-  electricityProduced: number[],
-  electricityConsumed: number[],
-  electrolyserCAPEX: number,
-  powerPlantCAPEX: number,
-  batteryCAPEX: number,
-  additionalUpfrontCosts: number,
-  gridConnectionCost: number,
-  electrolyserEpcCost: number,
-  powerPlantEpcCost: number,
-  batteryEpcCost: number,
-  electrolyserLandCost: number,
-  powerPlantLandCost: number,
-  batteryLandCost: number,
-  shareOfTotalInvestmentFinancedViaEquity: number, // input
-  directEquityShare: number, // input
-  indirectEquityShare: number, // input
-  shareOfTotalInvestmentFinancedViaLoan: number, // input
-  salvageCostShare: number, // input
-  decommissioningCostShare: number, // input
-  loanTerm: number, // input
-  interestOnLoan: number, // input
-  electrolyserOPEX: number[], // the one with stack replacement cost
-  powerPlantOpex: number[],
-  batteryOpex: number[],
-  additionalOpex: number[],
-  waterCost: number[],
-  electricityPurchase: number[],
-  capitalDepreciaitonProfile: string, // inputs
-  taxRate: number, // number
-  projectLife: number
+  annualSales: number[],
+  totalOpex: number[],
+  totalCapexCost: number,
+  totalEpcCost: number,
+  totalLandCost: number,
+  shareOfTotalInvestmentFinancedViaEquity: number,
+  directEquityShare: number,
+  salvageCostShare: number,
+  decommissioningCostShare: number,
+  loanTerm: number,
+  interestOnLoan: number,
+  capitalDepreciaitonProfile: string,
+  taxRate: number,
+  projectLife: number,
+  inflationRate: number
 ) {
   const inflation = applyInflation(inflationRate);
   // sales
-  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
-
-  const electricitySales = inflation(
-    electricityProduced.map(
-      (_: number, i: number) =>
-        (electricityProduced[i] - electricityConsumed[i]) *
-        averageElectricitySpotPrice
-    )
-  );
-  const oxygenSales = inflation(
-    h2Produced.map(
-      (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
-    )
-  );
-
-  const salesTotal = h2Sales.map(
-    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
-  );
-  // The values above can be used to create sales graphs. What's below would be necessary for cash flow analysis
-  // although need to double check if we should use values without inflation
+  const salesTotal = inflation(annualSales);
 
   // TODO double check that all arrays have 0th and decomissioning years
-  // TODO double check what needs to be added and what is subtracted. I defs screwed up somewhere.
   // net investments
   // direct equity payment
-  const totalCapexCost =
-    electrolyserCAPEX +
-    powerPlantCAPEX +
-    batteryCAPEX +
-    additionalUpfrontCosts +
-    gridConnectionCost;
-  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
-  const totalLandCost =
-    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+
   const totalInvestmentRequired = totalCapexCost + totalEpcCost + totalLandCost;
   const totalEquity = roundToNearestThousand(
-    shareOfTotalInvestmentFinancedViaEquity * totalInvestmentRequired
+    totalInvestmentRequired * shareOfTotalInvestmentFinancedViaEquity
   );
   const directEquityPayment = first(
     roundToNearestThousand(totalEquity * directEquityShare),
@@ -474,15 +510,18 @@ function cashFlowAnalysis(
   );
 
   // indirect equity
-
+  const indirectEquityShare = 100 - directEquityShare;
+  // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
   const indirectEquity = first(
     roundToNearestThousand(totalEquity * indirectEquityShare),
     projectLife
   );
+  const shareOfTotalInvestmentFinancedViaLoan =
+    100 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
   const totalLoan =
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
-  const totalLoanCost = first(totalLoan, projectLife);
+  const costFinancedViaLoan = first(totalLoan, projectLife);
 
   // salvage cost
   const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
@@ -494,13 +533,15 @@ function cashFlowAnalysis(
     projectLife
   );
 
+  // cost of setting up the project
   const netInvestment = directEquityPayment.map(
-    (x: number, i: number) =>
-      -directEquityPayment[i] +
+    (_: number, i: number) =>
+      directEquityPayment[i] +
+      decomissioningCost[i] -
+      // TODO check if costFinancedViaLoan should be positive since it's money you get in and repay later every year
+      costFinancedViaLoan[i] -
       indirectEquity[i] -
-      totalLoanCost[i] +
-      salvageCost[i] -
-      decomissioningCost[i]
+      salvageCost[i]
   );
 
   // loan liabilities
@@ -508,76 +549,95 @@ function cashFlowAnalysis(
   const loanRepayment = totalLoan / loanTerm;
   const totalLoanRepayment = projectYears(projectLife).map((year: number) => {
     if (year < loanTerm) {
-      return -loanRepayment;
+      return loanRepayment;
     }
     return 0;
   });
   // interest paid on loan
   const interestPaidOnLoan = projectYears(projectLife).map((year: number) => {
     if (year < loanTerm) {
-      return -loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
+      return loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
     }
     return 0;
   });
   // fixed opex
-  // TODO all opex should be negative
-  const electrolyserOpexWithInflation = inflation(electrolyserOPEX);
-  const powerPlantOpexWithInflation = inflation(powerPlantOpex);
-  const batteryOpexWithInflation = inflation(batteryOpex);
-  const additionalAnnualCostsWithInflation = inflation(additionalOpex);
-  // variable opex
-  const waterCostWithInflation = inflation(waterCost);
-  const electricityPurchaseWithInflation = inflation(electricityPurchase);
+  const totalOpexWithInflation = inflation(totalOpex);
   // depreciation
   const incomePreDepreciation = directEquityPayment.map(
     (x: number, i: number) => {
-      if (i == 0) {
-        return directEquityPayment[i] - indirectEquity[i];
-      }
       return (
-        salesTotal[i] +
-        netInvestment[i] +
-        totalLoanRepayment[i] +
+        salesTotal[i] -
+        netInvestment[i] -
+        totalLoanRepayment[i] -
         interestPaidOnLoan[i] -
-        electrolyserOpexWithInflation[i] -
-        powerPlantOpexWithInflation[i] -
-        batteryOpexWithInflation[i] -
-        additionalAnnualCostsWithInflation[i] -
-        waterCostWithInflation[i] -
-        electricityPurchaseWithInflation[i]
+        totalOpexWithInflation[i]
       );
     }
   );
   const totalDepreciableCapex = totalCapexCost + totalEpcCost;
-  const conversionFactors = getConversionFactors(capitalDepreciaitonProfile);
+  const conversionFactors = getConversionFactors(
+    capitalDepreciaitonProfile,
+    projectLife
+  );
   const depreciation = projectYears(projectLife).map(
     (x: number, i: number) => totalDepreciableCapex + conversionFactors[i]
   );
   // tax liabilities
   const taxableIncome = incomePreDepreciation.map(
-    (x: number, i: number) =>
-      // check if this is correct
+    (_: number, i: number) =>
+      // TODO check that if totalLoanRepayment should include total interest paid
       incomePreDepreciation[i] + depreciation[i] - totalLoanRepayment[i]
   );
 
-  const tax = taxableIncome.map((x: number, i: number) => {
+  const tax = taxableIncome.map((_: number, i: number) => {
     if (taxableIncome[i] < 0) {
       return 0;
     }
-    return -taxableIncome[i] * taxRate;
+    return taxableIncome[i] * taxRate;
   });
   // net cash flows
   // after tax and depreciation
-  const incomeAfterTaxAndPreDepreciation = incomePreDepreciation.map(
-    (x: number, i: number) => incomePreDepreciation[i] + tax[i]
+  const incomeAfterTaxAndDepreciation = incomePreDepreciation.map(
+    (_: number, i: number) => incomePreDepreciation[i] - tax[i]
   );
 
   const cumulativeSum = (
     (sum: number) => (value: number) =>
       (sum += value)
   )(0);
-  const cumulativeCashFlow =
-    incomeAfterTaxAndPreDepreciation.map(cumulativeSum);
+  const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
+  return cumulativeCashFlow;
+}
+
+function sales(
+  h2RetailPrice: number,
+  oxygenRetailPrice: number,
+  averageElectricitySpotPrice: number,
+  h2Produced: number[],
+  electricityProduced: number[],
+  electricityConsumed: number[]
+) {
+  // The values can be used to create sales graphs.
+  const h2Sales = h2Produced.map((x) => x * 1000 * h2RetailPrice);
+
+  const electricitySales = electricityProduced.map(
+    (_: number, i: number) =>
+      (electricityProduced[i] - electricityConsumed[i]) *
+      averageElectricitySpotPrice
+  );
+  const oxygenSales = h2Produced.map(
+    (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
+  );
+
+  const annualSales = h2Sales.map(
+    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
+  );
+  return {
+    h2Sales,
+    electricitySales,
+    oxygenSales,
+    annualSales,
+  };
 }
 
 const applyInflation = (rate: number) => {
@@ -595,9 +655,47 @@ const applyInflation = (rate: number) => {
   };
 };
 
-const getConversionFactors = (capitalDepreciaitonProfile: string) => {
+const getConversionFactors = (
+  capitalDepreciaitonProfile: string,
+  projectLife: number
+) => {
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
-  // https://xplaind.com/370120/macrs
-  return [];
+  switch (capitalDepreciaitonProfile) {
+    // TODO when default to straight line it breaks with undefined
+    case "Straight Line": {
+      return Array(projectLife).fill(1 / projectLife);
+    }
+    case "MACRs - 3 year Schedule": {
+      return [0.3333, 0.4445, 0.1481, 0.0741];
+    }
+    case "MACRs - 5 year Schedule": {
+      return [0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576];
+    }
+    case "MACRs - 7 year Schedule": {
+      return [0.1429, 0.1749, 0.1249, 0.0893, 0.892, 0.893, 0.0446];
+    }
+    case "MACRs - 10 year Schedule": {
+      return [
+        0.1, 0.18, 0.144, 0.1152, 0.0922, 0.0737, 0.0655, 0.0655, 0.0656,
+        0.0655, 0.0328,
+      ];
+    }
+    case "MACRs - 15 year Schedule": {
+      return [
+        0.05, 0.095, 0.0855, 0.077, 0.0693, 0.0623, 0.059, 0.059, 0.0591, 0.059,
+        0.0591, 0.059, 0.0591, 0.059, 0.0591, 0.0295,
+      ];
+    }
+    case "MACRs - 20 year Schedule": {
+      return [
+        0.0375, 0.0722, 0.0668, 0.0618, 0.0571, 0.0529, 0.0489, 0.0452, 0.0446,
+        0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446,
+        0.0446, 0.0446, 0.0223,
+      ];
+    }
+    default: {
+      throw new Error("Unknow depreciation profile");
+    }
+  }
 };

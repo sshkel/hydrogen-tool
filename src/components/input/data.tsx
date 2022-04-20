@@ -130,7 +130,7 @@ export const data: Field[] = [
     id: "electrolyserWaterCost",
     label: "Water Cost",
     defaultValue: 5,
-    adornmentLabel: "A$/kL"
+    adornmentLabel: "A$/kL",
   },
   /******* Power Plant Costs *******/
   // Solar Costs
@@ -177,7 +177,7 @@ export const data: Field[] = [
     id: "solarOpex",
     label: "OPEX (Fixed & Variable O&M)",
     defaultValue: 17000,
-    adornmentLabel: "A$/MW/yr"
+    adornmentLabel: "A$/MW/yr",
   },
   // Wind Costs
   {
@@ -223,7 +223,7 @@ export const data: Field[] = [
     id: "windOpex",
     label: "OPEX (Fixed & Variable O&M)",
     defaultValue: 25000,
-    adornmentLabel: "A$/MW/yr"
+    adornmentLabel: "A$/MW/yr",
   },
   // Costs for Grid Connected Systems
   {
@@ -236,7 +236,8 @@ export const data: Field[] = [
     id: "additionalTransmissionCharges",
     label: "Additional Transmission Charges",
     adornmentLabel: "A$/MWh",
-    helperText: "Any additional charges for using grid services, e.g. Transmission Use of System (TUOS) Charges.",
+    helperText:
+      "Any additional charges for using grid services, e.g. Transmission Use of System (TUOS) Charges.",
   },
   {
     id: "principalPPACost",
@@ -295,7 +296,8 @@ export const data: Field[] = [
     label: "Replacement Cost",
     defaultValue: 100,
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
+    helperText:
+      "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
   },
   /******* Electrolyser Parameters *******/
   // Electrolyser Specific Consumption
@@ -356,28 +358,30 @@ export const data: Field[] = [
     label: "Stack Lifetime",
     defaultValue: 60000,
     adornmentLabel: "hrs",
-    helperText: "Cumulative hours of operation before stack replacement is due."
+    helperText:
+      "Cumulative hours of operation before stack replacement is due.",
   },
   {
     id: "stackDegradation",
     label: "Stack Degradation",
-    defaultValue: 0.00,
+    defaultValue: 0.0,
     adornmentLabel: "%/yr",
-    helperText: "Decrease in stack output per year."
+    helperText: "Decrease in stack output per year.",
   },
   {
     id: "maximumDegradationBeforeReplacement",
     label: "Maximum Degradation Before Replacement",
     defaultValue: 0,
     adornmentLabel: "%",
-    helperText: "Maximum allowable degradation before stack must be replaced."
+    helperText: "Maximum allowable degradation before stack must be replaced.",
   },
   {
     id: "waterRequirementOfElectrolyser",
     label: "Water Requirement of Electrolyser",
     defaultValue: 10,
     adornmentLabel: "L/kg",
-    helperText: "Water consumed per kg of hydrogen produced - independent of load."
+    helperText:
+      "Water consumed per kg of hydrogen produced - independent of load.",
   },
   /******* Additional Costs *******/
   {
@@ -396,6 +400,29 @@ export const data: Field[] = [
     helperText:
       "Any other additional costs to include as an annual cost in the LCH2 calculation",
   },
+  // Additional Revenue streams
+  {
+    id: "h2RetailPrice",
+    label: "Hydrogen Retail Price",
+    defaultValue: 1,
+    adornmentLabel: "A$/kgH2",
+    helperText: "Price that hydrogen can be sold for",
+  },
+  {
+    id: "averageElectricitySpotPrice",
+    label: "Average Electricity Spot Price",
+    defaultValue: 0,
+    adornmentLabel: "A$/MWh",
+    helperText: "Fixed price for excess electricity sold to the grid",
+  },
+  {
+    id: "oxygenRetailPrice",
+    label: "Oxygen Retail Price",
+    defaultValue: 50,
+    adornmentLabel: "A$/tonne",
+    helperText:
+      "Price that oxygen can be sold for, assuming 8 kg oxygen produced per kg of hydrogen.",
+  },
   /******* Financing Parameters *******/
   {
     id: "plantLife",
@@ -411,7 +438,65 @@ export const data: Field[] = [
     defaultValue: 7,
     adornmentLabel: "% p.a.",
     helperText: "Discount rate for NPV analysis and LCH2.",
-  }
+  },
+  // Investment Breakdown
+  // Equity Share
+  {
+    id: "shareOfTotalInvestmentFinancedViaEquity",
+    label: "Share of Total Investment Financed via Equity.",
+    defaultValue: 70,
+    adornmentLabel: "% of Total Investment",
+  },
+  {
+    id: "directEquityShare",
+    label: "Direct Equity",
+    defaultValue: 100,
+    adornmentLabel: "% of Equity",
+    helperText: "Share of equity directly supported by project proponent.",
+  },
+  //Loan Share
+  {
+    id: "loanTerm",
+    label: "Loan Term",
+    defaultValue: 10,
+    adornmentLabel: "yrs",
+    helperText: "Loan repayment duration.",
+  },
+  {
+    id: "interestOnLoan",
+    label: "Interest on Loan",
+    defaultValue: 2.5,
+    adornmentLabel: "% p.a.",
+  },
+  // Post Project Cash Flows
+  {
+    id: "salvageCost",
+    label: "Salvage Cost",
+    defaultValue: 10,
+    adornmentLabel: "% of Total Investment",
+  },
+  {
+    id: "decommissioningCost",
+    label: "Decommissioning Costs",
+    defaultValue: 10,
+    adornmentLabel: "% of Total Investment",
+  },
+
+  //Additional liabilities
+  {
+    id: "inflationRate",
+    label: "Inflation Rate",
+    defaultValue: 2.5,
+    adornmentLabel: "% p.a.",
+    helperText: "water, O&M, PPA",
+  },
+  {
+    id: "taxRate",
+    label: "Tax Rate",
+    defaultValue: 30,
+    adornmentLabel: "% p.a.",
+    helperText: "Cash flow",
+  },
 ];
 
 export const regionData: string[] = [
@@ -461,4 +546,17 @@ export const regionData: string[] = [
 
 export const technologyData: string[] = ["Solar", "Wind", "Hybrid"];
 export const profileData: string[] = ["Fixed", "Variable"];
-export const replacementTypeData: string[] = ["Cumulative Hours", "Maximum Degradation Level"];
+export const replacementTypeData: string[] = [
+  "Cumulative Hours",
+  "Maximum Degradation Level",
+];
+
+export const capitalDepreciaitonProfile: string[] = [
+  "Straight Line",
+  "MACRs - 3 year Schedule",
+  "MACRs - 5 year Schedule",
+  "MACRs - 7 year Schedule",
+  "MACRs - 10 year Schedule",
+  "MACRs - 15 year Schedule",
+  "MACRs - 20 year Schedule",
+];
