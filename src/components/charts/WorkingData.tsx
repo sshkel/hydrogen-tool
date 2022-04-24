@@ -594,7 +594,7 @@ function cashFlowAnalysis(
   const taxableIncome = incomePreDepreciation.map(
     (_: number, i: number) =>
       // TODO check that if totalLoanRepayment should include total interest paid
-      incomePreDepreciation[i] + depreciation[i] - totalLoanRepayment[i]
+      incomePreDepreciation[i] - depreciation[i] - totalLoanRepayment[i]
   );
 
   const tax = taxableIncome.map((_: number, i: number) => {
