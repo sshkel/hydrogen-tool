@@ -8,14 +8,11 @@ interface Props {
 }
 
 export default function CostLineChart(props: Props) {
-  const {
-    plantLife,
-    datapoints
-  } = props;
+  const { plantLife, datapoints } = props;
 
   const graphData = {
-    labels: [...Array(plantLife).keys()].map(i => i + 1),
-    datasets: datapoints.map(point => ({
+    labels: [...Array(plantLife).keys()].map((i) => i + 1),
+    datasets: datapoints.map((point) => ({
       ...point,
       backgroundColor: "rgba(75,192,192,0.2)",
       borderColor: "rgba(75,192,192,1)",
@@ -27,8 +24,6 @@ export default function CostLineChart(props: Props) {
     },
   };
 
-  
-  console.log(graphData);
   return (
     <div>
       <Line data={graphData} />

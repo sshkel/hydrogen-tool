@@ -1,3 +1,5 @@
+import { DepreciationProfile } from "../../types";
+
 interface Field {
   id: string;
   label: string;
@@ -551,7 +553,7 @@ export const replacementTypeData: string[] = [
   "Maximum Degradation Level",
 ];
 
-export const capitalDepreciationProfile: string[] = [
+export const capitalDepreciationProfile: DepreciationProfile[] = [
   "Straight Line",
   "MACRs - 3 year Schedule",
   "MACRs - 5 year Schedule",

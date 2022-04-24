@@ -18,8 +18,8 @@ describe("Hydrogen Model", () => {
   let wind: CsvRow[];
   beforeAll(async () => {
     const startTime = Date.now();
-    solar = await readCSV(__dirname + "/../resources/solar-traces.csv");
-    wind = await readCSV(__dirname + "/../resources/wind-traces.csv");
+    solar = await readCSV(__dirname + "/../../resources/solar-traces.csv");
+    wind = await readCSV(__dirname + "/../../resources/wind-traces.csv");
     console.log("Model test start-up took %s ms", Date.now() - startTime);
   });
 
