@@ -608,13 +608,11 @@ function cashFlowAnalysis(
   const incomeAfterTaxAndDepreciation = incomePreDepreciation.map(
     (_: number, i: number) => incomePreDepreciation[i] - tax[i]
   );
-  debugArray(incomeAfterTaxAndDepreciation, "incometax");
   const cumulativeSum = (
     (sum: number) => (value: number) =>
       (sum += value)
   )(0);
   const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
-  debugger;
   return cumulativeCashFlow;
 }
 
@@ -647,11 +645,6 @@ function sales(
     oxygenSales,
     annualSales,
   };
-}
-
-function debugArray(arr: number[], name: string) {
-  console.log(`${name} ${arr.length} `);
-  arr.forEach((x: number, i: number) => console.log(`${i}: ${x}`));
 }
 
 function applyInflation(rate: number) {
