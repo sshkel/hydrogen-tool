@@ -361,13 +361,16 @@ export default function WorkingData(props: Props) {
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   // TODO definitly wrong, but not sure what it is without excel
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
+  const h2Prod = activeYears(h2Produced, plantLife);
+  const elecProduced = activeYears(electricityProduced, plantLife);
+  const elecConsumed = activeYears(electricityConsumed, plantLife);
   const { h2Sales, electricitySales, oxygenSales, annualSales } = sales(
     h2RetailPrice,
     oxygenRetailPrice,
     averageElectricitySpotPrice,
-    activeYears(h2Produced, plantLife),
-    activeYears(electricityProduced, plantLife),
-    activeYears(electricityConsumed, plantLife)
+    h2Prod,
+    elecProduced,
+    elecConsumed
   );
 
   const totalCapexCost =
@@ -414,6 +417,9 @@ export default function WorkingData(props: Props) {
     <div>
       <BasicTable
         data={{
+          h2Prod,
+          elecProduced,
+          elecConsumed,
           h2Sales,
           electricitySales,
           oxygenSales,
