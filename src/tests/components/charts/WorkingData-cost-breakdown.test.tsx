@@ -1,7 +1,17 @@
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
+
+const findCapitalCostBreakdownChart = (wrapper: ShallowWrapper) =>
+  wrapper
+    .find(CostBreakdownDoughnutChart)
+    .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+
+const findIndirectCostBreakdownChart = (wrapper: ShallowWrapper) =>
+  wrapper
+    .find(CostBreakdownDoughnutChart)
+    .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
 
 describe("Working Data calculations", () => {
   describe("Capital Cost Breakdown", () => {
@@ -17,9 +27,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -40,9 +48,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -63,9 +69,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -86,9 +90,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -109,9 +111,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -137,9 +137,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -157,9 +155,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -175,9 +171,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -193,9 +187,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -241,9 +233,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -269,9 +259,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -310,9 +298,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -350,9 +336,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -390,9 +374,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 
@@ -417,9 +399,7 @@ describe("Working Data calculations", () => {
 
       const wrapper = shallow(<WorkingData data={data} />);
 
-      const costBreakdownChart = wrapper
-        .find(CostBreakdownDoughnutChart)
-        .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
       expect(costBreakdownChart).toHaveLength(1);
 

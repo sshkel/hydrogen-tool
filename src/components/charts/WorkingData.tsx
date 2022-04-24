@@ -137,7 +137,7 @@ export default function WorkingData(props: Props) {
     H2VoltoMass: 0.089,
   };
 
-  const model = new HydrogenModel(dataModel, [], []);
+  const model = new HydrogenModel(dataModel, data.solarData, data.windData);
   const hourlyOperations = model.calculateElectrolyserHourlyOperation();
   const summary = model.calculateElectrolyserOutput(hourlyOperations);
 
@@ -407,8 +407,8 @@ export default function WorkingData(props: Props) {
   );
   return (
     <div>
-      <Line data={generatorData} />
-      <Line data={electrolyserData} />
+      <Line title="Generator Duration Curve" data={generatorData} />
+      <Line title="Electrolyser Duration Curve" data={electrolyserData} />
       <CostBreakdownDoughnutChart
         title="Capital Cost Breakdown"
         labels={[

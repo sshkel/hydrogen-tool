@@ -4,22 +4,23 @@ import {
   HydrogenModel,
   ModelSummary,
   maxDegradationStackReplacementYears,
-  cumulativeStackReplacementYears,
 } from "../../model/Model";
 import fs from "fs";
 import Papa from "papaparse";
-import workingdf1 from "./resources/example1-workingdf.json";
-import outputs1 from "./resources/example1-outputs.json";
-import workingdf2 from "./resources/example2-workingdf.json";
-import outputs2 from "./resources/example2-outputs.json";
-import workingdf3 from "./resources/example3-workingdf.json";
-import outputs3 from "./resources/example3-outputs.json";
+import workingdf1 from "../resources/example1-workingdf.json";
+import outputs1 from "../resources/example1-outputs.json";
+import workingdf2 from "../resources/example2-workingdf.json";
+import outputs2 from "../resources/example2-outputs.json";
+import workingdf3 from "../resources/example3-workingdf.json";
+import outputs3 from "../resources/example3-outputs.json";
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];
   beforeAll(async () => {
-    solar = await readCSV(__dirname + "/resources/solar-traces.csv");
-    wind = await readCSV(__dirname + "/resources/wind-traces.csv");
+    const startTime = Date.now();
+    solar = await readCSV(__dirname + "/../resources/solar-traces.csv");
+    wind = await readCSV(__dirname + "/../resources/wind-traces.csv");
+    console.log("Model test start-up took %s ms", Date.now() - startTime);
   });
 
   it("works for overload model", () => {
@@ -252,6 +253,7 @@ function compareToModel(
   outputs: ModelSummary,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
+  const startTime = Date.now();
   const electrolyser_outputs = model.calculateElectrolyserHourlyOperation();
 
   Object.keys(electrolyser_outputs).forEach((key: string) => {
@@ -260,12 +262,11 @@ function compareToModel(
     );
   });
 
-  const output = model.calculateElectrolyserOutput(
-    model.calculateElectrolyserHourlyOperation()
-  );
+  const output = model.calculateElectrolyserOutput(electrolyser_outputs);
   Object.keys(output).forEach((key: string) => {
     expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
+  console.log("Model test comparison took %s ms", Date.now() - startTime);
 }
 
 async function readCSV(filePath: string): Promise<any[]> {
