@@ -394,16 +394,16 @@ export default function WorkingData(props: Props) {
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
-    shareOfTotalInvestmentFinancedViaEquity,
-    directEquityShare,
-    salvageCostShare,
-    decommissioningCostShare,
+    shareOfTotalInvestmentFinancedViaEquity / 100,
+    directEquityShare / 100,
+    salvageCostShare / 100,
+    decommissioningCostShare / 100,
     loanTerm,
-    interestOnLoan,
+    interestOnLoan / 100,
     capitalDepreciationProfile,
-    taxRate,
+    taxRate / 100,
     plantLife,
-    inflationRate
+    inflationRate / 100
   );
   return (
     <div>
@@ -510,14 +510,14 @@ function cashFlowAnalysis(
   );
 
   // indirect equity
-  const indirectEquityShare = 100 - directEquityShare;
+  const indirectEquityShare = 1 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
   const indirectEquity = first(
     roundToNearestThousand(totalEquity * indirectEquityShare),
     projectLife
   );
   const shareOfTotalInvestmentFinancedViaLoan =
-    100 - shareOfTotalInvestmentFinancedViaEquity;
+    1 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
   const totalLoan =
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
