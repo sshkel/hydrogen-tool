@@ -580,7 +580,7 @@ function cashFlowAnalysis(
   const totalOpexWithInflation = inflation(padArray(totalOpex));
   // depreciation
   const incomePreDepreciation = directEquityPayment.map(
-    (x: number, i: number) => {
+    (_: number, i: number) => {
       return (
         salesTotal[i] -
         netInvestment[i] -
@@ -595,10 +595,8 @@ function cashFlowAnalysis(
     capitalDepreciationProfile,
     projectLife
   );
-  const depreciation = padArray(
-    projectYears(projectLife).map(
-      (x: number, i: number) => totalDepreciableCapex * conversionFactors[i]
-    )
+  const depreciation = conversionFactors.map(
+    (_: number, i: number) => totalDepreciableCapex * conversionFactors[i]
   );
 
   // tax liabilities
