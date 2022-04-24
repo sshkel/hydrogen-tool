@@ -24,7 +24,6 @@ export default function CostBarChart(props: Props) {
     },
   };
 
-  console.log(graphData);
   return (
     <div>
       <Bar data={graphData} />

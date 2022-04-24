@@ -412,7 +412,15 @@ export default function WorkingData(props: Props) {
 
   return (
     <div>
-      <DataTable data={cashFlow}></DataTable>
+      <DataTable
+        data={{
+          h2Sales,
+          electricitySales,
+          oxygenSales,
+          annualSales,
+          ...cashFlow,
+        }}
+      ></DataTable>
       <Line title="Generator Duration Curve" data={generatorData} />
       <Line title="Electrolyser Duration Curve" data={electrolyserData} />
       <CostBreakdownDoughnutChart
@@ -513,7 +521,6 @@ function cashFlowAnalysis(
     roundToNearestThousand(totalEquity * directEquityShare),
     projectLife
   );
-
   // indirect equity
   const indirectEquityShare = 1 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow

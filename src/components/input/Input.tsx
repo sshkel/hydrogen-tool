@@ -36,7 +36,6 @@ export default function Input(props: Props) {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
     e.preventDefault();
-    console.log(form);
     props.setState(form);
   };
 
