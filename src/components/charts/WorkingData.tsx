@@ -41,8 +41,6 @@ const isSolar = (tech: string): boolean => tech !== "Wind";
 const isWind = (tech: string): boolean => tech !== "Solar";
 
 export default function WorkingData(props: Props) {
-  const { loadSolar, loadWind } = props;
-
   const [state, setState] = useState<DownloadedData>({
     solarData: [],
     windData: [],
@@ -51,6 +49,7 @@ export default function WorkingData(props: Props) {
   // TODO: Error handling if we can't load solar and wind data
   // TODO: Add some validation for correct number of rows
   useEffect(() => {
+    const { loadSolar, loadWind } = props;
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
       if (solar.length !== 8760) {
         console.error("Solar data is not 8760 rows in length");
@@ -61,7 +60,7 @@ export default function WorkingData(props: Props) {
       }
       setState({ solarData: solar, windData: wind });
     });
-  }, []);
+  }, [props]);
 
   if (!props.data) {
     return null;
@@ -363,7 +362,6 @@ export default function WorkingData(props: Props) {
       ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
       : summary["Hydrogen Output for Variable Operation [t/yr"];
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
-  // TODO definitly wrong, but not sure what it is without excel
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
   const h2Prod = activeYears(h2Produced, plantLife);
   const elecProduced = activeYears(electricityProduced, plantLife);
