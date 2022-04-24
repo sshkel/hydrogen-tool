@@ -640,7 +640,7 @@ function sales(
   };
 }
 
-const applyInflation = (rate: number) => {
+function applyInflation(rate: number) {
   return (values: number[]) => {
     return values.map(
       // i corresponds to year
@@ -653,12 +653,12 @@ const applyInflation = (rate: number) => {
       }
     );
   };
-};
+}
 
-const getConversionFactors = (
+function getConversionFactors(
   capitalDepreciationProfile: DepreciationProfile,
   projectLife: number
-) => {
+) {
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
   switch (capitalDepreciationProfile) {
@@ -698,4 +698,4 @@ const getConversionFactors = (
       throw new Error("Unknown depreciation profile");
     }
   }
-};
+}
