@@ -1,49 +1,97 @@
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { shallow, ShallowWrapper } from "enzyme";
+import { mount, ReactWrapper } from "enzyme";
 import { Line } from "react-chartjs-2";
-import * as DataLoader from "../../../model/DataLoader";
-
-const findGeneratorDurationCurveChart = (wrapper: ShallowWrapper) =>
-  wrapper
-    .find(Line)
-    .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+import { read_local_csv } from "../../resources/loader";
 
 describe("Working Data calculations", () => {
+  let loadSolar: () => Promise<any[]>;
+  let loadWind: () => Promise<any[]>;
   beforeAll(() => {
-    jest.mock("../../../model/DataLoader", () => {
-      const originalModule = jest.requireActual("../../../model/DataLoader");
+    console.error = function () {};
+    loadSolar = async () =>
+      await read_local_csv(__dirname + "/../../resources/solar-traces.csv");
+    loadWind = async () =>
+      await read_local_csv(__dirname + "/../../resources/wind-traces.csv");
+  });
 
-      return {
-        __esModule: true,
-        ...originalModule,
-        loadSolar: async () =>
-          await DataLoader.read_csv(
-            __dirname + "/../resources/solar-traces.csv"
-          ),
-        loadWind: async () =>
-          await DataLoader.read_csv(
-            __dirname + "/../resources/wind-traces.csv"
-          ),
+  describe("Duration Curves", () => {
+    it("calculates generator duration curve as 8760 percentages", (done) => {
+      const data: InputFields = {
+        ...defaultInputData,
+        technology: "Solar",
+        solarNominalCapacity: 15, // MW
+        solarReferenceCapacity: 1000, // kW
+        solarPVFarmReferenceCost: 1200, // A$/kw
+        solarPVCostReductionWithScale: 20, // %
+        solarReferenceFoldIncrease: 10,
       };
+
+      const wrapper = mount(
+        <WorkingData data={data} loadSolar={loadSolar} loadWind={loadWind} />
+      );
+
+      // Sad 600ms sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const durationCurve = wrapper
+          .find(Line)
+          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+        expect(durationCurve).toHaveLength(1);
+        expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
+          8760
+        );
+        (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
+          (val) => {
+            expect(val).toBeGreaterThanOrEqual(0);
+            expect(val).toBeLessThanOrEqual(100);
+          }
+        );
+        done();
+      }, 600);
     });
   });
 
-  describe("Generator Duration Curve", () => {
-    it("calculates electrolyser CAPEX as expected", () => {
-      const data: InputFields = {
-        ...defaultInputData,
-      };
+  it("calculates electrolyser duration curve as 8760 percentages", (done) => {
+    const data: InputFields = {
+      ...defaultInputData,
+      technology: "Wind",
+      windNominalCapacity: 15, // MW
+      windReferenceCapacity: 1000, // kW
+      windFarmReferenceCost: 1200, // A$/kw
+      windCostReductionWithScale: 20, // %
+      windReferenceFoldIncrease: 10,
+      electrolyserNominalCapacity: 10, // MW
+      electrolyserReferenceCapacity: 10000, // kW
+      electrolyserReferencePurchaseCost: 1000, // A$/kw
+      electrolyserCostReductionWithScale: 20, // %
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+    };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+    const wrapper = mount(
+      <WorkingData data={data} loadSolar={loadSolar} loadWind={loadWind} />
+    );
 
-      const costBreakdownChart = findGeneratorDurationCurveChart(wrapper);
-
-      expect(costBreakdownChart).toHaveLength(1);
-
-      // Electrolyser Default CAPEX = 10_000_000
-      expect(costBreakdownChart.at(0).prop("data")).toEqual(10_000_000);
-    });
+    // Sad 600ms sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const durationCurve = wrapper
+        .find(Line)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+      expect(durationCurve).toHaveLength(1);
+      expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
+        8760
+      );
+      (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
+        (val) => {
+          expect(val).toBeGreaterThanOrEqual(0);
+          expect(val).toBeLessThanOrEqual(100);
+        }
+      );
+      done();
+    }, 600);
   });
 });
 
@@ -99,7 +147,7 @@ const defaultInputData: InputFields = {
   additionalTransmissionCharges: 0,
   principalPPACost: 0,
   profile: "Fixed",
-  region: "WA",
+  region: "Far North QLD",
   electrolyserMaximumLoad: 0,
   electrolyserMinimumLoad: 0,
   timeBetweenOverloading: 0,
@@ -118,44 +166,3 @@ const defaultInputData: InputFields = {
   taxRate: 0,
   inflationRate: 0,
 };
-
-async function readCSV(filePath: string): Promise<any[]> {
-  if (filePath.startsWith("http") || filePath.startsWith("https")) {
-    return new Promise((resolve) => {
-      const optionsWithDefaults = {
-        header: true,
-        dynamicTyping: true,
-      };
-
-      const dataStream = fs.createReadStream(filePath);
-      const parseStream: any = Papa.parse(
-        Papa.NODE_STREAM_INPUT,
-        optionsWithDefaults
-      );
-      dataStream.pipe(parseStream);
-
-      const data: any = [];
-      parseStream.on("data", (chunk: any) => {
-        data.push(chunk);
-      });
-
-      parseStream.on("finish", () => {
-        resolve(data);
-      });
-    });
-  } else {
-    return new Promise((resolve, reject) => {
-      const fileStream = fs.createReadStream(filePath);
-      Papa.parse(fileStream, {
-        header: true,
-        dynamicTyping: true,
-        complete: (results) => {
-          resolve(results.data);
-        },
-        error: (err) => {
-          reject(err);
-        },
-      });
-    });
-  }
-}

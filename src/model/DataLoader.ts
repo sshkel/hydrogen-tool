@@ -11,7 +11,7 @@ export async function loadWind() {
   );
 }
 // to use these run
-// npx http-server in hydrogen-tool/src/tests/model/resources
+// npx http-server in hydrogen-tool/src/tests/resources
 // you will also need to replace loading methods in WorkingData
 export async function loadLocalSolar() {
   return await read_csv("http://127.0.0.1:8080/solar-traces.csv");
@@ -21,7 +21,7 @@ export async function loadLocalWind() {
 }
 
 export async function read_csv(file: any, options?: any): Promise<any[]> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     Papa.parse(file, {
       header: true,
       dynamicTyping: true,
@@ -30,6 +30,9 @@ export async function read_csv(file: any, options?: any): Promise<any[]> {
       complete: (results) => {
         const df = results.data;
         resolve(df);
+      },
+      error: (err) => {
+        reject(err);
       },
     });
   });

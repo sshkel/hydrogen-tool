@@ -3,6 +3,8 @@ import { InputFields } from "../../../types";
 import { shallow, ShallowWrapper } from "enzyme";
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 
+const mockLoader: () => Promise<any[]> = () => new Promise(() => {});
+
 const findCapitalCostBreakdownChart = (wrapper: ShallowWrapper) =>
   wrapper
     .find(CostBreakdownDoughnutChart)
@@ -25,7 +27,9 @@ describe("Working Data calculations", () => {
         electrolyserReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -46,7 +50,9 @@ describe("Working Data calculations", () => {
         solarReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -67,7 +73,9 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -88,7 +96,9 @@ describe("Working Data calculations", () => {
         solarReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -109,7 +119,9 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -135,7 +147,9 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -153,7 +167,9 @@ describe("Working Data calculations", () => {
         batteryCosts: 542, // A$/kWh
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -169,7 +185,9 @@ describe("Working Data calculations", () => {
         gridConnectionCost: 2000,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -185,7 +203,9 @@ describe("Working Data calculations", () => {
         additionalUpfrontCosts: 2000,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -231,7 +251,9 @@ describe("Working Data calculations", () => {
         windLandProcurementCost: 15,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
 
@@ -257,7 +279,9 @@ describe("Working Data calculations", () => {
         electrolyserLandProcurementCost: 0.5,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
@@ -296,7 +320,9 @@ describe("Working Data calculations", () => {
         windLandProcurementCost: 1,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
@@ -334,7 +360,9 @@ describe("Working Data calculations", () => {
         windLandProcurementCost: 1,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
@@ -372,7 +400,9 @@ describe("Working Data calculations", () => {
         windLandProcurementCost: 1,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 
@@ -397,7 +427,9 @@ describe("Working Data calculations", () => {
         batteryLandProcurementCost: 10,
       };
 
-      const wrapper = shallow(<WorkingData data={data} />);
+      const wrapper = shallow(
+        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+      );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
 

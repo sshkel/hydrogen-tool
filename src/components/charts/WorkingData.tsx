@@ -1,7 +1,6 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { loadSolar, loadWind } from "../../model/DataLoader";
 import {
   cumulativeStackReplacementYears,
   DataModel,
@@ -29,6 +28,8 @@ import BasicTable from "./BasicTable";
 
 export interface Props {
   data?: InputFields;
+  loadSolar: () => Promise<any[]>;
+  loadWind: () => Promise<any[]>;
 }
 
 interface DownloadedData {
@@ -40,7 +41,9 @@ const isSolar = (tech: string): boolean => tech !== "Wind";
 const isWind = (tech: string): boolean => tech !== "Solar";
 
 export default function WorkingData(props: Props) {
-  const [data, setState] = useState<DownloadedData>({
+  const { loadSolar, loadWind } = props;
+
+  const [state, setState] = useState<DownloadedData>({
     solarData: [],
     windData: [],
   });
@@ -56,7 +59,6 @@ export default function WorkingData(props: Props) {
       if (wind.length !== 8760) {
         console.error("Wind data is not 8760 rows in length");
       }
-
       setState({ solarData: solar, windData: wind });
     });
   }, []);
@@ -139,8 +141,10 @@ export default function WorkingData(props: Props) {
     H2VoltoMass: 0.089,
   };
 
-  const model = new HydrogenModel(dataModel, data.solarData, data.windData);
+  const model = new HydrogenModel(dataModel, state.solarData, state.windData);
+
   const hourlyOperations = model.calculateElectrolyserHourlyOperation();
+
   const summary = model.calculateElectrolyserOutput(hourlyOperations);
 
   // Duration curve charts

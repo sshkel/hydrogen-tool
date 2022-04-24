@@ -7,6 +7,34 @@ interface Props {
   data: number[];
 }
 
+<<<<<<< HEAD
+=======
+// const state = {
+//   labels: ['January', 'February', 'March',
+//            'April', 'May'],
+//   datasets: [
+//     {
+//       label: 'Rainfall',
+//       backgroundColor: [
+//         '#B21F00',
+//         '#C9DE00',
+//         '#2FDE00',
+//         '#00A6B4',
+//         '#6800B4'
+//       ],
+//       hoverBackgroundColor: [
+//       '#501800',
+//       '#4B5000',
+//       '#175000',
+//       '#003350',
+//       '#35014F'
+//       ],
+//       data: [65, 59, 80, 81, 56]
+//     }
+//   ]
+// }
+
+>>>>>>> 7655a21f978af78ffc1dc78ee3780c7359f64756
 export default function CostBreakdownDoughnutChart(props: Props) {
   const data = {
     labels: props.labels,
@@ -21,6 +49,17 @@ export default function CostBreakdownDoughnutChart(props: Props) {
           "#FF0000",
           "#A21A24",
         ],
+<<<<<<< HEAD
+=======
+        // hoverBackgroundColor: [
+        //   '#501800',
+        //   '#4B5000',
+        //   '#175000',
+        //   '#003350',
+        //   '#35014F',
+        //   '#B21F00',
+        // ],
+>>>>>>> 7655a21f978af78ffc1dc78ee3780c7359f64756
         data: props.data,
       },
     ],
