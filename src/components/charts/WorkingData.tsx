@@ -25,6 +25,7 @@ import {
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
+import DataTable from "./DataTable";
 
 export interface Props {
   data?: InputFields;
@@ -352,14 +353,14 @@ export default function WorkingData(props: Props) {
     plantLife
   );
 
-  // guessing because I don't have excel but I think these come from summary
+  //TODO guessing because I don't have excel but I think these come from summary
   const h2Produced =
     props.data.profile === "Fixed"
       ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
       : summary["Hydrogen Output for Variable Operation [t/yr"];
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   // TODO definitly wrong, but not sure what it is without excel
-  const electricityConsumed = summary["Surplus Energy [MWh/yr]"];
+  const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
   const { h2Sales, electricitySales, oxygenSales, annualSales } = sales(
     h2RetailPrice,
     oxygenRetailPrice,
@@ -389,7 +390,7 @@ export default function WorkingData(props: Props) {
       additionalAnnualCosts
   );
 
-  const cumulativeCashFlow = cashFlowAnalysis(
+  const cashFlow = cashFlowAnalysis(
     annualSales,
     totalOpex,
     totalCapexCost,
@@ -406,8 +407,12 @@ export default function WorkingData(props: Props) {
     plantLife,
     inflationRate / 100
   );
+
+  const { cumulativeCashFlow } = cashFlow;
+
   return (
     <div>
+      <DataTable data={cashFlow}></DataTable>
       <Line title="Generator Duration Curve" data={generatorData} />
       <Line title="Electrolyser Duration Curve" data={electrolyserData} />
       <CostBreakdownDoughnutChart
@@ -475,7 +480,7 @@ export default function WorkingData(props: Props) {
     </div>
   );
 }
-// TODO percentages need to be fixed
+
 function cashFlowAnalysis(
   annualSales: number[],
   totalOpex: number[],
@@ -497,7 +502,6 @@ function cashFlowAnalysis(
   // sales
   const salesTotal = inflation(annualSales);
 
-  // TODO double check that all arrays have 0th and decomissioning years
   // net investments
   // direct equity payment
 
@@ -586,7 +590,7 @@ function cashFlowAnalysis(
   );
   const depreciation = padArray(
     projectYears(projectLife).map(
-      (x: number, i: number) => totalDepreciableCapex + conversionFactors[i]
+      (x: number, i: number) => totalDepreciableCapex * conversionFactors[i]
     )
   );
 
@@ -613,7 +617,23 @@ function cashFlowAnalysis(
       (sum += value)
   )(0);
   const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
-  return cumulativeCashFlow;
+
+  return {
+    directEquityPayment,
+    indirectEquity,
+    costFinancedViaLoan,
+    salvageCost,
+    decomissioningCost,
+    totalLoanRepayment,
+    interestPaidOnLoan,
+    totalOpexWithInflation,
+    incomePreDepreciation,
+    depreciation,
+    taxableIncome,
+    tax,
+    incomeAfterTaxAndDepreciation,
+    cumulativeCashFlow,
+  };
 }
 
 function sales(
@@ -666,43 +686,53 @@ function getConversionFactors(
   capitalDepreciationProfile: DepreciationProfile,
   projectLife: number
 ) {
+  let selectedModel = null;
   // come from conversion factors tab
   // can probs use the formula instead of hardcoded table
   switch (capitalDepreciationProfile) {
     // TODO when default to straight line it breaks with undefined
     case "Straight Line": {
-      return Array(projectLife).fill(1 / projectLife);
+      selectedModel = Array(projectLife).fill(1 / projectLife);
+      break;
     }
     case "MACRs - 3 year Schedule": {
-      return [0.3333, 0.4445, 0.1481, 0.0741];
+      selectedModel = [0.3333, 0.4445, 0.1481, 0.0741];
+      break;
     }
     case "MACRs - 5 year Schedule": {
-      return [0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576];
+      selectedModel = [0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576];
+      break;
     }
     case "MACRs - 7 year Schedule": {
-      return [0.1429, 0.1749, 0.1249, 0.0893, 0.892, 0.893, 0.0446];
+      selectedModel = [0.1429, 0.1749, 0.1249, 0.0893, 0.892, 0.893, 0.0446];
+      break;
     }
     case "MACRs - 10 year Schedule": {
-      return [
+      selectedModel = [
         0.1, 0.18, 0.144, 0.1152, 0.0922, 0.0737, 0.0655, 0.0655, 0.0656,
         0.0655, 0.0328,
       ];
+      break;
     }
     case "MACRs - 15 year Schedule": {
-      return [
+      selectedModel = [
         0.05, 0.095, 0.0855, 0.077, 0.0693, 0.0623, 0.059, 0.059, 0.0591, 0.059,
         0.0591, 0.059, 0.0591, 0.059, 0.0591, 0.0295,
       ];
+      break;
     }
     case "MACRs - 20 year Schedule": {
-      return [
+      selectedModel = [
         0.0375, 0.0722, 0.0668, 0.0618, 0.0571, 0.0529, 0.0489, 0.0452, 0.0446,
         0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446,
         0.0446, 0.0446, 0.0223,
       ];
+      break;
     }
     default: {
       throw new Error("Unknown depreciation profile");
     }
   }
+  const padding = projectLife - selectedModel.length;
+  return padArray(selectedModel.concat(Array(padding).fill(0)));
 }

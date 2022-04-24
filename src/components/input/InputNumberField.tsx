@@ -1,5 +1,5 @@
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 
 interface Props {
   label: string;
@@ -13,22 +13,34 @@ interface Props {
 }
 
 export default function InputNumberField(props: Props) {
-  const { label, name, defaultValue, helperText, disabled, required, onChange, adornmentLabel } = props;
+  const {
+    label,
+    name,
+    defaultValue,
+    helperText,
+    disabled,
+    required,
+    onChange,
+    adornmentLabel,
+  } = props;
 
-  return <TextField
-          id="outlined-number"
-          key={label}
-          name={name}
-          label={label}
-          defaultValue={defaultValue}
-          helperText={helperText}
-          disabled={disabled}
-          required={required}
-          type="number"
-          onChange={onChange}
-          InputProps={{
-            endAdornment: <InputAdornment position="end">{adornmentLabel}</InputAdornment>
-          }}
-        />;
-
+  return (
+    <TextField
+      id="outlined-number"
+      key={label}
+      name={name}
+      label={label}
+      defaultValue={defaultValue}
+      helperText={helperText}
+      disabled={disabled}
+      required={required}
+      type="number"
+      onChange={onChange}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">{adornmentLabel}</InputAdornment>
+        ),
+      }}
+    />
+  );
 }
