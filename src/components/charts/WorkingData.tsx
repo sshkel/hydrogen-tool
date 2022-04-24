@@ -25,7 +25,7 @@ import {
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
-import DataTable from "./DataTable";
+import BasicTable from "./BasicTable";
 
 export interface Props {
   data?: InputFields;
@@ -412,7 +412,7 @@ export default function WorkingData(props: Props) {
 
   return (
     <div>
-      <DataTable
+      <BasicTable
         data={{
           h2Sales,
           electricitySales,
@@ -420,7 +420,7 @@ export default function WorkingData(props: Props) {
           annualSales,
           ...cashFlow,
         }}
-      ></DataTable>
+      ></BasicTable>
       <Line title="Generator Duration Curve" data={generatorData} />
       <Line title="Electrolyser Duration Curve" data={electrolyserData} />
       <CostBreakdownDoughnutChart
