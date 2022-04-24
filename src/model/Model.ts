@@ -512,23 +512,26 @@ export class HydrogenModel {
     let Gen_CAPEX: number[] = [];
     let Gen_OPEX: number[] = [];
     if (ppaPrice > 0) {
-      Power_cost = buttFirst(
+      Power_cost = activeYears(
         operating_outputs["Energy in to Electrolyser [MWh/yr]"] * ppaPrice,
         projectLife
       );
     } else {
       Gen_CAPEX = first(gen_capex, projectLife);
 
-      Gen_OPEX = buttFirst(gen_opex, projectLife);
+      Gen_OPEX = activeYears(gen_opex, projectLife);
 
-      Power_cost = buttFirst(
+      Power_cost = activeYears(
         -1 * operating_outputs["Surplus Energy [MWh/yr]"] * spotPrice,
         projectLife
       );
     }
 
     const Elec_CAPEX = first(electrolyserCapex * elecCapacity, projectLife);
-    const Elec_OandM = buttFirst(electrolyserOandM * elecCapacity, projectLife);
+    const Elec_OandM = activeYears(
+      electrolyserOandM * elecCapacity,
+      projectLife
+    );
     const stack_years = cumulativeStackReplacementYears(
       operating_outputs["Total Time Electrolyser is Operating"] *
         this.hoursPerYear,
@@ -540,7 +543,7 @@ export class HydrogenModel {
     stack_years.forEach((x: number) => {
       Stack_replacement[x] = electrolyserStackCost * elecCapacity;
     });
-    const Water_cost = buttFirst(
+    const Water_cost = activeYears(
       annual_hydrogen * waterNeeds * waterCost,
       projectLife
     );
@@ -568,7 +571,7 @@ export class HydrogenModel {
         );
       });
     //# Calculate the annual discounted cash flows for hydrogen and total costs
-    const Hydrogen_kg = buttFirst(annual_hydrogen / kgtoTonne, projectLife);
+    const Hydrogen_kg = activeYears(annual_hydrogen / kgtoTonne, projectLife);
     const Hydrogen_kg_Discounted = Hydrogen_kg.map((x: number, i: number) => {
       return Hydrogen_kg[i] * (1 / (1 + discountRate)) ** Year[i];
     });
@@ -630,13 +633,18 @@ export function cumulativeStackReplacementYears(
   }
   return stackReplacementYears;
 }
-// + 1 for decomissioning years
+
 export function first(element: number, projectLife: number) {
   return [element].concat(Array(projectLife + 1).fill(0));
 }
-
-export function buttFirst(element: number, projectLife: number) {
+// projectLife with padding in the front and back.
+// initial investment and decommissioning year
+export function activeYears(element: number, projectLife: number) {
   return [0].concat(Array(projectLife).fill(element)).concat([0]);
+}
+// pad array with zero-th and decommissionning year
+export function padArray(arr: number[]) {
+  return [0].concat(arr).concat([0]);
 }
 
 export function decomissioning(element: number, projectLife: number) {

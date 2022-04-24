@@ -10,7 +10,8 @@ import {
   first,
   decomissioning,
   projectYears,
-  buttFirst,
+  activeYears,
+  padArray,
 } from "../../model/Model";
 import { DepreciationProfile, InputFields } from "../../types";
 import {
@@ -363,9 +364,9 @@ export default function WorkingData(props: Props) {
     h2RetailPrice,
     oxygenRetailPrice,
     averageElectricitySpotPrice,
-    buttFirst(h2Produced, plantLife),
-    buttFirst(electricityProduced, plantLife),
-    buttFirst(electricityConsumed, plantLife)
+    activeYears(h2Produced, plantLife),
+    activeYears(electricityProduced, plantLife),
+    activeYears(electricityConsumed, plantLife)
   );
 
   const totalCapexCost =
@@ -547,21 +548,25 @@ function cashFlowAnalysis(
   // loan liabilities
   // loan repayment
   const loanRepayment = totalLoan / loanTerm;
-  const totalLoanRepayment = projectYears(projectLife).map((year: number) => {
-    if (year < loanTerm) {
-      return loanRepayment;
-    }
-    return 0;
-  });
+  const totalLoanRepayment = padArray(
+    projectYears(projectLife).map((year: number) => {
+      if (year < loanTerm) {
+        return loanRepayment;
+      }
+      return 0;
+    })
+  );
   // interest paid on loan
-  const interestPaidOnLoan = projectYears(projectLife).map((year: number) => {
-    if (year < loanTerm) {
-      return loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
-    }
-    return 0;
-  });
+  const interestPaidOnLoan = padArray(
+    projectYears(projectLife).map((year: number) => {
+      if (year < loanTerm) {
+        return loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
+      }
+      return 0;
+    })
+  );
   // fixed opex
-  const totalOpexWithInflation = inflation(totalOpex);
+  const totalOpexWithInflation = inflation(padArray(totalOpex));
   // depreciation
   const incomePreDepreciation = directEquityPayment.map(
     (x: number, i: number) => {
@@ -579,9 +584,12 @@ function cashFlowAnalysis(
     capitalDepreciationProfile,
     projectLife
   );
-  const depreciation = projectYears(projectLife).map(
-    (x: number, i: number) => totalDepreciableCapex + conversionFactors[i]
+  const depreciation = padArray(
+    projectYears(projectLife).map(
+      (x: number, i: number) => totalDepreciableCapex + conversionFactors[i]
+    )
   );
+
   // tax liabilities
   const taxableIncome = incomePreDepreciation.map(
     (_: number, i: number) =>
@@ -600,12 +608,13 @@ function cashFlowAnalysis(
   const incomeAfterTaxAndDepreciation = incomePreDepreciation.map(
     (_: number, i: number) => incomePreDepreciation[i] - tax[i]
   );
-
+  debugArray(incomeAfterTaxAndDepreciation, "incometax");
   const cumulativeSum = (
     (sum: number) => (value: number) =>
       (sum += value)
   )(0);
   const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
+  debugger;
   return cumulativeCashFlow;
 }
 
@@ -638,6 +647,11 @@ function sales(
     oxygenSales,
     annualSales,
   };
+}
+
+function debugArray(arr: number[], name: string) {
+  console.log(`${name} ${arr.length} `);
+  arr.forEach((x: number, i: number) => console.log(`${i}: ${x}`));
 }
 
 function applyInflation(rate: number) {

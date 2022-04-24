@@ -470,13 +470,13 @@ export const data: Field[] = [
   },
   // Post Project Cash Flows
   {
-    id: "salvageCost",
+    id: "salvageCostShare",
     label: "Salvage Cost",
     defaultValue: 10,
     adornmentLabel: "% of Total Investment",
   },
   {
-    id: "decommissioningCost",
+    id: "decommissioningCostShare",
     label: "Decommissioning Costs",
     defaultValue: 10,
     adornmentLabel: "% of Total Investment",
