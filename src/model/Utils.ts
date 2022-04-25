@@ -16,8 +16,3 @@ export function decomissioning(element: number, projectLife: number) {
     .fill(0)
     .concat([element]);
 }
-
-export function projectYears(projectLife: number): number[] {
-  // gives you array of years starting from 1 and ending in projectLife
-  return Array.from({ length: projectLife }, (_, i) => i + 1);
-}

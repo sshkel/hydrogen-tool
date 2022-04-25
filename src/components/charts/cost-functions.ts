@@ -1,10 +1,4 @@
-import {
-  first,
-  decomissioning,
-  projectYears,
-  activeYears,
-  padArray,
-} from "../../model/Utils";
+import { first, decomissioning, padArray } from "../../model/Utils";
 import { DepreciationProfile } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>
@@ -78,7 +72,6 @@ export const getOpexPerYearWithAdditionalCostPredicate = (
   });
 };
 
-// VisibleForTesting
 export function maxDegradationStackReplacementYears(
   yearlyElecDegradation: number,
   maxElexDegradation: number,
@@ -108,20 +101,23 @@ export function cumulativeStackReplacementYears(
   // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
   //the total operating time surpassing a multiple of the stack lifetime.
   //"""
+  let currentStackLifetime: number = stackLifetime;
+
+  const years = projectYears(projectLife);
+
+  if (stackLifetime <= operatingHoursPerYear) {
+    return years;
+  }
 
   const stackReplacementYears = [];
-  for (let year of projectYears(projectLife)) {
-    // TODO check for rounding error. should be fine because floors?
-    // This is a funny way of calculating this if we are doing it iteratively
-    // Fix it with a simpler version
-    if (
-      Math.floor((operatingHoursPerYear * year) / stackLifetime) -
-        Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ===
-      1.0
-    ) {
+  for (let year of years) {
+    currentStackLifetime -= operatingHoursPerYear;
+    if (currentStackLifetime <= 0) {
       stackReplacementYears.push(year);
+      currentStackLifetime += stackLifetime;
     }
   }
+
   return stackReplacementYears;
 }
 
@@ -376,4 +372,9 @@ function getConversionFactors(
   }
   const padding = projectLife - selectedModel.length;
   return padArray(selectedModel.concat(Array(padding).fill(0)));
+}
+
+function projectYears(projectLife: number): number[] {
+  // gives you array of years starting from 1 and ending in projectLife
+  return Array.from({ length: projectLife }, (_, i) => i + 1);
 }

@@ -93,6 +93,85 @@ describe("Working Data calculations", () => {
       done();
     }, 600);
   });
+
+  describe("OPEX calculations", () => {
+    it("calculates generator duration curve as 8760 percentages", (done) => {
+      const data: InputFields = {
+        ...defaultInputData,
+        technology: "Solar",
+        solarNominalCapacity: 15, // MW
+        solarReferenceCapacity: 1000, // kW
+        solarPVFarmReferenceCost: 1200, // A$/kw
+        solarPVCostReductionWithScale: 20, // %
+        solarReferenceFoldIncrease: 10,
+      };
+
+      const wrapper = mount(
+        <WorkingData data={data} loadSolar={loadSolar} loadWind={loadWind} />
+      );
+
+      // Sad 600ms sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const durationCurve = wrapper
+          .find(Line)
+          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+        expect(durationCurve).toHaveLength(1);
+        expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
+          8760
+        );
+        (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
+          (val) => {
+            expect(val).toBeGreaterThanOrEqual(0);
+            expect(val).toBeLessThanOrEqual(100);
+          }
+        );
+        done();
+      }, 600);
+    });
+  });
+
+  it("calculates electrolyser duration curve as 8760 percentages", (done) => {
+    const data: InputFields = {
+      ...defaultInputData,
+      technology: "Wind",
+      windNominalCapacity: 15, // MW
+      windReferenceCapacity: 1000, // kW
+      windFarmReferenceCost: 1200, // A$/kw
+      windCostReductionWithScale: 20, // %
+      windReferenceFoldIncrease: 10,
+      electrolyserNominalCapacity: 10, // MW
+      electrolyserReferenceCapacity: 10000, // kW
+      electrolyserReferencePurchaseCost: 1000, // A$/kw
+      electrolyserCostReductionWithScale: 20, // %
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+    };
+
+    const wrapper = mount(
+      <WorkingData data={data} loadSolar={loadSolar} loadWind={loadWind} />
+    );
+
+    // Sad 600ms sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const durationCurve = wrapper
+        .find(Line)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+      expect(durationCurve).toHaveLength(1);
+      expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
+        8760
+      );
+      (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
+        (val) => {
+          expect(val).toBeGreaterThanOrEqual(0);
+          expect(val).toBeLessThanOrEqual(100);
+        }
+      );
+      done();
+    }, 600);
+  });
 });
 
 const defaultInputData: InputFields = {

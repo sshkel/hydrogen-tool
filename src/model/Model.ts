@@ -1,5 +1,3 @@
-import { projectYears } from "./Utils";
-
 export type DataModel = {
   batteryLifetime: number;
   batteryMinCharge: number;
