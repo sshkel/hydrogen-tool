@@ -25,6 +25,7 @@ import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import BasicTable from "./BasicTable";
+import DurationCurve from "./DurationCurve";
 
 export interface Props {
   data?: InputFields;
@@ -145,51 +146,6 @@ export default function WorkingData(props: Props) {
   const hourlyOperations = model.calculateElectrolyserHourlyOperation();
 
   const summary = model.calculateElectrolyserOutput(hourlyOperations);
-
-  // Duration curve charts
-  const generatorData = {
-    labels: Array.from(Array(hourlyOperations.Generator_CF.length).keys()).map(
-      (num) => ((num / 8760) * 100).toFixed(0)
-    ),
-    datasets: [
-      {
-        label: "Generator",
-        data: hourlyOperations.Generator_CF.map((x) => x * 100).sort(
-          (a, b) => b - a
-        ),
-        fill: true,
-        backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)",
-      },
-    ],
-    options: {
-      ticks: {
-        stepSize: 100,
-      },
-    },
-  };
-
-  const electrolyserData = {
-    labels: Array.from(
-      Array(hourlyOperations.Electrolyser_CF.length).keys()
-    ).map((num) => ((num / 8760) * 100).toFixed(0)),
-    datasets: [
-      {
-        label: "Electrolyser",
-        data: hourlyOperations.Electrolyser_CF.map((x) => x * 100).sort(
-          (a, b) => b - a
-        ),
-        fill: true,
-        backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)",
-      },
-    ],
-    options: {
-      ticks: {
-        stepSize: 100,
-      },
-    },
-  };
 
   // CAPEX charts
   const electrolyserCAPEX = calculateCapex(
@@ -429,8 +385,14 @@ export default function WorkingData(props: Props) {
           ...cashFlow,
         }}
       ></BasicTable>
-      <Line title="Generator Duration Curve" data={generatorData} />
-      <Line title="Electrolyser Duration Curve" data={electrolyserData} />
+      <DurationCurve
+        title="Generator Duration Curve"
+        data={hourlyOperations.Generator_CF}
+      />
+      <DurationCurve
+        title="Electrolyser Duration Curve"
+        data={hourlyOperations.Electrolyser_CF}
+      />
       <CostBreakdownDoughnutChart
         title="Capital Cost Breakdown"
         labels={[
