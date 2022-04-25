@@ -39,7 +39,7 @@ export default function BasicTable(props: Props) {
             >
               {Object.keys(dataToVis).map((k: string) => (
                 <TableCell align="right">
-                  {dataToVis[k][year].toFixed(3)}
+                  {dataToVis[k][year].toLocaleString("en-US")}
                 </TableCell>
               ))}
             </TableRow>
