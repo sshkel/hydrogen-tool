@@ -3,8 +3,8 @@ import {
   DataModel,
   HydrogenModel,
   ModelSummary,
-  maxDegradationStackReplacementYears,
 } from "../../model/Model";
+
 import fs from "fs";
 import Papa from "papaparse";
 import workingdf1 from "../resources/example1-workingdf.json";
@@ -13,6 +13,7 @@ import workingdf2 from "../resources/example2-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
 import workingdf3 from "../resources/example3-workingdf.json";
 import outputs3 from "../resources/example3-outputs.json";
+import { maxDegradationStackReplacementYears } from "../../components/charts/cost-functions";
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];

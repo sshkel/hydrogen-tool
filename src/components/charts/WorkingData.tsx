@@ -1,24 +1,24 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { DataModel, HydrogenModel } from "../../model/Model";
+
 import {
-  cumulativeStackReplacementYears,
-  DataModel,
-  HydrogenModel,
-  maxDegradationStackReplacementYears,
   first,
   decomissioning,
   projectYears,
   activeYears,
   padArray,
-} from "../../model/Model";
+} from "../../model/Utils";
 import { DepreciationProfile, InputFields } from "../../types";
 import {
+  cumulativeStackReplacementYears,
   calculateBatteryCapex,
   calculateCapex,
   getIndirectCost,
   getOpexPerYear,
   getOpexPerYearWithAdditionalCostPredicate,
+  maxDegradationStackReplacementYears,
   roundToNearestThousand,
 } from "./cost-functions";
 import CostBarChart from "./CostBarChart";

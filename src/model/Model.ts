@@ -1,3 +1,5 @@
+import { projectYears } from "./Utils";
+
 export type DataModel = {
   batteryLifetime: number;
   batteryMinCharge: number;
@@ -433,75 +435,4 @@ export class HydrogenModel {
 
     return electrolyser_CF_overload;
   }
-}
-
-// VisibleForTesting
-export function maxDegradationStackReplacementYears(
-  yearlyElecDegradation: number,
-  maxElexDegradation: number,
-  projectLife: number
-): number[] {
-  let runningYear = 1;
-  const replacementYears = [];
-  for (let year of projectYears(projectLife)) {
-    const stackDegradationForYear =
-      1 - 1 / (1 + yearlyElecDegradation) ** runningYear;
-    if (stackDegradationForYear > maxElexDegradation) {
-      runningYear = 1;
-      replacementYears.push(year);
-    } else {
-      runningYear++;
-    }
-  }
-  return replacementYears;
-}
-
-export function cumulativeStackReplacementYears(
-  // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
-  operatingHoursPerYear: number,
-  stackLifetime: number,
-  projectLife: number
-): number[] {
-  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
-  //the total operating time surpassing a multiple of the stack lifetime.
-  //"""
-
-  const stackReplacementYears = [];
-  for (let year of projectYears(projectLife)) {
-    // TODO check for rounding error. should be fine because floors?
-    // This is a funny way of calculating this if we are doing it iteratively
-    // Fix it with a simpler version
-    if (
-      Math.floor((operatingHoursPerYear * year) / stackLifetime) -
-        Math.floor((operatingHoursPerYear * (year - 1)) / stackLifetime) ===
-      1.0
-    ) {
-      stackReplacementYears.push(year);
-    }
-  }
-  return stackReplacementYears;
-}
-
-export function first(element: number, projectLife: number) {
-  return [element].concat(Array(projectLife + 1).fill(0));
-}
-// projectLife with padding in the front and back.
-// initial investment and decommissioning year
-export function activeYears(element: number, projectLife: number) {
-  return [0].concat(Array(projectLife).fill(element)).concat([0]);
-}
-// pad array with zero-th and decommissionning year
-export function padArray(arr: number[]) {
-  return [0].concat(arr).concat([0]);
-}
-
-export function decomissioning(element: number, projectLife: number) {
-  return Array(projectLife + 1)
-    .fill(0)
-    .concat([element]);
-}
-
-export function projectYears(projectLife: number): number[] {
-  // gives you array of years starting from 1 and ending in projectLife
-  return Array.from({ length: projectLife }, (_, i) => i + 1);
 }
