@@ -1,4 +1,5 @@
 import {
+  applyInflation,
   calculateBatteryCapex,
   calculateCapex,
   cumulativeStackReplacementYears,
@@ -125,5 +126,15 @@ describe("Cost function calculations", () => {
     const expected = [...Array(10).keys()].map((i) => i + 1);
 
     expect(stackReplacementYears).toEqual(expected);
+  });
+
+  it("can apply inflation based on rate and input cost", () => {
+    const inflationFn = applyInflation(0.5);
+    const input = [...Array(9).keys()].map((_) => 1);
+    const inflationValues = inflationFn(input);
+    expect(inflationValues).toHaveLength(9);
+    expect(inflationValues).toEqual([
+      1, 1.5, 2.25, 3.375, 5.0625, 7.59375, 11.390625, 17.0859375, 25.62890625,
+    ]);
   });
 });

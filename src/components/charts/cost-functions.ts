@@ -304,19 +304,19 @@ export function sales(
   };
 }
 
-function applyInflation(rate: number) {
-  return (values: number[]) => {
-    return values.map(
+export function applyInflation(rate: number) {
+  return (values: number[]) =>
+    values.map(
       // i corresponds to year
       (x: number, i: number) => {
         // zero-th year is always skipped as it signifies upfront costs rather than actual operations
         if (i === 0) {
           return x;
         }
+        // TODO: Check is passing in array size of PROJECT_YEARS + 1 (to account for 0th year, but going up to project life)
         return x * (1 + rate) ** i;
       }
     );
-  };
 }
 
 function getConversionFactors(
