@@ -1,8 +1,8 @@
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { mount, ReactWrapper } from "enzyme";
-import { Line } from "react-chartjs-2";
+import { mount } from "enzyme";
 import { read_local_csv } from "../../resources/loader";
+import DurationCurve from "../../../components/charts/DurationCurve";
 
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
@@ -35,20 +35,16 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const durationCurve = wrapper
-          .find(Line)
+          .find(DurationCurve)
           .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
         expect(durationCurve).toHaveLength(1);
-        expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
-          8760
-        );
-        (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
-          (val) => {
-            expect(val).toBeGreaterThanOrEqual(0);
-            expect(val).toBeLessThanOrEqual(100);
-          }
-        );
+        expect(durationCurve.at(0).prop("data")).toHaveLength(8760);
+        (durationCurve.at(0).prop("data") as number[]).forEach((val) => {
+          expect(val).toBeGreaterThanOrEqual(0);
+          expect(val).toBeLessThanOrEqual(100);
+        });
         done();
-      }, 600);
+      }, 1000);
     });
   });
 
@@ -78,18 +74,14 @@ describe("Working Data calculations", () => {
     setTimeout(() => {
       wrapper.update();
       const durationCurve = wrapper
-        .find(Line)
+        .find(DurationCurve)
         .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
       expect(durationCurve).toHaveLength(1);
-      expect(durationCurve.at(0).prop("data").datasets[0].data).toHaveLength(
-        8760
-      );
-      (durationCurve.at(0).prop("data").datasets[0].data as number[]).forEach(
-        (val) => {
-          expect(val).toBeGreaterThanOrEqual(0);
-          expect(val).toBeLessThanOrEqual(100);
-        }
-      );
+      expect(durationCurve.at(0).prop("data")).toHaveLength(8760);
+      (durationCurve.at(0).prop("data") as number[]).forEach((val) => {
+        expect(val).toBeGreaterThanOrEqual(0);
+        expect(val).toBeLessThanOrEqual(100);
+      });
       done();
     }, 600);
   });
