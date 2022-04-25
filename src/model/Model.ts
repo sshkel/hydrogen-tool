@@ -1,23 +1,13 @@
 export type DataModel = {
-  // batteryLifetime
   batteryLifetime: number;
-  // batteryMinCharge
   batteryMinCharge: number;
-  // batteryEfficiency
   batteryEfficiency: number;
-  // durationOfStorage
   durationOfStorage: number;
-  // batteryRatedPower
   batteryRatedPower: number;
-  // timeBetweenOverloading
   timeBetweenOverloading: number;
-  // maximumLoadWhenOverloading
   maximumLoadWhenOverloading: number;
-  // electrolyserNominalCapacity
   electrolyserNominalCapacity: number;
-  // solarNominalCapacity
   solarNominalCapacity: number;
-  // windNominalCapacity
   windNominalCapacity: number;
   region: string;
   electrolyserMaximumLoad: number;
