@@ -134,7 +134,7 @@ export default function WorkingData(props: Props) {
     region,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
-    // no clue what these are in the excel
+    //TODO  no clue what these are in the excel, work out what inputs they are supposed to be
     specCons: 4.5,
     elecEff: 83,
     H2VoltoMass: 0.089,

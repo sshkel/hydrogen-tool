@@ -68,23 +68,3 @@ export const getOpexPerYearWithAdditionalCostPredicate = (
     return cost * (1 + discountRate / 100) ** year + extras;
   });
 };
-
-// Tara use me to take all your cool calculations and convert to discounted calculations
-// just do something like this
-// const withDiscount = withDiscountRate(discountRate);
-// const discountedOpex = withDiscount(opex);
-// the only weird one is hydrogen produced that also multiplies things by 1000
-const applyDiscount = (discountRate: number) => {
-  return (values: number[]) => {
-    return values.map(
-      // i corresponds to year
-      (x: number, i: number) => {
-        // zero-th year is always skipped as it signifies upfront costs rather than actual operations
-        if (i === 0) {
-          return x;
-        }
-        return x / (1 + discountRate) ** i;
-      }
-    );
-  };
-};
