@@ -93,6 +93,40 @@ export default function Input(props: Props) {
         />
         {[...Array(7)].map((_) => getData(pointer))}
       </InputExpand>
+      <InputExpand title="Electrolyser Parameters" id="electrolyser-parameters">
+        <InputExpand
+          title="Electrolyser Specific Consumption - SEC"
+          id="electrolyser-specific-consumption"
+        >
+          <InputSelectField
+            id="profile"
+            label="SEC vs Load Profile"
+            values={profileData}
+            defaultValue={profileData[0]}
+            onChange={handleChange}
+          />
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand
+          title="Electrolyser Load Range"
+          id="electrolyser-load-range"
+        >
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
+        <InputExpand
+          title="Other Operational Factors"
+          id="other-operational-factors"
+        >
+          <InputSelectField
+            id="replacementType"
+            label="Stack Replacement Type"
+            values={replacementTypeData}
+            defaultValue={replacementTypeData[0]}
+            onChange={handleChange}
+          />
+          {[...Array(4)].map((_) => getData(pointer))}
+        </InputExpand>
+      </InputExpand>
       <InputExpand title="Electrolyser Costs" id="electrolyser-costs">
         <InputExpand
           title="Electrolyser Capital Costs"
@@ -129,40 +163,7 @@ export default function Input(props: Props) {
           {[...Array(6)].map((_) => getData(pointer))}
         </InputExpand>
       </InputExpand>
-      <InputExpand title="Electrolyser Parameters" id="electrolyser-parameters">
-        <InputExpand
-          title="Electrolyser Specific Consumption - SEC"
-          id="electrolyser-specific-consumption"
-        >
-          <InputSelectField
-            id="profile"
-            label="SEC vs Load Profile"
-            values={profileData}
-            defaultValue={profileData[0]}
-            onChange={handleChange}
-          />
-          {[...Array(4)].map((_) => getData(pointer))}
-        </InputExpand>
-        <InputExpand
-          title="Electrolyser Load Range"
-          id="electrolyser-load-range"
-        >
-          {[...Array(4)].map((_) => getData(pointer))}
-        </InputExpand>
-        <InputExpand
-          title="Other Operational Factors"
-          id="other-operational-factors"
-        >
-          <InputSelectField
-            id="replacementType"
-            label="Stack Replacement Type"
-            values={replacementTypeData}
-            defaultValue={replacementTypeData[0]}
-            onChange={handleChange}
-          />
-          {[...Array(4)].map((_) => getData(pointer))}
-        </InputExpand>
-      </InputExpand>
+
       <InputExpand title="Additional Costs" id="additional-costs">
         {[...Array(2)].map((_) => getData(pointer))}
       </InputExpand>

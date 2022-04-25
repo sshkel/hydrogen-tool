@@ -74,6 +74,90 @@ export const data: Field[] = [
     helperText:
       "Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration.",
   },
+  /******* Electrolyser Parameters *******/
+  // Electrolyser Specific Consumption
+  {
+    id: "secAtNominalLoadAE",
+    label: "SEC At Nominal Load (AE)",
+    defaultValue: 50,
+    adornmentLabel: kWheLabel,
+  },
+  {
+    id: "secAtNominalLoadPEM",
+    label: "SEC At Nominal Load (PEM)",
+    defaultValue: 0.02,
+    adornmentLabel: kgH2Label,
+    disabled: true,
+  },
+  {
+    id: "secCorrectionFactor",
+    label: "SEC Correction Factor",
+    defaultValue: 100,
+    adornmentLabel: "%",
+  },
+  {
+    id: "totalSystemSecAtNominalLoad",
+    label: "Total System SEC at Nominal Load",
+    defaultValue: 50.0,
+    adornmentLabel: kWheLabel,
+    disabled: true,
+  },
+  // Electrolyser Load Range
+  {
+    id: "electrolyserMaximumLoad",
+    label: "Electrolyser Maximum Load",
+    defaultValue: 100,
+    adornmentLabel: "%",
+  },
+  {
+    id: "electrolyserMinimumLoad",
+    label: "Electrolyser Minimum Load",
+    defaultValue: 10,
+    adornmentLabel: "%",
+  },
+  {
+    id: "maximumLoadWhenOverloading",
+    label: "Maximum Load When Overloading",
+    defaultValue: 10,
+    adornmentLabel: "%",
+  },
+  {
+    id: "timeBetweenOverloading",
+    label: "Time Between Overloading",
+    defaultValue: 0,
+    adornmentLabel: "hr",
+  },
+  // Other Operational Factors
+  {
+    id: "stackLifetime",
+    label: "Stack Lifetime",
+    defaultValue: 60000,
+    adornmentLabel: "hrs",
+    helperText:
+      "Cumulative hours of operation before stack replacement is due.",
+  },
+  {
+    id: "stackDegradation",
+    label: "Stack Degradation",
+    defaultValue: 0.0,
+    adornmentLabel: "%/yr",
+    helperText: "Decrease in stack output per year.",
+  },
+  {
+    id: "maximumDegradationBeforeReplacement",
+    label: "Maximum Degradation Before Replacement",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Maximum allowable degradation before stack must be replaced.",
+  },
+  {
+    id: "waterRequirementOfElectrolyser",
+    label: "Water Requirement of Electrolyser",
+    defaultValue: 10,
+    adornmentLabel: "L/kg",
+    helperText:
+      "Water consumed per kg of hydrogen produced - independent of load.",
+  },
   /******* Electrolyser Costs *******/
   // Electrolyser Capital Costs
   {
@@ -301,90 +385,7 @@ export const data: Field[] = [
     helperText:
       "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
   },
-  /******* Electrolyser Parameters *******/
-  // Electrolyser Specific Consumption
-  {
-    id: "secAtNominalLoadAE",
-    label: "SEC At Nominal Load (AE)",
-    defaultValue: 50,
-    adornmentLabel: kWheLabel,
-  },
-  {
-    id: "secAtNominalLoadPEM",
-    label: "SEC At Nominal Load (PEM)",
-    defaultValue: 0.02,
-    adornmentLabel: kgH2Label,
-    disabled: true,
-  },
-  {
-    id: "secCorrectionFactor",
-    label: "SEC Correction Factor",
-    defaultValue: 100,
-    adornmentLabel: "%",
-  },
-  {
-    id: "totalSystemSecAtNominalLoad",
-    label: "Total System SEC at Nominal Load",
-    defaultValue: 50.0,
-    adornmentLabel: kWheLabel,
-    disabled: true,
-  },
-  // Electrolyser Load Range
-  {
-    id: "electrolyserMaximumLoad",
-    label: "Electrolyser Maximum Load",
-    defaultValue: 100,
-    adornmentLabel: "%",
-  },
-  {
-    id: "electrolyserMinimumLoad",
-    label: "Electrolyser Minimum Load",
-    defaultValue: 10,
-    adornmentLabel: "%",
-  },
-  {
-    id: "maximumLoadWhenOverloading",
-    label: "Maximum Load When Overloading",
-    defaultValue: 10,
-    adornmentLabel: "%",
-  },
-  {
-    id: "timeBetweenOverloading",
-    label: "Time Between Overloading",
-    defaultValue: 0,
-    adornmentLabel: "hr",
-  },
-  // Other Operational Factors
-  {
-    id: "stackLifetime",
-    label: "Stack Lifetime",
-    defaultValue: 60000,
-    adornmentLabel: "hrs",
-    helperText:
-      "Cumulative hours of operation before stack replacement is due.",
-  },
-  {
-    id: "stackDegradation",
-    label: "Stack Degradation",
-    defaultValue: 0.0,
-    adornmentLabel: "%/yr",
-    helperText: "Decrease in stack output per year.",
-  },
-  {
-    id: "maximumDegradationBeforeReplacement",
-    label: "Maximum Degradation Before Replacement",
-    defaultValue: 0,
-    adornmentLabel: "%",
-    helperText: "Maximum allowable degradation before stack must be replaced.",
-  },
-  {
-    id: "waterRequirementOfElectrolyser",
-    label: "Water Requirement of Electrolyser",
-    defaultValue: 10,
-    adornmentLabel: "L/kg",
-    helperText:
-      "Water consumed per kg of hydrogen produced - independent of load.",
-  },
+
   /******* Additional Costs *******/
   {
     id: "additionalUpfrontCosts",
