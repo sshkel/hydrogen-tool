@@ -480,7 +480,7 @@ export const data: Field[] = [
   },
 ];
 
-export const regionData: string[] = [
+export const locationData: string[] = [
   "Port Hedland, WA",
   "Geraldton, WA",
   "Ashburton, WA",

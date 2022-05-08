@@ -94,7 +94,7 @@ export default function WorkingData(props: Props) {
     maximumLoadWhenOverloading,
     electrolyserMinimumLoad,
     electrolyserMaximumLoad,
-    region,
+    location,
     electrolyserWaterCost,
     stackReplacementType,
     stackLifetime,
@@ -126,7 +126,7 @@ export default function WorkingData(props: Props) {
     electrolyserNominalCapacity,
     solarNominalCapacity,
     windNominalCapacity,
-    region,
+    location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
     //TODO  no clue what these are in the excel, work out what inputs they are supposed to be

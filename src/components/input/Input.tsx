@@ -6,7 +6,7 @@ import React from "react";
 import {
   data,
   profileData,
-  regionData,
+  locationData,
   replacementTypeData,
   technologyData,
   capitalDepreciationProfile,
@@ -42,7 +42,8 @@ export default function Input(props: Props) {
     let savedValue = null;
     if (savedState) {
       const parsedState = JSON.parse(savedState);
-      savedValue = parsedState[id];
+      const value = parsedState[id];
+      savedValue = isNaN(value) ? value : Number(value);
     }
     return (
       <InputNumberField
@@ -74,8 +75,8 @@ export default function Input(props: Props) {
         <InputSelectField
           id="location"
           label="Location"
-          values={regionData}
-          defaultValue={regionData[0]}
+          values={locationData}
+          defaultValue={locationData[0]}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">

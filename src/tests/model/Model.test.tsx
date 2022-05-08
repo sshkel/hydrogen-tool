@@ -31,7 +31,7 @@ describe("Hydrogen Model", () => {
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 10,
       windNominalCapacity: 10,
-      region: "North West NSW",
+      location: "North West NSW",
 
       // spot_price: 30,
 
@@ -99,7 +99,7 @@ describe("Hydrogen Model", () => {
       solarNominalCapacity: 15,
       batteryRatedPower: 10,
       durationOfStorage: 2,
-      region: "North West NSW",
+      location: "North West NSW",
 
       // defaults
       windNominalCapacity: 0,
@@ -164,7 +164,7 @@ describe("Hydrogen Model", () => {
       windNominalCapacity: 100,
 
       // defaults
-      region: "North West NSW",
+      location: "North West NSW",
       batteryRatedPower: 0,
       durationOfStorage: 0,
       // spotPrice: 0,

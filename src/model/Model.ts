@@ -9,7 +9,7 @@ export type DataModel = {
   electrolyserNominalCapacity: number;
   solarNominalCapacity: number;
   windNominalCapacity: number;
-  region: string;
+  location: string;
   electrolyserMaximumLoad: number;
   electrolyserMinimumLoad: number;
   // no clue about these 3, need to ask
@@ -76,7 +76,7 @@ export class HydrogenModel {
       this.parameters.electrolyserNominalCapacity,
       this.parameters.solarNominalCapacity,
       this.parameters.windNominalCapacity,
-      this.parameters.region,
+      this.parameters.location,
       this.elecMaxLoad,
       this.elecMinLoad,
       this.hydOutput,

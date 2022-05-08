@@ -494,7 +494,7 @@ const defaultInputData: InputFields = {
   additionalTransmissionCharges: 0,
   principalPPACost: 0,
   profile: "Fixed",
-  region: "WA",
+  location: "WA",
   electrolyserMaximumLoad: 0,
   electrolyserMinimumLoad: 0,
   timeBetweenOverloading: 0,

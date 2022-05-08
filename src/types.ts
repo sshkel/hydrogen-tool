@@ -66,7 +66,7 @@ export interface InputFields {
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
   profile: SECType;
-  region: string;
+  location: string;
   electrolyserMaximumLoad: number;
   electrolyserMinimumLoad: number;
   timeBetweenOverloading: number;

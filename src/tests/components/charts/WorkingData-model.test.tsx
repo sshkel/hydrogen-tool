@@ -138,7 +138,7 @@ const defaultInputData: InputFields = {
   additionalTransmissionCharges: 0,
   principalPPACost: 0,
   profile: "Fixed",
-  region: "Far North QLD",
+  location: "Far North QLD",
   electrolyserMaximumLoad: 0,
   electrolyserMinimumLoad: 0,
   timeBetweenOverloading: 0,
