@@ -41,6 +41,9 @@ export default function InputNumberField(props: Props) {
           <InputAdornment position="end">{adornmentLabel}</InputAdornment>
         ),
       }}
+      inputProps={{
+        step: "0.1",
+      }}
     />
   );
 }
