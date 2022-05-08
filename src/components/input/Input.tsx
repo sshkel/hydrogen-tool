@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import InputNumberField from "./InputNumberField";
 import InputExpand from "./InputExpand";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import React from "react";
 import {
   data,
   profileData,
@@ -17,31 +17,21 @@ interface Props {
   setState: (obj: any) => void;
 }
 
-const getDefaultState = () => {
-  const defaultState: any = {};
-  data.forEach((field) => {
-    defaultState[field.id] = field.defaultValue;
-  });
-  defaultState["profile"] = profileData[0];
-  defaultState["replacementType"] = replacementTypeData[0];
-  defaultState["technology"] = technologyData[0];
-  defaultState["region"] = regionData[0];
-  defaultState["capitalDepreciationProfile"] = capitalDepreciationProfile[0];
-  return defaultState;
-};
-
 export default function Input(props: Props) {
-  const [formData, setFormData] = useState(getDefaultState());
   let pointer: number = 0;
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
+  const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
+    let form: any = {};
+
+    for (let input of e.target.getElementsByTagName("input")) {
+      const { name, value } = input;
+      form[name] = isNaN(value) ? value : Number(value);
+    }
+
+    console.log(form);
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
-  };
-
-  const handleChange = (e: { target: { value: any; name: string } }) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const getData = (index: number) => {
@@ -63,7 +53,6 @@ export default function Input(props: Props) {
         adornmentLabel={adornmentLabel}
         disabled={disabled}
         helperText={helperText}
-        onChange={handleChange}
       />
     );
   };
@@ -79,7 +68,7 @@ export default function Input(props: Props) {
         "& .selectWrapper": { m: 2, width: "40%" },
         "& .MuiButton-root": { m: 2 },
       }}
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e, formData)}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
         <InputSelectField
@@ -87,7 +76,6 @@ export default function Input(props: Props) {
           label="Location"
           values={regionData}
           defaultValue={regionData[0]}
-          onChange={handleChange}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
@@ -96,7 +84,6 @@ export default function Input(props: Props) {
           label="Technology"
           values={technologyData}
           defaultValue={technologyData[0]}
-          onChange={handleChange}
         />
         {[...Array(6)].map((_) => getData(pointer))}
       </InputExpand>
@@ -110,7 +97,6 @@ export default function Input(props: Props) {
             label="SEC vs Load Profile"
             values={profileData}
             defaultValue={profileData[0]}
-            onChange={handleChange}
           />
           {[...Array(2)].map((_) => getData(pointer))}
         </InputExpand>
@@ -129,7 +115,6 @@ export default function Input(props: Props) {
             label="Stack Replacement Type"
             values={replacementTypeData}
             defaultValue={replacementTypeData[0]}
-            onChange={handleChange}
           />
           {[...Array(4)].map((_) => getData(pointer))}
         </InputExpand>
@@ -207,7 +192,6 @@ export default function Input(props: Props) {
               label="DepreciationProfile"
               values={capitalDepreciationProfile}
               defaultValue={capitalDepreciationProfile[0]}
-              onChange={handleChange}
             />
           </InputExpand>
         </InputExpand>

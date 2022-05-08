@@ -1,9 +1,8 @@
-
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useState } from 'react';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useState } from "react";
 
 interface Props {
   id: string;
@@ -30,6 +29,7 @@ export default function InputTextField(props: Props) {
     <FormControl className="selectWrapper">
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
+        name={id}
         key={id}
         labelId={labelId}
         id={id}

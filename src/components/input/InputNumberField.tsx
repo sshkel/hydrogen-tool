@@ -26,7 +26,7 @@ export default function InputNumberField(props: Props) {
 
   return (
     <TextField
-      id="outlined-number"
+      id={name}
       key={label}
       name={name}
       label={label}
