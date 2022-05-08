@@ -98,7 +98,7 @@ export default function Input(props: Props) {
           defaultValue={technologyData[0]}
           onChange={handleChange}
         />
-        {[...Array(7)].map((_) => getData(pointer))}
+        {[...Array(6)].map((_) => getData(pointer))}
       </InputExpand>
       <InputExpand title="Electrolyser Parameters" id="electrolyser-parameters">
         <InputExpand
@@ -112,7 +112,7 @@ export default function Input(props: Props) {
             defaultValue={profileData[0]}
             onChange={handleChange}
           />
-          {[...Array(4)].map((_) => getData(pointer))}
+          {[...Array(2)].map((_) => getData(pointer))}
         </InputExpand>
         <InputExpand
           title="Electrolyser Load Range"

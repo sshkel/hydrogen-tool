@@ -43,14 +43,6 @@ export const data: Field[] = [
     helperText: "Rated capacity of wind farm",
   },
   {
-    id: "totalNominalPowerPlantCapacity",
-    label: "Total Nominal Power Plant Capacity",
-    defaultValue: 10,
-    disabled: true,
-    adornmentLabel: "MW",
-    helperText: "Total rated capacity for selected generation type",
-  },
-  {
     id: "batteryRatedPower",
     label: "Battery Rated Power",
     defaultValue: 0,
@@ -83,24 +75,10 @@ export const data: Field[] = [
     adornmentLabel: kWheLabel,
   },
   {
-    id: "secAtNominalLoadPEM",
-    label: "SEC At Nominal Load (PEM)",
-    defaultValue: 0.02,
-    adornmentLabel: kgH2Label,
-    disabled: true,
-  },
-  {
     id: "secCorrectionFactor",
     label: "SEC Correction Factor",
     defaultValue: 100,
     adornmentLabel: "%",
-  },
-  {
-    id: "totalSystemSecAtNominalLoad",
-    label: "Total System SEC at Nominal Load",
-    defaultValue: 50.0,
-    adornmentLabel: kWheLabel,
-    disabled: true,
   },
   // Electrolyser Load Range
   {

@@ -128,7 +128,6 @@ const defaultInputData: InputFields = {
   stackDegradation: 0,
   maximumDegradationBeforeReplacement: 0,
   technology: "Solar",
-  totalNominalPowerPlantCapacity: 0,
   electrolyserWaterCost: 0,
   windCostReductionWithScale: 0,
   windEpcCosts: 0,

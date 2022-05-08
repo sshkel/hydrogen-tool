@@ -56,7 +56,6 @@ export interface InputFields {
   stackDegradation: number;
   maximumDegradationBeforeReplacement: number;
   technology: Technology;
-  totalNominalPowerPlantCapacity: number;
   electrolyserWaterCost: number;
   windCostReductionWithScale: number;
   windEpcCosts: number;
