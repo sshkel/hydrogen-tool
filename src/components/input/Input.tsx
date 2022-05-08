@@ -36,6 +36,7 @@ export default function Input(props: Props) {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>, form: any) => {
     e.preventDefault();
+    localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
   };
 
@@ -47,12 +48,18 @@ export default function Input(props: Props) {
     ++pointer;
     const { label, id, defaultValue, adornmentLabel, disabled, helperText } =
       data[index];
+    const savedState = localStorage.getItem("savedData");
+    let savedValue = null;
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      savedValue = parsedState[id];
+    }
     return (
       <InputNumberField
         key={id}
         label={label}
         name={id}
-        defaultValue={defaultValue}
+        defaultValue={savedValue ? savedValue : defaultValue}
         adornmentLabel={adornmentLabel}
         disabled={disabled}
         helperText={helperText}
