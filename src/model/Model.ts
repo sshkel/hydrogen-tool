@@ -217,7 +217,7 @@ export class HydrogenModel {
       const hours = [1, 2, 4, 8];
       if (!hours.includes(batteryHours)) {
         throw new Error(
-          "Battery storage length not valid. Please enter one of 1, 2, 4 or 8"
+          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
         );
       }
       electrolyser_cf = this.battery_model(
