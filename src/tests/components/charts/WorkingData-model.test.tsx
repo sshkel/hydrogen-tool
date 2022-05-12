@@ -3,12 +3,11 @@ import { InputFields } from "../../../types";
 import { mount } from "enzyme";
 import { readLocalCsv } from "../../resources/loader";
 import DurationCurve from "../../../components/charts/DurationCurve";
-
+jest.setTimeout(10_000);
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
   let loadWind: () => Promise<any[]>;
   beforeAll(() => {
-    jest.setTimeout(10_000);
     console.error = function () {};
     loadSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
