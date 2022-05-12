@@ -3,8 +3,13 @@ import Papa from "papaparse";
 
 export async function readLocalCsv(filePath: string): Promise<any[]> {
   return new Promise((resolve, reject) => {
-    const fileStream = fs.createReadStream(filePath);
-    Papa.parse(fileStream, {
+    let fileStream = null;
+    try {
+      fileStream = fs.createReadStream(filePath);
+    } catch (err) {
+      reject(err);
+    }
+    Papa.parse(fileStream!, {
       header: true,
       dynamicTyping: true,
       complete: (results) => {
