@@ -8,6 +8,7 @@ describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
   let loadWind: () => Promise<any[]>;
   beforeAll(() => {
+    jest.setTimeout(10_000);
     console.error = function () {};
     loadSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
