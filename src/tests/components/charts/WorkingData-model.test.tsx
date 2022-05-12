@@ -1,7 +1,7 @@
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
 import { mount } from "enzyme";
-import { read_local_csv } from "../../resources/loader";
+import { readLocalCsv } from "../../resources/loader";
 import DurationCurve from "../../../components/charts/DurationCurve";
 
 describe("Working Data calculations", () => {
@@ -10,9 +10,9 @@ describe("Working Data calculations", () => {
   beforeAll(() => {
     console.error = function () {};
     loadSolar = async () =>
-      await read_local_csv(__dirname + "/../../resources/solar-traces.csv");
+      await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
     loadWind = async () =>
-      await read_local_csv(__dirname + "/../../resources/wind-traces.csv");
+      await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
   });
 
   describe("Duration Curves", () => {
