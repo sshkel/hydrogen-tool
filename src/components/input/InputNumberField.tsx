@@ -42,7 +42,7 @@ export default function InputNumberField(props: Props) {
         ),
       }}
       inputProps={{
-        step: "any",
+        step: "0.1",
       }}
     />
   );
