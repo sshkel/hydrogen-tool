@@ -1,0 +1,29 @@
+name: test
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "**.py"
+      - "**.csv"
+      - "**.txt"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "**.py"
+      - "**.csv"
+      - "**.txt"
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: npm
+      - run: npm test
