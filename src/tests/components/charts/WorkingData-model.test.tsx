@@ -13,6 +13,7 @@ describe("Working Data calculations", () => {
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
     loadWind = async () =>
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
+    console.log("loaded data");
   });
 
   describe("Duration Curves", () => {
