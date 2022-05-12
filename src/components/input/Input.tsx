@@ -29,19 +29,19 @@ export default function Input(props: Props) {
       form[name] = isNaN(value) ? value : Number(value);
     }
 
-    console.log(form);
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
   };
 
+  const savedState = localStorage.getItem("savedData") || "";
+  const parsedState = JSON.parse(savedState);
   const getData = (index: number) => {
     ++pointer;
     const { label, id, defaultValue, adornmentLabel, disabled, helperText } =
       data[index];
-    const savedState = localStorage.getItem("savedData");
-    let savedValue = null;
+
+    let savedValue;
     if (savedState) {
-      const parsedState = JSON.parse(savedState);
       const value = parsedState[id];
       savedValue = isNaN(value) ? value : Number(value);
     }
@@ -50,7 +50,7 @@ export default function Input(props: Props) {
         key={id}
         label={label}
         name={id}
-        defaultValue={savedValue ? savedValue : defaultValue}
+        defaultValue={savedValue !== undefined ? savedValue : defaultValue}
         adornmentLabel={adornmentLabel}
         disabled={disabled}
         helperText={helperText}
@@ -190,7 +190,7 @@ export default function Input(props: Props) {
           <InputExpand title="Depreciation" id="depreciation">
             <InputSelectField
               id="capitalDepreciationProfile"
-              label="DepreciationProfile"
+              label="Depreciation Profile"
               values={capitalDepreciationProfile}
               defaultValue={capitalDepreciationProfile[0]}
             />
