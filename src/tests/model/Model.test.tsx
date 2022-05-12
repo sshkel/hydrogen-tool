@@ -5,8 +5,6 @@ import {
   ModelSummary,
 } from "../../model/Model";
 
-import fs from "fs";
-import Papa from "papaparse";
 import workingdf1 from "../resources/example1-workingdf.json";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf2 from "../resources/example2-workingdf.json";
@@ -14,13 +12,14 @@ import outputs2 from "../resources/example2-outputs.json";
 import workingdf3 from "../resources/example3-workingdf.json";
 import outputs3 from "../resources/example3-outputs.json";
 import { maxDegradationStackReplacementYears } from "../../components/charts/cost-functions";
+import { readLocalCsv } from "../resources/loader";
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];
   beforeAll(async () => {
     const startTime = Date.now();
-    solar = await readCSV(__dirname + "/../resources/solar-traces.csv");
-    wind = await readCSV(__dirname + "/../resources/wind-traces.csv");
+    solar = await readLocalCsv(__dirname + "/../resources/solar-traces.csv");
+    wind = await readLocalCsv(__dirname + "/../resources/wind-traces.csv");
     console.log("Model test start-up took %s ms", Date.now() - startTime);
   });
 
@@ -268,45 +267,4 @@ function compareToModel(
     expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
   console.log("Model test comparison took %s ms", Date.now() - startTime);
-}
-
-async function readCSV(filePath: string): Promise<any[]> {
-  if (filePath.startsWith("http") || filePath.startsWith("https")) {
-    return new Promise((resolve) => {
-      const optionsWithDefaults = {
-        header: true,
-        dynamicTyping: true,
-      };
-
-      const dataStream = fs.createReadStream(filePath);
-      const parseStream: any = Papa.parse(
-        Papa.NODE_STREAM_INPUT,
-        optionsWithDefaults
-      );
-      dataStream.pipe(parseStream);
-
-      const data: any = [];
-      parseStream.on("data", (chunk: any) => {
-        data.push(chunk);
-      });
-
-      parseStream.on("finish", () => {
-        resolve(data);
-      });
-    });
-  } else {
-    return new Promise((resolve, reject) => {
-      const fileStream = fs.createReadStream(filePath);
-      Papa.parse(fileStream, {
-        header: true,
-        dynamicTyping: true,
-        complete: (results) => {
-          resolve(results.data);
-        },
-        error: (err) => {
-          reject(err);
-        },
-      });
-    });
-  }
 }
