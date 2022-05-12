@@ -69,8 +69,8 @@ export const data: Field[] = [
   /******* Electrolyser Parameters *******/
   // Electrolyser Specific Consumption
   {
-    id: "secAtNominalLoadAE",
-    label: "SEC At Nominal Load (AE)",
+    id: "secAtNominalLoad",
+    label: "SEC At Nominal Load",
     defaultValue: 50,
     adornmentLabel: kWheLabel,
   },

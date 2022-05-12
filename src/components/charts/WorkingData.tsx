@@ -20,6 +20,7 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import BasicTable from "./BasicTable";
 import DurationCurve from "./DurationCurve";
+import { H2_VOLT_TO_MASS } from "../../model/const";
 
 export interface Props {
   data?: InputFields;
@@ -79,6 +80,7 @@ export default function WorkingData(props: Props) {
     windReferenceFoldIncrease,
     batteryRatedPower = 0,
     batteryNominalCapacity,
+    batteryMinCharge = 0,
     batteryCosts,
     batteryEfficiency,
     solarOpex = 0,
@@ -113,11 +115,13 @@ export default function WorkingData(props: Props) {
     capitalDepreciationProfile,
     taxRate,
     inflationRate,
+    secAtNominalLoad = 0,
+    secCorrectionFactor = 0,
   } = props.data;
 
   const dataModel: DataModel = {
     batteryLifetime,
-    batteryMinCharge: props.data.batteryMinCharge || 0,
+    batteryMinCharge,
     batteryEfficiency,
     durationOfStorage,
     batteryRatedPower,
@@ -129,10 +133,9 @@ export default function WorkingData(props: Props) {
     location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
-    //TODO  no clue what these are in the excel, work out what inputs they are supposed to be
-    specCons: 4.5,
-    elecEff: 83,
-    H2VoltoMass: 0.089,
+    specCons: secAtNominalLoad,
+    elecEff: secCorrectionFactor,
+    H2VoltoMass: H2_VOLT_TO_MASS,
   };
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);

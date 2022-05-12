@@ -84,4 +84,6 @@ export interface InputFields {
   capitalDepreciationProfile: DepreciationProfile;
   taxRate: number;
   inflationRate: number;
+  secAtNominalLoad?: number;
+  secCorrectionFactor?: number;
 }
