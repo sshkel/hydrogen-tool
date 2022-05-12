@@ -33,7 +33,7 @@ export default function Input(props: Props) {
     props.setState(form);
   };
 
-  const savedState = localStorage.getItem("savedData") || "";
+  const savedState = localStorage.getItem("savedData") || "{}";
   const parsedState = JSON.parse(savedState);
   const getData = (index: number) => {
     ++pointer;
