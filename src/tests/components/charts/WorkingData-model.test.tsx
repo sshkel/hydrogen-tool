@@ -13,7 +13,6 @@ describe("Working Data calculations", () => {
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
     loadWind = async () =>
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
-    console.log("loaded data");
   });
 
   describe("Duration Curves", () => {
@@ -45,7 +44,7 @@ describe("Working Data calculations", () => {
           expect(val).toBeLessThanOrEqual(100);
         });
         done();
-      }, 1000);
+      }, 1500);
     });
   });
 
@@ -84,7 +83,7 @@ describe("Working Data calculations", () => {
         expect(val).toBeLessThanOrEqual(100);
       });
       done();
-    }, 600);
+    }, 1000);
   });
 });
 
