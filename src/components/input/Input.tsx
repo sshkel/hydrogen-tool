@@ -76,7 +76,11 @@ export default function Input(props: Props) {
           id="location"
           label="Location"
           values={locationData}
-          defaultValue={locationData[0]}
+          defaultValue={
+            parsedState["location"] !== undefined
+              ? parsedState["location"]
+              : locationData[0]
+          }
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
@@ -84,7 +88,11 @@ export default function Input(props: Props) {
           id="technology"
           label="Technology"
           values={technologyData}
-          defaultValue={technologyData[0]}
+          defaultValue={
+            parsedState["technology"] !== undefined
+              ? parsedState["technology"]
+              : technologyData[0]
+          }
         />
         {[...Array(6)].map((_) => getData(pointer))}
       </InputExpand>
@@ -97,7 +105,11 @@ export default function Input(props: Props) {
             id="profile"
             label="SEC vs Load Profile"
             values={profileData}
-            defaultValue={profileData[0]}
+            defaultValue={
+              parsedState["profile"] !== undefined
+                ? parsedState["profile"]
+                : profileData[0]
+            }
           />
           {[...Array(2)].map((_) => getData(pointer))}
         </InputExpand>
@@ -115,7 +127,11 @@ export default function Input(props: Props) {
             id="stackReplacementType"
             label="Stack Replacement Type"
             values={replacementTypeData}
-            defaultValue={replacementTypeData[0]}
+            defaultValue={
+              parsedState["stackReplacementType"] !== undefined
+                ? parsedState["stackReplacementType"]
+                : replacementTypeData[0]
+            }
           />
           {[...Array(4)].map((_) => getData(pointer))}
         </InputExpand>
@@ -192,7 +208,11 @@ export default function Input(props: Props) {
               id="capitalDepreciationProfile"
               label="Depreciation Profile"
               values={capitalDepreciationProfile}
-              defaultValue={capitalDepreciationProfile[0]}
+              defaultValue={
+                parsedState["capitalDepreciationProfile"] !== undefined
+                  ? parsedState["capitalDepreciationProfile"]
+                  : capitalDepreciationProfile[0]
+              }
             />
           </InputExpand>
         </InputExpand>

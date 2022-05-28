@@ -226,18 +226,17 @@ export default function WorkingData(props: Props) {
 
   // Stack Lifetime
   const stackReplacementYears: number[] =
-    stackReplacementType === "Cumulative Hours"
-      ? cumulativeStackReplacementYears(
-          summary["Total Time Electrolyser is Operating"] * 8760,
-          stackLifetime,
-          plantLife
-        )
-      : maxDegradationStackReplacementYears(
+    stackReplacementType === "Maximum Degradation Level"
+      ? maxDegradationStackReplacementYears(
           stackDegradation,
           maximumDegradationBeforeReplacement,
           plantLife
+        )
+      : cumulativeStackReplacementYears(
+          summary["Total Time Electrolyser is Operating"] * 8760,
+          stackLifetime,
+          plantLife
         );
-
   const electrolyserStackReplacementCost =
     (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
