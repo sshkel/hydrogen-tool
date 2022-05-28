@@ -88,7 +88,6 @@ export default function WorkingData(props: Props) {
     additionalAnnualCosts,
     batteryReplacementCost = 0,
     batteryLifetime = 0,
-    discountRate,
     plantLife,
     durationOfStorage,
     timeBetweenOverloading,
@@ -243,7 +242,7 @@ export default function WorkingData(props: Props) {
 
   const electrolyserOpex = getOpexPerYearWithAdditionalCostPredicate(
     electrolyserOMCost,
-    discountRate,
+    inflationRate,
     plantLife,
     (year: number): boolean => stackReplacementYears.includes(year),
     electrolyserStackReplacementCost
@@ -257,20 +256,19 @@ export default function WorkingData(props: Props) {
     : 0;
   const powerplantOpex = getOpexPerYear(
     solarOpexCost + windOpexCost,
-    discountRate,
+    inflationRate,
     plantLife
   );
 
   const additionalOpex = getOpexPerYear(
     additionalAnnualCosts,
-    discountRate,
+    inflationRate,
     plantLife
   );
 
   // Battery costs
-  const batteryOMCost: number = roundToNearestThousand(
-    (props.data.batteryOMCost || 0) * batteryRatedPower
-  );
+  const batteryOMCost: number =
+    (props.data.batteryOMCost || 0) * batteryRatedPower;
   const actualBatteryReplacementCost =
     (batteryReplacementCost / 100) * batteryCAPEX;
   const shouldAddBatteryReplacementCost = (year: number): boolean =>
@@ -279,7 +277,7 @@ export default function WorkingData(props: Props) {
     batteryRatedPower > 0
       ? getOpexPerYearWithAdditionalCostPredicate(
           batteryOMCost,
-          discountRate,
+          inflationRate,
           plantLife,
           shouldAddBatteryReplacementCost,
           actualBatteryReplacementCost
@@ -292,25 +290,20 @@ export default function WorkingData(props: Props) {
     (props.data.additionalTransmissionCharges || 0);
   const electricityPurchase = getOpexPerYear(
     summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost,
-    discountRate,
+    inflationRate,
     plantLife
   );
 
-  const hydrogenCost =
-    props.data.profile === "Fixed"
-      ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
-      : summary["Hydrogen Output for Variable Operation [t/yr"];
-  const waterCost = getOpexPerYear(
-    hydrogenCost * electrolyserWaterCost * waterRequirementOfElectrolyser,
-    discountRate,
-    plantLife
-  );
-
-  //TODO guessing because I don't have excel but I think these come from summary
   const h2Produced =
     props.data.profile === "Fixed"
       ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
       : summary["Hydrogen Output for Variable Operation [t/yr"];
+  const waterCost = getOpexPerYear(
+    h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser,
+    inflationRate,
+    plantLife
+  );
+
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
   const h2Prod = activeYears(h2Produced, plantLife);
@@ -369,6 +362,27 @@ export default function WorkingData(props: Props) {
     <div>
       <BasicTable
         data={{
+          "Power Plant Capacity Factor": [
+            summary["Generator Capacity Factor"] * 100,
+          ],
+          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
+            summary["Time Electrolyser is at its Rated Capacity"] * 100,
+          ],
+          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
+            summary["Total Time Electrolyser is Operating"] * 100,
+          ],
+          "Electrolyser Capacity Factor": [
+            summary["Achieved Electrolyser Capacity Factor"] * 100,
+          ],
+          "Energy Consumed by Electrolyser (MWh/yr)": [electricityConsumed],
+          "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
+            electricityProduced,
+          ],
+          "Hydrogen Output [t/yr]": [h2Produced],
+        }}
+      />
+      <BasicTable
+        data={{
           h2Prod,
           elecProduced,
           elecConsumed,
@@ -378,7 +392,7 @@ export default function WorkingData(props: Props) {
           annualSales,
           ...cashFlow,
         }}
-      ></BasicTable>
+      />
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}

@@ -7,6 +7,8 @@ export const getBaseLog = (n: number, base: number): number =>
 export const roundToNearestThousand = (n: number) =>
   Math.round(n / 1000) * 1000 || 0;
 
+const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
+
 export const calculateCapex = (
   nominalCapacity: number,
   referenceCapacity: number,
@@ -50,25 +52,31 @@ export const getIndirectCost = (
 // Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + discountRate)^year)
 export const getOpexPerYear = (
   cost: number,
-  discountRate: number,
+  inflationRate: number,
   years: number
-): number[] =>
-  [...Array(years).keys()].map(
-    (i) => cost * (1 + discountRate / 100) ** (i + 1)
+): number[] => {
+  const roundedCost = roundToNearestThousand(cost);
+  return [...Array(years).keys()].map((i) =>
+    roundToTwoDP(roundedCost * (1 + inflationRate / 100) ** (i + 1))
   );
+};
 
 export const getOpexPerYearWithAdditionalCostPredicate = (
   cost: number,
-  discountRate: number,
+  inflationRate: number,
   years: number,
   shouldIncludeAdditionalCost: (year: number) => boolean,
   additionalCost: number
 ): number[] => {
+  const roundedCost = roundToNearestThousand(cost);
+
   return [...Array(years).keys()].map((i) => {
     const year = i + 1;
     const extras = shouldIncludeAdditionalCost(year) ? additionalCost : 0;
 
-    return cost * (1 + discountRate / 100) ** year + extras;
+    return roundToTwoDP(
+      (roundedCost + extras) * (1 + inflationRate / 100) ** year
+    );
   });
 };
 

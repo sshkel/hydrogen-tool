@@ -45,15 +45,11 @@ describe("Cost function calculations", () => {
     const opex = getOpexPerYear(1000, 0.1, 10);
     expect(opex).toHaveLength(10);
     const expected = [
-      1000.9999999999999, 1002.0009999999997, 1003.0030009999997,
-      1004.0060040009995, 1005.0100100050004, 1006.0150200150053,
-      1007.0210350350202, 1008.0280560700552, 1009.036084126125,
-      1010.0451202102512,
+      1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
+      1010.05,
     ];
 
-    opex.forEach((val, index) => {
-      expect(val).toBeCloseTo(expected[index], 8);
-    });
+    expect(opex).toEqual(expected);
   });
 
   it("calculates opex per year with additional costs", () => {
@@ -66,36 +62,11 @@ describe("Cost function calculations", () => {
     );
     expect(opex).toHaveLength(10);
     const expected = [
-      1000.9999999999999, 1002.0009999999997, 1003.0030009999997,
-      1004.0060040009995, 1015.0100100050004, 1006.0150200150053,
-      1007.0210350350202, 1008.0280560700552, 1009.036084126125,
-      1020.0451202102512,
+      1001, 1002, 1003, 1004.01, 1015.06, 1006.02, 1007.02, 1008.03, 1009.04,
+      1020.15,
     ];
 
-    opex.forEach((val, index) => {
-      expect(val).toBeCloseTo(expected[index], 8);
-    });
-  });
-
-  it("calculates opex per year with additional costs", () => {
-    const opex = getOpexPerYearWithAdditionalCostPredicate(
-      1000,
-      0.1,
-      10,
-      (x) => x % 5 === 0,
-      10
-    );
-    expect(opex).toHaveLength(10);
-    const expected = [
-      1000.9999999999999, 1002.0009999999997, 1003.0030009999997,
-      1004.0060040009995, 1015.0100100050004, 1006.0150200150053,
-      1007.0210350350202, 1008.0280560700552, 1009.036084126125,
-      1020.0451202102512,
-    ];
-
-    opex.forEach((val, index) => {
-      expect(val).toBeCloseTo(expected[index], 8);
-    });
+    expect(opex).toEqual(expected);
   });
 
   it("returns years where stack is needed to replace", () => {
