@@ -52,9 +52,37 @@ describe("Cost function calculations", () => {
     expect(opex).toEqual(expected);
   });
 
+  it("rounds input cost for opex per year to nearest thousand", () => {
+    const opex = getOpexPerYear(500, 0.1, 10);
+    expect(opex).toHaveLength(10);
+    const expected = [
+      1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
+      1010.05,
+    ];
+
+    expect(opex).toEqual(expected);
+  });
+
   it("calculates opex per year with additional costs", () => {
     const opex = getOpexPerYearWithAdditionalCostPredicate(
       1000,
+      0.1,
+      10,
+      (x) => x % 5 === 0,
+      10
+    );
+    expect(opex).toHaveLength(10);
+    const expected = [
+      1001, 1002, 1003, 1004.01, 1015.06, 1006.02, 1007.02, 1008.03, 1009.04,
+      1020.15,
+    ];
+
+    expect(opex).toEqual(expected);
+  });
+
+  it("rounds input cost for opex per year with additional costs to nearest thousand", () => {
+    const opex = getOpexPerYearWithAdditionalCostPredicate(
+      1001,
       0.1,
       10,
       (x) => x % 5 === 0,
