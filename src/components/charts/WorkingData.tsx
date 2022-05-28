@@ -8,8 +8,8 @@ import {
   calculateBatteryCapex,
   calculateCapex,
   getIndirectCost,
-  getOpexPerYear,
-  getOpexPerYearWithAdditionalCostPredicate,
+  getOpexPerYearInflation,
+  getOpexPerYearInflationWithAdditionalCostPredicate,
   maxDegradationStackReplacementYears,
   roundToNearestThousand,
   cashFlowAnalysis,
@@ -240,7 +240,7 @@ export default function WorkingData(props: Props) {
   const electrolyserStackReplacementCost =
     (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
-  const electrolyserOpex = getOpexPerYearWithAdditionalCostPredicate(
+  const electrolyserOpex = getOpexPerYearInflationWithAdditionalCostPredicate(
     electrolyserOMCost,
     inflationRate,
     plantLife,
@@ -254,13 +254,13 @@ export default function WorkingData(props: Props) {
   const windOpexCost = isWind(technology)
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
-  const powerplantOpex = getOpexPerYear(
+  const powerplantOpex = getOpexPerYearInflation(
     solarOpexCost + windOpexCost,
     inflationRate,
     plantLife
   );
 
-  const additionalOpex = getOpexPerYear(
+  const additionalOpex = getOpexPerYearInflation(
     additionalAnnualCosts,
     inflationRate,
     plantLife
@@ -275,7 +275,7 @@ export default function WorkingData(props: Props) {
     batteryLifetime > 0 && year % batteryLifetime === 0;
   const batteryOpex =
     batteryRatedPower > 0
-      ? getOpexPerYearWithAdditionalCostPredicate(
+      ? getOpexPerYearInflationWithAdditionalCostPredicate(
           batteryOMCost,
           inflationRate,
           plantLife,
@@ -288,7 +288,7 @@ export default function WorkingData(props: Props) {
   const totalPPACost =
     (props.data.principalPPACost || 0) +
     (props.data.additionalTransmissionCharges || 0);
-  const electricityPurchase = getOpexPerYear(
+  const electricityPurchase = getOpexPerYearInflation(
     summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost,
     inflationRate,
     plantLife
@@ -298,7 +298,7 @@ export default function WorkingData(props: Props) {
     props.data.profile === "Fixed"
       ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
       : summary["Hydrogen Output for Variable Operation [t/yr"];
-  const waterCost = getOpexPerYear(
+  const waterCost = getOpexPerYearInflation(
     h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser,
     inflationRate,
     plantLife

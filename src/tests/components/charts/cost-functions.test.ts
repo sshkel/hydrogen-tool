@@ -5,8 +5,8 @@ import {
   cumulativeStackReplacementYears,
   getBaseLog,
   getIndirectCost,
-  getOpexPerYear,
-  getOpexPerYearWithAdditionalCostPredicate,
+  getOpexPerYearInflation,
+  getOpexPerYearInflationWithAdditionalCostPredicate,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
 
@@ -42,7 +42,7 @@ describe("Cost function calculations", () => {
   });
 
   it("calculates opex per year", () => {
-    const opex = getOpexPerYear(1000, 0.1, 10);
+    const opex = getOpexPerYearInflation(1000, 0.1, 10);
     expect(opex).toHaveLength(10);
     const expected = [
       1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
@@ -53,7 +53,7 @@ describe("Cost function calculations", () => {
   });
 
   it("rounds input cost for opex per year to nearest thousand", () => {
-    const opex = getOpexPerYear(500, 0.1, 10);
+    const opex = getOpexPerYearInflation(500, 0.1, 10);
     expect(opex).toHaveLength(10);
     const expected = [
       1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
@@ -64,7 +64,7 @@ describe("Cost function calculations", () => {
   });
 
   it("calculates opex per year with additional costs", () => {
-    const opex = getOpexPerYearWithAdditionalCostPredicate(
+    const opex = getOpexPerYearInflationWithAdditionalCostPredicate(
       1000,
       0.1,
       10,
@@ -81,7 +81,7 @@ describe("Cost function calculations", () => {
   });
 
   it("rounds input cost for opex per year with additional costs to nearest thousand", () => {
-    const opex = getOpexPerYearWithAdditionalCostPredicate(
+    const opex = getOpexPerYearInflationWithAdditionalCostPredicate(
       1001,
       0.1,
       10,
