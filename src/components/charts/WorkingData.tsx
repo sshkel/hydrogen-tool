@@ -221,8 +221,9 @@ export default function WorkingData(props: Props) {
     windEpcCost +
     windLandCost;
 
-  const electrolyserOMCost =
-    (props.data.electrolyserOMCost / 100) * electrolyserCAPEX;
+  const electrolyserOMCost = roundToNearestThousand(
+    (props.data.electrolyserOMCost / 100) * electrolyserCAPEX
+  );
 
   // Stack Lifetime
   const stackReplacementYears: number[] =
@@ -267,8 +268,9 @@ export default function WorkingData(props: Props) {
   );
 
   // Battery costs
-  const batteryOMCost: number =
-    (props.data.batteryOMCost || 0) * batteryRatedPower;
+  const batteryOMCost: number = roundToNearestThousand(
+    (props.data.batteryOMCost || 0) * batteryRatedPower
+  );
   const actualBatteryReplacementCost =
     (batteryReplacementCost / 100) * batteryCAPEX;
   const shouldAddBatteryReplacementCost = (year: number): boolean =>
@@ -288,8 +290,10 @@ export default function WorkingData(props: Props) {
   const totalPPACost =
     (props.data.principalPPACost || 0) +
     (props.data.additionalTransmissionCharges || 0);
+  const electricityOMCost =
+    summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost;
   const electricityPurchase = getOpexPerYear(
-    summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost,
+    electricityOMCost,
     inflationRate,
     plantLife
   );
@@ -298,11 +302,9 @@ export default function WorkingData(props: Props) {
     props.data.profile === "Fixed"
       ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
       : summary["Hydrogen Output for Variable Operation [t/yr"];
-  const waterCost = getOpexPerYear(
-    h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser,
-    inflationRate,
-    plantLife
-  );
+  const waterOMCost =
+    h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser;
+  const waterCost = getOpexPerYear(waterOMCost, inflationRate, plantLife);
 
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
@@ -319,16 +321,22 @@ export default function WorkingData(props: Props) {
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
-  const totalOpex = electrolyserOpex.map(
-    (_: number, i: number) =>
-      electrolyserOpex[i] +
-      powerplantOpex[i] +
-      batteryOpex[i] +
-      waterCost[i] +
-      electricityPurchase[i] +
+  const totalOpex = electrolyserOpex.map((_: number, i: number) => {
+    let cost =
+      electrolyserOMCost +
+      solarOpexCost +
+      windOpexCost +
+      batteryOMCost +
+      waterOMCost +
+      electricityOMCost +
       // TODO check if this is correct. Strangely taking not discounted cost here.
-      additionalAnnualCosts
-  );
+      additionalAnnualCosts;
+    // TODO clean up this lol
+    if (stackReplacementYears.includes(i + 1)) {
+      cost += electrolyserStackReplacementCost;
+    }
+    return cost;
+  });
 
   const {
     lch2,
