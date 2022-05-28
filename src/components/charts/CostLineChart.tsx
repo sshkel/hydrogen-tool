@@ -7,15 +7,24 @@ interface Props {
   datapoints: ChartData[];
 }
 
+const colours = [
+  "#3E7DCC",
+  "#8F9CB3",
+  "#00C8C8",
+  "#F9D84A",
+  "#8CC0FF",
+  "#4D525A",
+];
+
 export default function CostLineChart(props: Props) {
   const { plantLife, datapoints } = props;
 
   const graphData = {
     labels: [...Array(plantLife).keys()].map((i) => i + 1),
-    datasets: datapoints.map((point) => ({
+    datasets: datapoints.map((point, index) => ({
       ...point,
-      backgroundColor: "rgba(75,192,192,0.2)",
-      borderColor: "rgba(75,192,192,1)",
+      backgroundColor: colours[index],
+      borderColor: colours[index],
     })),
     options: {
       ticks: {

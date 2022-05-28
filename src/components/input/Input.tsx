@@ -112,7 +112,7 @@ export default function Input(props: Props) {
           id="other-operational-factors"
         >
           <InputSelectField
-            id="replacementType"
+            id="stackReplacementType"
             label="Stack Replacement Type"
             values={replacementTypeData}
             defaultValue={replacementTypeData[0]}

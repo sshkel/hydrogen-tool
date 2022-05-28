@@ -9,16 +9,6 @@ interface Field {
   helperText?: string;
 }
 
-const kWheLabel = (
-  <p>
-    kWh<sub>e</sub>/kg<sub>H2</sub>
-  </p>
-);
-const kgH2Label = (
-  <p>
-    kg<sub>H2</sub>/kWh<sub>e</sub>
-  </p>
-);
 const kWhNmLabel = (
   <p>
     kWh<sub>e</sub>/Nm<sup>3</sup>
