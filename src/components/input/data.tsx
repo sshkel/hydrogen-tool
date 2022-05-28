@@ -19,6 +19,11 @@ const kgH2Label = (
     kg<sub>H2</sub>/kWh<sub>e</sub>
   </p>
 );
+const kWhNmLabel = (
+  <p>
+    kWh<sub>e</sub>/Nm<sup>3</sup>
+  </p>
+);
 
 export const data: Field[] = [
   // System Sizing
@@ -72,7 +77,7 @@ export const data: Field[] = [
     id: "secAtNominalLoad",
     label: "SEC At Nominal Load",
     defaultValue: 50,
-    adornmentLabel: kWheLabel,
+    adornmentLabel: kWhNmLabel,
   },
   {
     id: "secCorrectionFactor",

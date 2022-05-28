@@ -103,8 +103,8 @@ class HydrogenModel:
             self.elecCostReduction = config_dict['elecCostReduction']
             self.elecMinLoad = config_dict[self.elecType]['elecMinLoad'] / 100
             self.elecEff = config_dict['elecEff'] / 100
-            self.specCons = config_dict[self.elecType]['specCons']  # kWh/Nm3
             self.H2VoltoMass = config_dict['H2VoltoMass']  # kg/m3
+            self.specCons = config_dict[self.elecType]['specCons'] * self.H2VoltoMass   # kWh/Nm3
             self.MWtokW = 1000  # kW/MW
             self.hydOutput = self.H2VoltoMass * self.MWtokW * self.elecEff  # kg.kWh/m3.MWh
             self.hoursPerYear = 8760
@@ -176,7 +176,7 @@ class HydrogenModel:
             'Hydrogen Output for Fixed Operation [t/yr]', 'Hydrogen Output for Variable Operation [t/yr]'
         """
 
-        working_df = self.__calculate_hourly_operation()
+        working_df = self.calculate_hourly_operation()
         # Generate results table to mirror the one in the excel tool
         operating_outputs = self.__get_tabulated_outputs(working_df)
         return operating_outputs
@@ -250,7 +250,7 @@ class HydrogenModel:
         self.LCH2 = round(lcoh, 2)
         return round(lcoh, 2)
 
-    def __calculate_hourly_operation(self):
+    def calculate_hourly_operation(self):
         """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
         Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
         """
@@ -464,7 +464,7 @@ class HydrogenModel:
             tech = "hybrid"
 
         colours = {"solar": "goldenrod", "wind": "royalblue", "hybrid": "limegreen"}
-        hourly_df = self.__calculate_hourly_operation()
+        hourly_df = self.calculate_hourly_operation()
         fig = plt.figure(1)
         for i in range(len(plots)):
             gen_elec = plots[i]

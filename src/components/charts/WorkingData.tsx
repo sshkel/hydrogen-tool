@@ -20,7 +20,6 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import BasicTable from "./BasicTable";
 import DurationCurve from "./DurationCurve";
-import { H2_VOLT_TO_MASS } from "../../model/const";
 
 export interface Props {
   data?: InputFields;
@@ -135,7 +134,6 @@ export default function WorkingData(props: Props) {
     electrolyserMinimumLoad,
     specCons: secAtNominalLoad,
     elecEff: secCorrectionFactor,
-    H2VoltoMass: H2_VOLT_TO_MASS,
   };
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
@@ -143,7 +141,6 @@ export default function WorkingData(props: Props) {
   const hourlyOperations = model.calculateElectrolyserHourlyOperation();
 
   const summary = model.calculateElectrolyserOutput(hourlyOperations);
-
   // CAPEX charts
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,

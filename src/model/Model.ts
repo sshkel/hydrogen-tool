@@ -12,10 +12,8 @@ export type DataModel = {
   location: string;
   electrolyserMaximumLoad: number;
   electrolyserMinimumLoad: number;
-  // no clue about these 3, need to ask
   specCons: number;
   elecEff: number;
-  H2VoltoMass: number;
 };
 
 export type CsvRow = {
@@ -34,6 +32,7 @@ export class HydrogenModel {
   readonly MWtokW = 1000; // kW/MW
   readonly hoursPerYear = 8760;
   readonly kgtoTonne = 1 / 1000;
+  readonly H2VoltoMass = 0.089;
 
   // calculated params
   genCapacity: number;
@@ -49,6 +48,7 @@ export class HydrogenModel {
   // data from renewables
   solarData: CsvRow[];
   windData: CsvRow[];
+  specCons: number;
 
   constructor(parameters: DataModel, solarData: CsvRow[], windData: CsvRow[]) {
     this.parameters = parameters;
@@ -61,12 +61,13 @@ export class HydrogenModel {
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = parameters.elecEff / 100;
-    this.hydOutput = this.parameters.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
+    this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
       parameters.batteryRatedPower * this.parameters.durationOfStorage;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = parameters.batteryMinCharge / 100;
+    this.specCons = this.parameters.specCons * this.H2VoltoMass;
   }
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
@@ -80,7 +81,7 @@ export class HydrogenModel {
       this.elecMaxLoad,
       this.elecMinLoad,
       this.hydOutput,
-      this.parameters.specCons,
+      this.specCons,
       this.elecOverload,
       this.parameters.timeBetweenOverloading,
       this.batteryEnergy,
