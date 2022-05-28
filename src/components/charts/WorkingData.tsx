@@ -313,6 +313,7 @@ export default function WorkingData(props: Props) {
     h2RetailPrice,
     oxygenRetailPrice,
     averageElectricitySpotPrice,
+    inflationRate / 100,
     h2Prod,
     elecProduced,
     elecConsumed

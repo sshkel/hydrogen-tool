@@ -147,8 +147,6 @@ export function cashFlowAnalysis(
   inflationRate: number
 ) {
   const inflation = applyInflation(inflationRate);
-  // sales
-  const salesTotal = inflation(annualSales);
 
   // net investments
   // direct equity payment
@@ -222,7 +220,7 @@ export function cashFlowAnalysis(
   const incomePreDepreciation = directEquityPayment.map(
     (_: number, i: number) => {
       return (
-        salesTotal[i] -
+        annualSales[i] -
         netInvestment[i] -
         totalLoanRepayment[i] -
         interestPaidOnLoan[i] -
@@ -285,20 +283,26 @@ export function sales(
   h2RetailPrice: number,
   oxygenRetailPrice: number,
   averageElectricitySpotPrice: number,
+  inflationRate: number,
   h2Produced: number[],
   electricityProduced: number[],
   electricityConsumed: number[]
 ) {
+  const inflation = applyInflation(inflationRate);
   // The values can be used to create sales graphs.
-  const h2Sales = h2Produced.map((x) => x * 1000 * h2RetailPrice);
+  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
 
-  const electricitySales = electricityProduced.map(
-    (_: number, i: number) =>
-      (electricityProduced[i] - electricityConsumed[i]) *
-      averageElectricitySpotPrice
+  const electricitySales = inflation(
+    electricityProduced.map(
+      (_: number, i: number) =>
+        (electricityProduced[i] - electricityConsumed[i]) *
+        averageElectricitySpotPrice
+    )
   );
-  const oxygenSales = h2Produced.map(
-    (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
+  const oxygenSales = inflation(
+    h2Produced.map(
+      (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
+    )
   );
 
   const annualSales = h2Sales.map(
