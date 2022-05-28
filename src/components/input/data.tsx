@@ -378,11 +378,11 @@ export const data: Field[] = [
   },
   // Additional Revenue streams
   {
-    id: "h2RetailPrice",
-    label: "Hydrogen Retail Price",
+    id: "salesMargin",
+    label: "Sales Margin",
     defaultValue: 1,
     adornmentLabel: "A$/kgH2",
-    helperText: "Price that hydrogen can be sold for",
+    helperText: "Sales margin for H2",
   },
   {
     id: "averageElectricitySpotPrice",

@@ -101,7 +101,8 @@ export default function WorkingData(props: Props) {
     stackDegradation,
     maximumDegradationBeforeReplacement,
     waterRequirementOfElectrolyser,
-    h2RetailPrice,
+    discountRate,
+    salesMargin,
     oxygenRetailPrice,
     averageElectricitySpotPrice,
     shareOfTotalInvestmentFinancedViaEquity,
@@ -309,15 +310,6 @@ export default function WorkingData(props: Props) {
   const h2Prod = activeYears(h2Produced, plantLife);
   const elecProduced = activeYears(electricityProduced, plantLife);
   const elecConsumed = activeYears(electricityConsumed, plantLife);
-  const { h2Sales, electricitySales, oxygenSales, annualSales } = sales(
-    h2RetailPrice,
-    oxygenRetailPrice,
-    averageElectricitySpotPrice,
-    inflationRate / 100,
-    h2Prod,
-    elecProduced,
-    elecConsumed
-  );
 
   const totalCapexCost =
     electrolyserCAPEX +
@@ -337,6 +329,31 @@ export default function WorkingData(props: Props) {
       electricityPurchase[i] +
       // TODO check if this is correct. Strangely taking not discounted cost here.
       additionalAnnualCosts
+  );
+
+  const {
+    lch2,
+    h2RetailPrice,
+    totalCost,
+    h2Moneys,
+    h2Sales,
+    electricitySales,
+    oxygenSales,
+    annualSales,
+  } = sales(
+    oxygenRetailPrice,
+    averageElectricitySpotPrice,
+    inflationRate / 100,
+    totalCapexCost,
+    totalEpcCost,
+    totalLandCost,
+    plantLife,
+    discountRate / 100,
+    salesMargin,
+    totalOpex,
+    h2Prod,
+    elecProduced,
+    elecConsumed
   );
 
   const cashFlow = cashFlowAnalysis(
@@ -380,6 +397,8 @@ export default function WorkingData(props: Props) {
             electricityProduced,
           ],
           "Hydrogen Output [t/yr]": [h2Produced],
+          LCH2: [lch2],
+          "H2 Retail Price": [h2RetailPrice],
         }}
       />
       <BasicTable
@@ -391,6 +410,8 @@ export default function WorkingData(props: Props) {
           electricitySales,
           oxygenSales,
           annualSales,
+          totalCost,
+          h2Moneys,
           ...cashFlow,
         }}
       />

@@ -88,7 +88,7 @@ const defaultInputData: InputFields = {
   timeBetweenOverloading: 0,
   maximumLoadWhenOverloading: 0,
   waterRequirementOfElectrolyser: 0,
-  h2RetailPrice: 0,
+  salesMargin: 0,
   oxygenRetailPrice: 0,
   averageElectricitySpotPrice: 0,
   shareOfTotalInvestmentFinancedViaEquity: 0,

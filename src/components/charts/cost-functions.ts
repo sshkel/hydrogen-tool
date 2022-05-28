@@ -280,18 +280,22 @@ export function cashFlowAnalysis(
 }
 
 export function sales(
-  h2RetailPrice: number,
   oxygenRetailPrice: number,
   averageElectricitySpotPrice: number,
   inflationRate: number,
+  totalCapexCost: number,
+  totalEpcCost: number,
+  totalLandCost: number,
+  projectLife: number,
+  discountRate: number,
+  salesMargin: number,
+  totalOpex: number[],
   h2Produced: number[],
   electricityProduced: number[],
   electricityConsumed: number[]
 ) {
   const inflation = applyInflation(inflationRate);
-  // The values can be used to create sales graphs.
-  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
-
+  const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
   const electricitySales = inflation(
     electricityProduced.map(
       (_: number, i: number) =>
@@ -304,11 +308,39 @@ export function sales(
       (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
     )
   );
+  const totalInvestmentRequired = first(
+    totalCapexCost + totalEpcCost + totalLandCost,
+    projectLife
+  );
+  const paddedOpex = padArray(totalOpex);
+  const discount = applyDiscount(discountRate);
+  const totalCost = discount(
+    totalInvestmentRequired.map((_: number, i: number) => {
+      return (
+        totalInvestmentRequired[i] +
+        paddedOpex[i] -
+        oxygenSales[i] -
+        electricitySales[i]
+      );
+    })
+  );
+  const h2Moneys = discount(
+    h2Produced.map((_: number, i: number) => h2Produced[i] * 1000)
+  );
+  const lch2 = sum(totalCost) / sum(h2Moneys);
+
+  const h2RetailPrice = lch2 + salesMargin;
+  // The values can be used to create sales graphs.
+  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
 
   const annualSales = h2Sales.map(
     (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
   );
   return {
+    lch2,
+    h2RetailPrice,
+    totalCost,
+    h2Moneys,
     h2Sales,
     electricitySales,
     oxygenSales,
@@ -327,6 +359,21 @@ export function applyInflation(rate: number) {
         }
         // TODO: Check is passing in array size of PROJECT_YEARS + 1 (to account for 0th year, but going up to project life)
         return x * (1 + rate) ** i;
+      }
+    );
+}
+
+export function applyDiscount(rate: number) {
+  return (values: number[]) =>
+    values.map(
+      // i corresponds to year
+      (x: number, i: number) => {
+        // zero-th year is always skipped as it signifies upfront costs rather than actual operations
+        if (i === 0) {
+          return x;
+        }
+        // TODO: Check is passing in array size of PROJECT_YEARS + 1 (to account for 0th year, but going up to project life)
+        return x / (1 + rate) ** i;
       }
     );
 }

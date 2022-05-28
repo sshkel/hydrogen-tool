@@ -72,7 +72,7 @@ export interface InputFields {
   timeBetweenOverloading: number;
   maximumLoadWhenOverloading: number;
   waterRequirementOfElectrolyser: number;
-  h2RetailPrice: number;
+  salesMargin: number;
   oxygenRetailPrice: number;
   averageElectricitySpotPrice: number;
   shareOfTotalInvestmentFinancedViaEquity: number;
