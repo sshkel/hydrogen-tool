@@ -58,7 +58,6 @@ describe("Hydrogen Model", () => {
       // electrolyserOandM: 4,
       // waterNeeds: 10,
 
-      H2VoltoMass: 0.089,
       elecEff: 83,
 
       // stackDegradation: 0,
@@ -122,7 +121,6 @@ describe("Hydrogen Model", () => {
       // electrolyserOandM: 2.5,
       // waterNeeds: 10,
 
-      H2VoltoMass: 0.089,
       elecEff: 83,
 
       // stackDegradation: 0,
@@ -186,7 +184,6 @@ describe("Hydrogen Model", () => {
       // electrolyserOandM: 2.5,
       // waterNeeds: 10,
 
-      H2VoltoMass: 0.089,
       elecEff: 83,
 
       // stackDegradation: 0,
