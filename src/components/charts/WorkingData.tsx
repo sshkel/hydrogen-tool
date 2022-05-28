@@ -372,6 +372,27 @@ export default function WorkingData(props: Props) {
     <div>
       <BasicTable
         data={{
+          "Power Plant Capacity Factor": [
+            summary["Generator Capacity Factor"] * 100,
+          ],
+          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
+            summary["Time Electrolyser is at its Rated Capacity"] * 100,
+          ],
+          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
+            summary["Total Time Electrolyser is Operating"] * 100,
+          ],
+          "Electrolyser Capacity Factor": [
+            summary["Achieved Electrolyser Capacity Factor"] * 100,
+          ],
+          "Energy Consumed by Electrolyser (MWh/yr)": [electricityConsumed],
+          "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
+            electricityProduced,
+          ],
+          "Hydrogen Output [t/yr]": [hydrogenCost],
+        }}
+      />
+      <BasicTable
+        data={{
           h2Prod,
           elecProduced,
           elecConsumed,
@@ -381,7 +402,7 @@ export default function WorkingData(props: Props) {
           annualSales,
           ...cashFlow,
         }}
-      ></BasicTable>
+      />
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}
