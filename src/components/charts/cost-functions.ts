@@ -296,17 +296,13 @@ export function sales(
 ) {
   const inflation = applyInflation(inflationRate);
   const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-  const electricitySales = inflation(
-    electricityProduced.map(
-      (_: number, i: number) =>
-        (electricityProduced[i] - electricityConsumed[i]) *
-        averageElectricitySpotPrice
-    )
+  const electricitySales = electricityProduced.map(
+    (_: number, i: number) =>
+      (electricityProduced[i] - electricityConsumed[i]) *
+      averageElectricitySpotPrice
   );
-  const oxygenSales = inflation(
-    h2Produced.map(
-      (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
-    )
+  const oxygenSales = h2Produced.map(
+    (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
   );
   const totalInvestmentRequired = first(
     totalCapexCost + totalEpcCost + totalLandCost,
@@ -342,8 +338,8 @@ export function sales(
     totalCost,
     h2Moneys,
     h2Sales,
-    electricitySales,
-    oxygenSales,
+    electricitySales: inflation(electricitySales),
+    oxygenSales: inflation(oxygenSales),
     annualSales,
   };
 }
