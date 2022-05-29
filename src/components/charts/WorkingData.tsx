@@ -117,7 +117,6 @@ export default function WorkingData(props: Props) {
     inflationRate,
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
-    ppaAgreement,
   } = props.data;
 
   const dataModel: DataModel = {
