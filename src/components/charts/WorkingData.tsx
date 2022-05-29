@@ -8,8 +8,8 @@ import {
   calculateBatteryCapex,
   calculateCapex,
   getIndirectCost,
-  getOpexPerYear,
-  getOpexPerYearWithAdditionalCostPredicate,
+  getOpexPerYearInflation,
+  getOpexPerYearInflationWithAdditionalCostPredicate,
   maxDegradationStackReplacementYears,
   roundToNearestThousand,
   cashFlowAnalysis,
@@ -242,7 +242,7 @@ export default function WorkingData(props: Props) {
   const electrolyserStackReplacementCost =
     (props.data.electrolyserStackReplacement / 100) * electrolyserCAPEX;
 
-  const electrolyserOpex = getOpexPerYearWithAdditionalCostPredicate(
+  const electrolyserOpex = getOpexPerYearInflationWithAdditionalCostPredicate(
     electrolyserOMCost,
     inflationRate,
     plantLife,
@@ -256,13 +256,13 @@ export default function WorkingData(props: Props) {
   const windOpexCost = isWind(technology)
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
-  const powerplantOpex = getOpexPerYear(
+  const powerplantOpex = getOpexPerYearInflation(
     solarOpexCost + windOpexCost,
     inflationRate,
     plantLife
   );
 
-  const additionalOpex = getOpexPerYear(
+  const additionalOpex = getOpexPerYearInflation(
     additionalAnnualCosts,
     inflationRate,
     plantLife
@@ -278,7 +278,7 @@ export default function WorkingData(props: Props) {
     batteryLifetime > 0 && year % batteryLifetime === 0;
   const batteryOpex =
     batteryRatedPower > 0
-      ? getOpexPerYearWithAdditionalCostPredicate(
+      ? getOpexPerYearInflationWithAdditionalCostPredicate(
           batteryOMCost,
           inflationRate,
           plantLife,
@@ -293,7 +293,7 @@ export default function WorkingData(props: Props) {
     (props.data.additionalTransmissionCharges || 0);
   const electricityOMCost =
     summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost;
-  const electricityPurchase = getOpexPerYear(
+  const electricityPurchase = getOpexPerYearInflation(
     electricityOMCost,
     inflationRate,
     plantLife
@@ -305,7 +305,11 @@ export default function WorkingData(props: Props) {
       : summary["Hydrogen Output for Variable Operation [t/yr"];
   const waterOMCost =
     h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser;
-  const waterCost = getOpexPerYear(waterOMCost, inflationRate, plantLife);
+  const waterCost = getOpexPerYearInflation(
+    waterOMCost,
+    inflationRate,
+    plantLife
+  );
 
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];

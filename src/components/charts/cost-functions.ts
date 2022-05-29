@@ -49,8 +49,8 @@ export const getIndirectCost = (
   costAsPercentageOfCapex: number = 0
 ) => roundToNearestThousand(capex * (costAsPercentageOfCapex / 100));
 
-// Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + discountRate)^year)
-export const getOpexPerYear = (
+// Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + inflationRate)^year)
+export const getOpexPerYearInflation = (
   cost: number,
   inflationRate: number,
   years: number
@@ -61,7 +61,7 @@ export const getOpexPerYear = (
   );
 };
 
-export const getOpexPerYearWithAdditionalCostPredicate = (
+export const getOpexPerYearInflationWithAdditionalCostPredicate = (
   cost: number,
   inflationRate: number,
   years: number,
