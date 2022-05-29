@@ -1,17 +1,17 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+import { checkLength } from "../../model/Utils";
 import { ChartData } from "../../types";
 
 interface Props {
-  plantLife: number;
+  labels: string[];
   datapoints: ChartData[];
 }
 
 export default function CostBarChart(props: Props) {
-  const { plantLife, datapoints } = props;
-
+  const { labels, datapoints } = props;
   const graphData = {
-    labels: [...Array(plantLife).keys()].map((i) => i + 1),
+    labels: labels,
     datasets: datapoints.map((point) => ({
       ...point,
       backgroundColor: "rgba(75,192,192,0.2)",

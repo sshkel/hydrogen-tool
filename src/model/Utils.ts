@@ -1,3 +1,4 @@
+import { ChartData } from "../types";
 export function first(element: number, projectLife: number) {
   return [element].concat(Array(projectLife + 1).fill(0));
 }
@@ -15,4 +16,17 @@ export function decomissioning(element: number, projectLife: number) {
   return Array(projectLife + 1)
     .fill(0)
     .concat([element]);
+}
+
+export function dropPadding(arr: number[]) {
+  return arr.slice(1, arr.length - 1);
+}
+export function checkLength(datapoints: ChartData[], plantLife: number) {
+  datapoints.forEach((p) => {
+    if (p.data.length !== plantLife) {
+      throw new Error(
+        `Invalid size of ${p.data.length} for ${p.label}. Should be ${plantLife}.`
+      );
+    }
+  });
 }
