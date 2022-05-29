@@ -275,7 +275,7 @@ export default function WorkingData(props: Props) {
   const actualBatteryReplacementCost =
     (batteryReplacementCost / 100) * batteryCAPEX;
   const shouldAddBatteryReplacementCost = (year: number): boolean =>
-    batteryLifetime > 0 && year % batteryLifetime === 0;
+    batteryLifetime > 0 && year % batteryLifetime === 0 && year < plantLife;
   const batteryOpex =
     batteryRatedPower > 0
       ? getOpexPerYearInflationWithAdditionalCostPredicate(
@@ -340,6 +340,9 @@ export default function WorkingData(props: Props) {
     if (stackReplacementYears.includes(i + 1)) {
       cost += electrolyserStackReplacementCost;
     }
+    if (shouldAddBatteryReplacementCost(i + 1)) {
+      cost += actualBatteryReplacementCost;
+    }
     return cost;
   });
 
@@ -347,6 +350,7 @@ export default function WorkingData(props: Props) {
     lch2,
     h2RetailPrice,
     totalCost,
+    totalCostWithDiscount,
     h2Moneys,
     h2Sales,
     electricitySales,
@@ -423,6 +427,7 @@ export default function WorkingData(props: Props) {
           oxygenSales,
           annualSales,
           totalCost,
+          totalCostWithDiscount,
           h2Moneys,
           ...cashFlow,
         }}

@@ -308,20 +308,19 @@ export function sales(
   );
   const paddedOpex = padArray(totalOpex);
   const discount = applyDiscount(discountRate);
-  const totalCost = discount(
-    totalInvestmentRequired.map((_: number, i: number) => {
-      return (
-        totalInvestmentRequired[i] +
-        paddedOpex[i] -
-        oxygenSales[i] -
-        electricitySales[i]
-      );
-    })
-  );
+  const totalCost = totalInvestmentRequired.map((_: number, i: number) => {
+    return (
+      totalInvestmentRequired[i] +
+      paddedOpex[i] -
+      oxygenSales[i] -
+      electricitySales[i]
+    );
+  });
+  const totalCostWithDiscount = discount(totalCost);
   const h2Moneys = discount(
     h2Produced.map((_: number, i: number) => h2Produced[i] * 1000)
   );
-  const lch2 = sum(totalCost) / sum(h2Moneys);
+  const lch2 = sum(totalCostWithDiscount) / sum(h2Moneys);
 
   const h2RetailPrice = lch2 + salesMargin;
   // The values can be used to create sales graphs.
@@ -334,6 +333,7 @@ export function sales(
     lch2,
     h2RetailPrice,
     totalCost,
+    totalCostWithDiscount,
     h2Moneys,
     h2Sales,
     electricitySales: inflation(electricitySales),
