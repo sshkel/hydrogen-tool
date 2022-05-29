@@ -1,7 +1,7 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { DataModel, HydrogenModel } from "../../model/Model";
-import { activeYears } from "../../model/Utils";
+import { activeYears, dropPadding } from "../../model/Utils";
 import { InputFields } from "../../types";
 import {
   cumulativeStackReplacementYears,
@@ -14,6 +14,7 @@ import {
   roundToNearestThousand,
   cashFlowAnalysis,
   sales,
+  projectYears,
 } from "./cost-functions";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
@@ -486,15 +487,22 @@ export default function WorkingData(props: Props) {
       <CostLineChart
         plantLife={plantLife}
         datapoints={[
-          { label: "Hydrogen Sales", data: h2Sales },
-          { label: "Electricity Sales", data: electricitySales },
-          { label: "Oxygen Sales", data: oxygenSales },
-          { label: "Total Sales", data: annualSales },
+          { label: "Hydrogen Sales", data: dropPadding(h2Sales) },
+          { label: "Electricity Sales", data: dropPadding(electricitySales) },
+          { label: "Oxygen Sales", data: dropPadding(oxygenSales) },
+          { label: "Total Sales", data: dropPadding(annualSales) },
         ]}
       />
       <CostBarChart
-        plantLife={plantLife}
-        datapoints={[{ label: "Cash Flow Analysis", data: cumulativeCashFlow }]}
+        labels={["startup"]
+          .concat(projectYears(plantLife).map(String))
+          .concat(["decomissioning"])}
+        datapoints={[
+          {
+            label: "Cash Flow Analysis",
+            data: cumulativeCashFlow,
+          },
+        ]}
       />
     </div>
   );

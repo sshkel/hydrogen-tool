@@ -427,7 +427,7 @@ function getConversionFactors(
   return padArray(selectedModel.concat(Array(padding).fill(0)));
 }
 
-function projectYears(projectLife: number): number[] {
+export function projectYears(projectLife: number): number[] {
   // gives you array of years starting from 1 and ending in projectLife inclusive
   return Array.from({ length: projectLife }, (_, i) => i + 1);
 }

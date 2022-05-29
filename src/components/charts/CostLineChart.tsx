@@ -1,5 +1,6 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
+import { checkLength } from "../../model/Utils";
 import { ChartData } from "../../types";
 
 interface Props {
@@ -18,6 +19,7 @@ const colours = [
 
 export default function CostLineChart(props: Props) {
   const { plantLife, datapoints } = props;
+  checkLength(datapoints, plantLife);
 
   const graphData = {
     labels: [...Array(plantLife).keys()].map((i) => i + 1),
