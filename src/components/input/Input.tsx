@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import InputNumberField from "./InputNumberField";
 import InputExpand from "./InputExpand";
 import Button from "@mui/material/Button";
-import React from "react";
+import React, { useState } from "react";
 import {
   data,
   profileData,
@@ -12,12 +12,15 @@ import {
   capitalDepreciationProfile,
 } from "./data";
 import InputSelectField from "./InputSelectField";
+import { Bool } from "../../types";
 
 interface Props {
   setState: (obj: any) => void;
 }
 
 export default function Input(props: Props) {
+  const [ppaAgreement, setPPAAgreement] = useState<Bool>("false");
+
   let pointer: number = 0;
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
@@ -58,6 +61,41 @@ export default function Input(props: Props) {
     );
   };
 
+  const getDataWithDisabledCheck = (index: number, disabled: boolean) => {
+    ++pointer;
+    const { label, id, defaultValue, adornmentLabel, helperText } = data[index];
+
+    let savedValue;
+    if (savedState) {
+      const value = parsedState[id];
+      savedValue = isNaN(value) ? value : Number(value);
+    }
+    return (
+      <InputNumberField
+        key={id}
+        label={label}
+        name={id}
+        defaultValue={
+          disabled
+            ? undefined
+            : savedValue !== undefined
+            ? savedValue
+            : defaultValue
+        }
+        value={disabled ? 0 : undefined}
+        adornmentLabel={adornmentLabel}
+        disabled={disabled}
+        helperText={helperText}
+      />
+    );
+  };
+
+  const ppaAgreementOnChange = (val: string) => {
+    if (val === "true" || val === "false") {
+      setPPAAgreement(val);
+    }
+  };
+
   return (
     <Box
       component="form"
@@ -81,6 +119,17 @@ export default function Input(props: Props) {
               ? parsedState["location"]
               : locationData[0]
           }
+        />
+        <InputSelectField
+          id="ppaAgreement"
+          label="PPA Agreement"
+          values={["true", "false"]}
+          defaultValue={
+            parsedState["ppaAgreement"] !== undefined
+              ? parsedState["ppaAgreement"]
+              : "false"
+          }
+          onChange={ppaAgreementOnChange}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
@@ -152,10 +201,15 @@ export default function Input(props: Props) {
       </InputExpand>
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
-          {[...Array(7)].map((_) => getData(pointer))}
+          {[...Array(7)].map((_) =>
+            getDataWithDisabledCheck(pointer, ppaAgreement === "true")
+          )}
         </InputExpand>
+
         <InputExpand title="Wind Costs" id="wind-costs">
-          {[...Array(7)].map((_) => getData(pointer))}
+          {[...Array(7)].map((_) =>
+            getDataWithDisabledCheck(pointer, ppaAgreement === "true")
+          )}
         </InputExpand>
         <InputExpand
           title="Costs for Grid Connected Systems"

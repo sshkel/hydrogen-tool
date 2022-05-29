@@ -15,6 +15,8 @@ export type DepreciationProfile =
 
 export type ChartData = { label: string; data: number[] };
 
+export type Bool = "true" | "false";
+
 export interface InputFields {
   additionalUpfrontCosts: number;
   additionalAnnualCosts: number;
@@ -86,4 +88,5 @@ export interface InputFields {
   inflationRate: number;
   secAtNominalLoad?: number;
   secCorrectionFactor?: number;
+  ppaAgreement: Bool;
 }

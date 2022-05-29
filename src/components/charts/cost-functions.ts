@@ -55,9 +55,8 @@ export const getOpexPerYearInflation = (
   inflationRate: number,
   years: number
 ): number[] => {
-  const roundedCost = roundToNearestThousand(cost);
   return [...Array(years).keys()].map((i) =>
-    roundToTwoDP(roundedCost * (1 + inflationRate / 100) ** (i + 1))
+    roundToTwoDP(cost * (1 + inflationRate / 100) ** (i + 1))
   );
 };
 
@@ -68,15 +67,11 @@ export const getOpexPerYearInflationWithAdditionalCostPredicate = (
   shouldIncludeAdditionalCost: (year: number) => boolean,
   additionalCost: number
 ): number[] => {
-  const roundedCost = roundToNearestThousand(cost);
-
   return [...Array(years).keys()].map((i) => {
     const year = i + 1;
     const extras = shouldIncludeAdditionalCost(year) ? additionalCost : 0;
 
-    return roundToTwoDP(
-      (roundedCost + extras) * (1 + inflationRate / 100) ** year
-    );
+    return roundToTwoDP((cost + extras) * (1 + inflationRate / 100) ** year);
   });
 };
 
@@ -108,17 +103,18 @@ export function cumulativeStackReplacementYears(
 ): number[] {
   // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
   //the total operating time surpassing a multiple of the stack lifetime.
+  //The final year is never included for stack replacement, so is excluded from the iteration.
   //"""
   let currentStackLifetime: number = stackLifetime;
 
-  const years = projectYears(projectLife);
-
+  const candidateReplacementYears = projectYears(projectLife - 1);
   if (stackLifetime <= operatingHoursPerYear) {
-    return years;
+    return candidateReplacementYears;
   }
 
   const stackReplacementYears = [];
-  for (let year of years) {
+  // Don't include final project year as there is no need for stack replacement
+  for (let year of candidateReplacementYears) {
     currentStackLifetime -= operatingHoursPerYear;
     if (currentStackLifetime <= 0) {
       stackReplacementYears.push(year);

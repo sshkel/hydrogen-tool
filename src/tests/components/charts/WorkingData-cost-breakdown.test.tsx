@@ -512,4 +512,5 @@ const defaultInputData: InputFields = {
   capitalDepreciationProfile: "Straight Line",
   taxRate: 0,
   inflationRate: 0,
+  ppaAgreement: "false",
 };

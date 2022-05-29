@@ -277,8 +277,8 @@ export class HydrogenModel {
       (x: number, i: number) =>
         (generator_cf[i] * oversize - electrolyser_cf[i]) * elecCapacity
     );
-    const battery_net_charge = [0.0 * size];
-    const battery_soc = [0.0 * size];
+    const battery_net_charge = new Array(size).fill(0.0);
+    const battery_soc = new Array(size).fill(0.0);
     const batt_losses = 1 - (1 - batteryEfficiency) / 2;
     const elec_min = elecMinLoad * elecCapacity;
     const elec_max = elecMaxLoad * elecCapacity;

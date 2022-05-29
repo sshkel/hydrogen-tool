@@ -9,16 +9,20 @@ interface Props {
   label: string;
   values: string[];
   defaultValue: string;
+  onChange?: (val: string) => void;
 }
 
 export default function InputTextField(props: Props) {
-  const { id, label, defaultValue, values } = props;
+  const { id, label, defaultValue, values, onChange } = props;
   const labelId = `${id}-label`;
 
   const [value, setValue] = useState(defaultValue);
 
   const onSelectChange = (event: SelectChangeEvent<string>) => {
     setValue(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
   };
 
   return (

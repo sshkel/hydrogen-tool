@@ -5,6 +5,7 @@ interface Props {
   label: string;
   name: string;
   defaultValue?: string | number;
+  value?: number;
   helperText?: string;
   disabled?: boolean;
   required?: boolean;
@@ -22,6 +23,7 @@ export default function InputNumberField(props: Props) {
     required,
     onChange,
     adornmentLabel,
+    value,
   } = props;
 
   return (
@@ -31,6 +33,7 @@ export default function InputNumberField(props: Props) {
       name={name}
       label={label}
       defaultValue={defaultValue}
+      value={value}
       helperText={helperText}
       disabled={disabled}
       required={required}

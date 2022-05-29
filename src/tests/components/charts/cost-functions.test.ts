@@ -52,17 +52,6 @@ describe("Cost function calculations", () => {
     expect(opex).toEqual(expected);
   });
 
-  it("rounds input cost for opex per year to nearest thousand", () => {
-    const opex = getOpexPerYearInflation(500, 0.1, 10);
-    expect(opex).toHaveLength(10);
-    const expected = [
-      1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
-      1010.05,
-    ];
-
-    expect(opex).toEqual(expected);
-  });
-
   it("calculates opex per year with additional costs", () => {
     const opex = getOpexPerYearInflationWithAdditionalCostPredicate(
       1000,
@@ -80,49 +69,35 @@ describe("Cost function calculations", () => {
     expect(opex).toEqual(expected);
   });
 
-  it("rounds input cost for opex per year with additional costs to nearest thousand", () => {
-    const opex = getOpexPerYearInflationWithAdditionalCostPredicate(
-      1001,
-      0.1,
-      10,
-      (x) => x % 5 === 0,
-      10
-    );
-    expect(opex).toHaveLength(10);
-    const expected = [
-      1001, 1002, 1003, 1004.01, 1015.06, 1006.02, 1007.02, 1008.03, 1009.04,
-      1020.15,
-    ];
-
-    expect(opex).toEqual(expected);
-  });
-
-  it("returns years where stack is needed to replace", () => {
+  it("returns years where stack is needs replacement", () => {
     const stackReplacementYears = cumulativeStackReplacementYears(1, 5, 100);
-    expect(stackReplacementYears).toHaveLength(20);
-    const expected = [...Array(20).keys()].map((i) => 5 * (i + 1));
+    // 100th year should not be included
+    expect(stackReplacementYears).toHaveLength(19);
+    const expected = [...Array(19).keys()].map((i) => 5 * (i + 1));
 
     expect(stackReplacementYears).toEqual(expected);
   });
 
-  it("returns years where stack is needed to replace with boundary cases", () => {
+  it("returns years where stack needs replacement with boundary cases", () => {
     const stackReplacementYears = cumulativeStackReplacementYears(2, 5, 20);
-    expect(stackReplacementYears).toHaveLength(8);
-    expect(stackReplacementYears).toEqual([3, 5, 8, 10, 13, 15, 18, 20]);
+    expect(stackReplacementYears).toHaveLength(7);
+    expect(stackReplacementYears).toEqual([3, 5, 8, 10, 13, 15, 18]);
   });
 
   it("handles when operating hours per year exceed stack lifetime", () => {
     const stackReplacementYears = cumulativeStackReplacementYears(2, 1, 10);
-    expect(stackReplacementYears).toHaveLength(10);
-    const expected = [...Array(10).keys()].map((i) => i + 1);
+    // Final year still not included
+    expect(stackReplacementYears).toHaveLength(9);
+    const expected = [...Array(9).keys()].map((i) => i + 1);
 
     expect(stackReplacementYears).toEqual(expected);
   });
 
   it("handles when operating hours per year are equal to stack lifetime", () => {
     const stackReplacementYears = cumulativeStackReplacementYears(1, 1, 10);
-    expect(stackReplacementYears).toHaveLength(10);
-    const expected = [...Array(10).keys()].map((i) => i + 1);
+    // Final year still not included
+    expect(stackReplacementYears).toHaveLength(9);
+    const expected = [...Array(9).keys()].map((i) => i + 1);
 
     expect(stackReplacementYears).toEqual(expected);
   });
