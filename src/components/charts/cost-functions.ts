@@ -155,17 +155,18 @@ export function cashFlowAnalysis(
   const totalEquity = roundToNearestThousand(
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaEquity
   );
-  const directEquityPayment = first(
-    roundToNearestThousand(totalEquity * directEquityShare),
-    projectLife
+
+  const directEquityCost = roundToNearestThousand(
+    totalEquity * directEquityShare
   );
+  const directEquityPayment = first(directEquityCost, projectLife);
   // indirect equity
   const indirectEquityShare = 1 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
-  const indirectEquity = first(
-    roundToNearestThousand(totalEquity * indirectEquityShare),
-    projectLife
+  const indrectEquityCost = roundToNearestThousand(
+    totalEquity * indirectEquityShare
   );
+  const indirectEquity = first(indrectEquityCost, projectLife);
   const shareOfTotalInvestmentFinancedViaLoan =
     1 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
@@ -183,14 +184,12 @@ export function cashFlowAnalysis(
     projectLife
   );
 
-  // cost of setting up the project
+  // cost of setting up or decommissioning the project
   const netInvestment = directEquityPayment.map(
     (_: number, i: number) =>
       directEquityPayment[i] +
+      indirectEquity[i] +
       decomissioningCost[i] -
-      // TODO check if costFinancedViaLoan should be positive since it's money you get in and repay later every year
-      costFinancedViaLoan[i] -
-      indirectEquity[i] -
       salvageCost[i]
   );
 
@@ -199,7 +198,7 @@ export function cashFlowAnalysis(
   const loanRepayment = totalLoan / loanTerm;
   const totalLoanRepayment = padArray(
     projectYears(projectLife).map((year: number) => {
-      if (year < loanTerm) {
+      if (year <= loanTerm) {
         return loanRepayment;
       }
       return 0;
@@ -208,7 +207,7 @@ export function cashFlowAnalysis(
   // interest paid on loan
   const interestPaidOnLoan = padArray(
     projectYears(projectLife).map((year: number) => {
-      if (year < loanTerm) {
+      if (year <= loanTerm) {
         return loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
       }
       return 0;
@@ -217,16 +216,15 @@ export function cashFlowAnalysis(
   // fixed opex
   const totalOpexWithInflation = inflation(padArray(totalOpex));
   // depreciation
-  const incomePreDepreciation = directEquityPayment.map(
-    (_: number, i: number) => {
-      return (
-        annualSales[i] -
-        netInvestment[i] -
-        totalLoanRepayment[i] -
-        interestPaidOnLoan[i] -
-        totalOpexWithInflation[i]
-      );
-    }
+  const incomePreDepreciation = projectYearsWithStartupAndDecommissioning(
+    projectLife
+  ).map(
+    (_: number, i: number) =>
+      annualSales[i] -
+      netInvestment[i] -
+      totalLoanRepayment[i] -
+      interestPaidOnLoan[i] -
+      totalOpexWithInflation[i]
   );
   const totalDepreciableCapex = totalCapexCost + totalEpcCost;
   const conversionFactors = getConversionFactors(
@@ -240,8 +238,8 @@ export function cashFlowAnalysis(
   // tax liabilities
   const taxableIncome = incomePreDepreciation.map(
     (_: number, i: number) =>
-      // TODO check that if totalLoanRepayment should include total interest paid
-      incomePreDepreciation[i] - depreciation[i] - totalLoanRepayment[i]
+      // TODO check if this formula is right (currently matches Excel)
+      incomePreDepreciation[i] - depreciation[i] + totalLoanRepayment[i]
   );
 
   const tax = taxableIncome.map((_: number, i: number) => {
@@ -430,6 +428,13 @@ function getConversionFactors(
 }
 
 export function projectYears(projectLife: number): number[] {
-  // gives you array of years starting from 1 and ending in projectLife
+  // gives you array of years starting from 1 and ending in projectLife inclusive
   return Array.from({ length: projectLife }, (_, i) => i + 1);
+}
+
+function projectYearsWithStartupAndDecommissioning(
+  projectLife: number
+): number[] {
+  // gives you array of years starting from start-up, including projectLife years and then decommissioning
+  return Array.from({ length: projectLife + 2 });
 }
