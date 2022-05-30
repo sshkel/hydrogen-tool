@@ -60,16 +60,15 @@ export const getOpexPerYearInflation = (
   );
 };
 
-export const getOpexPerYearInflationWithAdditionalCostPredicate = (
+export const getOpexPerYearInflationWithAdditionalCost = (
   cost: number,
   inflationRate: number,
   years: number,
-  shouldIncludeAdditionalCost: (year: number) => boolean,
-  additionalCost: number
+  additionalCostsByYear: number[]
 ): number[] => {
   return [...Array(years).keys()].map((i) => {
     const year = i + 1;
-    const extras = shouldIncludeAdditionalCost(year) ? additionalCost : 0;
+    const extras = additionalCostsByYear[i];
 
     return roundToTwoDP((cost + extras) * (1 + inflationRate / 100) ** year);
   });
@@ -274,7 +273,7 @@ export function cashFlowAnalysis(
 }
 
 export function sales(
-  oxygenRetailPrice: number,
+  oxygenSalePrice: number,
   averageElectricitySpotPrice: number,
   inflationRate: number,
   totalCapexCost: number,
@@ -295,9 +294,8 @@ export function sales(
       (electricityProduced[i] - electricityConsumed[i]) *
       averageElectricitySpotPrice
   );
-  const oxygenSales = h2Produced.map(
-    (_: number, i: number) => 8 * h2Produced[i] * oxygenRetailPrice
-  );
+
+  const oxygenSales = h2Produced.map((_: number, i: number) => oxygenSalePrice);
   const totalInvestmentRequired = first(
     totalCapexCost + totalEpcCost + totalLandCost,
     projectLife
@@ -316,7 +314,8 @@ export function sales(
   const h2Moneys = discount(
     h2Produced.map((_: number, i: number) => h2Produced[i] * 1000)
   );
-  const lch2 = sum(totalCostWithDiscount) / sum(h2Moneys);
+  const hydrogenProductionCost = sum(h2Moneys);
+  const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
 
   const h2RetailPrice = lch2 + salesMargin;
   // The values can be used to create sales graphs.
@@ -335,6 +334,7 @@ export function sales(
     electricitySales: inflation(electricitySales),
     oxygenSales: inflation(oxygenSales),
     annualSales,
+    hydrogenProductionCost,
   };
 }
 
@@ -366,6 +366,31 @@ export function applyDiscount(rate: number) {
         return x / (1 + rate) ** i;
       }
     );
+}
+
+export function getSummedDiscountForOpexCost(
+  opex: number,
+  discountRate: number,
+  years: number
+): number {
+  let sum = 0;
+  for (let i = 1; i <= years; i++) {
+    sum += opex / (1 + discountRate / 100) ** i;
+  }
+  return sum;
+}
+
+export function getSummedDiscountForOpexValues(
+  opexValues: number[],
+  discountRate: number,
+  years: number
+): number {
+  let sum = 0;
+  for (let i = 1; i <= years; i++) {
+    // Need to minus 1 as assuming opexValues is zero indexes
+    sum += opexValues[i - 1] / (1 + discountRate / 100) ** i;
+  }
+  return sum;
 }
 
 function getConversionFactors(
@@ -433,4 +458,17 @@ function projectYearsWithStartupAndDecommissioning(
 ): number[] {
   // gives you array of years starting from start-up, including projectLife years and then decommissioning
   return Array.from({ length: projectLife + 2 });
+}
+export function getReplacementCostOverProjectLife(
+  cost: number,
+  isReplacementYear: (year: number) => boolean,
+  projectLife: number
+): number[] {
+  const costArray: number[] = new Array(projectLife).fill(0);
+  for (let year = 1; year <= projectLife; year++) {
+    if (isReplacementYear(year)) {
+      costArray[year - 1] = cost;
+    }
+  }
+  return costArray;
 }

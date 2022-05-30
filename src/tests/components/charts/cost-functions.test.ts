@@ -6,7 +6,7 @@ import {
   getBaseLog,
   getIndirectCost,
   getOpexPerYearInflation,
-  getOpexPerYearInflationWithAdditionalCostPredicate,
+  getOpexPerYearInflationWithAdditionalCost,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
 
@@ -53,12 +53,11 @@ describe("Cost function calculations", () => {
   });
 
   it("calculates opex per year with additional costs", () => {
-    const opex = getOpexPerYearInflationWithAdditionalCostPredicate(
+    const opex = getOpexPerYearInflationWithAdditionalCost(
       1000,
       0.1,
       10,
-      (x) => x % 5 === 0,
-      10
+      [0, 0, 0, 0, 10, 0, 0, 0, 0, 10]
     );
     expect(opex).toHaveLength(10);
     const expected = [
