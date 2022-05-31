@@ -24,7 +24,7 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import BasicTable from "./BasicTable";
 import DurationCurve from "./DurationCurve";
-import HourlyCapacityFactors from "./HourlyCapactiyFactors";
+import HourlyCapacityFactors from "./HourlyCapacityFactors";
 
 export interface Props {
   data?: InputFields;
