@@ -3,6 +3,7 @@ import { InputFields } from "../../../types";
 import { mount } from "enzyme";
 import { readLocalCsv } from "../../resources/loader";
 import DurationCurve from "../../../components/charts/DurationCurve";
+import { solarPvWithBatteryScenario } from "../../scenario";
 jest.setTimeout(10_000);
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
@@ -17,21 +18,15 @@ describe("Working Data calculations", () => {
 
   describe("Duration Curves", () => {
     it("calculates generator duration curve as 8760 percentages", (done) => {
-      const data: InputFields = {
-        ...defaultInputData,
-        technology: "Solar",
-        solarNominalCapacity: 15, // MW
-        solarReferenceCapacity: 1000, // kW
-        solarPVFarmReferenceCost: 1200, // A$/kw
-        solarPVCostReductionWithScale: 20, // %
-        solarReferenceFoldIncrease: 10,
-      };
-
       const wrapper = mount(
-        <WorkingData data={data} loadSolar={loadSolar} loadWind={loadWind} />
+        <WorkingData
+          data={solarPvWithBatteryScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
       );
 
-      // Sad 600ms sleep to wait for CSV to load and set state
+      // Sad 1500ms sleep to wait for CSV to load and set state
       setTimeout(() => {
         wrapper.update();
         const durationCurve = wrapper

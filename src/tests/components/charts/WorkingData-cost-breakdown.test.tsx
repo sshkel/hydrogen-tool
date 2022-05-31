@@ -2,6 +2,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
 import { shallow, ShallowWrapper } from "enzyme";
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
+import { solarPvWithBatteryScenario } from "../../scenario";
 
 const mockLoader: () => Promise<any[]> = () => new Promise(() => {});
 
@@ -262,6 +263,33 @@ describe("Working Data calculations", () => {
       // Indirect Cost = 20_000
       expect(costBreakdownChart.at(0).prop("data").at(5)).toEqual(20_000);
     });
+
+    it("calculates cost breakdown for complex scenario", () => {
+      const wrapper = shallow(
+        <WorkingData
+          data={solarPvWithBatteryScenario}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+        />
+      );
+
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const dataArray: number[] = costBreakdownChart.at(0).prop("data");
+
+      // Electrolyser CAPEX = 10_380_000
+      expect(dataArray.at(0)).toEqual(10_380_000);
+      // Power Plant CAPEX = 11_985_000
+      expect(dataArray.at(1)).toEqual(11_985_000);
+      // Battery CAPEX = 6_784_000
+      expect(dataArray.at(2)).toEqual(6_784_000);
+      // Additional Cost = 100_000
+      expect(dataArray.at(4)).toEqual(100_000);
+      // Indirect Cost = 224_000
+      expect(dataArray.at(5)).toEqual(224_000);
+    });
   });
 
   describe("Indirect Cost Breakdown", () => {
@@ -439,6 +467,28 @@ describe("Working Data calculations", () => {
       // EPC: 10000, Land: 10000
       expect(chartData.at(4)).toEqual(10_000);
       expect(chartData.at(5)).toEqual(10_000);
+    });
+
+    it("calculates indirect costs in complex scenarios", () => {
+      const wrapper = shallow(
+        <WorkingData
+          data={solarPvWithBatteryScenario}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+        />
+      );
+
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const chartData = costBreakdownChart.at(0).prop("data");
+      // Electrolyser EPC = 104_000
+      expect(chartData.at(0)).toEqual(104_000);
+      // Power Plant Land = 120_000
+      expect(chartData.at(3)).toEqual(120_000);
+      // Battery Land = 339_000
+      expect(chartData.at(5)).toEqual(339_000);
     });
   });
 });
