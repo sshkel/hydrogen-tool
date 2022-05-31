@@ -24,6 +24,7 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import BasicTable from "./BasicTable";
 import DurationCurve from "./DurationCurve";
+import HourlyCapacityFactors from "./HourlyCapactiyFactors";
 
 export interface Props {
   data?: InputFields;
@@ -632,6 +633,12 @@ export default function WorkingData(props: Props) {
               lcOxygenSale,
             ],
           },
+        ]}
+      />
+      <HourlyCapacityFactors
+        datapoints={[
+          { label: "Electrolyser", data: hourlyOperations.Electrolyser_CF },
+          { label: "Power Plant", data: hourlyOperations.Generator_CF },
         ]}
       />
     </div>
