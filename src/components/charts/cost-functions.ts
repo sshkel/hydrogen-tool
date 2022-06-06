@@ -1,5 +1,5 @@
 import { first, decomissioning, padArray } from "../../model/Utils";
-import { DepreciationProfile } from "../../types";
+import { DepreciationProfile, StackReplacementType } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);
@@ -75,16 +75,17 @@ export const getOpexPerYearInflationWithAdditionalCost = (
 };
 
 export function maxDegradationStackReplacementYears(
-  yearlyElecDegradation: number,
-  maxElexDegradation: number,
+  stackDegradation: number,
+  maximumDegradationBeforeReplacement: number,
   projectLife: number
 ): number[] {
   let runningYear = 1;
   const replacementYears = [];
   for (let year of projectYears(projectLife)) {
+    // TODO Explain this calculation here
     const stackDegradationForYear =
-      1 - 1 / (1 + yearlyElecDegradation) ** runningYear;
-    if (stackDegradationForYear > maxElexDegradation) {
+      1 - 1 / (1 + stackDegradation / 100) ** runningYear;
+    if (stackDegradationForYear > maximumDegradationBeforeReplacement) {
       runningYear = 1;
       replacementYears.push(year);
     } else {

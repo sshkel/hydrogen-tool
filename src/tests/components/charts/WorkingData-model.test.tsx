@@ -118,6 +118,8 @@ const defaultInputData: InputFields = {
   solarPVCostReductionWithScale: 0,
   solarReferenceFoldIncrease: 0,
   solarOpex: 0,
+  solarDegradation: 0,
+  windDegradation: 0,
   stackReplacementType: "Cumulative Hours",
   stackLifetime: 0,
   stackDegradation: 0,

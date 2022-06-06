@@ -61,6 +61,8 @@ export const solarPvWithBatteryScenario: InputFields = {
   salesMargin: 1,
   averageElectricitySpotPrice: 0,
   oxygenRetailPrice: 0,
+  solarDegradation: 0,
+  windDegradation: 0,
   plantLife: 20,
   discountRate: 7,
   shareOfTotalInvestmentFinancedViaEquity: 70,

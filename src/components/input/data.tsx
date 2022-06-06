@@ -191,6 +191,21 @@ export const data: Field[] = [
     defaultValue: 5,
     adornmentLabel: "A$/kL",
   },
+  /******* Power Plant Parameters *******/
+  {
+    id: "solarDegradation",
+    label: "Solar Degradation",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Decrease in solar farm output per year",
+  },
+  {
+    id: "windDegradation",
+    label: "Wind Degradation",
+    defaultValue: 0,
+    adornmentLabel: "%",
+    helperText: "Decrease in wind farm output per year",
+  },
   /******* Power Plant Costs *******/
   // Solar Costs
   {

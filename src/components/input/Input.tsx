@@ -199,6 +199,9 @@ export default function Input(props: Props) {
           {[...Array(3)].map((_) => getData(pointer))}
         </InputExpand>
       </InputExpand>
+      <InputExpand title="Power Plant Parameters" id="power-plant-parameters">
+        {[...Array(2)].map((_) => getData(pointer))}
+      </InputExpand>
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
           {[...Array(7)].map((_) =>

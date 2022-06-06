@@ -83,6 +83,8 @@ const defaultInputData: InputFields = {
   principalPPACost: 0,
   profile: "Fixed",
   location: "WA",
+  solarDegradation: 0,
+  windDegradation: 0,
   electrolyserMaximumLoad: 0,
   electrolyserMinimumLoad: 0,
   timeBetweenOverloading: 0,

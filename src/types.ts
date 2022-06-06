@@ -52,6 +52,8 @@ export interface InputFields {
   solarLandProcurementCost: number;
   solarPVCostReductionWithScale: number;
   solarReferenceFoldIncrease: number;
+  solarDegradation: number;
+  windDegradation: number;
   solarOpex?: number;
   stackReplacementType: StackReplacementType;
   stackLifetime: number;

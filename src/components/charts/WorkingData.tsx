@@ -1,6 +1,6 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
-import { DataModel, HydrogenModel } from "../../model/Model";
+import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
 import { activeYears, dropPadding } from "../../model/Utils";
 import { InputFields } from "../../types";
 import {
@@ -120,6 +120,8 @@ export default function WorkingData(props: Props) {
     capitalDepreciationProfile,
     taxRate,
     inflationRate,
+    solarDegradation,
+    windDegradation,
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
     principalPPACost = 0,
@@ -136,6 +138,13 @@ export default function WorkingData(props: Props) {
     electrolyserNominalCapacity,
     solarNominalCapacity,
     windNominalCapacity,
+    solarDegradation,
+    windDegradation,
+    stackDegradation,
+    stackLifetime,
+    maximumDegradationBeforeReplacement,
+    stackReplacementType,
+    projectLife: plantLife,
     location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
@@ -145,9 +154,34 @@ export default function WorkingData(props: Props) {
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
 
-  const hourlyOperations = model.calculateElectrolyserHourlyOperation();
+  // If/else branch if degradation
+  let hourlyOperations = model.calculateElectrolyserHourlyOperation();
 
-  const summary = model.calculateElectrolyserOutput(hourlyOperations);
+  let summary = model.calculateElectrolyserOutput(hourlyOperations);
+
+  // Extract to function also checking solar and wind
+  if (
+    solarDegradation !== 0 ||
+    windDegradation !== 0 ||
+    stackDegradation !== 0
+  ) {
+    const summaries: ModelSummary[] = [];
+    for (let year = 1; year <= plantLife; year++) {
+      const hourlyOperationsByYear =
+        model.calculateElectrolyserHourlyOperation(year);
+      const tmpSummary = model.calculateElectrolyserOutput(
+        hourlyOperationsByYear
+      );
+      console.log(
+        "Year ",
+        year,
+        tmpSummary["Hydrogen Output for Fixed Operation [t/yr]"]
+      );
+      summaries.push(model.calculateElectrolyserOutput(hourlyOperationsByYear));
+    }
+    summary = model.calculateProjectSummary(summaries);
+  }
+
   // CAPEX charts
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
