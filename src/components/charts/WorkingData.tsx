@@ -364,9 +364,9 @@ export default function WorkingData(props: Props) {
   const {
     lch2,
     h2RetailPrice,
-    totalCost,
-    totalCostWithDiscount,
-    h2Moneys,
+    // totalCost,
+    // totalCostWithDiscount,
+    // h2Moneys,
     h2Sales,
     electricitySales,
     oxygenSales,
