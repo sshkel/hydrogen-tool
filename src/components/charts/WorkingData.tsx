@@ -390,9 +390,9 @@ export default function WorkingData(props: Props) {
   const {
     lch2,
     h2RetailPrice,
-    totalCost,
-    totalCostWithDiscount,
-    h2Moneys,
+    // totalCost,
+    // totalCostWithDiscount,
+    // h2Moneys,
     h2Sales,
     electricitySales,
     oxygenSales,
@@ -532,7 +532,8 @@ export default function WorkingData(props: Props) {
           "H2 Retail Price": [h2RetailPrice],
         }}
       />
-      <BasicTable
+      {/* Comment out for displaying */}
+      {/* <BasicTable
         data={{
           h2Prod,
           elecProduced,
@@ -546,7 +547,7 @@ export default function WorkingData(props: Props) {
           h2Moneys,
           ...cashFlow,
         }}
-      />
+      /> */}
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}
