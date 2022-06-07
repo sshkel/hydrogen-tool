@@ -6,6 +6,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
+  windElectrolyserScenario,
 } from "../../scenario";
 
 describe("Model summary", () => {
@@ -99,6 +100,48 @@ describe("Model summary", () => {
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(696.228);
         expect(data["LCH2"].at(0)).toBeCloseTo(5.602);
         expect(data["H2 Retail Price"].at(0)).toBeCloseTo(6.602);
+
+        done();
+      }, 1500);
+    });
+
+    it("calculates lch2 for wind", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windElectrolyserScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(BasicTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"].at(0)).toBeCloseTo(38.676);
+        expect(
+          data[
+            "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"
+          ].at(0)
+        ).toBeCloseTo(15.114);
+        expect(
+          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"].at(0)
+        ).toBeCloseTo(76.872);
+        expect(data["Electrolyser Capacity Factor"].at(0)).toBeCloseTo(44.632);
+        expect(
+          data["Energy Consumed by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(39_097.684);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(1558.586);
+        expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(781.954);
+        expect(data["LCH2"].at(0)).toBeCloseTo(3.815);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(4.815);
 
         done();
       }, 1500);

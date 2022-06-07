@@ -6,6 +6,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
+  windElectrolyserScenario,
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
@@ -57,23 +58,23 @@ describe("Working Data calculations", () => {
       }, 1500);
     });
 
-    it("calculates cash flow analysis for solar with battery", (done) => {
+    it("calculates cash flow analysis for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={solarPvWithBatteryScenario}
+          data={windElectrolyserScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
       );
 
       const cashFlowAnalysis = [
-        -20868000, -18468842.924651816, -16014006.597419927, -13502099.03700724,
-        -10931693.462584237, -8301327.423800658, -5609501.909047491,
-        -2854680.4314254937, -35288.091862947214, 2850289.3811886627,
-        -1860332.402528136, 2252363.0645115087, 6456868.5432271445,
-        6245170.314547649, 10640238.948748263, 15134176.923803892,
-        19729455.973235913, 24428609.623903733, 29234234.74083825,
-        34148993.11069612, 39175613.06480045, 39175613.06480045,
+        -15400000, -13462998.245404894, -11480871.44694491, -9452491.478523426,
+        -7376702.010891406, -5252317.806568585, -3078123.9971376946,
+        -852875.3424710315, 1424704.5285622976, -429005.3972152746,
+        1957194.4547891165, 5203933.338997802, 8523590.695311705,
+        11917989.485533454, 15388998.245510746, 18938532.224487472,
+        22568554.552938618, 26281077.439601038, 24995422.509959284,
+        28879185.61775899, 32851792.803253688, 32851792.803253688,
       ];
 
       // Sleep to wait for CSV to load and set state

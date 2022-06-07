@@ -6,6 +6,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
+  windElectrolyserScenario,
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
@@ -129,6 +130,62 @@ describe("Working Data calculations", () => {
         expect(datapoints[3].label).toEqual("Total Sales");
         datapoints[3].data.forEach((num, i) =>
           expect(num).toBeCloseTo(totalSales[i], 8)
+        );
+
+        done();
+      }, 1500);
+    });
+
+    it("calculates sales for wind", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windElectrolyserScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const hydrogenSales = [
+        3_858_899.06, 3_955_371.54, 4_054_255.83, 4_155_612.22, 4_259_502.53,
+        4_365_990.09, 4_475_139.84, 4_587_018.34, 4_701_693.8, 4_819_236.14,
+        4_939_717.05, 5_063_209.97, 5_189_790.22, 5_319_534.98, 5_452_523.35,
+        5_588_836.44, 5_728_557.35, 5_871_771.28, 6_018_565.56, 6_169_029.7,
+      ];
+
+      const electricitySales = new Array(20).fill(0);
+
+      const oxygenSales = new Array(20).fill(0);
+
+      const totalSales = hydrogenSales;
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const opexChart = wrapper
+          .find(CostLineChart)
+          .filterWhere((e) => e.prop("title") === "Sales");
+        expect(opexChart).toHaveLength(1);
+        const datapoints = opexChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(4);
+
+        expect(datapoints[0].label).toEqual("Hydrogen Sales");
+        datapoints[0].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(hydrogenSales[i], 2)
+        );
+
+        expect(datapoints[1].label).toEqual("Electricity Sales");
+        datapoints[1].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(electricitySales[i], 2)
+        );
+
+        expect(datapoints[2].label).toEqual("Oxygen Sales");
+        datapoints[2].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(oxygenSales[i], 2)
+        );
+
+        expect(datapoints[3].label).toEqual("Total Sales");
+        datapoints[3].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(totalSales[i], 2)
         );
 
         done();
