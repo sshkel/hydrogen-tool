@@ -2,11 +2,13 @@ import { mount } from "enzyme";
 
 import CostLineChart from "../../../components/charts/CostLineChart";
 import WorkingData from "../../../components/charts/WorkingData";
+import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithPPAScenario,
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
@@ -74,7 +76,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates sales for solar with battery", (done) => {
@@ -133,7 +135,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates sales for wind", (done) => {
@@ -189,7 +191,63 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
+    });
+
+    it("calculates sales for wind with ppa agreement", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windWithPPAScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const hydrogenSales = [
+        2_149_639.3, 2_203_380.28, 2_258_464.78, 2_314_926.4, 2_372_799.56,
+        2_432_119.55, 2_492_922.54, 2_555_245.61, 2_619_126.75, 2_684_604.91,
+        2_751_720.04, 2_820_513.04, 2_891_025.86, 2_963_301.51, 3_037_384.05,
+        3_113_318.65, 3_191_151.62, 3_270_930.41, 3_352_703.67, 3_436_521.26,
+      ];
+
+      const electricitySales = new Array(20).fill(0);
+
+      const oxygenSales = new Array(20).fill(0);
+
+      const totalSales = hydrogenSales;
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const opexChart = wrapper
+          .find(CostLineChart)
+          .filterWhere((e) => e.prop("title") === "Sales");
+        expect(opexChart).toHaveLength(1);
+        const datapoints = opexChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(4);
+
+        expect(datapoints[0].label).toEqual("Hydrogen Sales");
+        datapoints[0].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(hydrogenSales[i], 2)
+        );
+
+        expect(datapoints[1].label).toEqual("Electricity Sales");
+        datapoints[1].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(electricitySales[i], 2)
+        );
+
+        expect(datapoints[2].label).toEqual("Oxygen Sales");
+        datapoints[2].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(oxygenSales[i], 2)
+        );
+
+        expect(datapoints[3].label).toEqual("Total Sales");
+        datapoints[3].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(totalSales[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
     });
   });
 });

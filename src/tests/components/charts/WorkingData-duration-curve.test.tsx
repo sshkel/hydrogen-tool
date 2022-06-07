@@ -2,6 +2,7 @@ import { mount } from "enzyme";
 
 import DurationCurve from "../../../components/charts/DurationCurve";
 import WorkingData from "../../../components/charts/WorkingData";
+import { TIMEOUT } from "../../consts";
 import hybridBatteryRetailElectrolyserDurationCurve from "../../resources/hybrid-battery-retail-electrolyser-duration-curve.json";
 import hybridBatteryRetailGeneratorDurationCurve from "../../resources/hybrid-battery-retail-generator-duration-curve.json";
 import { readLocalCsv } from "../../resources/loader";
@@ -74,7 +75,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
@@ -114,7 +115,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates duration curves as 8760 percentages for wind", (done) => {
@@ -154,7 +155,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
@@ -195,7 +196,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
@@ -240,7 +241,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
 
     it("calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
@@ -281,7 +282,7 @@ describe("Working Data calculations", () => {
         );
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
   });
 });

@@ -18,7 +18,6 @@ export default function BasicTable(props: Props) {
   const keys = Object.keys(props.data);
   const years = Array.from(Array(props.data[keys[0]].length).keys());
   const dataToVis: { [key: string]: number[] } = {
-    year: years,
     ...props.data,
   };
 

@@ -2,11 +2,13 @@ import { mount } from "enzyme";
 
 import CostLineChart from "../../../components/charts/CostLineChart";
 import WorkingData from "../../../components/charts/WorkingData";
+import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithPPAScenario,
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
@@ -21,7 +23,7 @@ describe("Working Data calculations", () => {
   });
 
   describe("Operating Costs", () => {
-    it("calculates duration curves as 8760 percentages for solar", (done) => {
+    it("calculates opex for solar", (done) => {
       const wrapper = mount(
         <WorkingData
           data={solarPvWithElectrolyserScenario}
@@ -96,11 +98,11 @@ describe("Working Data calculations", () => {
         });
 
         done();
-      }, 1500);
+      }, TIMEOUT);
     });
   });
 
-  it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
+  it("calculates opex for solar with battery", (done) => {
     const wrapper = mount(
       <WorkingData
         data={solarPvWithBatteryScenario}
@@ -184,10 +186,10 @@ describe("Working Data calculations", () => {
       });
 
       done();
-    }, 1500);
+    }, TIMEOUT);
   });
 
-  it("calculates duration curves as 8760 percentages for wind", (done) => {
+  it("calculates opex for wind", (done) => {
     const wrapper = mount(
       <WorkingData
         data={windElectrolyserScenario}
@@ -262,6 +264,79 @@ describe("Working Data calculations", () => {
       });
 
       done();
-    }, 1500);
+    }, TIMEOUT);
+  });
+
+  it("calculates opex for wind with PPA agreement", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        data={windWithPPAScenario}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+      />
+    );
+
+    const electrolyserOpex = [
+      256_250.0, 262_656.25, 269_222.66, 275_953.22, 282_852.05, 289_923.35,
+      297_171.44, 304_600.72, 312_215.74, 5_440_359.31, 328_021.66, 336_222.21,
+      344_627.76, 353_243.46, 362_074.54, 371_126.41, 380_404.57, 389_914.68,
+      399_662.55, 409_654.11,
+    ];
+
+    const powerPlantOpex = new Array(20).fill(0);
+
+    const batteryOpex = new Array(20).fill(0);
+
+    const additionalAnnualCosts = new Array(20).fill(0);
+
+    const waterCosts = [
+      34_720.24, 35_588.25, 36_477.95, 37_389.9, 38_324.65, 39_282.76,
+      40_264.83, 41_271.45, 42_303.24, 43_360.82, 44_444.84, 45_555.96,
+      46_694.86, 47_862.23, 49_058.79, 50_285.26, 51_542.39, 52_830.95,
+      54_151.73, 55_505.52,
+    ];
+
+    const electricityPurchase = new Array(20).fill(0);
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const opexChart = wrapper
+        .find(CostLineChart)
+        .filterWhere((e) => e.prop("title") === "Operating Costs");
+      expect(opexChart).toHaveLength(1);
+      const datapoints = opexChart.at(0).prop("datapoints");
+      expect(datapoints).toHaveLength(6);
+      expect(datapoints[0]).toEqual({
+        label: "Electrolyser OPEX",
+        data: electrolyserOpex,
+      });
+      expect(datapoints[1]).toEqual({
+        label: "Power Plant OPEX",
+        data: powerPlantOpex,
+      });
+
+      expect(datapoints[2]).toEqual({
+        label: "Battery OPEX",
+        data: batteryOpex,
+      });
+
+      expect(datapoints[3]).toEqual({
+        label: "Additional Annual Costs",
+        data: additionalAnnualCosts,
+      });
+
+      expect(datapoints[4]).toEqual({
+        label: "Water Costs",
+        data: waterCosts,
+      });
+
+      expect(datapoints[5]).toEqual({
+        label: "Electricity Purchase",
+        data: electricityPurchase,
+      });
+
+      done();
+    }, TIMEOUT);
   });
 });

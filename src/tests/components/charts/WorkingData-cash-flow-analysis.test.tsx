@@ -2,11 +2,13 @@ import { mount } from "enzyme";
 
 import CostBarChart from "../../../components/charts/CostBarChart";
 import WorkingData from "../../../components/charts/WorkingData";
+import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithPPAScenario,
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
@@ -55,7 +57,44 @@ describe("Working Data calculations", () => {
         });
 
         done();
-      }, 1500);
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for solar with battery", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={solarPvWithBatteryScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -20868000, -18468842.924651816, -16014006.597419927, -13502099.03700724,
+        -10931693.462584237, -8301327.423800658, -5609501.909047491,
+        -2854680.4314254937, -35288.091862947214, 2850289.3811886627,
+        -1860332.402528136, 2252363.0645115087, 6456868.5432271445,
+        6245170.314547649, 10640238.948748263, 15134176.923803892,
+        19729455.973235913, 24428609.623903733, 29234234.74083825,
+        34148993.11069612, 39175613.06480045, 39175613.06480045,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
     });
 
     it("calculates cash flow analysis for wind", (done) => {
@@ -92,7 +131,44 @@ describe("Working Data calculations", () => {
         });
 
         done();
-      }, 1500);
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for wind with ppa agreement", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windWithPPAScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -7000000, -5854181.661353372, -4681217.864240577, -3480429.972199964,
+        -2251122.382858335, -992582.1037831653, 295921.68226888357,
+        1615138.0629722334, 2965834.853193167, 4348799.063169625,
+        1165658.4795640097, 2981135.9508087905, 4838250.35883469,
+        6738042.627061238, 8681579.701993449, 10669955.203798965,
+        12704290.09314962, 14785733.354734039, 16915462.69785807,
+        19094685.2745602, 21324638.415679883, 21324638.415679883,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
     });
   });
 });
