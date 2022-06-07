@@ -1,5 +1,5 @@
 import { first, decomissioning, padArray } from "../../model/Utils";
-import { DepreciationProfile, StackReplacementType } from "../../types";
+import { DepreciationProfile } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);
