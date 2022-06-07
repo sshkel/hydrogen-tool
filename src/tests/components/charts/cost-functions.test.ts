@@ -113,12 +113,12 @@ describe("Cost function calculations", () => {
   });
 
   it("Electrolyser degradation works for basic case", () => {
-    const maxElexDegradation = 0.6;
+    const maxElecDegradation = 0.6;
     const yearlyElecDegradation = 0.1;
     const projectLife = 20;
     const actual = maxDegradationStackReplacementYears(
       yearlyElecDegradation,
-      maxElexDegradation,
+      maxElecDegradation,
       projectLife
     );
     const expected = [10, 20];
@@ -127,12 +127,12 @@ describe("Cost function calculations", () => {
   });
 
   it("Electrolyser degradation works for no replacements", () => {
-    const maxElexDegradation = 0.7;
+    const maxElecDegradation = 0.7;
     const yearlyElecDegradation = 0.1;
     const projectLife = 10;
     const actual = maxDegradationStackReplacementYears(
       yearlyElecDegradation,
-      maxElexDegradation,
+      maxElecDegradation,
       projectLife
     );
     const expected: number[] = [];

@@ -11,16 +11,13 @@ import workingdf2 from "../resources/example2-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
 import workingdf3 from "../resources/example3-workingdf.json";
 import outputs3 from "../resources/example3-outputs.json";
-import { maxDegradationStackReplacementYears } from "../../components/charts/cost-functions";
 import { readLocalCsv } from "../resources/loader";
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];
   beforeAll(async () => {
-    const startTime = Date.now();
     solar = await readLocalCsv(__dirname + "/../resources/solar-traces.csv");
     wind = await readLocalCsv(__dirname + "/../resources/wind-traces.csv");
-    console.log("Model test start-up took %s ms", Date.now() - startTime);
   });
 
   it("works for overload model", () => {
@@ -221,7 +218,6 @@ function compareToModel(
   outputs: ModelSummary,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
-  const startTime = Date.now();
   const electrolyser_outputs = model.calculateElectrolyserHourlyOperation();
 
   Object.keys(electrolyser_outputs).forEach((key: string) => {
@@ -234,5 +230,4 @@ function compareToModel(
   Object.keys(output).forEach((key: string) => {
     expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
-  console.log("Model test comparison took %s ms", Date.now() - startTime);
 }
