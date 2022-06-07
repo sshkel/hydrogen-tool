@@ -617,9 +617,10 @@ export default function WorkingData(props: Props) {
         ]}
       />
       <CostBarChart
-        labels={["startup"]
+        title="Cash Flow Analysis"
+        labels={["Startup"]
           .concat(projectYears(plantLife).map(String))
-          .concat(["decomissioning"])}
+          .concat(["Decomissioning"])}
         datapoints={[
           {
             label: "Cash Flow Analysis",
@@ -628,6 +629,7 @@ export default function WorkingData(props: Props) {
         ]}
       />
       <CostBarChart
+        title="Breakdown of Cost Components in LCH2"
         labels={[
           "Power Plant CAPEX",
           "Electrolyser CAPEX",

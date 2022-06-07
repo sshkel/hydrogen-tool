@@ -3,12 +3,13 @@ import { Bar } from "react-chartjs-2";
 import { ChartData } from "../../types";
 
 interface Props {
+  title: string;
   labels: string[];
   datapoints: ChartData[];
 }
 
 export default function CostBarChart(props: Props) {
-  const { labels, datapoints } = props;
+  const { title, labels, datapoints } = props;
   const graphData = {
     labels: labels,
     datasets: datapoints.map((point) => ({
@@ -25,7 +26,7 @@ export default function CostBarChart(props: Props) {
 
   return (
     <div>
-      <Bar data={graphData} />
+      <Bar title={title} data={graphData} />
     </div>
   );
 }
