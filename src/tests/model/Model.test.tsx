@@ -215,34 +215,6 @@ describe("Hydrogen Model", () => {
     const model = new HydrogenModel(example3, solar, wind);
     compareToModel(model, outputs3, workingdf3);
   });
-
-  it("Electrolyser degradation works for basic case", () => {
-    const maxElexDegradation = 0.6;
-    const yearlyElecDegradation = 0.1;
-    const projectLife = 20;
-    const actual = maxDegradationStackReplacementYears(
-      yearlyElecDegradation,
-      maxElexDegradation,
-      projectLife
-    );
-    const expected = [10, 20];
-    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
-    expect(actual).toEqual(expected);
-  });
-
-  it("Electrolyser degradation works for no replacements", () => {
-    const maxElexDegradation = 0.7;
-    const yearlyElecDegradation = 0.1;
-    const projectLife = 10;
-    const actual = maxDegradationStackReplacementYears(
-      yearlyElecDegradation,
-      maxElexDegradation,
-      projectLife
-    );
-    const expected: number[] = [];
-    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
-    expect(actual).toEqual(expected);
-  });
 });
 function compareToModel(
   model: HydrogenModel,

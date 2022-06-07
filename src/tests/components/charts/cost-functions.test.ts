@@ -7,6 +7,7 @@ import {
   getIndirectCost,
   getOpexPerYearInflation,
   getOpexPerYearInflationWithAdditionalCost,
+  maxDegradationStackReplacementYears,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
 
@@ -109,5 +110,33 @@ describe("Cost function calculations", () => {
     expect(inflationValues).toEqual([
       1, 1.5, 2.25, 3.375, 5.0625, 7.59375, 11.390625, 17.0859375, 25.62890625,
     ]);
+  });
+
+  it("Electrolyser degradation works for basic case", () => {
+    const maxElexDegradation = 0.6;
+    const yearlyElecDegradation = 0.1;
+    const projectLife = 20;
+    const actual = maxDegradationStackReplacementYears(
+      yearlyElecDegradation,
+      maxElexDegradation,
+      projectLife
+    );
+    const expected = [10, 20];
+    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
+    expect(actual).toEqual(expected);
+  });
+
+  it("Electrolyser degradation works for no replacements", () => {
+    const maxElexDegradation = 0.7;
+    const yearlyElecDegradation = 0.1;
+    const projectLife = 10;
+    const actual = maxDegradationStackReplacementYears(
+      yearlyElecDegradation,
+      maxElexDegradation,
+      projectLife
+    );
+    const expected: number[] = [];
+    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
+    expect(actual).toEqual(expected);
   });
 });

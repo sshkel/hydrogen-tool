@@ -84,8 +84,7 @@ export class HydrogenModel {
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = parameters.elecEff / 100;
-    // TODO: Figure out why this worked
-    this.hydOutput = this.MWtokW * (1 / 53.8) * 10; // this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
+    this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
       parameters.batteryRatedPower * this.parameters.durationOfStorage;
@@ -213,7 +212,7 @@ export class HydrogenModel {
       sum(generatorCapFactor) * genCapacity -
       sum(electrolyserCapFactor) * elecCapacity;
     // Hydrogen Output for Fixed Operation [t/yr]
-    const hydrogen_fixed = sum(hydrogenProdFixed) * kgtoTonne;
+    const hydrogen_fixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
     // Hydrogen Output for Variable Operation [t/yr]
     const hydrogen_variable =
       sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
@@ -341,7 +340,7 @@ export class HydrogenModel {
 
     // actual hydrogen calc
     const hydrogen_prod_fixed = electrolyser_cf.map(
-      (x: number) => x * hydOutput * (1 - yearlyDegradationRate)
+      (x: number) => (x * hydOutput * (1 - yearlyDegradationRate)) / specCons
     );
 
     const electrolyser_output_polynomial = (x: number) => {

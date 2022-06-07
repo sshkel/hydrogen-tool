@@ -84,7 +84,7 @@ export function maxDegradationStackReplacementYears(
   for (let year of projectYears(projectLife)) {
     // TODO Explain this calculation here
     const stackDegradationForYear =
-      1 - 1 / (1 + stackDegradation / 100) ** runningYear;
+      1 - 1 / (1 + stackDegradation) ** runningYear;
     if (stackDegradationForYear > maximumDegradationBeforeReplacement) {
       runningYear = 1;
       replacementYears.push(year);

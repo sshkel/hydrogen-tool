@@ -169,14 +169,6 @@ export default function WorkingData(props: Props) {
     for (let year = 1; year <= plantLife; year++) {
       const hourlyOperationsByYear =
         model.calculateElectrolyserHourlyOperation(year);
-      const tmpSummary = model.calculateElectrolyserOutput(
-        hourlyOperationsByYear
-      );
-      console.log(
-        "Year ",
-        year,
-        tmpSummary["Hydrogen Output for Fixed Operation [t/yr]"]
-      );
       summaries.push(model.calculateElectrolyserOutput(hourlyOperationsByYear));
     }
     summary = model.calculateProjectSummary(summaries);
