@@ -1,4 +1,4 @@
-import { first, decomissioning, padArray } from "../../model/Utils";
+import { decomissioning, first, padArray } from "../../model/Utils";
 import { DepreciationProfile } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>

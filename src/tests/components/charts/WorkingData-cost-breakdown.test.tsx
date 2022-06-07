@@ -1,7 +1,8 @@
+import { ShallowWrapper, shallow } from "enzyme";
+
+import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { shallow, ShallowWrapper } from "enzyme";
-import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 import { solarPvWithBatteryScenario } from "../../scenario";
 
 const mockLoader: () => Promise<any[]> = () => new Promise(() => {});

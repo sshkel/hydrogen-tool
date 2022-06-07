@@ -1,18 +1,19 @@
 import Box from "@mui/material/Box";
-import InputNumberField from "./InputNumberField";
-import InputExpand from "./InputExpand";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
+
+import { Bool } from "../../types";
+import InputExpand from "./InputExpand";
+import InputNumberField from "./InputNumberField";
+import InputSelectField from "./InputSelectField";
 import {
+  capitalDepreciationProfile,
   data,
-  profileData,
   locationData,
+  profileData,
   replacementTypeData,
   technologyData,
-  capitalDepreciationProfile,
 } from "./data";
-import InputSelectField from "./InputSelectField";
-import { Bool } from "../../types";
 
 interface Props {
   setState: (obj: any) => void;

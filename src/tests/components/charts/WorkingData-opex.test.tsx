@@ -1,8 +1,9 @@
-import WorkingData from "../../../components/charts/WorkingData";
 import { mount } from "enzyme";
+
+import CostLineChart from "../../../components/charts/CostLineChart";
+import WorkingData from "../../../components/charts/WorkingData";
 import { readLocalCsv } from "../../resources/loader";
 import { solarPvWithBatteryScenario } from "../../scenario";
-import CostLineChart from "../../../components/charts/CostLineChart";
 
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;

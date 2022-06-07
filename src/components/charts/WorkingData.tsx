@@ -1,30 +1,31 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
+
 import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
 import { activeYears, dropPadding } from "../../model/Utils";
 import { InputFields } from "../../types";
-import {
-  cumulativeStackReplacementYears,
-  calculateBatteryCapex,
-  calculateCapex,
-  getIndirectCost,
-  getOpexPerYearInflation,
-  getOpexPerYearInflationWithAdditionalCost,
-  maxDegradationStackReplacementYears,
-  roundToNearestThousand,
-  cashFlowAnalysis,
-  sales,
-  projectYears,
-  getSummedDiscountForOpexCost,
-  getReplacementCostOverProjectLife,
-  getSummedDiscountForOpexValues,
-} from "./cost-functions";
+import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
-import BasicTable from "./BasicTable";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
+import {
+  calculateBatteryCapex,
+  calculateCapex,
+  cashFlowAnalysis,
+  cumulativeStackReplacementYears,
+  getIndirectCost,
+  getOpexPerYearInflation,
+  getOpexPerYearInflationWithAdditionalCost,
+  getReplacementCostOverProjectLife,
+  getSummedDiscountForOpexCost,
+  getSummedDiscountForOpexValues,
+  maxDegradationStackReplacementYears,
+  projectYears,
+  roundToNearestThousand,
+  sales,
+} from "./cost-functions";
 
 export interface Props {
   data?: InputFields;
@@ -510,6 +511,7 @@ export default function WorkingData(props: Props) {
   return (
     <div>
       <BasicTable
+        title="Summary of Results"
         data={{
           "Power Plant Capacity Factor": [
             summary["Generator Capacity Factor"] * 100,
@@ -545,6 +547,7 @@ export default function WorkingData(props: Props) {
           totalCost,
           totalCostWithDiscount,
           h2Moneys,
+          waterCost: padArray(waterCost),
           ...cashFlow,
         }}
       /> */}

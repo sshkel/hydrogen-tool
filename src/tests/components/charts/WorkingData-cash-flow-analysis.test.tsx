@@ -1,8 +1,9 @@
-import WorkingData from "../../../components/charts/WorkingData";
 import { mount } from "enzyme";
+
+import CostBarChart from "../../../components/charts/CostBarChart";
+import WorkingData from "../../../components/charts/WorkingData";
 import { readLocalCsv } from "../../resources/loader";
 import { solarPvWithBatteryScenario } from "../../scenario";
-import CostBarChart from "../../../components/charts/CostBarChart";
 
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
@@ -44,7 +45,7 @@ describe("Working Data calculations", () => {
         expect(cashFlowChart).toHaveLength(1);
         const datapoints = cashFlowChart.at(0).prop("datapoints");
         expect(datapoints).toHaveLength(1);
-        expect(cashFlowChart.at(0).prop("datapoints").at(0)).toEqual({
+        expect(datapoints.at(0)).toEqual({
           label: "Cash Flow Analysis",
           data: cashFlowAnalysis,
         });

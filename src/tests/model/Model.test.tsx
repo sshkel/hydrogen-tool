@@ -4,14 +4,14 @@ import {
   HydrogenModel,
   ModelSummary,
 } from "../../model/Model";
-
-import workingdf1 from "../resources/example1-workingdf.json";
 import outputs1 from "../resources/example1-outputs.json";
-import workingdf2 from "../resources/example2-workingdf.json";
+import workingdf1 from "../resources/example1-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
-import workingdf3 from "../resources/example3-workingdf.json";
+import workingdf2 from "../resources/example2-workingdf.json";
 import outputs3 from "../resources/example3-outputs.json";
+import workingdf3 from "../resources/example3-workingdf.json";
 import { readLocalCsv } from "../resources/loader";
+
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];

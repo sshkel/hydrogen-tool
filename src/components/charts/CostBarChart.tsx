@@ -1,5 +1,6 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+
 import { ChartData } from "../../types";
 
 interface Props {

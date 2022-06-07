@@ -1,7 +1,20 @@
-import WorkingData from "../../../components/charts/WorkingData";
 import { mount } from "enzyme";
-import { readLocalCsv } from "../../resources/loader";
+
 import DurationCurve from "../../../components/charts/DurationCurve";
+import WorkingData from "../../../components/charts/WorkingData";
+import hybridBatteryRetailElectrolyserDurationCurve from "../../resources/hybrid-battery-retail-electrolyser-duration-curve.json";
+import hybridBatteryRetailGeneratorDurationCurve from "../../resources/hybrid-battery-retail-generator-duration-curve.json";
+import { readLocalCsv } from "../../resources/loader";
+import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
+import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
+import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
+import solarGeneratorDurationCurve from "../../resources/solar-generator-duration-curve.json";
+import windBatteryPPAElectrolyserDurationCurve from "../../resources/wind-battery-ppa-electrolyser-duration-curve.json";
+import windBatteryPPAGeneratorDurationCurve from "../../resources/wind-battery-ppa-generator-duration-curve.json";
+import windElectrolyserDurationCurve from "../../resources/wind-electrolyser-duration-curve.json";
+import windGeneratorDurationCurve from "../../resources/wind-generator-duration-curve.json";
+import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electrolyser-duration-curve.json";
+import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
   hybridBatterySurplusRetailScenario,
   solarPvWithBatteryScenario,
@@ -10,18 +23,6 @@ import {
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
-import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
-import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
-import solarGeneratorDurationCurve from "../../resources/solar-generator-duration-curve.json";
-import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
-import windGeneratorDurationCurve from "../../resources/wind-generator-duration-curve.json";
-import windElectrolyserDurationCurve from "../../resources/wind-electrolyser-duration-curve.json";
-import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
-import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electrolyser-duration-curve.json";
-import hybridBatteryRetailGeneratorDurationCurve from "../../resources/hybrid-battery-retail-generator-duration-curve.json";
-import hybridBatteryRetailElectrolyserDurationCurve from "../../resources/hybrid-battery-retail-electrolyser-duration-curve.json";
-import windBatteryPPAGeneratorDurationCurve from "../../resources/wind-battery-ppa-generator-duration-curve.json";
-import windBatteryPPAElectrolyserDurationCurve from "../../resources/wind-battery-ppa-electrolyser-duration-curve.json";
 
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;

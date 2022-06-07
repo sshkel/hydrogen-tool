@@ -1,10 +1,11 @@
-import { InputFields } from "../../../types";
+import Button from "@mui/material/Button";
 import { mount, shallow } from "enzyme";
+
 import Input from "../../../components/input/Input";
+import InputExpand from "../../../components/input/InputExpand";
 import InputNumberField from "../../../components/input/InputNumberField";
 import InputSelectField from "../../../components/input/InputSelectField";
-import InputExpand from "../../../components/input/InputExpand";
-import Button from "@mui/material/Button";
+import { InputFields } from "../../../types";
 
 describe("Input", () => {
   it("renders expands", () => {

@@ -1,4 +1,5 @@
 import { ChartData } from "../types";
+
 export function first(element: number, projectLife: number) {
   return [element].concat(Array(projectLife + 1).fill(0));
 }

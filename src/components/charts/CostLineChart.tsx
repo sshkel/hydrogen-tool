@@ -1,5 +1,6 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
+
 import { checkLength } from "../../model/Utils";
 import { ChartData } from "../../types";
 
