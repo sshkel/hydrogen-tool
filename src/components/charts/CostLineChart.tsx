@@ -4,6 +4,7 @@ import { checkLength } from "../../model/Utils";
 import { ChartData } from "../../types";
 
 interface Props {
+  title: string;
   plantLife: number;
   datapoints: ChartData[];
 }
@@ -18,7 +19,7 @@ const colours = [
 ];
 
 export default function CostLineChart(props: Props) {
-  const { plantLife, datapoints } = props;
+  const { title, plantLife, datapoints } = props;
   checkLength(datapoints, plantLife);
 
   const graphData = {
@@ -37,7 +38,7 @@ export default function CostLineChart(props: Props) {
 
   return (
     <div>
-      <Line data={graphData} />
+      <Line title={title} data={graphData} />
     </div>
   );
 }

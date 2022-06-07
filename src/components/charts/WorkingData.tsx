@@ -595,17 +595,19 @@ export default function WorkingData(props: Props) {
         ]}
       />
       <CostLineChart
+        title="Operating Costs"
         plantLife={plantLife}
         datapoints={[
           { label: "Electrolyser OPEX", data: electrolyserOpex },
-          { label: "Powerplant OPEX", data: powerplantOpex },
+          { label: "Power Plant OPEX", data: powerplantOpex },
           { label: "Battery OPEX", data: batteryOpex },
           { label: "Additional Annual Costs", data: additionalOpex },
+          { label: "Water Costs", data: waterCost },
           { label: "Electricity Purchase", data: electricityPurchase },
-          { label: "Water Cost", data: waterCost },
         ]}
       />
       <CostLineChart
+        title="Sales"
         plantLife={plantLife}
         datapoints={[
           { label: "Hydrogen Sales", data: dropPadding(h2Sales) },
