@@ -2,7 +2,7 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
-import { activeYears, dropPadding } from "../../model/Utils";
+import { activeYears, dropPadding, padArray } from "../../model/Utils";
 import { InputFields } from "../../types";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -126,6 +126,7 @@ export default function WorkingData(props: Props) {
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
     principalPPACost = 0,
+    ppaAgreement,
   } = props.data;
 
   const dataModel: DataModel = {
@@ -335,8 +336,10 @@ export default function WorkingData(props: Props) {
 
   // Check for PPA Agreement
   const totalPPACost =
-    (props.data.principalPPACost || 0) +
-    (props.data.additionalTransmissionCharges || 0);
+    ppaAgreement === "true"
+      ? (props.data.principalPPACost || 0) +
+        (props.data.additionalTransmissionCharges || 0)
+      : 0;
   const electricityOMCost =
     summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost;
   const electricityPurchase = getOpexPerYearInflation(
@@ -359,9 +362,14 @@ export default function WorkingData(props: Props) {
 
   const electricityProduced = summary["Surplus Energy [MWh/yr]"];
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
+  const electricityConsumedByBattery = summary["Total Battery Output [MWh/yr]"];
   const h2Prod = activeYears(h2Produced, plantLife);
   const elecProduced = activeYears(electricityProduced, plantLife);
   const elecConsumed = activeYears(electricityConsumed, plantLife);
+  const elecConsumedByBattery = activeYears(
+    electricityConsumedByBattery,
+    plantLife
+  );
 
   const totalCapexCost =
     electrolyserCAPEX +
@@ -372,14 +380,19 @@ export default function WorkingData(props: Props) {
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+
   const totalOpex = electrolyserOpex.map(
     (_: number, i: number) =>
       electrolyserOMCost +
       solarOpexCost +
       windOpexCost +
       batteryOMCost +
+      // TODO: Need to figure out a way to include this
+      // electricityPurchase[i] +
+      // electricitySales[i] +
       waterOMCost +
-      electricityOMCost +
+      additionalTransmissionCharges *
+        (electricityConsumed + electricityConsumedByBattery) +
       // TODO check if this is correct. Strangely taking not discounted cost here.
       additionalAnnualCosts +
       stackReplacementCostsOverProjectLife[i] +
@@ -391,9 +404,9 @@ export default function WorkingData(props: Props) {
   const {
     lch2,
     h2RetailPrice,
-    // totalCost,
-    // totalCostWithDiscount,
-    // h2Moneys,
+    totalCost,
+    totalCostWithDiscount,
+    h2Moneys,
     h2Sales,
     electricitySales,
     oxygenSales,
@@ -412,7 +425,8 @@ export default function WorkingData(props: Props) {
     totalOpex,
     h2Prod,
     elecProduced,
-    elecConsumed
+    elecConsumed,
+    elecConsumedByBattery
   );
 
   const cashFlow = cashFlowAnalysis(
@@ -484,14 +498,17 @@ export default function WorkingData(props: Props) {
   // TODO: Need to check we are in PPA mode
   const lcElectricityPurchase =
     getSummedDiscountForOpexCost(
-      electricityConsumed * principalPPACost,
+      (electricityConsumed + electricityConsumedByBattery) * principalPPACost,
       discountRate,
       plantLife
     ) / hydrogenProductionCost;
   // TODO: check in Retail mode
   const lcElectricitySale =
     getSummedDiscountForOpexCost(
-      (electricityConsumed - electricityProduced) * averageElectricitySpotPrice,
+      (electricityConsumed +
+        electricityConsumedByBattery -
+        electricityProduced) *
+        averageElectricitySpotPrice,
       discountRate,
       plantLife
     ) / hydrogenProductionCost;
@@ -500,7 +517,8 @@ export default function WorkingData(props: Props) {
   const lcGridConnection =
     (gridConnectionCost +
       getSummedDiscountForOpexCost(
-        additionalTransmissionCharges * electricityConsumed,
+        additionalTransmissionCharges *
+          (electricityConsumed + electricityConsumedByBattery),
         discountRate,
         plantLife
       )) /
@@ -535,11 +553,12 @@ export default function WorkingData(props: Props) {
         }}
       />
       {/* Comment out for displaying */}
-      {/* <BasicTable
+      <BasicTable
         data={{
           h2Prod,
           elecProduced,
           elecConsumed,
+          elecConsumedByBattery,
           h2Sales,
           electricitySales,
           oxygenSales,
@@ -550,7 +569,7 @@ export default function WorkingData(props: Props) {
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}
-      /> */}
+      />
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}

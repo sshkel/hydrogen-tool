@@ -286,13 +286,16 @@ export function sales(
   totalOpex: number[],
   h2Produced: number[],
   electricityProduced: number[],
-  electricityConsumed: number[]
+  electricityConsumed: number[],
+  electricityConsumedByBattery: number[]
 ) {
   const inflation = applyInflation(inflationRate);
   const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
   const electricitySales = electricityProduced.map(
     (_: number, i: number) =>
-      (electricityProduced[i] - electricityConsumed[i]) *
+      (electricityProduced[i] -
+        electricityConsumed[i] -
+        electricityConsumedByBattery[i]) *
       averageElectricitySpotPrice
   );
 

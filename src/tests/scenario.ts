@@ -304,7 +304,7 @@ export const windWithPPAScenario: InputFields = {
   capitalDepreciationProfile: "Straight Line",
 };
 
-export const hybridBatterySurplusRetailScenario: InputFields = {
+export const hybridBatteryGridSurplusRetailScenario: InputFields = {
   location: "New England",
   technology: "Hybrid",
   ppaAgreement: "false",
@@ -351,8 +351,8 @@ export const hybridBatterySurplusRetailScenario: InputFields = {
   windEpcCosts: 0,
   windLandProcurementCost: 0,
   windOpex: 25000,
-  gridConnectionCost: 0,
-  additionalTransmissionCharges: 0,
+  gridConnectionCost: 100000,
+  additionalTransmissionCharges: 1,
   principalPPACost: 0,
   batteryEfficiency: 90,
   batteryMinCharge: 0,

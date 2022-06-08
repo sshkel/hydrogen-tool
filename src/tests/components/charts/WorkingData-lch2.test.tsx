@@ -5,6 +5,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
+  hybridBatteryGridSurplusRetailScenario,
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
@@ -130,6 +131,38 @@ describe("Working Data calculations", () => {
 
       const costBreakdown = [
         0, 1.393, 0, 0, 0.369, 0, 0, 0.283, 0.05, 0, 0, 0, 0,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere(
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+          );
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        datapoints[0].data.forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for hybrid with battery, grid and surplus retail", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={hybridBatteryGridSurplusRetailScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const costBreakdown = [
+        1.676, 1.117, 0, 0.349, 0.296, 0, 0, 0.385, 0.05, 1.617, 0.064, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state

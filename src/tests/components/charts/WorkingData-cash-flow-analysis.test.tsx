@@ -5,6 +5,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
+  hybridBatteryGridSurplusRetailScenario,
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
@@ -151,6 +152,66 @@ describe("Working Data calculations", () => {
         6738042.627061238, 8681579.701993449, 10669955.203798965,
         12704290.09314962, 14785733.354734039, 16915462.69785807,
         19094685.2745602, 21324638.415679883, 21324638.415679883,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for hybrid with battery, grid and surplus retail", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={hybridBatteryGridSurplusRetailScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // $(23,814,000.00)
+      // $(20,859,759.93)
+      // $(17,836,766.85)
+      // $(14,743,301.95)
+      // $(11,577,603.43)
+      // $(8,337,865.44)
+      // $(5,022,237.00)
+      // $(1,628,820.85)
+      // $1,844,327.70
+      // $1,635,667.62
+      // $(4,876,224.91)
+      // $91,842.24
+      // $5,171,353.57
+      // $10,365,095.18
+      // $15,675,922.84
+      // $21,106,763.68
+      // $26,660,618.04
+      // $27,959,349.61
+      // $33,768,533.91
+      // $39,710,190.32
+      // $45,787,630.64
+      // $45,787,630.64
+
+      const cashFlowAnalysis = [
+        -23814000, -20891698.94637349, -17901443.366406314, -14841534.39693996,
+        -11710230.703236947, -8505747.41719136, -5226255.048994633,
+        -1869878.3715929883, 1565304.7227436965, 1301052.37394604,
+        -5267822.241017633, -340639.7358765863, 4696964.831892986,
+        9847752.013856797, 15114551.375369702, 20500263.22092043,
+        26007860.362609923, 27238858.13251838, 32999443.442005906,
+        38891285.88423062, 44917666.88751095, 44917666.88751095,
       ];
 
       // Sleep to wait for CSV to load and set state

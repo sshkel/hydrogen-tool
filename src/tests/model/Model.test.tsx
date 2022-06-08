@@ -146,6 +146,7 @@ describe("Hydrogen Model", () => {
       projectLife: 20,
     };
     const model = new HydrogenModel(example2, solar, wind);
+
     compareToModel(model, outputs2, workingdf2);
   });
   it("works for normal model", () => {

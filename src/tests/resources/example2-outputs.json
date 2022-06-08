@@ -1,1 +1,11 @@
-{"Generator Capacity Factor": 0.3271758738229452, "Time Electrolyser is at its Rated Capacity": 0.357648401826484, "Total Time Electrolyser is Operating": 0.5047945205479452, "Achieved Electrolyser Capacity Factor": 0.4549424816128686, "Energy in to Electrolyser [MWh/yr]": 39852.96138928729, "Surplus Energy [MWh/yr]": 3137.94843104772, "Hydrogen Output for Fixed Operation [t/yr]": 7350.657322912985, "Hydrogen Output for Variable Operation [t/yr]": 3451.443664137224}
+{
+  "Generator Capacity Factor": 0.3271758738229452,
+  "Time Electrolyser is at its Rated Capacity": 0.357648401826484,
+  "Total Time Electrolyser is Operating": 0.5047945205479452,
+  "Achieved Electrolyser Capacity Factor": 0.4549424816128686,
+  "Energy in to Electrolyser [MWh/yr]": 39852.96138928729,
+  "Surplus Energy [MWh/yr]": 3137.94843104772,
+  "Hydrogen Output for Fixed Operation [t/yr]": 7350.657322912985,
+  "Hydrogen Output for Variable Operation [t/yr]": 3451.443664137224,
+  "Total Battery Output [MWh/yr]": 5600.431735517298
+}
