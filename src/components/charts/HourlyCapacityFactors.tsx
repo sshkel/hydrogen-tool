@@ -12,8 +12,8 @@ const colours = ["#3E7DCC", "#00C8C8"];
 export default function HourlyCapacityFactors(props: Props) {
   // randomly sample for demo until we fix and have zoom in functionality
   // https://youtube.com/clip/UgkxlUpRBGgl1xSjlEPyATuGK1_Eaqu50GxV
-  const sampleToPlot = 120;
-  const randomStart = Math.floor(Math.random() * 8760);
+  const sampleToPlot = 250;
+  const randomStart = 0;
   const { datapoints } = props;
 
   const graphData = {
