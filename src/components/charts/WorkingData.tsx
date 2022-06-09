@@ -2,7 +2,7 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
-import { activeYears, dropPadding, padArray } from "../../model/Utils";
+import { activeYears, dropPadding } from "../../model/Utils";
 import { InputFields } from "../../types";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -334,6 +334,10 @@ export default function WorkingData(props: Props) {
         )
       : Array(plantLife).fill(0);
 
+  const electricityProduced = summary["Surplus Energy [MWh/yr]"];
+  const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
+  const electricityConsumedByBattery = summary["Total Battery Output [MWh/yr]"];
+
   // Check for PPA Agreement
   const totalPPACost =
     ppaAgreement === "true"
@@ -341,7 +345,7 @@ export default function WorkingData(props: Props) {
         (props.data.additionalTransmissionCharges || 0)
       : 0;
   const electricityOMCost =
-    summary["Energy in to Electrolyser [MWh/yr]"] * totalPPACost;
+    (electricityConsumed + electricityConsumedByBattery) * totalPPACost;
   const electricityPurchase = getOpexPerYearInflation(
     electricityOMCost,
     inflationRate,
@@ -360,9 +364,6 @@ export default function WorkingData(props: Props) {
     plantLife
   );
 
-  const electricityProduced = summary["Surplus Energy [MWh/yr]"];
-  const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
-  const electricityConsumedByBattery = summary["Total Battery Output [MWh/yr]"];
   const h2Prod = activeYears(h2Produced, plantLife);
   const elecProduced = activeYears(electricityProduced, plantLife);
   const elecConsumed = activeYears(electricityConsumed, plantLife);
@@ -404,9 +405,9 @@ export default function WorkingData(props: Props) {
   const {
     lch2,
     h2RetailPrice,
-    totalCost,
-    totalCostWithDiscount,
-    h2Moneys,
+    // totalCost,
+    // totalCostWithDiscount,
+    // h2Moneys,
     h2Sales,
     electricitySales,
     oxygenSales,
@@ -431,7 +432,12 @@ export default function WorkingData(props: Props) {
 
   const cashFlow = cashFlowAnalysis(
     annualSales,
-    totalOpex,
+    totalOpex.map(
+      (num) =>
+        num -
+        additionalTransmissionCharges *
+          (electricityConsumed + electricityConsumedByBattery)
+    ),
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
@@ -553,7 +559,7 @@ export default function WorkingData(props: Props) {
         }}
       />
       {/* Comment out for displaying */}
-      <BasicTable
+      {/* <BasicTable
         data={{
           h2Prod,
           elecProduced,
@@ -569,7 +575,7 @@ export default function WorkingData(props: Props) {
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}
-      />
+      /> */}
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}

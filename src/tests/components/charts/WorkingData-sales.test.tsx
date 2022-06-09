@@ -9,6 +9,7 @@ import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
 
@@ -306,5 +307,61 @@ describe("Working Data calculations", () => {
         done();
       }, TIMEOUT);
     });
+
+    // it("calculates sales for wind with battery and PPA agreement", (done) => {
+    //   const wrapper = mount(
+    //     <WorkingData
+    //       data={windWithBatteryAndPPAScenario}
+    //       loadSolar={loadSolar}
+    //       loadWind={loadWind}
+    //     />
+    //   );
+
+    //   const hydrogenSales = [
+    //     3_098_449.97, 3_175_911.22, 3_255_309.0, 3_336_691.73, 3_420_109.02,
+    //     3_505_611.74, 3_593_252.04, 3_683_083.34, 3_775_160.42, 3_869_539.43,
+    //     3_966_277.92, 4_065_434.87, 4_167_070.74, 4_271_247.51, 4_378_028.69,
+    //     4_487_479.41, 4_599_666.4, 4_714_658.06, 4_832_524.51, 4_953_337.62,
+    //   ];
+
+    //   const electricitySales = new Array(20).fill(0);
+
+    //   const oxygenSales = new Array(20).fill(0);
+
+    //   const totalSales = hydrogenSales;
+
+    //   // Sleep to wait for CSV to load and set state
+    //   setTimeout(() => {
+    //     wrapper.update();
+    //     const opexChart = wrapper
+    //       .find(CostLineChart)
+    //       .filterWhere((e) => e.prop("title") === "Sales");
+    //     expect(opexChart).toHaveLength(1);
+    //     const datapoints = opexChart.at(0).prop("datapoints");
+    //     expect(datapoints).toHaveLength(4);
+
+    //     expect(datapoints[0].label).toEqual("Hydrogen Sales");
+    //     datapoints[0].data.forEach((num, i) =>
+    //       expect(num).toBeCloseTo(hydrogenSales[i], 2)
+    //     );
+
+    //     expect(datapoints[1].label).toEqual("Electricity Sales");
+    //     datapoints[1].data.forEach((num, i) =>
+    //       expect(num).toBeCloseTo(electricitySales[i], 2)
+    //     );
+
+    //     expect(datapoints[2].label).toEqual("Oxygen Sales");
+    //     datapoints[2].data.forEach((num, i) =>
+    //       expect(num).toBeCloseTo(oxygenSales[i], 2)
+    //     );
+
+    //     expect(datapoints[3].label).toEqual("Total Sales");
+    //     datapoints[3].data.forEach((num, i) =>
+    //       expect(num).toBeCloseTo(totalSales[i], 2)
+    //     );
+
+    //     done();
+    //   }, TIMEOUT);
+    // });
   });
 });

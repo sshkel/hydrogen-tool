@@ -429,7 +429,7 @@ export const windWithBatteryAndPPAScenario: InputFields = {
   windOpex: 0,
   gridConnectionCost: 0,
   additionalTransmissionCharges: 0,
-  principalPPACost: 0,
+  principalPPACost: 3,
   batteryEfficiency: 90,
   batteryMinCharge: 0,
   batteryLifetime: 10,
