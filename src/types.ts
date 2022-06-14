@@ -91,4 +91,5 @@ export interface InputFields {
   secAtNominalLoad?: number;
   secCorrectionFactor?: number;
   ppaAgreement: Bool;
+  gridConnected: Bool;
 }

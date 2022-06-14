@@ -9,6 +9,7 @@ import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
 
@@ -189,6 +190,43 @@ describe("Working Data calculations", () => {
         9847752.013856797, 15114551.375369702, 20500263.22092043,
         26007860.362609923, 27238858.13251838, 32999443.442005906,
         38891285.88423062, 44917666.88751095, 44917666.88751095,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for wind with battery and PPA agreement", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windWithBatteryAndPPAScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -9498000, -7864407.625267617, -6192010.6411669245, -4479838.932463715,
+        -2726898.131042925, -932169.0095866157, 905393.1399061012,
+        2786859.1431361362, 4713326.596446922, 2419568.916147054,
+        621463.8169325157, 3185761.2720045242, 5809078.163453333,
+        8492889.977188362, 11238709.086266765, 14048085.67307213,
+        16922608.674547628, 19863906.751060013, 17634161.20655571,
+        20714059.298191532, 23865866.842118252, 23865866.842118252,
       ];
 
       // Sleep to wait for CSV to load and set state

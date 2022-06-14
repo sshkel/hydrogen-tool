@@ -3,6 +3,7 @@ import { InputFields } from "../types";
 export const solarPvWithBatteryScenario: InputFields = {
   location: "Port Hedland, WA",
   ppaAgreement: "false",
+  gridConnected: "false",
   technology: "Solar",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 15,
@@ -79,6 +80,7 @@ export const solarPvWithBatteryScenario: InputFields = {
 export const solarPvWithElectrolyserScenario: InputFields = {
   location: "Fitzroy, QLD",
   ppaAgreement: "false",
+  gridConnected: "false",
   technology: "Solar",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 15,
@@ -155,6 +157,7 @@ export const solarPvWithElectrolyserScenario: InputFields = {
 export const windElectrolyserScenario: InputFields = {
   location: "Central West NSW",
   ppaAgreement: "false",
+  gridConnected: "false",
   technology: "Wind",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 0,
@@ -231,6 +234,7 @@ export const windElectrolyserScenario: InputFields = {
 export const windWithPPAScenario: InputFields = {
   location: "Wagga Wagga, NSW",
   ppaAgreement: "true",
+  gridConnected: "true",
   technology: "Wind",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 0,
@@ -308,6 +312,7 @@ export const hybridBatteryGridSurplusRetailScenario: InputFields = {
   location: "New England",
   technology: "Hybrid",
   ppaAgreement: "false",
+  gridConnected: "true",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 10,
   windNominalCapacity: 5,
@@ -383,6 +388,7 @@ export const hybridBatteryGridSurplusRetailScenario: InputFields = {
 export const windWithBatteryAndPPAScenario: InputFields = {
   location: "South West NSW",
   ppaAgreement: "true",
+  gridConnected: "false",
   technology: "Wind",
   electrolyserNominalCapacity: 10,
   solarNominalCapacity: 0,
@@ -428,8 +434,8 @@ export const windWithBatteryAndPPAScenario: InputFields = {
   windLandProcurementCost: 0,
   windOpex: 0,
   gridConnectionCost: 0,
-  additionalTransmissionCharges: 0,
-  principalPPACost: 3,
+  additionalTransmissionCharges: 1,
+  principalPPACost: 0,
   batteryEfficiency: 90,
   batteryMinCharge: 0,
   batteryLifetime: 10,

@@ -9,6 +9,7 @@ import {
   solarPvWithBatteryScenario,
   solarPvWithElectrolyserScenario,
   windElectrolyserScenario,
+  windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
 
@@ -229,6 +230,48 @@ describe("Model summary", () => {
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(844.832);
         expect(data["LCH2"].at(0)).toBeCloseTo(5.554);
         expect(data["H2 Retail Price"].at(0)).toBeCloseTo(6.554);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for wind with battery and PPA agreement", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={windWithBatteryAndPPAScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(BasicTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"].at(0)).toBeCloseTo(32.109);
+        expect(
+          data[
+            "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"
+          ].at(0)
+        ).toBeCloseTo(17.489);
+        expect(
+          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"].at(0)
+        ).toBeCloseTo(78.071);
+        expect(data["Electrolyser Capacity Factor"].at(0)).toBeCloseTo(45.739);
+        expect(
+          data["Energy Consumed by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(40_067.358);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(2124.017);
+        expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(801.347);
+        expect(data["LCH2"].at(0)).toBeCloseTo(2.617);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(3.617);
 
         done();
       }, TIMEOUT);

@@ -566,4 +566,5 @@ const defaultInputData: InputFields = {
   taxRate: 0,
   inflationRate: 0,
   ppaAgreement: "false",
+  gridConnected: "false",
 };

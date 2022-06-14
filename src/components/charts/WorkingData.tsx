@@ -126,8 +126,10 @@ export default function WorkingData(props: Props) {
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
     principalPPACost = 0,
-    ppaAgreement,
   } = props.data;
+
+  const gridConnected: boolean = props.data.gridConnected === "true";
+  const ppaAgreement: boolean = props.data.ppaAgreement === "true";
 
   const dataModel: DataModel = {
     batteryLifetime,
@@ -338,12 +340,15 @@ export default function WorkingData(props: Props) {
   const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
   const electricityConsumedByBattery = summary["Total Battery Output [MWh/yr]"];
 
+  const gridConnectionCapex =
+    gridConnected || ppaAgreement ? gridConnectionCost : 0;
+  const gridConnectionOpex = gridConnected
+    ? additionalTransmissionCharges *
+      (electricityConsumed + electricityConsumedByBattery)
+    : 0;
+
   // Check for PPA Agreement
-  const totalPPACost =
-    ppaAgreement === "true"
-      ? (props.data.principalPPACost || 0) +
-        (props.data.additionalTransmissionCharges || 0)
-      : 0;
+  const totalPPACost = ppaAgreement ? props.data.principalPPACost || 0 : 0;
   const electricityOMCost =
     (electricityConsumed + electricityConsumedByBattery) * totalPPACost;
   const electricityPurchase = getOpexPerYearInflation(
@@ -377,7 +382,7 @@ export default function WorkingData(props: Props) {
     powerPlantCAPEX +
     batteryCAPEX +
     additionalUpfrontCosts +
-    gridConnectionCost;
+    gridConnectionCapex;
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
@@ -392,8 +397,7 @@ export default function WorkingData(props: Props) {
       // electricityPurchase[i] +
       // electricitySales[i] +
       waterOMCost +
-      additionalTransmissionCharges *
-        (electricityConsumed + electricityConsumedByBattery) +
+      gridConnectionOpex +
       // TODO check if this is correct. Strangely taking not discounted cost here.
       additionalAnnualCosts +
       stackReplacementCostsOverProjectLife[i] +
@@ -514,16 +518,11 @@ export default function WorkingData(props: Props) {
       plantLife
     ) / hydrogenProductionCost;
 
-  // Add CAPEX if PPA or Grid, and transmission charge if Grid
+  const gridOpex = gridConnected
+    ? getSummedDiscountForOpexCost(gridConnectionOpex, discountRate, plantLife)
+    : 0;
   const lcGridConnection =
-    (gridConnectionCost +
-      getSummedDiscountForOpexCost(
-        additionalTransmissionCharges *
-          (electricityConsumed + electricityConsumedByBattery),
-        discountRate,
-        plantLife
-      )) /
-    hydrogenProductionCost;
+    (gridConnectionCapex + gridOpex) / hydrogenProductionCost;
 
   const { cumulativeCashFlow } = cashFlow;
 

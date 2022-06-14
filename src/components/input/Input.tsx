@@ -21,6 +21,7 @@ interface Props {
 
 export default function Input(props: Props) {
   const [ppaAgreement, setPPAAgreement] = useState<Bool>("false");
+  const [, setGridConnected] = useState<Bool>("false");
 
   let pointer: number = 0;
 
@@ -91,10 +92,12 @@ export default function Input(props: Props) {
     );
   };
 
-  const ppaAgreementOnChange = (val: string) => {
-    if (val === "true" || val === "false") {
-      setPPAAgreement(val);
-    }
+  const setStateChange = (setState: (s: Bool) => void) => {
+    return (val: string) => {
+      if (val === "true" || val === "false") {
+        setState(val);
+      }
+    };
   };
 
   return (
@@ -130,7 +133,18 @@ export default function Input(props: Props) {
               ? parsedState["ppaAgreement"]
               : "false"
           }
-          onChange={ppaAgreementOnChange}
+          onChange={setStateChange(setPPAAgreement)}
+        />
+        <InputSelectField
+          id="gridConnected"
+          label="Grid Connected"
+          values={["true", "false"]}
+          defaultValue={
+            parsedState["gridConnected"] !== undefined
+              ? parsedState["gridConnected"]
+              : "false"
+          }
+          onChange={setStateChange(setGridConnected)}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">

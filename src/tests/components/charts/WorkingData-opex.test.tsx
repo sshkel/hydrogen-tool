@@ -458,12 +458,7 @@ describe("Working Data calculations", () => {
       58029.48, 59480.22, 60967.22, 62491.4, 64053.69, 65655.03,
     ];
 
-    const electricityPurchase = [
-      127612.25, 130802.56, 134072.62, 137424.44, 140860.05, 144381.55,
-      147991.09, 151690.87, 155483.14, 159370.22, 163354.47, 167438.33,
-      171624.29, 175914.9, 180312.77, 184820.59, 189441.1, 194177.13, 199031.56,
-      204007.35,
-    ];
+    const electricityPurchase = new Array(20).fill(0);
 
     // Sleep to wait for CSV to load and set state
     setTimeout(() => {
