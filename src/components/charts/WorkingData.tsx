@@ -432,12 +432,7 @@ export default function WorkingData(props: Props) {
 
   const cashFlow = cashFlowAnalysis(
     annualSales,
-    totalOpex.map(
-      (num) =>
-        num -
-        additionalTransmissionCharges *
-          (electricityConsumed + electricityConsumedByBattery)
-    ),
+    totalOpex,
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
