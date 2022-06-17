@@ -131,7 +131,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        0, 1.393, 0, 0, 0.369, 0, 0, 0.283, 0.05, 0, 0, 0, 0,
+        0, 1.393, 0, 0, 0.369, 0.15, 0, 0.283, 0.05, 0, 0.014, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state

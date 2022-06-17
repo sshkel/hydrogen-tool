@@ -186,8 +186,8 @@ describe("Model summary", () => {
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
         ).toBeCloseTo(3619.361);
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(677.468);
-        expect(data["LCH2"].at(0)).toBeCloseTo(2.096);
-        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(3.096);
+        expect(data["LCH2"].at(0)).toBeCloseTo(2.31);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(3.31);
 
         done();
       }, TIMEOUT);
@@ -270,8 +270,8 @@ describe("Model summary", () => {
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
         ).toBeCloseTo(2124.017);
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(801.347);
-        expect(data["LCH2"].at(0)).toBeCloseTo(2.617);
-        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(3.617);
+        expect(data["LCH2"].at(0)).toBeCloseTo(2.669);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(3.669);
 
         done();
       }, TIMEOUT);

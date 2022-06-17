@@ -298,7 +298,12 @@ describe("Working Data calculations", () => {
       54_151.73, 55_505.52,
     ];
 
-    const electricityPurchase = new Array(20).fill(0);
+    const electricityPurchase = [
+      138_880.96, 142_352.98, 145_911.81, 149_559.6, 153_298.59, 157_131.06,
+      161_059.34, 165_085.82, 169_212.96, 173_443.29, 177_779.37, 182_223.85,
+      186_779.45, 191_448.94, 196_235.16, 201_141.04, 206_169.57, 211_323.81,
+      216_606.9, 222_022.07,
+    ];
 
     // Sleep to wait for CSV to load and set state
     setTimeout(() => {
@@ -458,7 +463,11 @@ describe("Working Data calculations", () => {
       58029.48, 59480.22, 60967.22, 62491.4, 64053.69, 65655.03,
     ];
 
-    const electricityPurchase = new Array(20).fill(0);
+    const electricityPurchase = [
+      42537.42, 43600.85, 44690.87, 45808.15, 46953.35, 48127.18, 49330.36,
+      50563.62, 51827.71, 53123.41, 54451.49, 55812.78, 57208.1, 58638.3,
+      60104.26, 61606.86, 63147.03, 64725.71, 66343.85, 68002.45,
+    ];
 
     // Sleep to wait for CSV to load and set state
     setTimeout(() => {

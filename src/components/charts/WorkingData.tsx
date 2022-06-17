@@ -348,7 +348,9 @@ export default function WorkingData(props: Props) {
     : 0;
 
   // Check for PPA Agreement
-  const totalPPACost = ppaAgreement ? props.data.principalPPACost || 0 : 0;
+  const totalPPACost = ppaAgreement
+    ? principalPPACost + additionalTransmissionCharges
+    : 0;
   const electricityOMCost =
     (electricityConsumed + electricityConsumedByBattery) * totalPPACost;
   const electricityPurchase = getOpexPerYearInflation(
@@ -393,8 +395,8 @@ export default function WorkingData(props: Props) {
       solarOpexCost +
       windOpexCost +
       batteryOMCost +
+      electricityOMCost +
       // TODO: Need to figure out a way to include this
-      // electricityPurchase[i] +
       // electricitySales[i] +
       waterOMCost +
       gridConnectionOpex +
