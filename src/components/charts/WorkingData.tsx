@@ -184,6 +184,7 @@ export default function WorkingData(props: Props) {
   let summary = model.calculateElectrolyserOutput(hourlyOperations);
 
   // Extract to function also checking solar and wind
+  // TODO: Optimise if no degradation
   if (
     solarDegradation !== 0 ||
     windDegradation !== 0 ||
