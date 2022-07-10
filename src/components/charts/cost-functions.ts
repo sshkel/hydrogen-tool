@@ -324,17 +324,12 @@ export function sales(
   salesMargin: number,
   totalOpex: number[],
   h2Produced: number[],
-  electricityProduced: number[],
-  electricityConsumed: number[],
-  electricityConsumedByBattery: number[]
+  electricityProduced: number[]
 ) {
   const inflation = applyInflation(inflationRate);
   const electricitySales = electricityProduced.map(
     (_: number, i: number) =>
-      (electricityProduced[i] -
-        electricityConsumed[i] -
-        electricityConsumedByBattery[i]) *
-      averageElectricitySpotPrice
+      electricityProduced[i] * averageElectricitySpotPrice
   );
 
   const totalInvestmentRequired = first(
@@ -352,28 +347,32 @@ export function sales(
     );
   });
   const totalCostWithDiscount = discount(totalCost);
-  const h2Moneys = discount(
+  const h2ProducedKgLCA = discount(
     h2Produced.map((_: number, i: number) => h2Produced[i] * 1000)
   );
-  const hydrogenProductionCost = sum(h2Moneys);
+  const hydrogenProductionCost = sum(h2ProducedKgLCA);
   const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
 
   const h2RetailPrice = lch2 + salesMargin;
   // The values can be used to create sales graphs.
-  const h2Sales = inflation(h2Produced.map((x) => x * 1000 * h2RetailPrice));
-
-  const annualSales = h2Sales.map(
-    (_: number, i: number) => h2Sales[i] + electricitySales[i] + oxygenSales[i]
+  const inflatedElectricitySales = inflation(electricitySales);
+  const inflatedOxygenSales = inflation(oxygenSales);
+  const inflatedh2Sales = inflation(
+    h2Produced.map((x) => x * 1000 * h2RetailPrice)
+  );
+  const annualSales = inflatedh2Sales.map(
+    (_: number, i: number) =>
+      inflatedh2Sales[i] + inflatedElectricitySales[i] + inflatedOxygenSales[i]
   );
   return {
     lch2,
     h2RetailPrice,
     totalCost,
     totalCostWithDiscount,
-    h2Moneys,
-    h2Sales,
-    electricitySales: inflation(electricitySales),
-    oxygenSales: inflation(oxygenSales),
+    h2ProducedKgLCA,
+    h2Sales: inflatedh2Sales,
+    electricitySales: inflatedElectricitySales,
+    oxygenSales: inflatedOxygenSales,
     annualSales,
     hydrogenProductionCost,
   };

@@ -446,7 +446,7 @@ export default function WorkingData(props: Props) {
     h2RetailPrice,
     // totalCost,
     // totalCostWithDiscount,
-    // h2Moneys,
+    // h2ProducedKgLCA,
     h2Sales,
     electricitySales,
     oxygenSales,
@@ -464,9 +464,7 @@ export default function WorkingData(props: Props) {
     salesMargin,
     totalOpex,
     paddedH2Produced,
-    paddedElectricityProduced,
-    paddedElectricityConsumed,
-    paddedElectricityConsumedByBattery
+    paddedElectricityProduced
   );
 
   const cashFlow = cashFlowAnalysis(
@@ -614,7 +612,7 @@ export default function WorkingData(props: Props) {
           annualSales,
           totalCost,
           totalCostWithDiscount,
-          h2Moneys,
+          h2ProducedKgLCA,
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}
