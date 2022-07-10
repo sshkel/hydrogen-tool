@@ -2,6 +2,7 @@ import {
   applyInflation,
   calculateBatteryCapex,
   calculateCapex,
+  calculateLoanBalance,
   cumulativeStackReplacementYearsConstant,
   getBaseLog,
   getIndirectCost,
@@ -154,5 +155,18 @@ describe("Cost function calculations", () => {
     const expected: number[] = [];
     // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
     expect(actual).toEqual(expected);
+  });
+
+  it("Explodes loan balance correctly", () => {
+    const totalLoan = 7_500_000;
+    const loanRepayment = 750_000;
+    const projectLife = 20;
+    const result = calculateLoanBalance(totalLoan, projectLife, loanRepayment);
+    const expected = [
+      7_500_000, 6750000, 6000000, 5250000, 4500000, 3750000, 3000000, 2250000,
+      1500000, 750000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+    expect(result.length).toEqual(projectLife + 2);
+    expect(result).toEqual(expected);
   });
 });

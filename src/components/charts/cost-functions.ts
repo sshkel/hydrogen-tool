@@ -229,6 +229,7 @@ export function cashFlowAnalysis(
   );
 
   // loan liabilities
+  const totalLoanCostValues = first(totalLoan, projectLife);
   // loan repayment
   const loanRepayment = totalLoan / loanTerm;
   const totalLoanRepayment = padArray(
@@ -239,6 +240,20 @@ export function cashFlowAnalysis(
       return 0;
     })
   );
+
+  // TODO new loan calcs, walk thorugh with haider
+  const loanBalance = calculateLoanBalance(
+    totalLoan,
+    projectLife,
+    loanRepayment
+  );
+
+  let interestIncurred = loanBalance.map((v: number, i: number) => {
+    return v * interestOnLoan;
+  });
+  interestIncurred.pop();
+  interestIncurred = [0].concat(interestIncurred);
+
   // interest paid on loan
   const interestPaidOnLoan = padArray(
     projectYears(projectLife).map((year: number) => {
@@ -310,6 +325,24 @@ export function cashFlowAnalysis(
     incomeAfterTaxAndDepreciation,
     cumulativeCashFlow,
   };
+}
+
+export function calculateLoanBalance(
+  totalLoan: number,
+  projectLife: number,
+  loanRepayment: number
+) {
+  const loanBalance = [totalLoan];
+
+  for (let i = 0; i < projectLife + 1; i++) {
+    const newBalance = loanBalance[i] - loanRepayment;
+    if (newBalance > 0) {
+      loanBalance.push(newBalance);
+    } else {
+      loanBalance.push(0);
+    }
+  }
+  return loanBalance;
 }
 
 export function sales(
