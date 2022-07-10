@@ -9,6 +9,7 @@ import {
   standaloneSolarScenario,
   standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
+  standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
@@ -266,6 +267,43 @@ describe("Working Data calculations", () => {
         15947362.499748085, 19624787.403125357, 23384772.929087058,
         27229383.093197804, 31160733.511411317, 35180992.690080166,
         35180992.690080166,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for solar with stack degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneSolarWithStackDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -14000000, -11803505.304518683, -9583598.769500522, -7340118.374123184,
+        -5072904.33330862, -2781799.2469770545, -466648.254418795,
+        1872700.8060673485, 4236397.232116944, 6624587.286666839,
+        9037414.021585733, 12206093.491679247, 15413462.287424365,
+        18659997.13214404, 21946179.38244507, 25272495.035859946,
+        28639434.73707333, 26993046.043221965, 31107734.952540398,
+        35274424.16096176, 39493769.6127414, 39493769.6127414,
       ];
 
       // Sleep to wait for CSV to load and set state

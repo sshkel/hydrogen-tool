@@ -606,15 +606,10 @@ export default function WorkingData(props: Props) {
         data={{
           paddedH2Produced,
           paddedElectricityProduced,
-          paddedElectricityConsumed,
-          paddedElectricityConsumedByBattery,
           h2Sales,
           electricitySales,
-          oxygenSales: padArray(oxygenSales),
+          oxygenSales,
           annualSales,
-          totalCost,
-          totalCostWithDiscount,
-          h2ProducedKgLCA,
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}

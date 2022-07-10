@@ -9,6 +9,7 @@ import {
   standaloneSolarScenario,
   standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
+  standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
@@ -315,6 +316,48 @@ describe("Model summary", () => {
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(681.321);
         expect(data["LCH2"].at(0)).toBeCloseTo(4.27);
         expect(data["H2 Retail Price"].at(0)).toBeCloseTo(5.27);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for solar with stack degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneSolarWithStackDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(BasicTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"].at(0)).toBeCloseTo(25.794);
+        expect(
+          data[
+            "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"
+          ].at(0)
+        ).toBeCloseTo(0.936);
+        expect(
+          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"].at(0)
+        ).toBeCloseTo(42.123);
+        expect(data["Electrolyser Capacity Factor"].at(0)).toBeCloseTo(25.508);
+        expect(
+          data["Energy Consumed by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(22_344.641);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(250.61);
+        expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(417.583);
+        expect(data["LCH2"].at(0)).toBeCloseTo(5.728);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(8.728);
 
         done();
       }, TIMEOUT);
