@@ -406,10 +406,6 @@ export default function WorkingData(props: Props) {
 
   const paddedH2Produced: number[] = padArray(h2Produced);
   const paddedElectricityProduced: number[] = padArray(electricityProduced);
-  const paddedElectricityConsumed: number[] = padArray(electricityConsumed);
-  const paddedElectricityConsumedByBattery = padArray(
-    electricityConsumedByBattery
-  );
 
   const totalCapexCost =
     electrolyserCAPEX +
