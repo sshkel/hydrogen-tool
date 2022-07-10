@@ -7,6 +7,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
   standaloneSolarScenario,
+  standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
   standaloneWindScenario,
   windWithBatteryAndPPAScenario,
@@ -468,6 +469,84 @@ describe("Working Data calculations", () => {
       50563.62, 51827.71, 53123.41, 54451.49, 55812.78, 57208.1, 58638.3,
       60104.26, 61606.86, 63147.03, 64725.71, 66343.85, 68002.45,
     ];
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const opexChart = wrapper
+        .find(CostLineChart)
+        .filterWhere((e) => e.prop("title") === "Operating Costs");
+      expect(opexChart).toHaveLength(1);
+      const datapoints = opexChart.at(0).prop("datapoints");
+      expect(datapoints).toHaveLength(6);
+      expect(datapoints[0]).toEqual({
+        label: "Electrolyser OPEX",
+        data: electrolyserOpex,
+      });
+      expect(datapoints[1]).toEqual({
+        label: "Power Plant OPEX",
+        data: powerPlantOpex,
+      });
+
+      expect(datapoints[2]).toEqual({
+        label: "Battery OPEX",
+        data: batteryOpex,
+      });
+
+      expect(datapoints[3]).toEqual({
+        label: "Additional Annual Costs",
+        data: additionalAnnualCosts,
+      });
+
+      expect(datapoints[4]).toEqual({
+        label: "Water Costs",
+        data: waterCosts,
+      });
+
+      expect(datapoints[5]).toEqual({
+        label: "Electricity Purchase",
+        data: electricityPurchase,
+      });
+
+      done();
+    }, TIMEOUT);
+  });
+
+  it("calculates opex for solar with oxygen and electricity sales", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        data={standaloneSolarScenarioAdditionalRevenueStreams}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+      />
+    );
+
+    const electrolyserOpex = [
+      256_250.0, 262_656.25, 269_222.66, 275_953.22, 282_852.05, 289_923.35,
+      297_171.44, 304_600.72, 312_215.74, 320_021.14, 328_021.66, 336_222.21,
+      344_627.76, 353_243.46, 6_155_267.21, 371_126.41, 380_404.57, 389_914.68,
+      399_662.55, 409_654.11,
+    ];
+
+    const powerPlantOpex = [
+      261_375.0, 267_909.38, 274_607.11, 281_472.29, 288_509.09, 295_721.82,
+      303_114.87, 310_692.74, 318_460.06, 326_421.56, 334_582.1, 342_946.65,
+      351_520.32, 360_308.32, 369_316.03, 378_548.93, 388_012.66, 397_712.97,
+      407_655.8, 417_847.19,
+    ];
+
+    const batteryOpex = new Array(20).fill(0);
+
+    const additionalAnnualCosts = new Array(20).fill(0);
+
+    const waterCosts = [
+      34_917.72, 35_790.67, 36_685.43, 37_602.57, 38_542.63, 39_506.2,
+      40_493.85, 41_506.2, 42_543.86, 43_607.45, 44_697.64, 45_815.08,
+      46_960.46, 48_134.47, 49_337.83, 50_571.27, 51_835.56, 53_131.45,
+      54_459.73, 55_821.23,
+    ];
+
+    const electricityPurchase = new Array(20).fill(0);
 
     // Sleep to wait for CSV to load and set state
     setTimeout(() => {

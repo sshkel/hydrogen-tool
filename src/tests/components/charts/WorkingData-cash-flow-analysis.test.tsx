@@ -7,6 +7,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
   standaloneSolarScenario,
+  standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
   standaloneWindScenario,
   windWithBatteryAndPPAScenario,
@@ -227,6 +228,44 @@ describe("Working Data calculations", () => {
         8492889.977188345, 11238709.086266747, 14048085.673072109,
         16922608.674547605, 19863906.75105999, 17634161.206555683,
         20714059.298191506, 23865866.842118226, 23865866.842118226,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for solar with oxygen and electricity sales", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneSolarScenarioAdditionalRevenueStreams}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -17500000, -15607914.350170678, -13672276.559095621,
+        -11691997.823243689, -9665962.118995458, -7593025.522141023,
+        -5472015.510365225, -3301730.248295034, -1080937.854673088,
+        1191624.3487894065, 3517250.6073384634, 6811113.017696911,
+        10177946.98831432, 13619576.808197161, 17137872.373577077,
+        15947362.499748085, 19624787.403125357, 23384772.929087058,
+        27229383.093197804, 31160733.511411317, 35180992.690080166,
+        35180992.690080166,
       ];
 
       // Sleep to wait for CSV to load and set state

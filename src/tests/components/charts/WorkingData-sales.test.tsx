@@ -82,88 +82,6 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates sales for solar with oxygen and electricity sales", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          data={standaloneSolarScenarioAdditionalRevenueStreams}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-        />
-      );
-
-      const hydrogenSales = [
-        3680527.2543005436, 3772540.435658057, 3866853.946549508,
-        3963525.2952132453, 4062613.427593576, 4164178.763283415,
-        4268283.2323655, 4374990.313174637, 4484365.071004003,
-        4596474.197779102, 4711386.05272358, 4829170.704041669,
-        4949899.971642709, 5073647.470933777, 5200488.657707121,
-        5330500.874149799, 5463763.396003543, 5600357.480903632,
-        5740366.417926222, 5883875.5783743765,
-      ];
-      const electricitySales = [
-        73590.89711775075, 75430.66954569452, 77316.43628433686,
-        79249.34719144527, 81230.5808712314, 83261.34539301218,
-        85342.87902783748, 87476.4510035334, 89663.36227862173,
-        91904.94633558727, 94202.56999397694, 96557.63424382637,
-        98971.575099922, 101445.86447742004, 103982.01108935554,
-        106581.56136658942, 109246.10040075415, 111977.252910773,
-        114776.6842335423, 117646.10133938085,
-      ];
-
-      const oxygenSales = [
-        55868.3574724455, 57265.06640925664, 58696.69306948804,
-        60164.11039622524, 61668.21315613086, 63209.918485034126,
-        64790.16644715999, 66409.92060833897, 68070.16862354745,
-        69771.92283913612, 71516.22091011453, 73304.12643286737,
-        75136.72959368904, 77015.14783353127, 78940.52652936954,
-        80914.03969260378, 82936.89068491886, 85010.31295204183,
-        87135.57077584286, 89313.96004523893,
-      ];
-
-      const totalSales = [
-        3809986.5088907396, 3905236.1716130087, 4002867.075903333,
-        4102938.7528009154, 4205512.221620938, 4310650.027161461,
-        4418416.277840498, 4528876.68478651, 4642098.601906172,
-        4758151.066953826, 4877104.843627671, 4999032.464718363,
-        5124008.27633632, 5252108.483244729, 5383411.195325847,
-        5517996.475208993, 5655946.387089216, 5797345.046766447,
-        5942278.672935608, 6090835.639758997,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const opexChart = wrapper
-          .find(CostLineChart)
-          .filterWhere((e) => e.prop("title") === "Sales");
-        expect(opexChart).toHaveLength(1);
-        const datapoints = opexChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(4);
-
-        expect(datapoints[0].label).toEqual("Hydrogen Sales");
-        datapoints[0].data.forEach((num, i) =>
-          expect(num).toBeCloseTo(hydrogenSales[i], 2)
-        );
-
-        expect(datapoints[1].label).toEqual("Electricity Sales");
-        datapoints[1].data.forEach((num, i) =>
-          expect(num).toBeCloseTo(electricitySales[i], 2)
-        );
-
-        expect(datapoints[2].label).toEqual("Oxygen Sales");
-        datapoints[2].data.forEach((num, i) =>
-          expect(num).toBeCloseTo(oxygenSales[i], 2)
-        );
-
-        expect(datapoints[3].label).toEqual("Total Sales");
-        datapoints[3].data.forEach((num, i) =>
-          expect(num).toBeCloseTo(totalSales[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
     it("calculates sales for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
@@ -444,6 +362,88 @@ describe("Working Data calculations", () => {
         expect(datapoints[3].label).toEqual("Total Sales");
         datapoints[3].data.forEach((num, i) =>
           expect(num).toBeCloseTo(totalSales[i], 8)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates sales for solar with oxygen and electricity sales", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneSolarScenarioAdditionalRevenueStreams}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const hydrogenSales = [
+        3680527.2543005436, 3772540.435658057, 3866853.946549508,
+        3963525.2952132453, 4062613.427593576, 4164178.763283415,
+        4268283.2323655, 4374990.313174637, 4484365.071004003,
+        4596474.197779102, 4711386.05272358, 4829170.704041669,
+        4949899.971642709, 5073647.470933777, 5200488.657707121,
+        5330500.874149799, 5463763.396003543, 5600357.480903632,
+        5740366.417926222, 5883875.5783743765,
+      ];
+      const electricitySales = [
+        73590.89711775075, 75430.66954569452, 77316.43628433686,
+        79249.34719144527, 81230.5808712314, 83261.34539301218,
+        85342.87902783748, 87476.4510035334, 89663.36227862173,
+        91904.94633558727, 94202.56999397694, 96557.63424382637,
+        98971.575099922, 101445.86447742004, 103982.01108935554,
+        106581.56136658942, 109246.10040075415, 111977.252910773,
+        114776.6842335423, 117646.10133938085,
+      ];
+
+      const oxygenSales = [
+        55868.3574724455, 57265.06640925664, 58696.69306948804,
+        60164.11039622524, 61668.21315613086, 63209.918485034126,
+        64790.16644715999, 66409.92060833897, 68070.16862354745,
+        69771.92283913612, 71516.22091011453, 73304.12643286737,
+        75136.72959368904, 77015.14783353127, 78940.52652936954,
+        80914.03969260378, 82936.89068491886, 85010.31295204183,
+        87135.57077584286, 89313.96004523893,
+      ];
+
+      const totalSales = [
+        3809986.5088907396, 3905236.1716130087, 4002867.075903333,
+        4102938.7528009154, 4205512.221620938, 4310650.027161461,
+        4418416.277840498, 4528876.68478651, 4642098.601906172,
+        4758151.066953826, 4877104.843627671, 4999032.464718363,
+        5124008.27633632, 5252108.483244729, 5383411.195325847,
+        5517996.475208993, 5655946.387089216, 5797345.046766447,
+        5942278.672935608, 6090835.639758997,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const opexChart = wrapper
+          .find(CostLineChart)
+          .filterWhere((e) => e.prop("title") === "Sales");
+        expect(opexChart).toHaveLength(1);
+        const datapoints = opexChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(4);
+
+        expect(datapoints[0].label).toEqual("Hydrogen Sales");
+        datapoints[0].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(hydrogenSales[i], 2)
+        );
+
+        expect(datapoints[1].label).toEqual("Electricity Sales");
+        datapoints[1].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(electricitySales[i], 2)
+        );
+
+        expect(datapoints[2].label).toEqual("Oxygen Sales");
+        datapoints[2].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(oxygenSales[i], 2)
+        );
+
+        expect(datapoints[3].label).toEqual("Total Sales");
+        datapoints[3].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(totalSales[i], 2)
         );
 
         done();

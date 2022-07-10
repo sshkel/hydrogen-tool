@@ -9,6 +9,7 @@ import {
 import {
   dropPadding,
   fillProjectYearsArray,
+  mean,
   padArray,
 } from "../../model/Utils";
 import {
@@ -581,23 +582,27 @@ export default function WorkingData(props: Props) {
       <BasicTable
         title="Summary of Results"
         data={{
-          "Power Plant Capacity Factor": summary[`${POWER_PLANT_CF}`].map(
-            (x) => x * 100
-          ),
-          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
-            summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100),
-          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": summary[
-            `${TOTAL_OPERATING_TIME}`
-          ].map((x) => x * 100),
-          "Electrolyser Capacity Factor": summary[`${ELECTROLYSER_CF}`].map(
-            (x) => x * 100
-          ),
-          "Energy Consumed by Electrolyser (MWh/yr)": electricityConsumed,
-          "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-            electricityProduced,
-          "Hydrogen Output [t/yr]": h2Produced,
-          LCH2: Array(plantLife).fill(lch2),
-          "H2 Retail Price": Array(plantLife).fill(h2RetailPrice),
+          "Power Plant Capacity Factor": [
+            mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100)),
+          ],
+          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
+            mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)),
+          ],
+          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
+            mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)),
+          ],
+          "Electrolyser Capacity Factor": [
+            mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)),
+          ],
+          "Energy Consumed by Electrolyser (MWh/yr)": [
+            mean(electricityConsumed),
+          ],
+          "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
+            mean(electricityProduced),
+          ],
+          "Hydrogen Output [t/yr]": [mean(h2Produced)],
+          LCH2: [lch2],
+          "H2 Retail Price": [h2RetailPrice],
         }}
       />
       {/* Comment out for displaying */}
