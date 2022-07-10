@@ -230,7 +230,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        2.08, 1.39, 0, 0.37, 0.37, 0, -0.11, 0.2, 0.05, 0, 0, 0, -0.08,
+        2.08, 1.39, 0, 0.37, 0.37, 0, 0.105, 0.2, 0.05, 0, 0, 0, 0.079,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -245,10 +245,9 @@ describe("Working Data calculations", () => {
         const datapoints = cashFlowChart.at(0).prop("datapoints");
         expect(datapoints).toHaveLength(1);
 
-        // TODO: Work out why it doesn't align with chart? Is it just negative values don't work?
-        // datapoints[0].data.forEach((cost, i) =>
-        //   expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        // );
+        datapoints[0].data.forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
 
         done();
       }, TIMEOUT);
@@ -264,7 +263,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        2.24, 2.24, 0, 0.4, 0.59, 0, 0, 0.28, 0.05, 0, 0, 0, -0.08,
+        2.24, 2.24, 0, 0.4, 0.59, 0, 0, 0.28, 0.05, 0, 0, 0, 0.08,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -280,9 +279,9 @@ describe("Working Data calculations", () => {
         expect(datapoints).toHaveLength(1);
 
         // TODO: Work out why it doesn't align with chart? Is it just negative values don't work?
-        // datapoints[0].data.forEach((cost, i) =>
-        //   expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        // );
+        datapoints[0].data.forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
 
         done();
       }, TIMEOUT);

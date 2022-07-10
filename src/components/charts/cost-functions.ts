@@ -229,7 +229,7 @@ export function cashFlowAnalysis(
   );
 
   // loan liabilities
-  const totalLoanCostValues = first(totalLoan, projectLife);
+  // const totalLoanCostValues = first(totalLoan, projectLife);
   // loan repayment
   const loanRepayment = totalLoan / loanTerm;
   const totalLoanRepayment = padArray(

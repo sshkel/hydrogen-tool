@@ -548,11 +548,7 @@ export default function WorkingData(props: Props) {
   // TODO: check in Retail mode
   const retailElectricitySalePrice = fillProjectYearsArray(
     plantLife,
-    (i) =>
-      (electricityConsumed[i] +
-        electricityConsumedByBattery[i] -
-        electricityProduced[i]) *
-      averageElectricitySpotPrice
+    (i) => electricityProduced[i] * averageElectricitySpotPrice
   );
   const lcElectricitySale =
     getSummedDiscountForOpexValues(
@@ -602,7 +598,7 @@ export default function WorkingData(props: Props) {
         }}
       />
       {/* Comment out for displaying */}
-      {/* <BasicTable
+      <BasicTable
         data={{
           paddedH2Produced,
           paddedElectricityProduced,
@@ -613,7 +609,7 @@ export default function WorkingData(props: Props) {
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}
-      /> */}
+      />
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}
