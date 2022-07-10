@@ -6,6 +6,7 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
+  standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
@@ -358,6 +359,48 @@ describe("Model summary", () => {
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(417.583);
         expect(data["LCH2"].at(0)).toBeCloseTo(5.728);
         expect(data["H2 Retail Price"].at(0)).toBeCloseTo(8.728);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for hybrid with degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneHybridWithDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(BasicTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"].at(0)).toBeCloseTo(27.738);
+        expect(
+          data[
+            "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"
+          ].at(0)
+        ).toBeCloseTo(30.739);
+        expect(
+          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"].at(0)
+        ).toBeCloseTo(85.198);
+        expect(data["Electrolyser Capacity Factor"].at(0)).toBeCloseTo(61.06);
+        expect(
+          data["Energy Consumed by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(53_488.536);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(12_117.619);
+        expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(1037.638);
+        expect(data["LCH2"].at(0)).toBeCloseTo(4.429);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(5.429);
 
         done();
       }, TIMEOUT);

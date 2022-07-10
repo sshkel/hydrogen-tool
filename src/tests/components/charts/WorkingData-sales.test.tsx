@@ -6,6 +6,7 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
+  standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
@@ -482,6 +483,63 @@ describe("Working Data calculations", () => {
         4_675_731.22, 4_745_172.78, 4_815_645.64, 4_887_165.13, 4_959_746.79,
         5_033_406.4, 5_108_159.96, 6_139_462.26, 6_230_642.39, 6_323_176.69,
       ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const opexChart = wrapper
+          .find(CostLineChart)
+          .filterWhere((e) => e.prop("title") === "Sales");
+        expect(opexChart).toHaveLength(1);
+        const datapoints = opexChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(4);
+
+        expect(datapoints[0].label).toEqual("Hydrogen Sales");
+
+        datapoints[0].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(hydrogenSales[i], 2)
+        );
+
+        expect(datapoints[1].label).toEqual("Electricity Sales");
+        datapoints[1].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(electricitySales[i], 2)
+        );
+
+        expect(datapoints[2].label).toEqual("Oxygen Sales");
+        datapoints[2].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(oxygenSales[i], 2)
+        );
+
+        expect(datapoints[3].label).toEqual("Total Sales");
+        datapoints[3].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(totalSales[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates sales for hybrid with degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneHybridWithDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const hydrogenSales = [
+        6_452_977.23, 6_511_541.2, 6_569_068.82, 6_626_102.66, 6_674_307.65,
+        6_706_444.94, 6_738_004.59, 6_770_024.03, 7_365_703.67, 7_400_163.11,
+        7_434_254.41, 7_469_449.4, 7_503_712.51, 7_538_066.8, 7_573_698.73,
+        7_608_925.0, 8_278_689.95, 8_316_136.39, 8_355_223.82, 8_393_340.18,
+      ];
+
+      const electricitySales = new Array(20).fill(0);
+
+      const oxygenSales = new Array(20).fill(0);
+
+      const totalSales = hydrogenSales;
 
       // Sleep to wait for CSV to load and set state
       setTimeout(() => {

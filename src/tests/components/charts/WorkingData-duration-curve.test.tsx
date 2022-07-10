@@ -5,6 +5,8 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import hybridBatteryRetailElectrolyserDurationCurve from "../../resources/hybrid-battery-retail-electrolyser-duration-curve.json";
 import hybridBatteryRetailGeneratorDurationCurve from "../../resources/hybrid-battery-retail-generator-duration-curve.json";
+import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
+import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
 import { readLocalCsv } from "../../resources/loader";
 import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
 import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
@@ -18,6 +20,7 @@ import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electroly
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
   hybridBatteryGridSurplusRetailScenario,
+  standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
   standaloneWindScenario,
@@ -284,6 +287,47 @@ describe("Working Data calculations", () => {
         done();
       }, TIMEOUT);
     });
+  });
+
+  it("calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        data={standaloneHybridWithDegradationScenario}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+      />
+    );
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const generatorDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+      expect(generatorDurationCurve).toHaveLength(1);
+      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
+
+      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toEqual(hybridDegradationGeneratorDurationCurve[index]);
+        }
+      );
+
+      const electrolyserDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+      expect(electrolyserDurationCurve).toHaveLength(1);
+      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toEqual(
+            hybridDegradationElectrolyserDurationCurve[index]
+          );
+        }
+      );
+
+      done();
+    }, TIMEOUT);
   });
 });
 

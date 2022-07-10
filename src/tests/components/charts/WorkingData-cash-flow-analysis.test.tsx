@@ -6,6 +6,7 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
+  standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
@@ -304,6 +305,44 @@ describe("Working Data calculations", () => {
         18659997.13214404, 21946179.38244507, 25272495.035859946,
         28639434.73707333, 26993046.043221965, 31107734.952540398,
         35274424.16096176, 39493769.6127414, 39493769.6127414,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for hybrid with degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneHybridWithDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -25900000, -22576533.562415905, -19246800.241482984,
+        -15912377.559620492, -12574488.214315157, -9240157.70323433,
+        -5921454.605907008, -2619727.4562547468, -3118912.6512446934,
+        537489.2476593186, 4175938.0580413393, 9147623.477371292,
+        14125234.453803143, 19107662.57220704, 24094497.42264889,
+        29086139.625642657, 29491932.24143811, 34931207.04175541,
+        40375017.11555111, 45823964.68661668, 51276826.974499196,
+        51276826.974499196,
       ];
 
       // Sleep to wait for CSV to load and set state
