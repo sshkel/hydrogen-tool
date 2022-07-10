@@ -1,10 +1,21 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
-import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
-import { activeYears, dropPadding } from "../../model/Utils";
 import {
+  DataModel,
+  HydrogenModel,
+  ModelSummaryPerYear,
+} from "../../model/Model";
+import {
+  dropPadding,
+  fillProjectYearsArray,
+  padArray,
+} from "../../model/Utils";
+import {
+  BATTERY_OUTPUT,
   ELECTROLYSER_CF,
+  ENERGY_INPUT,
+  ENERGY_OUTPUT,
   HYDROGEN_OUTPUT_FIXED,
   HYDROGEN_OUTPUT_VARIABLE,
   POWER_PLANT_CF,
@@ -25,6 +36,7 @@ import {
   cumulativeStackReplacementYears,
   getIndirectCost,
   getOpexPerYearInflation,
+  getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
   getReplacementCostOverProjectLife,
   getSummedDiscountForOpexCost,
@@ -175,9 +187,10 @@ export default function WorkingData(props: Props) {
   if (
     solarDegradation !== 0 ||
     windDegradation !== 0 ||
-    stackDegradation !== 0
+    stackDegradation !== 0 ||
+    true
   ) {
-    const summaries: ModelSummary[] = [];
+    const summaries: ModelSummaryPerYear[] = [];
     for (let year = 1; year <= plantLife; year++) {
       const hourlyOperationsByYear =
         model.calculateElectrolyserHourlyOperation(year);
@@ -279,7 +292,7 @@ export default function WorkingData(props: Props) {
           plantLife
         )
       : cumulativeStackReplacementYears(
-          summary["Total Time Electrolyser is Operating"] * 8760,
+          summary[`${TOTAL_OPERATING_TIME}`],
           stackLifetime,
           plantLife
         );
@@ -307,13 +320,13 @@ export default function WorkingData(props: Props) {
   const windOpexCost = isWind(technology)
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
-  const powerplantOpex = getOpexPerYearInflation(
+  const powerplantOpex = getOpexPerYearInflationConstant(
     solarOpexCost + windOpexCost,
     inflationRate,
     plantLife
   );
 
-  const additionalOpex = getOpexPerYearInflation(
+  const additionalOpex = getOpexPerYearInflationConstant(
     additionalAnnualCosts,
     inflationRate,
     plantLife
@@ -344,23 +357,30 @@ export default function WorkingData(props: Props) {
         )
       : Array(plantLife).fill(0);
 
-  const electricityProduced = summary["Surplus Energy [MWh/yr]"];
-  const electricityConsumed = summary["Energy in to Electrolyser [MWh/yr]"];
-  const electricityConsumedByBattery = summary["Total Battery Output [MWh/yr]"];
+  const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
+  const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
+  const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
 
   const gridConnectionCapex =
     gridConnected || ppaAgreement ? gridConnectionCost : 0;
-  const gridConnectionOpex = gridConnected
-    ? additionalTransmissionCharges *
-      (electricityConsumed + electricityConsumedByBattery)
-    : 0;
+  const gridConnectionOpex: number[] = gridConnected
+    ? fillProjectYearsArray(
+        plantLife,
+        (i) =>
+          additionalTransmissionCharges *
+          (electricityConsumed[i] + electricityConsumedByBattery[i])
+      )
+    : Array(plantLife).fill(0);
 
   // Check for PPA Agreement
   const totalPPACost = ppaAgreement
     ? principalPPACost + additionalTransmissionCharges
     : 0;
-  const electricityOMCost =
-    (electricityConsumed + electricityConsumedByBattery) * totalPPACost;
+  const electricityOMCost: number[] = fillProjectYearsArray(
+    plantLife,
+    (i) =>
+      totalPPACost * (electricityConsumed[i] + electricityConsumedByBattery[i])
+  );
   const electricityPurchase = getOpexPerYearInflation(
     electricityOMCost,
     inflationRate,
@@ -371,20 +391,22 @@ export default function WorkingData(props: Props) {
     props.data.profile === "Fixed"
       ? summary[`${HYDROGEN_OUTPUT_FIXED}`]
       : summary[`${HYDROGEN_OUTPUT_VARIABLE}`];
-  const waterOMCost =
-    h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser;
+  const waterOMCost: number[] = fillProjectYearsArray(
+    plantLife,
+    (i) =>
+      electrolyserWaterCost * waterRequirementOfElectrolyser * h2Produced[i]
+  );
   const waterCost = getOpexPerYearInflation(
     waterOMCost,
     inflationRate,
     plantLife
   );
 
-  const h2Prod = activeYears(h2Produced, plantLife);
-  const elecProduced = activeYears(electricityProduced, plantLife);
-  const elecConsumed = activeYears(electricityConsumed, plantLife);
-  const elecConsumedByBattery = activeYears(
-    electricityConsumedByBattery,
-    plantLife
+  const paddedH2Produced: number[] = padArray(h2Produced);
+  const paddedElectricityProduced: number[] = padArray(electricityProduced);
+  const paddedElectricityConsumed: number[] = padArray(electricityConsumed);
+  const paddedElectricityConsumedByBattery = padArray(
+    electricityConsumedByBattery
   );
 
   const totalCapexCost =
@@ -403,18 +425,21 @@ export default function WorkingData(props: Props) {
       solarOpexCost +
       windOpexCost +
       batteryOMCost +
-      electricityOMCost +
+      electricityOMCost[i] +
       // TODO: Need to figure out a way to include this
       // electricitySales[i] +
-      waterOMCost +
-      gridConnectionOpex +
+      waterOMCost[i] +
+      gridConnectionOpex[i] +
       // TODO check if this is correct. Strangely taking not discounted cost here.
       additionalAnnualCosts +
       stackReplacementCostsOverProjectLife[i] +
       batteryReplacementCostsOverProjectLife[i]
   );
 
-  const oxygenSalePrice = 8 * h2Produced * oxygenRetailPrice;
+  const oxygenSalePrice: number[] = fillProjectYearsArray(
+    plantLife,
+    (i) => 8 * h2Produced[i] * oxygenRetailPrice
+  );
 
   const {
     lch2,
@@ -428,7 +453,7 @@ export default function WorkingData(props: Props) {
     annualSales,
     hydrogenProductionCost,
   } = sales(
-    oxygenSalePrice,
+    padArray(oxygenSalePrice),
     averageElectricitySpotPrice,
     inflationRate / 100,
     totalCapexCost,
@@ -438,10 +463,10 @@ export default function WorkingData(props: Props) {
     discountRate / 100,
     salesMargin,
     totalOpex,
-    h2Prod,
-    elecProduced,
-    elecConsumed,
-    elecConsumedByBattery
+    paddedH2Produced,
+    paddedElectricityProduced,
+    paddedElectricityConsumed,
+    paddedElectricityConsumedByBattery
   );
 
   const cashFlow = cashFlowAnalysis(
@@ -475,9 +500,10 @@ export default function WorkingData(props: Props) {
     getSummedDiscountForOpexCost(electrolyserOMCost, discountRate, plantLife) /
     hydrogenProductionCost;
 
-  const batteryCostPerYear: number[] = new Array(plantLife)
-    .fill(batteryOMCost)
-    .map((cost, i) => cost + batteryReplacementCostsOverProjectLife[i]);
+  const batteryCostPerYear: number[] = fillProjectYearsArray(
+    plantLife,
+    (i) => batteryOMCost + batteryReplacementCostsOverProjectLife[i]
+  );
 
   const lcBattery =
     (batteryCAPEX +
@@ -488,7 +514,7 @@ export default function WorkingData(props: Props) {
       )) /
     hydrogenProductionCost;
   const lcWater =
-    getSummedDiscountForOpexCost(waterOMCost, discountRate, plantLife) /
+    getSummedDiscountForOpexValues(waterOMCost, discountRate, plantLife) /
     hydrogenProductionCost;
   const lcAdditionalCosts =
     (additionalUpfrontCosts +
@@ -499,7 +525,7 @@ export default function WorkingData(props: Props) {
       )) /
     hydrogenProductionCost;
   const lcOxygenSale =
-    getSummedDiscountForOpexCost(oxygenSalePrice, discountRate, plantLife) /
+    getSummedDiscountForOpexValues(oxygenSalePrice, discountRate, plantLife) /
     hydrogenProductionCost;
 
   const lcStackReplacement =
@@ -509,27 +535,42 @@ export default function WorkingData(props: Props) {
       plantLife
     ) / hydrogenProductionCost;
 
-  // NOTE: This will change once electricity consumed becomes a list
-  // TODO: Need to check we are in PPA mode
-  const lcElectricityPurchase =
-    getSummedDiscountForOpexCost(
-      (electricityConsumed + electricityConsumedByBattery) * principalPPACost,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
+  const ppaCostOfElectricityConsumed = fillProjectYearsArray(
+    plantLife,
+    (i) =>
+      (electricityConsumed[i] + electricityConsumedByBattery[i]) *
+      principalPPACost
+  );
+  const lcElectricityPurchase = ppaAgreement
+    ? getSummedDiscountForOpexValues(
+        ppaCostOfElectricityConsumed,
+        discountRate,
+        plantLife
+      ) / hydrogenProductionCost
+    : 0;
+
   // TODO: check in Retail mode
+  const retailElectricitySalePrice = fillProjectYearsArray(
+    plantLife,
+    (i) =>
+      (electricityConsumed[i] +
+        electricityConsumedByBattery[i] -
+        electricityProduced[i]) *
+      averageElectricitySpotPrice
+  );
   const lcElectricitySale =
-    getSummedDiscountForOpexCost(
-      (electricityConsumed +
-        electricityConsumedByBattery -
-        electricityProduced) *
-        averageElectricitySpotPrice,
+    getSummedDiscountForOpexValues(
+      retailElectricitySalePrice,
       discountRate,
       plantLife
     ) / hydrogenProductionCost;
 
   const gridOpex = gridConnected
-    ? getSummedDiscountForOpexCost(gridConnectionOpex, discountRate, plantLife)
+    ? getSummedDiscountForOpexValues(
+        gridConnectionOpex,
+        discountRate,
+        plantLife
+      )
     : 0;
   const lcGridConnection =
     (gridConnectionCapex + gridOpex) / hydrogenProductionCost;
@@ -541,33 +582,35 @@ export default function WorkingData(props: Props) {
       <BasicTable
         title="Summary of Results"
         data={{
-          "Power Plant Capacity Factor": [summary[`${POWER_PLANT_CF}`] * 100],
-          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
-            summary[`${RATED_CAPACITY_TIME}`] * 100,
-          ],
-          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
-            summary[`${TOTAL_OPERATING_TIME}`] * 100,
-          ],
-          "Electrolyser Capacity Factor": [summary[`${ELECTROLYSER_CF}`] * 100],
-          "Energy Consumed by Electrolyser (MWh/yr)": [electricityConsumed],
-          "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
+          "Power Plant Capacity Factor": summary[`${POWER_PLANT_CF}`].map(
+            (x) => x * 100
+          ),
+          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
+            summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100),
+          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": summary[
+            `${TOTAL_OPERATING_TIME}`
+          ].map((x) => x * 100),
+          "Electrolyser Capacity Factor": summary[`${ELECTROLYSER_CF}`].map(
+            (x) => x * 100
+          ),
+          "Energy Consumed by Electrolyser (MWh/yr)": electricityConsumed,
+          "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
             electricityProduced,
-          ],
-          "Hydrogen Output [t/yr]": [h2Produced],
-          LCH2: [lch2],
-          "H2 Retail Price": [h2RetailPrice],
+          "Hydrogen Output [t/yr]": h2Produced,
+          LCH2: Array(plantLife).fill(lch2),
+          "H2 Retail Price": Array(plantLife).fill(h2RetailPrice),
         }}
       />
       {/* Comment out for displaying */}
       {/* <BasicTable
         data={{
-          h2Prod,
-          elecProduced,
-          elecConsumed,
-          elecConsumedByBattery,
+          paddedH2Produced,
+          paddedElectricityProduced,
+          paddedElectricityConsumed,
+          paddedElectricityConsumedByBattery,
           h2Sales,
           electricitySales,
-          oxygenSales,
+          oxygenSales: padArray(oxygenSales),
           annualSales,
           totalCost,
           totalCostWithDiscount,

@@ -9,3 +9,15 @@ export const HYDROGEN_OUTPUT_FIXED =
   "Hydrogen Output for Fixed Operation [t/yr]";
 export const HYDROGEN_OUTPUT_VARIABLE =
   "Hydrogen Output for Variable Operation [t/yr]";
+
+export const SUMMARY_KEYS = [
+  POWER_PLANT_CF,
+  RATED_CAPACITY_TIME,
+  TOTAL_OPERATING_TIME,
+  ELECTROLYSER_CF,
+  ENERGY_INPUT,
+  ENERGY_OUTPUT,
+  BATTERY_OUTPUT,
+  HYDROGEN_OUTPUT_FIXED,
+  HYDROGEN_OUTPUT_VARIABLE,
+];

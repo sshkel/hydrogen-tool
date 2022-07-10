@@ -1,5 +1,6 @@
 import { maxDegradationStackReplacementYears } from "../components/charts/cost-functions";
 import { StackReplacementType } from "../types";
+import { mean, sum } from "./Utils";
 import {
   BATTERY_OUTPUT,
   ELECTROLYSER_CF,
@@ -9,6 +10,7 @@ import {
   HYDROGEN_OUTPUT_VARIABLE,
   POWER_PLANT_CF,
   RATED_CAPACITY_TIME,
+  SUMMARY_KEYS,
   TOTAL_OPERATING_TIME,
 } from "./consts";
 
@@ -46,6 +48,10 @@ export type ModelHourlyOperation = {
 };
 export type ModelSummary = {
   [k: string]: number;
+};
+
+export type ModelSummaryPerYear = {
+  [k: string]: number[];
 };
 
 export class HydrogenModel {
@@ -132,7 +138,7 @@ export class HydrogenModel {
   }
   calculateElectrolyserOutput(
     hourlyOperation: ModelHourlyOperation
-  ): ModelSummary {
+  ): ModelSummaryPerYear {
     const operatingOutputs = this.getTabulatedOutput(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
@@ -148,54 +154,21 @@ export class HydrogenModel {
     return operatingOutputs;
   }
 
-  calculateProjectSummary(modelSummaryPerYear: ModelSummary[]): ModelSummary {
-    let summary: ModelSummary = {};
-    summary[POWER_PLANT_CF] = this.getMeanForKey(
-      POWER_PLANT_CF,
-      modelSummaryPerYear
-    );
-    summary[RATED_CAPACITY_TIME] = this.getMeanForKey(
-      RATED_CAPACITY_TIME,
-      modelSummaryPerYear
-    );
-    summary[TOTAL_OPERATING_TIME] = this.getMeanForKey(
-      TOTAL_OPERATING_TIME,
-      modelSummaryPerYear
-    );
-    summary[ELECTROLYSER_CF] = this.getMeanForKey(
-      ELECTROLYSER_CF,
-      modelSummaryPerYear
-    );
-    summary[ENERGY_INPUT] = this.getMeanForKey(
-      ENERGY_INPUT,
-      modelSummaryPerYear
-    );
-    summary[ENERGY_OUTPUT] = this.getMeanForKey(
-      ENERGY_OUTPUT,
-      modelSummaryPerYear
-    );
-    summary[BATTERY_OUTPUT] = this.getMeanForKey(
-      BATTERY_OUTPUT,
-      modelSummaryPerYear
-    );
-    summary[HYDROGEN_OUTPUT_FIXED] = this.getMeanForKey(
-      HYDROGEN_OUTPUT_FIXED,
-      modelSummaryPerYear
-    );
-    summary[HYDROGEN_OUTPUT_VARIABLE] = this.getMeanForKey(
-      HYDROGEN_OUTPUT_VARIABLE,
-      modelSummaryPerYear
-    );
+  calculateProjectSummary(
+    modelSummaryPerYear: ModelSummaryPerYear[]
+  ): ModelSummaryPerYear {
+    let projectSummary: ModelSummaryPerYear = {};
+    SUMMARY_KEYS.forEach((key) => {
+      projectSummary[key] = [];
+    });
 
-    return summary;
-  }
+    modelSummaryPerYear.forEach((yearSummary) => {
+      SUMMARY_KEYS.forEach((key) => {
+        projectSummary[key].push(yearSummary[key][0]);
+      });
+    });
 
-  private getMeanForKey(key: string, modelSummaryPerYear: ModelSummary[]) {
-    let sum = 0;
-    for (const summary of modelSummaryPerYear) {
-      sum += summary[key];
-    }
-    return sum / modelSummaryPerYear.length || 0;
+    return projectSummary;
   }
 
   private getTabulatedOutput(
@@ -208,10 +181,7 @@ export class HydrogenModel {
     genCapacity: number,
     kgtoTonne: number,
     hoursPerYear: number
-  ): ModelSummary {
-    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-    const mean = (arr: number[]) => sum(arr) / arr.length || 0;
-    // Generator Capacity Factor
+  ): ModelSummaryPerYear {
     const generator_capacity_factor = mean(generatorCapFactor);
     // Time Electrolyser is at its Rated Capacity"
     const time_electrolyser =
@@ -240,16 +210,16 @@ export class HydrogenModel {
       -1 *
       (1 - (1 - this.batteryEfficiency) / 2);
 
-    let summary: ModelSummary = {};
-    summary[POWER_PLANT_CF] = generator_capacity_factor;
-    summary[RATED_CAPACITY_TIME] = time_electrolyser;
-    summary[TOTAL_OPERATING_TIME] = total_ops_time;
-    summary[ELECTROLYSER_CF] = achieved_electrolyser_cf;
-    summary[ENERGY_INPUT] = energy_in_electrolyser;
-    summary[ENERGY_OUTPUT] = surplus;
-    summary[BATTERY_OUTPUT] = totalBatteryOutput;
-    summary[HYDROGEN_OUTPUT_FIXED] = hydrogen_fixed;
-    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogen_variable;
+    let summary: ModelSummaryPerYear = {};
+    summary[POWER_PLANT_CF] = [generator_capacity_factor];
+    summary[RATED_CAPACITY_TIME] = [time_electrolyser];
+    summary[TOTAL_OPERATING_TIME] = [total_ops_time];
+    summary[ELECTROLYSER_CF] = [achieved_electrolyser_cf];
+    summary[ENERGY_INPUT] = [energy_in_electrolyser];
+    summary[ENERGY_OUTPUT] = [surplus];
+    summary[BATTERY_OUTPUT] = [totalBatteryOutput];
+    summary[HYDROGEN_OUTPUT_FIXED] = [hydrogen_fixed];
+    summary[HYDROGEN_OUTPUT_VARIABLE] = [hydrogen_variable];
 
     return summary;
   }

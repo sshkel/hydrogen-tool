@@ -1,4 +1,4 @@
-import { decomissioning, first, padArray } from "../../model/Utils";
+import { decomissioning, first, padArray, sum } from "../../model/Utils";
 import { DepreciationProfile } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>
@@ -50,13 +50,24 @@ export const getIndirectCost = (
 ) => roundToNearestThousand(capex * (costAsPercentageOfCapex / 100));
 
 // Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + inflationRate)^year)
-export const getOpexPerYearInflation = (
+export const getOpexPerYearInflationConstant = (
   cost: number,
   inflationRate: number,
   years: number
 ): number[] => {
   return [...Array(years).keys()].map((i) =>
     roundToTwoDP(cost * (1 + inflationRate / 100) ** (i + 1))
+  );
+};
+
+// Return a list of the OPEX per year for 1..$years inclusive, using the formula (costPerYear  * (1 + inflationRate)^year)
+export const getOpexPerYearInflation = (
+  costPerYear: number[],
+  inflationRate: number,
+  years: number
+): number[] => {
+  return [...Array(years).keys()].map((i) =>
+    roundToTwoDP(costPerYear[i] * (1 + inflationRate / 100) ** (i + 1))
   );
 };
 
@@ -95,7 +106,7 @@ export function maxDegradationStackReplacementYears(
   return replacementYears;
 }
 
-export function cumulativeStackReplacementYears(
+export function cumulativeStackReplacementYearsConstant(
   // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
   operatingHoursPerYear: number,
   stackLifetime: number,
@@ -116,6 +127,34 @@ export function cumulativeStackReplacementYears(
   // Don't include final project year as there is no need for stack replacement
   for (let year of candidateReplacementYears) {
     currentStackLifetime -= operatingHoursPerYear;
+    if (currentStackLifetime <= 0) {
+      stackReplacementYears.push(year);
+      currentStackLifetime += stackLifetime;
+    }
+  }
+
+  return stackReplacementYears;
+}
+
+export function cumulativeStackReplacementYears(
+  // array of size projectLife with operating hours per year
+  operatingHoursPerYear: number[],
+  stackLifetime: number,
+  projectLife: number
+): number[] {
+  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
+  //the total operating time surpassing a multiple of the stack lifetime.
+  //The final year is never included for stack replacement, so is excluded from the iteration.
+  //"""
+  let currentStackLifetime: number = stackLifetime;
+
+  const candidateReplacementYears = projectYears(projectLife - 1);
+
+  const stackReplacementYears = [];
+  // Don't include final project year as there is no need for stack replacement
+  for (let year of candidateReplacementYears) {
+    // Account for zero indexing in operating hours per year
+    currentStackLifetime -= operatingHoursPerYear[year - 1] * 8760;
     if (currentStackLifetime <= 0) {
       stackReplacementYears.push(year);
       currentStackLifetime += stackLifetime;
@@ -274,7 +313,7 @@ export function cashFlowAnalysis(
 }
 
 export function sales(
-  oxygenSalePrice: number,
+  oxygenSales: number[],
   averageElectricitySpotPrice: number,
   inflationRate: number,
   totalCapexCost: number,
@@ -290,7 +329,6 @@ export function sales(
   electricityConsumedByBattery: number[]
 ) {
   const inflation = applyInflation(inflationRate);
-  const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
   const electricitySales = electricityProduced.map(
     (_: number, i: number) =>
       (electricityProduced[i] -
@@ -299,7 +337,6 @@ export function sales(
       averageElectricitySpotPrice
   );
 
-  const oxygenSales = h2Produced.map((_: number, i: number) => oxygenSalePrice);
   const totalInvestmentRequired = first(
     totalCapexCost + totalEpcCost + totalLandCost,
     projectLife

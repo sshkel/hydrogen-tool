@@ -2,10 +2,10 @@ import {
   applyInflation,
   calculateBatteryCapex,
   calculateCapex,
-  cumulativeStackReplacementYears,
+  cumulativeStackReplacementYearsConstant,
   getBaseLog,
   getIndirectCost,
-  getOpexPerYearInflation,
+  getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
   roundToNearestThousand,
@@ -43,7 +43,7 @@ describe("Cost function calculations", () => {
   });
 
   it("calculates opex per year", () => {
-    const opex = getOpexPerYearInflation(1000, 0.1, 10);
+    const opex = getOpexPerYearInflationConstant(1000, 0.1, 10);
     expect(opex).toHaveLength(10);
     const expected = [
       1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
@@ -70,7 +70,11 @@ describe("Cost function calculations", () => {
   });
 
   it("returns years where stack is needs replacement", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(1, 5, 100);
+    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
+      1,
+      5,
+      100
+    );
     // 100th year should not be included
     expect(stackReplacementYears).toHaveLength(19);
     const expected = [...Array(19).keys()].map((i) => 5 * (i + 1));
@@ -79,13 +83,21 @@ describe("Cost function calculations", () => {
   });
 
   it("returns years where stack needs replacement with boundary cases", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(2, 5, 20);
+    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
+      2,
+      5,
+      20
+    );
     expect(stackReplacementYears).toHaveLength(7);
     expect(stackReplacementYears).toEqual([3, 5, 8, 10, 13, 15, 18]);
   });
 
   it("handles when operating hours per year exceed stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(2, 1, 10);
+    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
+      2,
+      1,
+      10
+    );
     // Final year still not included
     expect(stackReplacementYears).toHaveLength(9);
     const expected = [...Array(9).keys()].map((i) => i + 1);
@@ -94,7 +106,11 @@ describe("Cost function calculations", () => {
   });
 
   it("handles when operating hours per year are equal to stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(1, 1, 10);
+    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
+      1,
+      1,
+      10
+    );
     // Final year still not included
     expect(stackReplacementYears).toHaveLength(9);
     const expected = [...Array(9).keys()].map((i) => i + 1);
