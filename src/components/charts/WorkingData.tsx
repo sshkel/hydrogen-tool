@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 
 import { DataModel, HydrogenModel, ModelSummary } from "../../model/Model";
 import { activeYears, dropPadding } from "../../model/Utils";
+import {
+  ELECTROLYSER_CF,
+  HYDROGEN_OUTPUT_FIXED,
+  HYDROGEN_OUTPUT_VARIABLE,
+  POWER_PLANT_CF,
+  RATED_CAPACITY_TIME,
+  TOTAL_OPERATING_TIME,
+} from "../../model/consts";
 import { InputFields } from "../../types";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -361,8 +369,8 @@ export default function WorkingData(props: Props) {
 
   const h2Produced =
     props.data.profile === "Fixed"
-      ? summary["Hydrogen Output for Fixed Operation [t/yr]"]
-      : summary["Hydrogen Output for Variable Operation [t/yr"];
+      ? summary[`${HYDROGEN_OUTPUT_FIXED}`]
+      : summary[`${HYDROGEN_OUTPUT_VARIABLE}`];
   const waterOMCost =
     h2Produced * electrolyserWaterCost * waterRequirementOfElectrolyser;
   const waterCost = getOpexPerYearInflation(
@@ -533,18 +541,14 @@ export default function WorkingData(props: Props) {
       <BasicTable
         title="Summary of Results"
         data={{
-          "Power Plant Capacity Factor": [
-            summary["Generator Capacity Factor"] * 100,
-          ],
+          "Power Plant Capacity Factor": [summary[`${POWER_PLANT_CF}`] * 100],
           "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
-            summary["Time Electrolyser is at its Rated Capacity"] * 100,
+            summary[`${RATED_CAPACITY_TIME}`] * 100,
           ],
           "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
-            summary["Total Time Electrolyser is Operating"] * 100,
+            summary[`${TOTAL_OPERATING_TIME}`] * 100,
           ],
-          "Electrolyser Capacity Factor": [
-            summary["Achieved Electrolyser Capacity Factor"] * 100,
-          ],
+          "Electrolyser Capacity Factor": [summary[`${ELECTROLYSER_CF}`] * 100],
           "Energy Consumed by Electrolyser (MWh/yr)": [electricityConsumed],
           "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
             electricityProduced,

@@ -1,5 +1,16 @@
 import { maxDegradationStackReplacementYears } from "../components/charts/cost-functions";
 import { StackReplacementType } from "../types";
+import {
+  BATTERY_OUTPUT,
+  ELECTROLYSER_CF,
+  ENERGY_INPUT,
+  ENERGY_OUTPUT,
+  HYDROGEN_OUTPUT_FIXED,
+  HYDROGEN_OUTPUT_VARIABLE,
+  POWER_PLANT_CF,
+  RATED_CAPACITY_TIME,
+  TOTAL_OPERATING_TIME,
+} from "./consts";
 
 export type DataModel = {
   batteryLifetime: number;
@@ -138,40 +149,45 @@ export class HydrogenModel {
   }
 
   calculateProjectSummary(modelSummaryPerYear: ModelSummary[]): ModelSummary {
-    return {
-      "Generator Capacity Factor": this.getMeanForKey(
-        "Generator Capacity Factor",
-        modelSummaryPerYear
-      ),
-      "Time Electrolyser is at its Rated Capacity": this.getMeanForKey(
-        "Time Electrolyser is at its Rated Capacity",
-        modelSummaryPerYear
-      ),
-      "Total Time Electrolyser is Operating": this.getMeanForKey(
-        "Total Time Electrolyser is Operating",
-        modelSummaryPerYear
-      ),
-      "Achieved Electrolyser Capacity Factor": this.getMeanForKey(
-        "Achieved Electrolyser Capacity Factor",
-        modelSummaryPerYear
-      ),
-      "Energy in to Electrolyser [MWh/yr]": this.getMeanForKey(
-        "Energy in to Electrolyser [MWh/yr]",
-        modelSummaryPerYear
-      ),
-      "Surplus Energy [MWh/yr]": this.getMeanForKey(
-        "Surplus Energy [MWh/yr]",
-        modelSummaryPerYear
-      ),
-      "Hydrogen Output for Fixed Operation [t/yr]": this.getMeanForKey(
-        "Hydrogen Output for Fixed Operation [t/yr]",
-        modelSummaryPerYear
-      ),
-      "Hydrogen Output for Variable Operation [t/yr]": this.getMeanForKey(
-        "Hydrogen Output for Variable Operation [t/yr]",
-        modelSummaryPerYear
-      ),
-    };
+    let summary: ModelSummary = {};
+    summary[POWER_PLANT_CF] = this.getMeanForKey(
+      POWER_PLANT_CF,
+      modelSummaryPerYear
+    );
+    summary[RATED_CAPACITY_TIME] = this.getMeanForKey(
+      RATED_CAPACITY_TIME,
+      modelSummaryPerYear
+    );
+    summary[TOTAL_OPERATING_TIME] = this.getMeanForKey(
+      TOTAL_OPERATING_TIME,
+      modelSummaryPerYear
+    );
+    summary[ELECTROLYSER_CF] = this.getMeanForKey(
+      ELECTROLYSER_CF,
+      modelSummaryPerYear
+    );
+    summary[ENERGY_INPUT] = this.getMeanForKey(
+      ENERGY_INPUT,
+      modelSummaryPerYear
+    );
+    summary[ENERGY_OUTPUT] = this.getMeanForKey(
+      ENERGY_OUTPUT,
+      modelSummaryPerYear
+    );
+    summary[BATTERY_OUTPUT] = this.getMeanForKey(
+      BATTERY_OUTPUT,
+      modelSummaryPerYear
+    );
+    summary[HYDROGEN_OUTPUT_FIXED] = this.getMeanForKey(
+      HYDROGEN_OUTPUT_FIXED,
+      modelSummaryPerYear
+    );
+    summary[HYDROGEN_OUTPUT_VARIABLE] = this.getMeanForKey(
+      HYDROGEN_OUTPUT_VARIABLE,
+      modelSummaryPerYear
+    );
+
+    return summary;
   }
 
   private getMeanForKey(key: string, modelSummaryPerYear: ModelSummary[]) {
@@ -224,17 +240,18 @@ export class HydrogenModel {
       -1 *
       (1 - (1 - this.batteryEfficiency) / 2);
 
-    return {
-      "Generator Capacity Factor": generator_capacity_factor,
-      "Time Electrolyser is at its Rated Capacity": time_electrolyser,
-      "Total Time Electrolyser is Operating": total_ops_time,
-      "Achieved Electrolyser Capacity Factor": achieved_electrolyser_cf,
-      "Energy in to Electrolyser [MWh/yr]": energy_in_electrolyser,
-      "Surplus Energy [MWh/yr]": surplus,
-      "Total Battery Output [MWh/yr]": totalBatteryOutput,
-      "Hydrogen Output for Fixed Operation [t/yr]": hydrogen_fixed,
-      "Hydrogen Output for Variable Operation [t/yr]": hydrogen_variable,
-    };
+    let summary: ModelSummary = {};
+    summary[POWER_PLANT_CF] = generator_capacity_factor;
+    summary[RATED_CAPACITY_TIME] = time_electrolyser;
+    summary[TOTAL_OPERATING_TIME] = total_ops_time;
+    summary[ELECTROLYSER_CF] = achieved_electrolyser_cf;
+    summary[ENERGY_INPUT] = energy_in_electrolyser;
+    summary[ENERGY_OUTPUT] = surplus;
+    summary[BATTERY_OUTPUT] = totalBatteryOutput;
+    summary[HYDROGEN_OUTPUT_FIXED] = hydrogen_fixed;
+    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogen_variable;
+
+    return summary;
   }
 
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,

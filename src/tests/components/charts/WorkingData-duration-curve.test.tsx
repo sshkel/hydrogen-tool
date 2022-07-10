@@ -18,9 +18,9 @@ import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electroly
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
   hybridBatteryGridSurplusRetailScenario,
-  solarPvWithBatteryScenario,
-  solarPvWithElectrolyserScenario,
-  windElectrolyserScenario,
+  standaloneSolarScenario,
+  standaloneSolarWithBatteryScenario,
+  standaloneWindScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -40,7 +40,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={solarPvWithElectrolyserScenario}
+          data={standaloneSolarScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -81,7 +81,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={solarPvWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -121,7 +121,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windElectrolyserScenario}
+          data={standaloneWindScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />

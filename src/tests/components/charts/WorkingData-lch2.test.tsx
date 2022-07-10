@@ -6,9 +6,9 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   hybridBatteryGridSurplusRetailScenario,
-  solarPvWithBatteryScenario,
-  solarPvWithElectrolyserScenario,
-  windElectrolyserScenario,
+  standaloneSolarScenario,
+  standaloneSolarWithBatteryScenario,
+  standaloneWindScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -28,7 +28,7 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={solarPvWithElectrolyserScenario}
+          data={standaloneSolarScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -60,7 +60,7 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={solarPvWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -92,7 +92,7 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windElectrolyserScenario}
+          data={standaloneWindScenario}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />

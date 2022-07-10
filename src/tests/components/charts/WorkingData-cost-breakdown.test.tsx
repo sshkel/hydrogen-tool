@@ -3,7 +3,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { solarPvWithBatteryScenario } from "../../scenario";
+import { standaloneSolarWithBatteryScenario } from "../../scenario";
 
 const mockLoader: () => Promise<any[]> = () => new Promise(() => {});
 
@@ -268,7 +268,7 @@ describe("Working Data calculations", () => {
     it("calculates cost breakdown for complex scenario", () => {
       const wrapper = shallow(
         <WorkingData
-          data={solarPvWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario}
           loadSolar={mockLoader}
           loadWind={mockLoader}
         />
@@ -473,7 +473,7 @@ describe("Working Data calculations", () => {
     it("calculates indirect costs in complex scenarios", () => {
       const wrapper = shallow(
         <WorkingData
-          data={solarPvWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario}
           loadSolar={mockLoader}
           loadWind={mockLoader}
         />
