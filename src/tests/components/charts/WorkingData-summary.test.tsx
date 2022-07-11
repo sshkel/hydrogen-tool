@@ -12,6 +12,7 @@ import {
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
+  standaloneWindWithBatteryAndDegradationScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -27,8 +28,8 @@ describe("Model summary", () => {
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
   });
 
-  describe("LCH2", () => {
-    it("calculates lch2 for solar", (done) => {
+  describe("Summary of Results", () => {
+    it("calculates summary of results for solar", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneSolarScenario}
@@ -70,7 +71,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for solar with battery", (done) => {
+    it("calculates summary of results for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneSolarWithBatteryScenario}
@@ -112,7 +113,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for wind", (done) => {
+    it("calculates summary of results for wind", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneWindScenario}
@@ -154,7 +155,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for wind with ppa agreement", (done) => {
+    it("calculates summary of results for wind with ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           data={windWithPPAScenario}
@@ -196,7 +197,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for hybrid with battery, grid and surplus retail", (done) => {
+    it("calculates summary of results for hybrid with battery, grid and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
           data={hybridBatteryGridSurplusRetailScenario}
@@ -238,7 +239,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for wind with battery and PPA agreement", (done) => {
+    it("calculates summary of results for wind with battery and PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           data={windWithBatteryAndPPAScenario}
@@ -280,7 +281,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for solar with oxygen and electricity sales", (done) => {
+    it("calculates summary of results for solar with oxygen and electricity sales", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneSolarScenarioAdditionalRevenueStreams}
@@ -322,7 +323,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for solar with stack degradation", (done) => {
+    it("calculates summary of results for solar with stack degradation", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneSolarWithStackDegradationScenario}
@@ -364,7 +365,7 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for hybrid with degradation", (done) => {
+    it("calculates summary of results for hybrid with degradation", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneHybridWithDegradationScenario}
@@ -401,6 +402,48 @@ describe("Model summary", () => {
         expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(1037.638);
         expect(data["LCH2"].at(0)).toBeCloseTo(4.429);
         expect(data["H2 Retail Price"].at(0)).toBeCloseTo(5.429);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates summary of results for wind with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneWindWithBatteryAndDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(BasicTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"].at(0)).toBeCloseTo(36.763);
+        expect(
+          data[
+            "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"
+          ].at(0)
+        ).toBeCloseTo(23.758);
+        expect(
+          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"].at(0)
+        ).toBeCloseTo(85.883);
+        expect(data["Electrolyser Capacity Factor"].at(0)).toBeCloseTo(51.699);
+        expect(
+          data["Energy Consumed by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(45_288.612);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"].at(0)
+        ).toBeCloseTo(3_017.854);
+        expect(data["Hydrogen Output [t/yr]"].at(0)).toBeCloseTo(866.564);
+        expect(data["LCH2"].at(0)).toBeCloseTo(3.836);
+        expect(data["H2 Retail Price"].at(0)).toBeCloseTo(4.836);
 
         done();
       }, TIMEOUT);

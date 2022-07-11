@@ -12,6 +12,7 @@ import {
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
+  standaloneWindWithBatteryAndDegradationScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -538,6 +539,67 @@ describe("Working Data calculations", () => {
       const electricitySales = new Array(20).fill(0);
 
       const oxygenSales = new Array(20).fill(0);
+
+      const totalSales = hydrogenSales;
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const opexChart = wrapper
+          .find(CostLineChart)
+          .filterWhere((e) => e.prop("title") === "Sales");
+        expect(opexChart).toHaveLength(1);
+        const datapoints = opexChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(4);
+
+        expect(datapoints[0].label).toEqual("Hydrogen Sales");
+
+        datapoints[0].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(hydrogenSales[i], 2)
+        );
+
+        expect(datapoints[1].label).toEqual("Electricity Sales");
+        datapoints[1].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(electricitySales[i], 2)
+        );
+
+        expect(datapoints[2].label).toEqual("Oxygen Sales");
+        datapoints[2].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(oxygenSales[i], 2)
+        );
+
+        expect(datapoints[3].label).toEqual("Total Sales");
+        datapoints[3].data.forEach((num, i) =>
+          expect(num).toBeCloseTo(totalSales[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates sales for wind with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneWindWithBatteryAndDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const hydrogenSales = [
+        4805111.262889797, 4849436.586758338, 4894710.529707105,
+        4939880.626432193, 4985857.688552939, 5032003.850307461,
+        5078515.586240595, 5125078.394706222, 5172172.361535969,
+        5219677.00418809, 5267465.186097277, 5929548.587151664,
+        5982898.13705361, 6036180.162534405, 6089855.470118385, 6143347.1656682,
+        6197335.6729158135, 6250746.126985426, 6303676.261744287,
+        6356640.541892363, 6409619.979511622, 6462647.0364217,
+        7269466.554035588, 7328130.92502591, 7386532.887508535,
+      ];
+
+      const electricitySales = new Array(25).fill(0);
+
+      const oxygenSales = new Array(25).fill(0);
 
       const totalSales = hydrogenSales;
 

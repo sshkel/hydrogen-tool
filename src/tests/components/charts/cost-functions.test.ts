@@ -138,22 +138,22 @@ describe("Cost function calculations", () => {
       maxElecDegradation,
       projectLife
     );
-    const expected = [10, 20];
-    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
+    const expected = [7, 14];
+    // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
     expect(actual).toEqual(expected);
   });
 
   it("Electrolyser degradation works for no replacements", () => {
     const maxElecDegradation = 0.7;
     const yearlyElecDegradation = 0.1;
-    const projectLife = 10;
+    const projectLife = 7;
     const actual = maxDegradationStackReplacementYears(
       yearlyElecDegradation,
       maxElecDegradation,
       projectLife
     );
     const expected: number[] = [];
-    // electrolyser replacement at years 10 and 20 as degrades more than 60 percent
+    // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
     expect(actual).toEqual(expected);
   });
 

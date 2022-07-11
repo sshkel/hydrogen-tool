@@ -12,6 +12,7 @@ import {
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
+  standaloneWindWithBatteryAndDegradationScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -298,6 +299,39 @@ describe("Working Data calculations", () => {
 
       const costBreakdown = [
         2.402, 0.89, 0, 0.523, 0.236, 0, 0, 0.328, 0.05, 0, 0, 0, 0,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere(
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+          );
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+
+        datapoints[0].data.forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for wind with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneWindWithBatteryAndDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const costBreakdown = [
+        1.451, 0.967, 0, 0.423, 0.282, 0, 0, 0.271, 0.05, 0.392, 0, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state

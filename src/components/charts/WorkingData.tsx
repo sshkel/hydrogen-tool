@@ -598,18 +598,22 @@ export default function WorkingData(props: Props) {
         }}
       />
       {/* Comment out for displaying */}
-      <BasicTable
+      {/* <BasicTable
         data={{
           paddedH2Produced,
           paddedElectricityProduced,
           h2Sales,
+          totalCost,
+          totalCostWithDiscount,
+          h2ProducedKgLCA,
           electricitySales,
           oxygenSales,
           annualSales,
+          waterOMCost: padArray(waterOMCost),
           waterCost: padArray(waterCost),
           ...cashFlow,
         }}
-      />
+      /> */}
       <DurationCurve
         title="Generator Duration Curve"
         data={hourlyOperations.Generator_CF}

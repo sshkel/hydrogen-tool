@@ -12,6 +12,7 @@ import {
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
+  standaloneWindWithBatteryAndDegradationScenario,
   windWithBatteryAndPPAScenario,
   windWithPPAScenario,
 } from "../../scenario";
@@ -343,6 +344,45 @@ describe("Working Data calculations", () => {
         29086139.625642657, 29491932.24143811, 34931207.04175541,
         40375017.11555111, 45823964.68661668, 51276826.974499196,
         51276826.974499196,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(CostBarChart)
+          .filterWhere((e) => e.prop("title") === "Cash Flow Analysis");
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("datapoints");
+        expect(datapoints).toHaveLength(1);
+        expect(datapoints.at(0)).toEqual({
+          label: "Cash Flow Analysis",
+          data: cashFlowAnalysis,
+        });
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates cash flow analysis for wind with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneWindWithBatteryAndDegradationScenario}
+          loadSolar={loadSolar}
+          loadWind={loadWind}
+        />
+      );
+
+      const cashFlowAnalysis = [
+        -19_018_000.0, -15758081.792626027, -12491684.413326934,
+        -9238105.707391521, -6583860.887321843, -4529893.368832776,
+        -2472845.962814278, -413187.6247566305, 1648376.7594082698,
+        3711456.382837086, 3832901.6992062638, 2952579.401431962,
+        6454076.191112272, 9977374.685213754, 13522049.182880452,
+        17087983.739968438, 20674653.05145514, 24281993.232161693,
+        27909185.56869737, 31555468.5976053, 32733662.229923964,
+        36416855.16607022, 34817711.34560173, 39058243.293695085,
+        43319528.59298895, 47600888.27748296, 47600888.27748296,
       ];
 
       // Sleep to wait for CSV to load and set state

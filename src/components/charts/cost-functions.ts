@@ -90,17 +90,16 @@ export function maxDegradationStackReplacementYears(
   maximumDegradationBeforeReplacement: number,
   projectLife: number
 ): number[] {
-  let runningYear = 1;
+  let currentStackDegradation = 0;
   const replacementYears = [];
   for (let year of projectYears(projectLife)) {
-    // TODO Explain this calculation here
-    const stackDegradationForYear =
-      1 - 1 / (1 + stackDegradation) ** runningYear;
-    if (stackDegradationForYear > maximumDegradationBeforeReplacement) {
-      runningYear = 1;
+    if (currentStackDegradation >= maximumDegradationBeforeReplacement) {
       replacementYears.push(year);
+      // TODO: This matches Excel but I think it has an off by one error
+      //        and at the end of the year, currentStackDegradation = stackDegradation
+      currentStackDegradation = 0;
     } else {
-      runningYear++;
+      currentStackDegradation += stackDegradation;
     }
   }
   return replacementYears;
