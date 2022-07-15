@@ -390,8 +390,8 @@ export class HydrogenModel {
 
     // Stack degradation calculation
     if (stackDegradation > 0) {
-      // Cumulative hour degradation logic
-      if (this.stackLifetime < Number.MAX_VALUE) {
+      // Cumulative hour degradation logic if defined
+      if (this.stackLifetime) {
         this.currentStackOperatingHours += electrolyser_cf.filter(
           (e) => e > 0
         ).length;
