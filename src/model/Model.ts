@@ -1,7 +1,4 @@
-import {
-  cumulativeStackReplacementYears,
-  maxDegradationStackReplacementYears,
-} from "../components/charts/cost-functions";
+import { maxDegradationStackReplacementYears } from "../components/charts/cost-functions";
 import { StackReplacementType } from "../types";
 import { mean, sum } from "./Utils";
 import {
