@@ -12,6 +12,8 @@ import outputs3 from "../resources/example3-outputs.json";
 import workingdf3 from "../resources/example3-workingdf.json";
 import { readLocalCsv } from "../resources/loader";
 
+const PROJECT_LIFE = 20;
+
 describe("Hydrogen Model", () => {
   let solar: CsvRow[];
   let wind: CsvRow[];
@@ -219,18 +221,18 @@ function compareToModel(
   outputs: ModelSummaryPerYear,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
-  const year = 1;
-  const electrolyser_outputs = model.calculateElectrolyserHourlyOperation(year);
+  const project_output = model.calculateHydrogenModel(PROJECT_LIFE);
 
-  Object.keys(electrolyser_outputs).forEach((key: string) => {
+  const hourly_outputs = model.getHourlyOperations();
+
+  Object.keys(hourly_outputs).forEach((key: string) => {
     Object.values(workingdf[key]).forEach((x: number, i: number) =>
-      expect(electrolyser_outputs[key][i]).toBeCloseTo(x, 9)
+      expect(hourly_outputs[key][i]).toBeCloseTo(x, 9)
     );
   });
 
-  const output = model.calculateElectrolyserOutput(electrolyser_outputs);
-  Object.keys(output).forEach((key: string) => {
+  Object.keys(project_output).forEach((key: string) => {
     // Check first year results only since no degradation
-    expect(output[key]).toBeCloseTo(outputs[key], 8);
+    expect(project_output[key][0]).toBeCloseTo(outputs[key], 8);
   });
 }
