@@ -2,7 +2,7 @@ import {
   CsvRow,
   DataModel,
   HydrogenModel,
-  ModelSummary,
+  ModelSummaryPerYear,
 } from "../../model/Model";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf1 from "../resources/example1-workingdf.json";
@@ -81,7 +81,7 @@ describe("Hydrogen Model", () => {
       // electrolyserStackCost: 40,
       // waterCost: 5,
       // discountRate: 4,
-      projectLife: 20,
+      // projectLife: 20,
     };
     const model = new HydrogenModel(example1, solar, wind);
     compareToModel(model, outputs1, workingdf1);
@@ -143,7 +143,7 @@ describe("Hydrogen Model", () => {
       // electrolyserStackCost: 40,
       // waterCost: 5,
       // discountRate: 4,
-      projectLife: 20,
+      // projectLife: 20,
     };
     const model = new HydrogenModel(example2, solar, wind);
 
@@ -208,7 +208,7 @@ describe("Hydrogen Model", () => {
       waterCost: 5,
       discountRate: 4,
       */
-      projectLife: 20,
+      // projectLife: 20,
     };
     const model = new HydrogenModel(example3, solar, wind);
     compareToModel(model, outputs3, workingdf3);
@@ -216,10 +216,11 @@ describe("Hydrogen Model", () => {
 });
 function compareToModel(
   model: HydrogenModel,
-  outputs: ModelSummary,
+  outputs: ModelSummaryPerYear,
   workingdf: { [key: string]: { [key: string]: number } }
 ) {
-  const electrolyser_outputs = model.calculateElectrolyserHourlyOperation();
+  const year = 1;
+  const electrolyser_outputs = model.calculateElectrolyserHourlyOperation(year);
 
   Object.keys(electrolyser_outputs).forEach((key: string) => {
     Object.values(workingdf[key]).forEach((x: number, i: number) =>
@@ -230,6 +231,6 @@ function compareToModel(
   const output = model.calculateElectrolyserOutput(electrolyser_outputs);
   Object.keys(output).forEach((key: string) => {
     // Check first year results only since no degradation
-    expect(output[key][0]).toBeCloseTo(outputs[key], 8);
+    expect(output[key]).toBeCloseTo(outputs[key], 8);
   });
 }

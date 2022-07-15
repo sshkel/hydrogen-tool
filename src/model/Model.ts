@@ -1,4 +1,7 @@
-import { maxDegradationStackReplacementYears } from "../components/charts/cost-functions";
+import {
+  cumulativeStackReplacementYears,
+  maxDegradationStackReplacementYears,
+} from "../components/charts/cost-functions";
 import { StackReplacementType } from "../types";
 import { mean, sum } from "./Utils";
 import {
@@ -34,7 +37,6 @@ export type DataModel = {
   stackReplacementType: StackReplacementType;
   stackLifetime?: number;
   maximumDegradationBeforeReplacement?: number;
-  projectLife: number;
   specCons: number;
   elecEff: number;
 };
@@ -46,11 +48,11 @@ export type CsvRow = {
 export type ModelHourlyOperation = {
   [k: string]: number[];
 };
-export type ModelSummary = {
+export type ModelSummaryPerYear = {
   [k: string]: number;
 };
 
-export type ModelSummaryPerYear = {
+export type ProjectModelSummary = {
   [k: string]: number[];
 };
 
@@ -81,12 +83,14 @@ export class HydrogenModel {
   windData: CsvRow[];
   specCons: number;
 
+  // parameters to expose to working data
+  hourlyOperationsInYearOne: ModelHourlyOperation;
+
   constructor(parameters: DataModel, solarData: CsvRow[], windData: CsvRow[]) {
     this.parameters = parameters;
     this.solarData = solarData;
     this.windData = windData;
-    this.stackReplacementYears =
-      this.initialiseStackReplacementYears(parameters);
+    this.stackReplacementYears = [];
 
     this.stackLifetime =
       parameters.stackReplacementType === "Cumulative Hours"
@@ -94,6 +98,7 @@ export class HydrogenModel {
         : Number.MAX_VALUE;
     this.currentStackOperatingHours = 0;
     this.lastStackReplacementYear = 0;
+    this.hourlyOperationsInYearOne = {};
 
     // calculated values
     this.genCapacity =
@@ -109,10 +114,94 @@ export class HydrogenModel {
     this.battMin = parameters.batteryMinCharge / 100;
     this.specCons = this.parameters.specCons * this.H2VoltoMass;
   }
+
+  calculateHydrogenModel(plantLife: number): ProjectModelSummary {
+    const { stackDegradation, solarDegradation, windDegradation } =
+      this.parameters;
+    const projectSummary =
+      stackDegradation + solarDegradation + windDegradation === 0
+        ? this.calculateHydrogenModelWithoutDegradation(plantLife)
+        : this.calculateHydrogenModelWithDegradation(plantLife);
+
+    return projectSummary;
+  }
+
+  private calculateHydrogenModelWithoutDegradation(
+    plantLife: number
+  ): ProjectModelSummary {
+    const year = 1;
+    const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
+    this.hourlyOperationsInYearOne = hourlyOperation;
+    const operatingOutputs = this.getTabulatedOutput(
+      hourlyOperation.Generator_CF,
+      hourlyOperation.Electrolyser_CF,
+      hourlyOperation.Hydrogen_prod_fixed,
+      hourlyOperation.Hydrogen_prod_variable,
+      hourlyOperation.Net_Battery_Flow,
+      this.parameters.electrolyserNominalCapacity,
+      this.genCapacity,
+      this.kgtoTonne,
+      this.hoursPerYear
+    );
+
+    let projectSummary: ProjectModelSummary = {};
+    SUMMARY_KEYS.forEach((key) => {
+      projectSummary[key] = Array(plantLife).fill(operatingOutputs[key]);
+    });
+
+    return projectSummary;
+  }
+
+  private calculateHydrogenModelWithDegradation(
+    plantLife: number
+  ): ProjectModelSummary {
+    this.stackReplacementYears = this.initialiseStackReplacementYears(
+      this.parameters,
+      plantLife
+    );
+    let year = 1;
+    // Calculate first year separately
+    const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
+    this.hourlyOperationsInYearOne = hourlyOperation;
+    const operatingOutputs = this.calculateElectrolyserOutput(hourlyOperation);
+
+    let modelSummaryPerYear: ModelSummaryPerYear[] = [];
+    modelSummaryPerYear.push(operatingOutputs);
+
+    for (year = 2; year <= plantLife; year++) {
+      const hourlyOperationsByYear =
+        this.calculateElectrolyserHourlyOperation(year);
+      modelSummaryPerYear.push(
+        this.calculateElectrolyserOutput(hourlyOperationsByYear)
+      );
+    }
+
+    let projectSummary: ProjectModelSummary = {};
+
+    SUMMARY_KEYS.forEach((key) => {
+      projectSummary[key] = [];
+    });
+
+    modelSummaryPerYear.forEach((yearSummary) => {
+      SUMMARY_KEYS.forEach((key) => {
+        projectSummary[key].push(yearSummary[key]);
+      });
+    });
+
+    return projectSummary;
+  }
+
+  /**
+   * NOTE: This must be called after #calculateHydrogenModel to be properly populated
+   * @returns hourly operations for first year of project life
+   */
+  getHourlyOperations(): ModelHourlyOperation {
+    return this.hourlyOperationsInYearOne;
+  }
+
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  // Assume if no year is passed in, we don't want to account for degradation
-  calculateElectrolyserHourlyOperation(year?: number): ModelHourlyOperation {
+  calculateElectrolyserHourlyOperation(year: number): ModelHourlyOperation {
     return this.calculateHourlyOperation(
       this.genCapacity,
       this.parameters.electrolyserNominalCapacity,
@@ -152,23 +241,6 @@ export class HydrogenModel {
     );
 
     return operatingOutputs;
-  }
-
-  calculateProjectSummary(
-    modelSummaryPerYear: ModelSummaryPerYear[]
-  ): ModelSummaryPerYear {
-    let projectSummary: ModelSummaryPerYear = {};
-    SUMMARY_KEYS.forEach((key) => {
-      projectSummary[key] = [];
-    });
-
-    modelSummaryPerYear.forEach((yearSummary) => {
-      SUMMARY_KEYS.forEach((key) => {
-        projectSummary[key].push(yearSummary[key][0]);
-      });
-    });
-
-    return projectSummary;
   }
 
   private getTabulatedOutput(
@@ -211,15 +283,15 @@ export class HydrogenModel {
       (1 - (1 - this.batteryEfficiency) / 2);
 
     let summary: ModelSummaryPerYear = {};
-    summary[POWER_PLANT_CF] = [generator_capacity_factor];
-    summary[RATED_CAPACITY_TIME] = [time_electrolyser];
-    summary[TOTAL_OPERATING_TIME] = [total_ops_time];
-    summary[ELECTROLYSER_CF] = [achieved_electrolyser_cf];
-    summary[ENERGY_INPUT] = [energy_in_electrolyser];
-    summary[ENERGY_OUTPUT] = [surplus];
-    summary[BATTERY_OUTPUT] = [totalBatteryOutput];
-    summary[HYDROGEN_OUTPUT_FIXED] = [hydrogen_fixed];
-    summary[HYDROGEN_OUTPUT_VARIABLE] = [hydrogen_variable];
+    summary[POWER_PLANT_CF] = generator_capacity_factor;
+    summary[RATED_CAPACITY_TIME] = time_electrolyser;
+    summary[TOTAL_OPERATING_TIME] = total_ops_time;
+    summary[ELECTROLYSER_CF] = achieved_electrolyser_cf;
+    summary[ENERGY_INPUT] = energy_in_electrolyser;
+    summary[ENERGY_OUTPUT] = surplus;
+    summary[BATTERY_OUTPUT] = totalBatteryOutput;
+    summary[HYDROGEN_OUTPUT_FIXED] = hydrogen_fixed;
+    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogen_variable;
 
     return summary;
   }
@@ -550,12 +622,15 @@ export class HydrogenModel {
     return this.stackReplacementYears;
   }
 
-  private initialiseStackReplacementYears(parameters: DataModel): number[] {
+  private initialiseStackReplacementYears(
+    parameters: DataModel,
+    projectLife: number
+  ): number[] {
     if (parameters.stackReplacementType === "Maximum Degradation Level") {
       return maxDegradationStackReplacementYears(
         parameters.stackDegradation,
         parameters.maximumDegradationBeforeReplacement || 0,
-        parameters.projectLife
+        projectLife
       );
     }
     return [];

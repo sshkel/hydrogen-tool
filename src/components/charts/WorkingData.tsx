@@ -5,6 +5,7 @@ import {
   DataModel,
   HydrogenModel,
   ModelSummaryPerYear,
+  ProjectModelSummary,
 } from "../../model/Model";
 import {
   dropPadding,
@@ -169,7 +170,6 @@ export default function WorkingData(props: Props) {
     stackLifetime,
     maximumDegradationBeforeReplacement,
     stackReplacementType,
-    projectLife: plantLife,
     location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
@@ -179,27 +179,8 @@ export default function WorkingData(props: Props) {
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
 
-  // If/else branch if degradation
-  let hourlyOperations = model.calculateElectrolyserHourlyOperation();
-
-  let summary = model.calculateElectrolyserOutput(hourlyOperations);
-
-  // Extract to function also checking solar and wind
-  // TODO: Optimise if no degradation
-  if (
-    solarDegradation !== 0 ||
-    windDegradation !== 0 ||
-    stackDegradation !== 0 ||
-    true
-  ) {
-    const summaries: ModelSummaryPerYear[] = [];
-    for (let year = 1; year <= plantLife; year++) {
-      const hourlyOperationsByYear =
-        model.calculateElectrolyserHourlyOperation(year);
-      summaries.push(model.calculateElectrolyserOutput(hourlyOperationsByYear));
-    }
-    summary = model.calculateProjectSummary(summaries);
-  }
+  let summary: ProjectModelSummary = model.calculateHydrogenModel(plantLife);
+  let hourlyOperations = model.getHourlyOperations();
 
   // CAPEX charts
   const electrolyserCAPEX = calculateCapex(
