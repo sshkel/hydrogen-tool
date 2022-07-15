@@ -247,21 +247,12 @@ export function cashFlowAnalysis(
     loanRepayment
   );
 
-  let interestIncurred = loanBalance.map((v: number, i: number) => {
+  let interestPaidOnLoan = loanBalance.map((v: number, i: number) => {
     return v * interestOnLoan;
   });
-  interestIncurred.pop();
-  interestIncurred = [0].concat(interestIncurred);
+  interestPaidOnLoan.pop();
+  interestPaidOnLoan = [0].concat(interestPaidOnLoan);
 
-  // interest paid on loan
-  const interestPaidOnLoan = padArray(
-    projectYears(projectLife).map((year: number) => {
-      if (year <= loanTerm) {
-        return loanRepayment * (1 + interestOnLoan) ** year - loanRepayment;
-      }
-      return 0;
-    })
-  );
   // fixed opex
   const totalOpexWithInflation = inflation(padArray(totalOpex));
   // depreciation
@@ -288,7 +279,7 @@ export function cashFlowAnalysis(
   const taxableIncome = incomePreDepreciation.map(
     (_: number, i: number) =>
       // TODO check if this formula is right (currently matches Excel)
-      incomePreDepreciation[i] - depreciation[i] + totalLoanRepayment[i]
+      incomePreDepreciation[i] - depreciation[i] + interestPaidOnLoan[i]
   );
 
   const tax = taxableIncome.map((_: number, i: number) => {
