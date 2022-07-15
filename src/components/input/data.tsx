@@ -46,20 +46,12 @@ export const data: Field[] = [
       "Rated power capacity of the battery. Sets a limit on how much the battery can charge/ discharge instantaneously.",
   },
   {
-    id: "durationOfStorage",
-    label: "Duration of Storage",
+    id: "batteryStorageDuration",
+    label: "Battery Storage Duration",
     defaultValue: 0,
     adornmentLabel: "hr",
     helperText:
       "Number of hours that the battery takes to charge/discharge at its max power level.",
-  },
-  {
-    id: "batteryNominalCapacity",
-    label: "Nominal Battery Capacity",
-    defaultValue: 0,
-    adornmentLabel: "MWh",
-    helperText:
-      "Rated energy capacity of battery (multiple of storage duration and battery power capacity). Equals 0 if battery is not in configuration.",
   },
   /******* Electrolyser Parameters *******/
   // Electrolyser Specific Consumption

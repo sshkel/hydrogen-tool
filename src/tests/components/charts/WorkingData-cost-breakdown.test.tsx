@@ -3,7 +3,10 @@ import { ShallowWrapper, shallow } from "enzyme";
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 import WorkingData from "../../../components/charts/WorkingData";
 import { InputFields } from "../../../types";
-import { standaloneSolarWithBatteryScenario } from "../../scenario";
+import {
+  defaultInputData,
+  standaloneSolarWithBatteryScenario,
+} from "../../scenario";
 
 const mockLoader: () => Promise<any[]> = () => new Promise(() => {});
 
@@ -165,7 +168,7 @@ describe("Working Data calculations", () => {
       const data: InputFields = {
         ...defaultInputData,
         batteryRatedPower: 2, // MW
-        batteryNominalCapacity: 4, // MWh
+        batteryStorageDuration: 2, // hr
         batteryCosts: 542, // A$/kWh
       };
 
@@ -448,8 +451,8 @@ describe("Working Data calculations", () => {
         ...defaultInputData,
 
         // Battery CAPEX = 100000
-        batteryRatedPower: 1, // MW
-        batteryNominalCapacity: 10, // MWh
+        batteryRatedPower: 5, // MW
+        batteryStorageDuration: 2, // hr
         batteryCosts: 10, // A$/kWh
 
         batteryEpcCosts: 10,
@@ -493,78 +496,3 @@ describe("Working Data calculations", () => {
     });
   });
 });
-
-const defaultInputData: InputFields = {
-  additionalUpfrontCosts: 0,
-  additionalAnnualCosts: 0,
-  batteryEpcCosts: 0,
-  batteryEfficiency: 0,
-  batteryMinCharge: 0,
-  batteryLandProcurementCost: 0,
-  batteryRatedPower: 0,
-  batteryCosts: 0,
-  batteryOMCost: 0,
-  batteryReplacementCost: 0,
-  batteryLifetime: 0,
-  discountRate: 0,
-  durationOfStorage: 0,
-  electrolyserCostReductionWithScale: 0,
-  electrolyserEpcCosts: 0,
-  electrolyserLandProcurementCost: 0,
-  electrolyserReferenceFoldIncrease: 0,
-  electrolyserOMCost: 0,
-  electrolyserStackReplacement: 0,
-  gridConnectionCost: 0,
-  batteryNominalCapacity: 0,
-  electrolyserNominalCapacity: 0,
-  solarNominalCapacity: 0,
-  windNominalCapacity: 0,
-  solarReferenceCapacity: 0,
-  windReferenceCapacity: 0,
-  electrolyserReferenceCapacity: 0,
-  electrolyserReferencePurchaseCost: 0,
-  solarPVFarmReferenceCost: 0,
-  windFarmReferenceCost: 0,
-  solarEpcCosts: 0,
-  solarLandProcurementCost: 0,
-  solarPVCostReductionWithScale: 0,
-  solarReferenceFoldIncrease: 0,
-  solarOpex: 0,
-  solarDegradation: 0,
-  windDegradation: 0,
-  stackReplacementType: "Cumulative Hours",
-  stackLifetime: 0,
-  stackDegradation: 0,
-  maximumDegradationBeforeReplacement: 0,
-  technology: "Solar",
-  electrolyserWaterCost: 0,
-  windCostReductionWithScale: 0,
-  windEpcCosts: 0,
-  windLandProcurementCost: 0,
-  windReferenceFoldIncrease: 0,
-  windOpex: 0,
-  plantLife: 0,
-  additionalTransmissionCharges: 0,
-  principalPPACost: 0,
-  profile: "Fixed",
-  location: "Port Headland, WA",
-  electrolyserMaximumLoad: 0,
-  electrolyserMinimumLoad: 0,
-  timeBetweenOverloading: 0,
-  maximumLoadWhenOverloading: 0,
-  waterRequirementOfElectrolyser: 0,
-  salesMargin: 0,
-  oxygenRetailPrice: 0,
-  averageElectricitySpotPrice: 0,
-  shareOfTotalInvestmentFinancedViaEquity: 0,
-  directEquityShare: 0,
-  salvageCostShare: 0,
-  decommissioningCostShare: 0,
-  loanTerm: 0,
-  interestOnLoan: 0,
-  capitalDepreciationProfile: "Straight Line",
-  taxRate: 0,
-  inflationRate: 0,
-  ppaAgreement: "false",
-  gridConnected: "false",
-};

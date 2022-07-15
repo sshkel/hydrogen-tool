@@ -158,7 +158,7 @@ export default function Input(props: Props) {
               : technologyData[0]
           }
         />
-        {[...Array(6)].map((_) => getData(pointer))}
+        {[...Array(5)].map((_) => getData(pointer))}
       </InputExpand>
       <InputExpand title="Electrolyser Parameters" id="electrolyser-parameters">
         <InputExpand

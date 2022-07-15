@@ -105,7 +105,6 @@ export default function WorkingData(props: Props) {
     windCostReductionWithScale,
     windReferenceFoldIncrease,
     batteryRatedPower = 0,
-    batteryNominalCapacity,
     batteryMinCharge = 0,
     batteryCosts,
     batteryEfficiency,
@@ -117,7 +116,7 @@ export default function WorkingData(props: Props) {
     batteryReplacementCost = 0,
     batteryLifetime = 0,
     plantLife,
-    durationOfStorage,
+    batteryStorageDuration = 0,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
     electrolyserMinimumLoad,
@@ -156,7 +155,7 @@ export default function WorkingData(props: Props) {
     batteryLifetime,
     batteryMinCharge,
     batteryEfficiency,
-    durationOfStorage,
+    batteryStorageDuration,
     batteryRatedPower,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
@@ -212,6 +211,7 @@ export default function WorkingData(props: Props) {
     : 0;
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 
+  const batteryNominalCapacity = batteryRatedPower * batteryStorageDuration;
   const batteryCAPEX = calculateBatteryCapex(
     batteryRatedPower,
     batteryNominalCapacity,

@@ -18,7 +18,7 @@ export type DataModel = {
   batteryLifetime: number;
   batteryMinCharge: number;
   batteryEfficiency: number;
-  durationOfStorage: number;
+  batteryStorageDuration: number;
   batteryRatedPower: number;
   timeBetweenOverloading: number;
   maximumLoadWhenOverloading: number;
@@ -107,7 +107,7 @@ export class HydrogenModel {
     this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
-      parameters.batteryRatedPower * this.parameters.durationOfStorage;
+      parameters.batteryRatedPower * this.parameters.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = parameters.batteryMinCharge / 100;
     this.specCons = this.parameters.specCons * this.H2VoltoMass;
@@ -218,7 +218,7 @@ export class HydrogenModel {
       this.elecOverload,
       this.parameters.timeBetweenOverloading,
       this.batteryEnergy,
-      this.parameters.durationOfStorage,
+      this.parameters.batteryStorageDuration,
       this.batteryEfficiency,
       this.parameters.batteryRatedPower,
       this.battMin,

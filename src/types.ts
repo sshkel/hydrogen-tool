@@ -30,7 +30,7 @@ export interface InputFields {
   batteryReplacementCost?: number;
   batteryLifetime?: number;
   discountRate: number;
-  durationOfStorage: number;
+  batteryStorageDuration?: number;
   electrolyserCostReductionWithScale: number;
   electrolyserEpcCosts: number;
   electrolyserLandProcurementCost: number;
@@ -38,7 +38,6 @@ export interface InputFields {
   electrolyserOMCost: number;
   electrolyserStackReplacement: number;
   gridConnectionCost: number;
-  batteryNominalCapacity?: number;
   electrolyserNominalCapacity: number;
   solarNominalCapacity: number;
   windNominalCapacity: number;
