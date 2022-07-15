@@ -1,12 +1,6 @@
 import { InputFields } from "../../types";
-import {
-  calculateBatteryCapex,
-  calculateCapex,
-  getIndirectCost,
-} from "./cost-functions";
-
-const isSolar = (tech: string): boolean => tech !== "Wind";
-const isWind = (tech: string): boolean => tech !== "Solar";
+import { isSolar, isWind } from "../../utils";
+import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
 export function generateCapexValues(data: InputFields) {
   const {
@@ -121,3 +115,43 @@ export function generateCapexValues(data: InputFields) {
     totalIndirectCosts,
   };
 }
+
+export const calculateCapex = (
+  nominalCapacity: number,
+  referenceCapacity: number,
+  referencePurchaseCost: number,
+  costReductionWithScale: number,
+  referenceFoldIncrease: number
+): number => {
+  const foldIncreaseInCapacity = getBaseLog(
+    (nominalCapacity * 1000) / referenceCapacity,
+    referenceFoldIncrease
+  );
+
+  const capitalCostReductionFactor =
+    1 - (1 - costReductionWithScale / 100) ** foldIncreaseInCapacity;
+
+  const scaledPurchaseCost =
+    referencePurchaseCost * (1 - capitalCostReductionFactor);
+
+  const capexCost = nominalCapacity * 1000 * scaledPurchaseCost;
+
+  return roundToNearestThousand(capexCost);
+};
+
+export const calculateBatteryCapex = (
+  ratedPower: number = 0,
+  nominalCapacity: number = 0,
+  cost: number = 0
+): number => {
+  if (ratedPower === 0) {
+    return 0;
+  }
+  const capexCost = nominalCapacity * cost * 1000;
+  return roundToNearestThousand(capexCost);
+};
+
+export const getIndirectCost = (
+  capex: number,
+  costAsPercentageOfCapex: number = 0
+) => roundToNearestThousand(capex * (costAsPercentageOfCapex / 100));

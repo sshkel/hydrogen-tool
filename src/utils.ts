@@ -1,4 +1,7 @@
-import { ChartData } from "../types";
+import { ChartData } from "./types";
+
+export const isSolar = (tech: string): boolean => tech !== "Wind";
+export const isWind = (tech: string): boolean => tech !== "Solar";
 
 export function fillProjectYearsArray(
   projectLife: number,

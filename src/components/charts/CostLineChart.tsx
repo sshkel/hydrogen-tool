@@ -1,7 +1,7 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-import { checkLength } from "../../model/Utils";
+import { checkLength } from "../../utils";
 import { ChartData } from "../../types";
 
 interface Props {

@@ -1,11 +1,11 @@
+import { DepreciationProfile } from "../../types";
 import {
   decomissioning,
   first,
   padArray,
   projectYears,
   sum,
-} from "../../model/Utils";
-import { DepreciationProfile } from "../../types";
+} from "../../utils";
 
 export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);
@@ -13,129 +13,7 @@ export const getBaseLog = (n: number, base: number): number =>
 export const roundToNearestThousand = (n: number) =>
   Math.round(n / 1000) * 1000 || 0;
 
-const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
-
-export const calculateCapex = (
-  nominalCapacity: number,
-  referenceCapacity: number,
-  referencePurchaseCost: number,
-  costReductionWithScale: number,
-  referenceFoldIncrease: number
-): number => {
-  const foldIncreaseInCapacity = getBaseLog(
-    (nominalCapacity * 1000) / referenceCapacity,
-    referenceFoldIncrease
-  );
-
-  const capitalCostReductionFactor =
-    1 - (1 - costReductionWithScale / 100) ** foldIncreaseInCapacity;
-
-  const scaledPurchaseCost =
-    referencePurchaseCost * (1 - capitalCostReductionFactor);
-
-  const capexCost = nominalCapacity * 1000 * scaledPurchaseCost;
-
-  return roundToNearestThousand(capexCost);
-};
-
-export const calculateBatteryCapex = (
-  ratedPower: number = 0,
-  nominalCapacity: number = 0,
-  cost: number = 0
-): number => {
-  if (ratedPower === 0) {
-    return 0;
-  }
-  const capexCost = nominalCapacity * cost * 1000;
-  return roundToNearestThousand(capexCost);
-};
-
-export const getIndirectCost = (
-  capex: number,
-  costAsPercentageOfCapex: number = 0
-) => roundToNearestThousand(capex * (costAsPercentageOfCapex / 100));
-
-// Return a list of the OPEX per year for 1..$years inclusive, using the formula (cost * (1 + inflationRate)^year)
-export const getOpexPerYearInflationConstant = (
-  cost: number,
-  inflationRate: number,
-  years: number
-): number[] => {
-  return [...Array(years).keys()].map((i) =>
-    roundToTwoDP(cost * (1 + inflationRate / 100) ** (i + 1))
-  );
-};
-
-// Return a list of the OPEX per year for 1..$years inclusive, using the formula (costPerYear  * (1 + inflationRate)^year)
-export const getOpexPerYearInflation = (
-  costPerYear: number[],
-  inflationRate: number,
-  years: number
-): number[] => {
-  return [...Array(years).keys()].map((i) =>
-    roundToTwoDP(costPerYear[i] * (1 + inflationRate / 100) ** (i + 1))
-  );
-};
-
-export const getOpexPerYearInflationWithAdditionalCost = (
-  cost: number,
-  inflationRate: number,
-  years: number,
-  additionalCostsByYear: number[]
-): number[] => {
-  return [...Array(years).keys()].map((i) => {
-    const year = i + 1;
-    const extras = additionalCostsByYear[i];
-
-    return roundToTwoDP((cost + extras) * (1 + inflationRate / 100) ** year);
-  });
-};
-
-export function maxDegradationStackReplacementYears(
-  stackDegradation: number,
-  maximumDegradationBeforeReplacement: number,
-  projectLife: number
-): number[] {
-  let currentStackDegradation = 0;
-  const replacementYears = [];
-  for (let year of projectYears(projectLife)) {
-    if (currentStackDegradation >= maximumDegradationBeforeReplacement) {
-      replacementYears.push(year);
-      currentStackDegradation = 0;
-    } else {
-      currentStackDegradation += stackDegradation;
-    }
-  }
-  return replacementYears;
-}
-
-export function cumulativeStackReplacementYears(
-  // array of size projectLife with operating hours per year
-  operatingHoursPerYear: number[],
-  stackLifetime: number,
-  projectLife: number
-): number[] {
-  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
-  //the total operating time surpassing a multiple of the stack lifetime.
-  //The final year is never included for stack replacement, so is excluded from the iteration.
-  //"""
-  let currentStackLifetime: number = stackLifetime;
-
-  const candidateReplacementYears = projectYears(projectLife - 1);
-
-  const stackReplacementYears = [];
-  // Don't include final project year as there is no need for stack replacement
-  for (let year of candidateReplacementYears) {
-    // Account for zero indexing in operating hours per year
-    currentStackLifetime -= operatingHoursPerYear[year - 1];
-    if (currentStackLifetime <= 0) {
-      stackReplacementYears.push(year);
-      currentStackLifetime += stackLifetime;
-    }
-  }
-
-  return stackReplacementYears;
-}
+export const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
 
 export function cashFlowAnalysis(
   annualSales: number[],
@@ -490,17 +368,4 @@ function projectYearsWithStartupAndDecommissioning(
 ): number[] {
   // gives you array of years starting from start-up, including projectLife years and then decommissioning
   return Array.from({ length: projectLife + 2 });
-}
-export function getReplacementCostOverProjectLife(
-  cost: number,
-  isReplacementYear: (year: number) => boolean,
-  projectLife: number
-): number[] {
-  const costArray: number[] = new Array(projectLife).fill(0);
-  for (let year = 1; year <= projectLife; year++) {
-    if (isReplacementYear(year)) {
-      costArray[year - 1] = cost;
-    }
-  }
-  return costArray;
 }

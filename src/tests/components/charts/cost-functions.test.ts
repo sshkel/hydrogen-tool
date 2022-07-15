@@ -1,14 +1,7 @@
 import {
   applyInflation,
-  calculateBatteryCapex,
-  calculateCapex,
   calculateLoanBalance,
-  cumulativeStackReplacementYears,
   getBaseLog,
-  getIndirectCost,
-  getOpexPerYearInflationConstant,
-  getOpexPerYearInflationWithAdditionalCost,
-  maxDegradationStackReplacementYears,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
 
@@ -25,112 +18,6 @@ describe("Cost function calculations", () => {
     expect(roundToNearestThousand(5678901)).toEqual(5679000);
   });
 
-  it("calculates capex", () => {
-    const capex = calculateCapex(10, 10, 10, 10, 10);
-
-    expect(capex).toEqual(73000);
-  });
-
-  it("calculates battery capex", () => {
-    const capex = calculateBatteryCapex(10, 10, 10);
-
-    expect(capex).toEqual(100000);
-  });
-
-  it("calculates indirect cost", () => {
-    const cost = getIndirectCost(350000, 1);
-
-    expect(cost).toEqual(4000);
-  });
-
-  it("calculates opex per year", () => {
-    const opex = getOpexPerYearInflationConstant(1000, 0.1, 10);
-    expect(opex).toHaveLength(10);
-    const expected = [
-      1001, 1002, 1003, 1004.01, 1005.01, 1006.02, 1007.02, 1008.03, 1009.04,
-      1010.05,
-    ];
-
-    expect(opex).toEqual(expected);
-  });
-
-  it("calculates opex per year with additional costs", () => {
-    const opex = getOpexPerYearInflationWithAdditionalCost(
-      1000,
-      0.1,
-      10,
-      [0, 0, 0, 0, 10, 0, 0, 0, 0, 10]
-    );
-    expect(opex).toHaveLength(10);
-    const expected = [
-      1001, 1002, 1003, 1004.01, 1015.06, 1006.02, 1007.02, 1008.03, 1009.04,
-      1020.15,
-    ];
-
-    expect(opex).toEqual(expected);
-  });
-
-  it("returns years where stack is needs replacement", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(
-      Array(100).fill(1),
-      5,
-      100
-    );
-    // 100th year should not be included
-    expect(stackReplacementYears).toHaveLength(19);
-    const expected = [...Array(19).keys()].map((i) => 5 * (i + 1));
-
-    expect(stackReplacementYears).toEqual(expected);
-  });
-
-  it("returns years where stack needs replacement with boundary cases", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(
-      Array(20).fill(2),
-      5,
-      20
-    );
-    expect(stackReplacementYears).toHaveLength(7);
-    expect(stackReplacementYears).toEqual([3, 5, 8, 10, 13, 15, 18]);
-  });
-
-  it("handles when operating hours per year exceed stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(
-      Array(10).fill(2),
-      1,
-      10
-    );
-    // Final year still not included
-    expect(stackReplacementYears).toHaveLength(9);
-    const expected = [...Array(9).keys()].map((i) => i + 1);
-
-    expect(stackReplacementYears).toEqual(expected);
-  });
-
-  it("handles when operating hours per year are equal to stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(
-      Array(10).fill(1),
-      1,
-      10
-    );
-    // Final year still not included
-    expect(stackReplacementYears).toHaveLength(9);
-    const expected = [...Array(9).keys()].map((i) => i + 1);
-
-    expect(stackReplacementYears).toEqual(expected);
-  });
-
-  it("handles when operating hours per year fluctuate due to degradation", () => {
-    const stackReplacementYears = cumulativeStackReplacementYears(
-      [1, 2, 3, 4, 5, 5, 4, 3, 2, 1],
-      10,
-      10
-    );
-    // Final year still not included
-    expect(stackReplacementYears).toHaveLength(2);
-
-    expect(stackReplacementYears).toEqual([4, 6]);
-  });
-
   it("can apply inflation based on rate and input cost", () => {
     const inflationFn = applyInflation(0.5);
     const input = [...Array(9).keys()].map((_) => 1);
@@ -139,34 +26,6 @@ describe("Cost function calculations", () => {
     expect(inflationValues).toEqual([
       1, 1.5, 2.25, 3.375, 5.0625, 7.59375, 11.390625, 17.0859375, 25.62890625,
     ]);
-  });
-
-  it("Electrolyser degradation works for basic case", () => {
-    const maxElecDegradation = 0.6;
-    const yearlyElecDegradation = 0.1;
-    const projectLife = 20;
-    const actual = maxDegradationStackReplacementYears(
-      yearlyElecDegradation,
-      maxElecDegradation,
-      projectLife
-    );
-    const expected = [7, 14];
-    // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
-    expect(actual).toEqual(expected);
-  });
-
-  it("Electrolyser degradation works for no replacements", () => {
-    const maxElecDegradation = 0.7;
-    const yearlyElecDegradation = 0.1;
-    const projectLife = 7;
-    const actual = maxDegradationStackReplacementYears(
-      yearlyElecDegradation,
-      maxElecDegradation,
-      projectLife
-    );
-    const expected: number[] = [];
-    // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
-    expect(actual).toEqual(expected);
   });
 
   it("Explodes loan balance correctly", () => {

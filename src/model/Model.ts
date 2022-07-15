@@ -1,6 +1,6 @@
-import { maxDegradationStackReplacementYears } from "../components/charts/cost-functions";
+import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import { StackReplacementType } from "../types";
-import { mean, sum } from "./Utils";
+import { mean, sum } from "../utils";
 import {
   BATTERY_OUTPUT,
   ELECTROLYSER_CF,
