@@ -30,12 +30,10 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
+import { generateCapexValues } from "./capex-calculation";
 import {
-  calculateBatteryCapex,
-  calculateCapex,
   cashFlowAnalysis,
   cumulativeStackReplacementYears,
-  getIndirectCost,
   getOpexPerYearInflation,
   getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
@@ -146,6 +144,8 @@ export default function WorkingData(props: Props) {
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
     principalPPACost = 0,
+    gridConnectionCost = 0,
+    technology,
   } = props.data;
 
   const gridConnected: boolean = props.data.gridConnected === "true";
@@ -181,86 +181,52 @@ export default function WorkingData(props: Props) {
   let hourlyOperations = model.getHourlyOperations();
 
   // CAPEX charts
-  const electrolyserCAPEX = calculateCapex(
+  const {
+    electrolyserCAPEX,
+    powerPlantCAPEX,
+    batteryCAPEX,
+    electrolyserEpcCost,
+    electrolyserLandCost,
+    powerPlantEpcCost,
+    powerPlantLandCost,
+    batteryEpcCost,
+    batteryLandCost,
+    totalIndirectCosts,
+  } = generateCapexValues(
+    technology,
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
     electrolyserReferencePurchaseCost,
     electrolyserCostReductionWithScale,
-    electrolyserReferenceFoldIncrease
-  );
+    electrolyserReferenceFoldIncrease,
 
-  const { technology } = props.data;
+    solarNominalCapacity,
+    solarReferenceCapacity,
+    solarPVFarmReferenceCost,
+    solarPVCostReductionWithScale,
+    solarReferenceFoldIncrease,
 
-  const solarCAPEX = isSolar(technology)
-    ? calculateCapex(
-        solarNominalCapacity,
-        solarReferenceCapacity,
-        solarPVFarmReferenceCost,
-        solarPVCostReductionWithScale,
-        solarReferenceFoldIncrease
-      )
-    : 0;
-  const windCAPEX = isWind(technology)
-    ? calculateCapex(
-        windNominalCapacity,
-        windReferenceCapacity,
-        windFarmReferenceCost,
-        windCostReductionWithScale,
-        windReferenceFoldIncrease
-      )
-    : 0;
-  const powerPlantCAPEX = solarCAPEX + windCAPEX;
+    windNominalCapacity,
+    windReferenceCapacity,
+    windFarmReferenceCost,
+    windCostReductionWithScale,
+    windReferenceFoldIncrease,
 
-  const batteryNominalCapacity = batteryRatedPower * batteryStorageDuration;
-  const batteryCAPEX = calculateBatteryCapex(
     batteryRatedPower,
-    batteryNominalCapacity,
-    batteryCosts
+    batteryStorageDuration,
+    batteryCosts || 0,
+
+    props.data.electrolyserEpcCosts,
+    props.data.electrolyserLandProcurementCost,
+    props.data.solarEpcCosts,
+    props.data.solarLandProcurementCost,
+    props.data.windEpcCosts,
+    props.data.windLandProcurementCost,
+    props.data.batteryEpcCosts || 0,
+    props.data.batteryLandProcurementCost || 0
   );
 
-  const gridConnectionCost = props.data.gridConnectionCost || 0;
-
-  const electrolyserEpcCost = getIndirectCost(
-    electrolyserCAPEX,
-    props.data.electrolyserEpcCosts
-  );
-  const electrolyserLandCost = getIndirectCost(
-    electrolyserCAPEX,
-    props.data.electrolyserLandProcurementCost
-  );
-
-  const solarEpcCost = getIndirectCost(solarCAPEX, props.data.solarEpcCosts);
-  const solarLandCost = getIndirectCost(
-    solarCAPEX,
-    props.data.solarLandProcurementCost
-  );
-
-  const windEpcCost = getIndirectCost(windCAPEX, props.data.windEpcCosts);
-  const windLandCost = getIndirectCost(
-    windCAPEX,
-    props.data.windLandProcurementCost
-  );
-
-  const powerPlantEpcCost = solarEpcCost + windEpcCost;
-  const powerPlantLandCost = solarLandCost + windLandCost;
-
-  const batteryEpcCost = getIndirectCost(
-    batteryCAPEX,
-    props.data.batteryEpcCosts
-  );
-  const batteryLandCost = getIndirectCost(
-    batteryCAPEX,
-    props.data.batteryLandProcurementCost
-  );
-
-  const totalIndirectCosts =
-    electrolyserEpcCost +
-    electrolyserLandCost +
-    solarEpcCost +
-    solarLandCost +
-    windEpcCost +
-    windLandCost;
-
+  // OPEX charts
   const electrolyserOMCost = roundToNearestThousand(
     (props.data.electrolyserOMCost / 100) * electrolyserCAPEX
   );
@@ -634,8 +600,8 @@ export default function WorkingData(props: Props) {
         data={[
           electrolyserEpcCost,
           electrolyserLandCost,
-          solarEpcCost + windEpcCost,
-          solarLandCost + windLandCost,
+          powerPlantEpcCost,
+          powerPlantLandCost,
           batteryEpcCost,
           batteryLandCost,
         ]}
