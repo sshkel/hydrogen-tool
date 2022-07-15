@@ -11,6 +11,7 @@ import {
   fillProjectYearsArray,
   mean,
   padArray,
+  projectYears,
 } from "../../model/Utils";
 import {
   BATTERY_OUTPUT,
@@ -41,7 +42,6 @@ import {
   getSummedDiscountForOpexCost,
   getSummedDiscountForOpexValues,
   maxDegradationStackReplacementYears,
-  projectYears,
   roundToNearestThousand,
   sales,
 } from "./cost-functions";
@@ -88,23 +88,10 @@ export default function WorkingData(props: Props) {
 
   const {
     electrolyserNominalCapacity,
-    electrolyserReferenceCapacity,
-    electrolyserReferencePurchaseCost,
-    electrolyserCostReductionWithScale,
-    electrolyserReferenceFoldIncrease,
     solarNominalCapacity,
-    solarReferenceCapacity,
-    solarPVFarmReferenceCost,
-    solarPVCostReductionWithScale,
-    solarReferenceFoldIncrease,
     windNominalCapacity,
-    windReferenceCapacity,
-    windFarmReferenceCost,
-    windCostReductionWithScale,
-    windReferenceFoldIncrease,
     batteryRatedPower = 0,
     batteryMinCharge = 0,
-    batteryCosts,
     batteryEfficiency,
     solarOpex = 0,
     windOpex = 0,
@@ -192,39 +179,7 @@ export default function WorkingData(props: Props) {
     batteryEpcCost,
     batteryLandCost,
     totalIndirectCosts,
-  } = generateCapexValues(
-    technology,
-    electrolyserNominalCapacity,
-    electrolyserReferenceCapacity,
-    electrolyserReferencePurchaseCost,
-    electrolyserCostReductionWithScale,
-    electrolyserReferenceFoldIncrease,
-
-    solarNominalCapacity,
-    solarReferenceCapacity,
-    solarPVFarmReferenceCost,
-    solarPVCostReductionWithScale,
-    solarReferenceFoldIncrease,
-
-    windNominalCapacity,
-    windReferenceCapacity,
-    windFarmReferenceCost,
-    windCostReductionWithScale,
-    windReferenceFoldIncrease,
-
-    batteryRatedPower,
-    batteryStorageDuration,
-    batteryCosts || 0,
-
-    props.data.electrolyserEpcCosts,
-    props.data.electrolyserLandProcurementCost,
-    props.data.solarEpcCosts,
-    props.data.solarLandProcurementCost,
-    props.data.windEpcCosts,
-    props.data.windLandProcurementCost,
-    props.data.batteryEpcCosts || 0,
-    props.data.batteryLandProcurementCost || 0
-  );
+  } = generateCapexValues(props.data);
 
   // OPEX charts
   const electrolyserOMCost = roundToNearestThousand(
@@ -240,7 +195,7 @@ export default function WorkingData(props: Props) {
           plantLife
         )
       : cumulativeStackReplacementYears(
-          summary[`${TOTAL_OPERATING_TIME}`],
+          summary[`${TOTAL_OPERATING_TIME}`].map((hours) => hours * 8760),
           stackLifetime,
           plantLife
         );
@@ -268,8 +223,10 @@ export default function WorkingData(props: Props) {
   const windOpexCost = isWind(technology)
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
+
+  const powerplantOpexCost = solarOpexCost + windOpexCost;
   const powerplantOpex = getOpexPerYearInflationConstant(
-    solarOpexCost + windOpexCost,
+    powerplantOpexCost,
     inflationRate,
     plantLife
   );
@@ -366,15 +323,13 @@ export default function WorkingData(props: Props) {
   const totalOpex = electrolyserOpex.map(
     (_: number, i: number) =>
       electrolyserOMCost +
-      solarOpexCost +
-      windOpexCost +
+      powerplantOpexCost +
       batteryOMCost +
       electricityOMCost[i] +
       // TODO: Need to figure out a way to include this
       // electricitySales[i] +
       waterOMCost[i] +
       gridConnectionOpex[i] +
-      // TODO check if this is correct. Strangely taking not discounted cost here.
       additionalAnnualCosts +
       stackReplacementCostsOverProjectLife[i] +
       batteryReplacementCostsOverProjectLife[i]

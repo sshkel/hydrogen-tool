@@ -1,4 +1,4 @@
-import { Technology } from "../../types";
+import { InputFields } from "../../types";
 import {
   calculateBatteryCapex,
   calculateCapex,
@@ -8,39 +8,41 @@ import {
 const isSolar = (tech: string): boolean => tech !== "Wind";
 const isWind = (tech: string): boolean => tech !== "Solar";
 
-export function generateCapexValues(
-  technology: Technology,
-  electrolyserNominalCapacity: number,
-  electrolyserReferenceCapacity: number,
-  electrolyserReferencePurchaseCost: number,
-  electrolyserCostReductionWithScale: number,
-  electrolyserReferenceFoldIncrease: number,
+export function generateCapexValues(data: InputFields) {
+  const {
+    technology,
+    electrolyserNominalCapacity,
+    electrolyserReferenceCapacity,
+    electrolyserReferencePurchaseCost,
+    electrolyserCostReductionWithScale,
+    electrolyserReferenceFoldIncrease,
 
-  solarNominalCapacity: number,
-  solarReferenceCapacity: number,
-  solarPVFarmReferenceCost: number,
-  solarPVCostReductionWithScale: number,
-  solarReferenceFoldIncrease: number,
+    solarNominalCapacity,
+    solarReferenceCapacity,
+    solarPVFarmReferenceCost,
+    solarPVCostReductionWithScale,
+    solarReferenceFoldIncrease,
 
-  windNominalCapacity: number,
-  windReferenceCapacity: number,
-  windFarmReferenceCost: number,
-  windCostReductionWithScale: number,
-  windReferenceFoldIncrease: number,
+    windNominalCapacity,
+    windReferenceCapacity,
+    windFarmReferenceCost,
+    windCostReductionWithScale,
+    windReferenceFoldIncrease,
 
-  batteryRatedPower: number,
-  batteryStorageDuration: number,
-  batteryCosts: number,
+    batteryRatedPower = 0,
+    batteryStorageDuration = 0,
+    batteryCosts = 0,
 
-  electrolyserEpcCosts: number,
-  electrolyserLandProcurementCost: number,
-  solarEpcCosts: number,
-  solarLandProcurementCost: number,
-  windEpcCosts: number,
-  windLandProcurementCost: number,
-  batteryEpcCosts: number,
-  batteryLandProcurementCost: number
-) {
+    electrolyserEpcCosts,
+    electrolyserLandProcurementCost,
+    solarEpcCosts,
+    solarLandProcurementCost,
+    windEpcCosts,
+    windLandProcurementCost,
+    batteryEpcCosts,
+    batteryLandProcurementCost,
+  } = data;
+
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,

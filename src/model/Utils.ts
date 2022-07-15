@@ -7,6 +7,11 @@ export function fillProjectYearsArray(
   return Array.from({ length: projectLife }, (_, i) => map(i));
 }
 
+export function projectYears(projectLife: number): number[] {
+  // gives you array of years starting from 1 and ending in projectLife inclusive
+  return Array.from({ length: projectLife }, (_, i) => i + 1);
+}
+
 export function first(element: number, projectLife: number) {
   return [element].concat(Array(projectLife + 1).fill(0));
 }

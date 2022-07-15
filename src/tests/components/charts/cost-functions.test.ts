@@ -3,7 +3,7 @@ import {
   calculateBatteryCapex,
   calculateCapex,
   calculateLoanBalance,
-  cumulativeStackReplacementYearsConstant,
+  cumulativeStackReplacementYears,
   getBaseLog,
   getIndirectCost,
   getOpexPerYearInflationConstant,
@@ -71,8 +71,8 @@ describe("Cost function calculations", () => {
   });
 
   it("returns years where stack is needs replacement", () => {
-    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
-      1,
+    const stackReplacementYears = cumulativeStackReplacementYears(
+      Array(100).fill(1),
       5,
       100
     );
@@ -84,8 +84,8 @@ describe("Cost function calculations", () => {
   });
 
   it("returns years where stack needs replacement with boundary cases", () => {
-    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
-      2,
+    const stackReplacementYears = cumulativeStackReplacementYears(
+      Array(20).fill(2),
       5,
       20
     );
@@ -94,8 +94,8 @@ describe("Cost function calculations", () => {
   });
 
   it("handles when operating hours per year exceed stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
-      2,
+    const stackReplacementYears = cumulativeStackReplacementYears(
+      Array(10).fill(2),
       1,
       10
     );
@@ -107,8 +107,8 @@ describe("Cost function calculations", () => {
   });
 
   it("handles when operating hours per year are equal to stack lifetime", () => {
-    const stackReplacementYears = cumulativeStackReplacementYearsConstant(
-      1,
+    const stackReplacementYears = cumulativeStackReplacementYears(
+      Array(10).fill(1),
       1,
       10
     );
@@ -117,6 +117,18 @@ describe("Cost function calculations", () => {
     const expected = [...Array(9).keys()].map((i) => i + 1);
 
     expect(stackReplacementYears).toEqual(expected);
+  });
+
+  it("handles when operating hours per year fluctuate due to degradation", () => {
+    const stackReplacementYears = cumulativeStackReplacementYears(
+      [1, 2, 3, 4, 5, 5, 4, 3, 2, 1],
+      10,
+      10
+    );
+    // Final year still not included
+    expect(stackReplacementYears).toHaveLength(2);
+
+    expect(stackReplacementYears).toEqual([4, 6]);
   });
 
   it("can apply inflation based on rate and input cost", () => {

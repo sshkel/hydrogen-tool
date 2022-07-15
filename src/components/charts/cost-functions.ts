@@ -1,4 +1,10 @@
-import { decomissioning, first, padArray, sum } from "../../model/Utils";
+import {
+  decomissioning,
+  first,
+  padArray,
+  projectYears,
+  sum,
+} from "../../model/Utils";
 import { DepreciationProfile } from "../../types";
 
 export const getBaseLog = (n: number, base: number): number =>
@@ -95,44 +101,12 @@ export function maxDegradationStackReplacementYears(
   for (let year of projectYears(projectLife)) {
     if (currentStackDegradation >= maximumDegradationBeforeReplacement) {
       replacementYears.push(year);
-      // TODO: This matches Excel but I think it has an off by one error
-      //        and at the end of the year, currentStackDegradation = stackDegradation
       currentStackDegradation = 0;
     } else {
       currentStackDegradation += stackDegradation;
     }
   }
   return replacementYears;
-}
-
-export function cumulativeStackReplacementYearsConstant(
-  // operating_outputs["Total Time Electrolyser is Operating"] * hoursPerYear;
-  operatingHoursPerYear: number,
-  stackLifetime: number,
-  projectLife: number
-): number[] {
-  // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
-  //the total operating time surpassing a multiple of the stack lifetime.
-  //The final year is never included for stack replacement, so is excluded from the iteration.
-  //"""
-  let currentStackLifetime: number = stackLifetime;
-
-  const candidateReplacementYears = projectYears(projectLife - 1);
-  if (stackLifetime <= operatingHoursPerYear) {
-    return candidateReplacementYears;
-  }
-
-  const stackReplacementYears = [];
-  // Don't include final project year as there is no need for stack replacement
-  for (let year of candidateReplacementYears) {
-    currentStackLifetime -= operatingHoursPerYear;
-    if (currentStackLifetime <= 0) {
-      stackReplacementYears.push(year);
-      currentStackLifetime += stackLifetime;
-    }
-  }
-
-  return stackReplacementYears;
 }
 
 export function cumulativeStackReplacementYears(
@@ -153,7 +127,7 @@ export function cumulativeStackReplacementYears(
   // Don't include final project year as there is no need for stack replacement
   for (let year of candidateReplacementYears) {
     // Account for zero indexing in operating hours per year
-    currentStackLifetime -= operatingHoursPerYear[year - 1] * 8760;
+    currentStackLifetime -= operatingHoursPerYear[year - 1];
     if (currentStackLifetime <= 0) {
       stackReplacementYears.push(year);
       currentStackLifetime += stackLifetime;
@@ -509,11 +483,6 @@ function getConversionFactors(
   }
   const padding = projectLife - selectedModel.length;
   return padArray(selectedModel.concat(Array(padding).fill(0)));
-}
-
-export function projectYears(projectLife: number): number[] {
-  // gives you array of years starting from 1 and ending in projectLife inclusive
-  return Array.from({ length: projectLife }, (_, i) => i + 1);
 }
 
 function projectYearsWithStartupAndDecommissioning(
