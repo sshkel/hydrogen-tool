@@ -61,7 +61,6 @@ export function cashFlowAnalysis(
   // cost financed via loan
   const totalLoan =
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
-  const costFinancedViaLoan = startup(totalLoan, projectLife);
 
   // salvage cost
   const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
@@ -322,7 +321,7 @@ export function getSummedDiscountForOpexValues(
   return sum;
 }
 
-function getConversionFactors(
+export function getConversionFactors(
   capitalDepreciationProfile: DepreciationProfile,
   projectLife: number
 ) {
@@ -375,12 +374,11 @@ function getConversionFactors(
   }
   const padding = projectLife - selectedModel.length;
 
-  // TODO: Add test for when project life doesn't match schedule
-  if (padding < 0) {
-    throw new Error(`Invalid capital depriciation profile ${capitalDepreciationProfile}.
-                      Project life must be at least ${selectedModel.length} years and current project life is ${projectLife}.`);
+  if (padding > 0) {
+    selectedModel.push(...Array(padding).fill(0));
+  } else {
+    selectedModel = selectedModel.slice(0, projectLife);
   }
 
-  selectedModel.push(...Array(padding).fill(0));
   return padArray(selectedModel);
 }
