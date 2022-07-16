@@ -1,9 +1,12 @@
 import {
   cumulativeStackReplacementYears,
+  generateOpexValues,
   getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
 } from "../../../components/charts/opex-calculations";
+import { InputFields } from "../../../types";
+import { defaultInputData } from "../../scenario";
 
 describe("Opex calculations", () => {
   it("calculates opex per year", () => {
@@ -108,7 +111,7 @@ describe("Opex calculations", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("handles eectrolyser degradation when no replacements", () => {
+  it("handles electrolyser degradation when no replacements", () => {
     const maxElecDegradation = 0.7;
     const yearlyElecDegradation = 0.1;
     const projectLife = 7;
@@ -120,5 +123,68 @@ describe("Opex calculations", () => {
     const expected: number[] = [];
     // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
     expect(actual).toEqual(expected);
+  });
+
+  it("calculates grid connection opex when grid connected", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "Grid Connected",
+      plantLife: 10,
+      additionalTransmissionCharges: 10,
+    };
+
+    const valuesForProjectLife = Array(10).fill(1);
+    const { gridConnectionOpexPerYear } = generateOpexValues(
+      data,
+      0,
+      0,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife
+    );
+    expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(20));
+  });
+
+  it("does not calculates grid connection opex when PPA agreement", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "PPA Agreement",
+      plantLife: 10,
+      additionalTransmissionCharges: 10,
+    };
+
+    const valuesForProjectLife = Array(10).fill(1);
+    const { gridConnectionOpexPerYear } = generateOpexValues(
+      data,
+      0,
+      0,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife
+    );
+    expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
+  });
+
+  it("does not calculates grid connection opex when standalone", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "Standalone",
+      plantLife: 10,
+      additionalTransmissionCharges: 10,
+    };
+
+    const valuesForProjectLife = Array(10).fill(1);
+    const { gridConnectionOpexPerYear } = generateOpexValues(
+      data,
+      0,
+      0,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife,
+      valuesForProjectLife
+    );
+    expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
   });
 });

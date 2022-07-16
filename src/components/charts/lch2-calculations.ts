@@ -91,7 +91,6 @@ export function generateLCValues(
     ? calculateLevelisedCost(ppaCostOfElectricityConsumed)
     : 0;
 
-  // TODO: Test for electricity sales on when in retail mode
   const retailElectricitySalePrice = retailed
     ? fillYearsArray(
         plantLife,

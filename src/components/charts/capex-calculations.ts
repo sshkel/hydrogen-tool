@@ -103,7 +103,6 @@ export function generateCapexValues(data: InputFields) {
     batteryLandProcurementCost
   );
 
-  // TODO: test for grid connection CAPEX with ppa agreement or grid connected
   const gridConnectionCAPEX =
     gridConnected || ppaAgreement ? gridConnectionCost : 0;
 

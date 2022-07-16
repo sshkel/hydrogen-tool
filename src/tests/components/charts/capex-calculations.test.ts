@@ -1,8 +1,11 @@
 import {
   calculateBatteryCapex,
   calculateCapex,
+  generateCapexValues,
   getIndirectCost,
 } from "../../../components/charts/capex-calculations";
+import { InputFields } from "../../../types";
+import { defaultInputData } from "../../scenario";
 
 describe("Capex calculations", () => {
   it("calculates capex", () => {
@@ -21,5 +24,41 @@ describe("Capex calculations", () => {
     const cost = getIndirectCost(350000, 1);
 
     expect(cost).toEqual(4000);
+  });
+
+  it("sets grid connection CAPEX when grid connected", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "Grid Connected",
+      gridConnectionCost: 10,
+    };
+
+    const { gridConnectionCAPEX } = generateCapexValues(data);
+
+    expect(gridConnectionCAPEX).toEqual(10);
+  });
+
+  it("sets grid connection CAPEX when PPA agreement", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "PPA Agreement",
+      gridConnectionCost: 10,
+    };
+
+    const { gridConnectionCAPEX } = generateCapexValues(data);
+
+    expect(gridConnectionCAPEX).toEqual(10);
+  });
+
+  it("does not set grid connection CAPEX when standalone", () => {
+    const data: InputFields = {
+      ...defaultInputData,
+      powerPlantConfiguration: "Standalone",
+      gridConnectionCost: 10,
+    };
+
+    const { gridConnectionCAPEX } = generateCapexValues(data);
+
+    expect(gridConnectionCAPEX).toEqual(0);
   });
 });
