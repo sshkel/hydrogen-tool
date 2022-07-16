@@ -89,9 +89,9 @@ export function generateOpexValues(
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
 
-  const powerplantOpexCost = solarOpexCost + windOpexCost;
-  const powerplantOpexPerYear = getOpexPerYearInflationConstant(
-    powerplantOpexCost,
+  const powerPlantOpexCost = solarOpexCost + windOpexCost;
+  const powerPlantOpexPerYear = getOpexPerYearInflationConstant(
+    powerPlantOpexCost,
     inflationRate,
     plantLife
   );
@@ -166,7 +166,7 @@ export function generateOpexValues(
     plantLife,
     (i: number) =>
       electrolyserOpexCost +
-      powerplantOpexCost +
+      powerPlantOpexCost +
       batteryOpexCost +
       electricityOpexCost[i] +
       waterOpexCost[i] +
@@ -179,8 +179,8 @@ export function generateOpexValues(
   return {
     electrolyserOpexCost,
     electrolyserOpexPerYear,
-    powerplantOpexCost,
-    powerplantOpexPerYear,
+    powerPlantOpexCost,
+    powerPlantOpexPerYear,
 
     batteryOpexCost,
     batteryOpexPerYear,

@@ -26,12 +26,8 @@ import CostLineChart from "./CostLineChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import { generateCapexValues } from "./capex-calculations";
-import {
-  cashFlowAnalysis,
-  getSummedDiscountForOpexCost,
-  getSummedDiscountForOpexValues,
-  sales,
-} from "./cost-functions";
+import { cashFlowAnalysis, sales } from "./cost-functions";
+import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
 
 export interface Props {
@@ -79,7 +75,6 @@ export default function WorkingData(props: Props) {
     batteryMinCharge = 0,
     batteryEfficiency,
     additionalUpfrontCosts,
-    additionalAnnualCosts,
     batteryLifetime = 0,
     plantLife,
     batteryStorageDuration = 0,
@@ -109,7 +104,6 @@ export default function WorkingData(props: Props) {
     windDegradation,
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
-    principalPPACost = 0,
     gridConnectionCost = 0,
   } = props.data;
 
@@ -185,8 +179,8 @@ export default function WorkingData(props: Props) {
   const {
     electrolyserOpexCost,
     electrolyserOpexPerYear,
-    powerplantOpexCost,
-    powerplantOpexPerYear,
+    powerPlantOpexCost,
+    powerPlantOpexPerYear,
 
     batteryOpexCost,
     batteryOpexPerYear,
@@ -211,8 +205,7 @@ export default function WorkingData(props: Props) {
     h2Produced
   );
 
-  // Cost values
-
+  // Cost values for sales calculation
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
@@ -245,6 +238,7 @@ export default function WorkingData(props: Props) {
     electricityProduced
   );
 
+  // Cash flow analysis calculations
   const { cumulativeCashFlow } = cashFlowAnalysis(
     annualSales,
     totalOpex,
@@ -263,89 +257,41 @@ export default function WorkingData(props: Props) {
     inflationRate / 100
   );
 
-  const lcPowerPlantCAPEX = powerPlantCAPEX / hydrogenProductionCost;
-  const lcElectrolyserCAPEX = electrolyserCAPEX / hydrogenProductionCost;
-  const lcIndirectCosts = totalIndirectCosts / hydrogenProductionCost;
-  const lcPowerPlantOPEX =
-    getSummedDiscountForOpexCost(powerplantOpexCost, discountRate, plantLife) /
-    hydrogenProductionCost;
-  const lcElectrolyserOPEX =
-    getSummedDiscountForOpexCost(
-      electrolyserOpexCost,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
-
-  const batteryCostPerYear: number[] = fillYearsArray(
-    plantLife,
-    (i) => batteryOpexCost + batteryReplacementCostsOverProjectLife[i]
+  // LCH2 calculations
+  const {
+    lcPowerPlantCAPEX,
+    lcElectrolyserCAPEX,
+    lcIndirectCosts,
+    lcPowerPlantOPEX,
+    lcElectrolyserOPEX,
+    lcElectricityPurchase,
+    lcElectricitySale,
+    lcStackReplacement,
+    lcWater,
+    lcBattery,
+    lcGridConnection,
+    lcAdditionalCosts,
+    lcOxygenSale,
+  } = generateLCValues(
+    props.data,
+    powerPlantCAPEX,
+    electrolyserCAPEX,
+    batteryCAPEX,
+    gridConnectionCAPEX,
+    totalIndirectCosts,
+    powerPlantOpexCost,
+    electrolyserOpexCost,
+    batteryOpexCost,
+    waterOpexCost,
+    gridConnectionOpexPerYear,
+    batteryReplacementCostsOverProjectLife,
+    stackReplacementCostsOverProjectLife,
+    oxygenSalePrice,
+    electricityProduced,
+    electricityConsumed,
+    electricityConsumedByBattery,
+    hydrogenProductionCost
   );
-
-  const lcBattery =
-    (batteryCAPEX +
-      getSummedDiscountForOpexValues(
-        batteryCostPerYear,
-        discountRate,
-        plantLife
-      )) /
-    hydrogenProductionCost;
-  const lcWater =
-    getSummedDiscountForOpexValues(waterOpexCost, discountRate, plantLife) /
-    hydrogenProductionCost;
-  const lcAdditionalCosts =
-    (additionalUpfrontCosts +
-      getSummedDiscountForOpexCost(
-        additionalAnnualCosts,
-        discountRate,
-        plantLife
-      )) /
-    hydrogenProductionCost;
-  const lcOxygenSale =
-    getSummedDiscountForOpexValues(oxygenSalePrice, discountRate, plantLife) /
-    hydrogenProductionCost;
-
-  const lcStackReplacement =
-    getSummedDiscountForOpexValues(
-      stackReplacementCostsOverProjectLife,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
-
-  const ppaCostOfElectricityConsumed = fillYearsArray(
-    plantLife,
-    (i) =>
-      (electricityConsumed[i] + electricityConsumedByBattery[i]) *
-      principalPPACost
-  );
-  const lcElectricityPurchase = ppaAgreement
-    ? getSummedDiscountForOpexValues(
-        ppaCostOfElectricityConsumed,
-        discountRate,
-        plantLife
-      ) / hydrogenProductionCost
-    : 0;
-
-  // TODO: check in Retail mode
-  const retailElectricitySalePrice = fillYearsArray(
-    plantLife,
-    (i) => electricityProduced[i] * averageElectricitySpotPrice
-  );
-  const lcElectricitySale =
-    getSummedDiscountForOpexValues(
-      retailElectricitySalePrice,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
-
-  const gridOpex = gridConnected
-    ? getSummedDiscountForOpexValues(
-        gridConnectionOpexPerYear,
-        discountRate,
-        plantLife
-      )
-    : 0;
-  const lcGridConnection =
-    (gridConnectionCAPEX + gridOpex) / hydrogenProductionCost;
 
   return (
     <div>
@@ -443,7 +389,7 @@ export default function WorkingData(props: Props) {
         plantLife={plantLife}
         datapoints={[
           { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
-          { label: "Power Plant OPEX", data: powerplantOpexPerYear },
+          { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
           { label: "Battery OPEX", data: batteryOpexPerYear },
           { label: "Additional Annual Costs", data: additionalOpexPerYear },
           { label: "Water Costs", data: waterOpexPerYear },

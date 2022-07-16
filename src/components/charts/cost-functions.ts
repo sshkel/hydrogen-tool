@@ -82,8 +82,6 @@ export function cashFlowAnalysis(
       salvageCost[i]
   );
 
-  // loan liabilities
-  // const totalLoanCostValues = first(totalLoan, projectLife);
   // loan repayment
   const loanRepayment = totalLoan / loanTerm;
   const totalLoanRepayment = fillYearsArray(activeLife, (year: number) => {
@@ -294,31 +292,6 @@ export function getDiscountFn(rate: number, years: number) {
       }
     );
   };
-}
-
-export function getSummedDiscountForOpexCost(
-  opex: number,
-  discountRate: number,
-  years: number
-): number {
-  let sum = 0;
-  for (let i = 1; i <= years; i++) {
-    sum += opex / (1 + discountRate / 100) ** i;
-  }
-  return sum;
-}
-
-export function getSummedDiscountForOpexValues(
-  opexValues: number[],
-  discountRate: number,
-  years: number
-): number {
-  let sum = 0;
-  for (let i = 1; i <= years; i++) {
-    // Need to minus 1 as assuming opexValues is zero indexes
-    sum += opexValues[i - 1] / (1 + discountRate / 100) ** i;
-  }
-  return sum;
 }
 
 export function getConversionFactors(
