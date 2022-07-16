@@ -5,10 +5,10 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
+  gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
   hybridBatteryGridSurplusRetailScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
-  standaloneSolarScenarioAdditionalRevenueStreams,
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
   standaloneWindScenario,
@@ -518,7 +518,7 @@ describe("Working Data calculations", () => {
   it("calculates opex for solar with oxygen and electricity sales", (done) => {
     const wrapper = mount(
       <WorkingData
-        data={standaloneSolarScenarioAdditionalRevenueStreams}
+        data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario}
         loadSolar={loadSolar}
         loadWind={loadWind}
       />

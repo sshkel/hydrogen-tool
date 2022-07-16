@@ -1,10 +1,12 @@
-import { InputFields } from "../../types";
+import { InputFields, isGridConnected, isPPAAgreement } from "../../types";
 import { isSolar, isWind } from "../../utils";
 import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
 export function generateCapexValues(data: InputFields) {
   const {
     technology,
+    powerPlantConfiguration,
+
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
     electrolyserReferencePurchaseCost,
@@ -39,8 +41,8 @@ export function generateCapexValues(data: InputFields) {
     batteryLandProcurementCost,
   } = data;
 
-  const gridConnected: boolean = data.gridConnected === "true";
-  const ppaAgreement: boolean = data.ppaAgreement === "true";
+  const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerPlantConfiguration);
 
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,

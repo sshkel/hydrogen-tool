@@ -1,4 +1,4 @@
-import { DepreciationProfile } from "../../types";
+import { DepreciationProfile, PowerPlantConfiguration } from "../../types";
 
 interface Field {
   id: string;
@@ -543,3 +543,16 @@ export const capitalDepreciationProfile: DepreciationProfile[] = [
   "MACRs - 15 year Schedule",
   "MACRs - 20 year Schedule",
 ];
+
+export const powerPlantConfigurationData: string[] = [
+  "Standalone",
+  "Grid Connected",
+  "PPA Agreement",
+  "Grid Connected with Surplus Retailed",
+];
+
+export function isPowerPlantConfiguration(
+  value: string
+): value is PowerPlantConfiguration {
+  return powerPlantConfigurationData.includes(value);
+}

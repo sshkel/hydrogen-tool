@@ -13,9 +13,24 @@ export type DepreciationProfile =
   | "MACRs - 15 year Schedule"
   | "MACRs - 20 year Schedule";
 
+export type PowerPlantConfiguration =
+  | "Standalone"
+  | "Grid Connected"
+  | "PPA Agreement"
+  | "Grid Connected with Surplus Retailed";
+
 export type ChartData = { label: string; data: number[] };
 
-export type Bool = "true" | "false";
+export const isPPAAgreement = (
+  powerPlantConfiguration: PowerPlantConfiguration
+) => powerPlantConfiguration === "PPA Agreement";
+export const isGridConnected = (
+  powerPlantConfiguration: PowerPlantConfiguration
+) =>
+  powerPlantConfiguration === "Grid Connected" ||
+  powerPlantConfiguration === "Grid Connected with Surplus Retailed";
+export const isRetailed = (powerPlantConfiguration: PowerPlantConfiguration) =>
+  powerPlantConfiguration === "Grid Connected with Surplus Retailed";
 
 export interface InputFields {
   additionalUpfrontCosts: number;
@@ -89,6 +104,5 @@ export interface InputFields {
   inflationRate: number;
   secAtNominalLoad?: number;
   secCorrectionFactor?: number;
-  ppaAgreement: Bool;
-  gridConnected: Bool;
+  powerPlantConfiguration: PowerPlantConfiguration;
 }

@@ -1,4 +1,4 @@
-import { InputFields } from "../../types";
+import { InputFields, isGridConnected, isPPAAgreement } from "../../types";
 import { fillYearsArray, isSolar, isWind, projectYears } from "../../utils";
 import { roundToNearestThousand, roundToTwoDP } from "./cost-functions";
 
@@ -14,6 +14,7 @@ export function generateOpexValues(
   const {
     plantLife,
     technology,
+    powerPlantConfiguration,
 
     principalPPACost = 0,
     additionalTransmissionCharges = 0,
@@ -43,9 +44,8 @@ export function generateOpexValues(
     inflationRate,
   } = data;
 
-  // TODO: Refactor these inputs
-  const gridConnected: boolean = data.gridConnected === "true";
-  const ppaAgreement: boolean = data.ppaAgreement === "true";
+  const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerPlantConfiguration);
 
   // Stack Lifetime needed for opex calculations
   const stackReplacementYears: number[] =

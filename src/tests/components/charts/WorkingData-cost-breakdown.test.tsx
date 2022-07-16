@@ -187,7 +187,7 @@ describe("Working Data calculations", () => {
     it("passes down grid connection cost", () => {
       const data: InputFields = {
         ...defaultInputData,
-        gridConnected: "true",
+        powerPlantConfiguration: "Grid Connected",
         gridConnectionCost: 2000,
       };
 

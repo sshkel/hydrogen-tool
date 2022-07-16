@@ -2,14 +2,16 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
 
-import { Bool } from "../../types";
+import { PowerPlantConfiguration } from "../../types";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
 import InputSelectField from "./InputSelectField";
 import {
   capitalDepreciationProfile,
   data,
+  isPowerPlantConfiguration,
   locationData,
+  powerPlantConfigurationData,
   profileData,
   replacementTypeData,
   technologyData,
@@ -20,8 +22,8 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const [ppaAgreement, setPPAAgreement] = useState<Bool>("false");
-  const [, setGridConnected] = useState<Bool>("false");
+  const [powerPlantConfiguration, setPowerPlantConfiguration] =
+    useState<PowerPlantConfiguration>("Standalone");
 
   let pointer: number = 0;
 
@@ -92,9 +94,9 @@ export default function Input(props: Props) {
     );
   };
 
-  const setStateChange = (setState: (s: Bool) => void) => {
+  const setStateChange = (setState: (s: PowerPlantConfiguration) => void) => {
     return (val: string) => {
-      if (val === "true" || val === "false") {
+      if (isPowerPlantConfiguration(val)) {
         setState(val);
       }
     };
@@ -125,26 +127,15 @@ export default function Input(props: Props) {
           }
         />
         <InputSelectField
-          id="ppaAgreement"
-          label="PPA Agreement"
-          values={["true", "false"]}
+          id="powerPlantConfiguration"
+          label="Power Plant Configuration"
+          values={powerPlantConfigurationData}
           defaultValue={
-            parsedState["ppaAgreement"] !== undefined
-              ? parsedState["ppaAgreement"]
-              : "false"
+            parsedState["powerPlantConfiguration"] !== undefined
+              ? parsedState["powerPlantConfiguration"]
+              : powerPlantConfigurationData[0]
           }
-          onChange={setStateChange(setPPAAgreement)}
-        />
-        <InputSelectField
-          id="gridConnected"
-          label="Grid Connected"
-          values={["true", "false"]}
-          defaultValue={
-            parsedState["gridConnected"] !== undefined
-              ? parsedState["gridConnected"]
-              : "false"
-          }
-          onChange={setStateChange(setGridConnected)}
+          onChange={setStateChange(setPowerPlantConfiguration)}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
@@ -220,13 +211,19 @@ export default function Input(props: Props) {
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
           {[...Array(7)].map((_) =>
-            getDataWithDisabledCheck(pointer, ppaAgreement === "true")
+            getDataWithDisabledCheck(
+              pointer,
+              powerPlantConfiguration === "PPA Agreement"
+            )
           )}
         </InputExpand>
 
         <InputExpand title="Wind Costs" id="wind-costs">
           {[...Array(7)].map((_) =>
-            getDataWithDisabledCheck(pointer, ppaAgreement === "true")
+            getDataWithDisabledCheck(
+              pointer,
+              powerPlantConfiguration === "PPA Agreement"
+            )
           )}
         </InputExpand>
         <InputExpand
