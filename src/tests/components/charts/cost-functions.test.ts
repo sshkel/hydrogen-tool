@@ -28,14 +28,14 @@ describe("Cost function calculations", () => {
     ]);
   });
 
-  it("Explodes loan balance correctly", () => {
+  it("calculates loan balance correctly", () => {
     const totalLoan = 7_500_000;
     const loanRepayment = 750_000;
     const projectLife = 20;
     const result = calculateLoanBalance(totalLoan, projectLife, loanRepayment);
     const expected = [
-      7_500_000, 6750000, 6000000, 5250000, 4500000, 3750000, 3000000, 2250000,
-      1500000, 750000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 7_500_000, 6750000, 6000000, 5250000, 4500000, 3750000, 3000000,
+      2250000, 1500000, 750000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ];
     expect(result.length).toEqual(projectLife + 2);
     expect(result).toEqual(expected);

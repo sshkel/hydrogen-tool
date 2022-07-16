@@ -245,7 +245,7 @@ export default function WorkingData(props: Props) {
     electricityProduced
   );
 
-  const cashFlow = cashFlowAnalysis(
+  const { cumulativeCashFlow } = cashFlowAnalysis(
     annualSales,
     totalOpex,
     totalCapexCost,
@@ -346,8 +346,6 @@ export default function WorkingData(props: Props) {
     : 0;
   const lcGridConnection =
     (gridConnectionCAPEX + gridOpex) / hydrogenProductionCost;
-
-  const { cumulativeCashFlow } = cashFlow;
 
   return (
     <div>

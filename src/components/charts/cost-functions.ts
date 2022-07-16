@@ -4,7 +4,6 @@ import {
   dropPadding,
   fillYearsArray,
   padArray,
-  projectYears,
   startup,
   sum,
 } from "../../utils";
@@ -34,7 +33,8 @@ export function cashFlowAnalysis(
   projectLife: number,
   inflationRate: number
 ) {
-  const inflation = getInflationFn(inflationRate, projectLife + 2);
+  const activeLife = projectLife + 2;
+  const applyInflation = getInflationFn(inflationRate, activeLife);
   const paddedAnnualSales = padArray(annualSales);
 
   // net investments
@@ -74,8 +74,9 @@ export function cashFlowAnalysis(
   );
 
   // cost of setting up or decommissioning the project
-  const netInvestment = directEquityPayment.map(
-    (_: number, i: number) =>
+  const netInvestment = fillYearsArray(
+    activeLife,
+    (i: number) =>
       directEquityPayment[i] +
       indirectEquity[i] +
       decomissioningCost[i] -
@@ -86,35 +87,29 @@ export function cashFlowAnalysis(
   // const totalLoanCostValues = first(totalLoan, projectLife);
   // loan repayment
   const loanRepayment = totalLoan / loanTerm;
-  const totalLoanRepayment = padArray(
-    projectYears(projectLife).map((year: number) => {
-      if (year <= loanTerm) {
-        return loanRepayment;
-      }
+  const totalLoanRepayment = fillYearsArray(activeLife, (year: number) => {
+    if (year === 0 || year === activeLife - 1 || year > loanTerm) {
       return 0;
-    })
-  );
+    }
+    return loanRepayment;
+  });
 
-  // TODO new loan calcs, walk thorugh with haider
   const loanBalance = calculateLoanBalance(
     totalLoan,
     projectLife,
     loanRepayment
   );
 
-  let interestPaidOnLoan = loanBalance.map((v: number, i: number) => {
-    return v * interestOnLoan;
-  });
-  interestPaidOnLoan.pop();
-  interestPaidOnLoan = [0].concat(interestPaidOnLoan);
+  const interestPaidOnLoan = loanBalance.map(
+    (balance: number) => balance * interestOnLoan
+  );
 
   // fixed opex
-  const totalOpexWithInflation = inflation(padArray(totalOpex));
+  const totalOpexWithInflation = applyInflation(padArray(totalOpex));
   // depreciation
-  const incomePreDepreciation = projectYearsWithStartupAndDecommissioning(
-    projectLife
-  ).map(
-    (_: number, i: number) =>
+  const incomePreDepreciation = fillYearsArray(
+    activeLife,
+    (i: number) =>
       paddedAnnualSales[i] -
       netInvestment[i] -
       totalLoanRepayment[i] -
@@ -126,28 +121,32 @@ export function cashFlowAnalysis(
     capitalDepreciationProfile,
     projectLife
   );
-  const depreciation = conversionFactors.map(
-    (_: number, i: number) => totalDepreciableCapex * conversionFactors[i]
+  const depreciation = fillYearsArray(
+    activeLife,
+    (i: number) => totalDepreciableCapex * conversionFactors[i]
   );
 
   // tax liabilities
-  const taxableIncome = incomePreDepreciation.map(
-    (_: number, i: number) =>
-      // TODO check if this formula is right (currently matches Excel)
+  const taxableIncome = fillYearsArray(
+    activeLife,
+    (i: number) =>
       incomePreDepreciation[i] - depreciation[i] + interestPaidOnLoan[i]
   );
 
-  const tax = taxableIncome.map((_: number, i: number) => {
+  const tax = fillYearsArray(activeLife, (i: number) => {
     if (taxableIncome[i] < 0) {
       return 0;
     }
     return taxableIncome[i] * taxRate;
   });
+
   // net cash flows
   // after tax and depreciation
-  const incomeAfterTaxAndDepreciation = incomePreDepreciation.map(
-    (_: number, i: number) => incomePreDepreciation[i] - tax[i]
+  const incomeAfterTaxAndDepreciation = fillYearsArray(
+    activeLife,
+    (i: number) => incomePreDepreciation[i] - tax[i]
   );
+
   const cumulativeSum = (
     (sum: number) => (value: number) =>
       (sum += value)
@@ -155,19 +154,6 @@ export function cashFlowAnalysis(
   const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
 
   return {
-    directEquityPayment,
-    indirectEquity,
-    costFinancedViaLoan,
-    salvageCost,
-    decomissioningCost,
-    totalLoanRepayment,
-    interestPaidOnLoan,
-    totalOpexWithInflation,
-    incomePreDepreciation,
-    depreciation,
-    taxableIncome,
-    tax,
-    incomeAfterTaxAndDepreciation,
     cumulativeCashFlow,
   };
 }
@@ -177,9 +163,9 @@ export function calculateLoanBalance(
   projectLife: number,
   loanRepayment: number
 ) {
-  const loanBalance = [totalLoan];
+  const loanBalance: number[] = [0, totalLoan];
 
-  for (let i = 0; i < projectLife + 1; i++) {
+  for (let i = 1; i <= projectLife; i++) {
     const newBalance = loanBalance[i] - loanRepayment;
     if (newBalance > 0) {
       loanBalance.push(newBalance);
@@ -388,12 +374,13 @@ function getConversionFactors(
     }
   }
   const padding = projectLife - selectedModel.length;
-  return padArray(selectedModel.concat(Array(padding).fill(0)));
-}
 
-function projectYearsWithStartupAndDecommissioning(
-  projectLife: number
-): number[] {
-  // gives you array of years starting from start-up, including projectLife years and then decommissioning
-  return Array.from({ length: projectLife + 2 });
+  // TODO: Add test for when project life doesn't match schedule
+  if (padding < 0) {
+    throw new Error(`Invalid capital depriciation profile ${capitalDepreciationProfile}.
+                      Project life must be at least ${selectedModel.length} years and current project life is ${projectLife}.`);
+  }
+
+  selectedModel.push(...Array(padding).fill(0));
+  return padArray(selectedModel);
 }

@@ -279,7 +279,6 @@ describe("Working Data calculations", () => {
         const datapoints = cashFlowChart.at(0).prop("datapoints");
         expect(datapoints).toHaveLength(1);
 
-        // TODO: Work out why it doesn't align with chart? Is it just negative values don't work?
         datapoints[0].data.forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
