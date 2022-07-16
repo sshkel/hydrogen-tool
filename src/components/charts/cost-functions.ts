@@ -1,9 +1,11 @@
 import { DepreciationProfile } from "../../types";
 import {
   decomissioning,
-  first,
+  dropPadding,
+  fillYearsArray,
   padArray,
   projectYears,
+  startup,
   sum,
 } from "../../utils";
 
@@ -32,7 +34,8 @@ export function cashFlowAnalysis(
   projectLife: number,
   inflationRate: number
 ) {
-  const inflation = applyInflation(inflationRate);
+  const inflation = getInflationFn(inflationRate, projectLife + 2);
+  const paddedAnnualSales = padArray(annualSales);
 
   // net investments
   // direct equity payment
@@ -45,20 +48,20 @@ export function cashFlowAnalysis(
   const directEquityCost = roundToNearestThousand(
     totalEquity * directEquityShare
   );
-  const directEquityPayment = first(directEquityCost, projectLife);
+  const directEquityPayment = startup(directEquityCost, projectLife);
   // indirect equity
   const indirectEquityShare = 1 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
   const indrectEquityCost = roundToNearestThousand(
     totalEquity * indirectEquityShare
   );
-  const indirectEquity = first(indrectEquityCost, projectLife);
+  const indirectEquity = startup(indrectEquityCost, projectLife);
   const shareOfTotalInvestmentFinancedViaLoan =
     1 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
   const totalLoan =
     totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
-  const costFinancedViaLoan = first(totalLoan, projectLife);
+  const costFinancedViaLoan = startup(totalLoan, projectLife);
 
   // salvage cost
   const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
@@ -112,7 +115,7 @@ export function cashFlowAnalysis(
     projectLife
   ).map(
     (_: number, i: number) =>
-      annualSales[i] -
+      paddedAnnualSales[i] -
       netInvestment[i] -
       totalLoanRepayment[i] -
       interestPaidOnLoan[i] -
@@ -188,99 +191,124 @@ export function calculateLoanBalance(
 }
 
 export function sales(
-  oxygenSales: number[],
-  averageElectricitySpotPrice: number,
-  inflationRate: number,
+  // Calculated values
   totalCapexCost: number,
   totalEpcCost: number,
   totalLandCost: number,
+  // Inputs
   projectLife: number,
   discountRate: number,
   salesMargin: number,
+  averageElectricitySpotPrice: number,
+  inflationRate: number,
+  // Values per year of project life
+  oxygenSales: number[],
   totalOpex: number[],
   h2Produced: number[],
   electricityProduced: number[]
 ) {
-  const inflation = applyInflation(inflationRate);
-  const electricitySales = electricityProduced.map(
-    (_: number, i: number) =>
-      electricityProduced[i] * averageElectricitySpotPrice
+  const activeLife = projectLife + 2;
+
+  const paddedH2Produced = padArray(h2Produced);
+  const paddedElectricityProduced = padArray(electricityProduced);
+  const paddedTotalOpex = padArray(totalOpex);
+  const paddedOxygenSales = padArray(oxygenSales);
+
+  const electricitySales = fillYearsArray(
+    activeLife,
+    (i: number) => paddedElectricityProduced[i] * averageElectricitySpotPrice
   );
 
-  const totalInvestmentRequired = first(
+  const totalInvestmentRequired = startup(
     totalCapexCost + totalEpcCost + totalLandCost,
     projectLife
   );
-  const paddedOpex = padArray(totalOpex);
-  const discount = applyDiscount(discountRate);
-  const totalCost = totalInvestmentRequired.map((_: number, i: number) => {
-    return (
+
+  const totalCost = fillYearsArray(
+    activeLife,
+    (i: number) =>
       totalInvestmentRequired[i] +
-      paddedOpex[i] -
-      oxygenSales[i] -
+      paddedTotalOpex[i] -
+      paddedOxygenSales[i] -
       electricitySales[i]
-    );
-  });
-  const totalCostWithDiscount = discount(totalCost);
-  const h2ProducedKgLCA = discount(
-    h2Produced.map((_: number, i: number) => h2Produced[i] * 1000)
   );
+
+  const applyInflation = getInflationFn(inflationRate, activeLife);
+  const applyDiscount = getDiscountFn(discountRate, activeLife);
+
+  const totalCostWithDiscount = applyDiscount(totalCost);
+  const h2ProducedKgLCA = applyDiscount(
+    fillYearsArray(activeLife, (i: number) => paddedH2Produced[i] * 1000)
+  );
+
   const hydrogenProductionCost = sum(h2ProducedKgLCA);
   const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
-
   const h2RetailPrice = lch2 + salesMargin;
+
   // The values can be used to create sales graphs.
-  const inflatedElectricitySales = inflation(electricitySales);
-  const inflatedOxygenSales = inflation(oxygenSales);
-  const inflatedh2Sales = inflation(
-    h2Produced.map((x) => x * 1000 * h2RetailPrice)
+  const inflatedElectricitySales = applyInflation(electricitySales);
+  const inflatedOxygenSales = applyInflation(paddedOxygenSales);
+  const inflatedh2Sales = applyInflation(
+    paddedH2Produced.map((x) => x * 1000 * h2RetailPrice)
   );
-  const annualSales = inflatedh2Sales.map(
+  const paddedAnnualSales = inflatedh2Sales.map(
     (_: number, i: number) =>
       inflatedh2Sales[i] + inflatedElectricitySales[i] + inflatedOxygenSales[i]
   );
+
   return {
     lch2,
     h2RetailPrice,
     totalCost,
     totalCostWithDiscount,
-    h2ProducedKgLCA,
-    h2Sales: inflatedh2Sales,
-    electricitySales: inflatedElectricitySales,
-    oxygenSales: inflatedOxygenSales,
-    annualSales,
     hydrogenProductionCost,
+    // Drop padding to account for sales graphs tracking project years
+    h2Sales: dropPadding(inflatedh2Sales),
+    electricitySales: dropPadding(inflatedElectricitySales),
+    oxygenSales: dropPadding(inflatedOxygenSales),
+    annualSales: dropPadding(paddedAnnualSales),
   };
 }
 
-export function applyInflation(rate: number) {
-  return (values: number[]) =>
-    values.map(
+export function getInflationFn(rate: number, years: number) {
+  return (values: number[]) => {
+    if (values.length !== years) {
+      throw new Error(
+        `Invalid size of ${values.length} for values to apply inflation. Should be ${years}.`
+      );
+    }
+
+    return values.map(
       // i corresponds to year
       (x: number, i: number) => {
         // zero-th year is always skipped as it signifies upfront costs rather than actual operations
         if (i === 0) {
           return x;
         }
-        // TODO: Check is passing in array size of PROJECT_YEARS + 1 (to account for 0th year, but going up to project life)
         return x * (1 + rate) ** i;
       }
     );
+  };
 }
 
-export function applyDiscount(rate: number) {
-  return (values: number[]) =>
-    values.map(
+export function getDiscountFn(rate: number, years: number) {
+  return (values: number[]) => {
+    if (values.length !== years) {
+      throw new Error(
+        `Invalid size of ${values.length} for values to apply discount. Should be ${years}.`
+      );
+    }
+    return values.map(
       // i corresponds to year
       (x: number, i: number) => {
         // zero-th year is always skipped as it signifies upfront costs rather than actual operations
         if (i === 0) {
           return x;
         }
-        // TODO: Check is passing in array size of PROJECT_YEARS + 1 (to account for 0th year, but going up to project life)
         return x / (1 + rate) ** i;
       }
     );
+  };
 }
 
 export function getSummedDiscountForOpexCost(

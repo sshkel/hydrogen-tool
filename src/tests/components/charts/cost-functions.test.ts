@@ -1,7 +1,7 @@
 import {
-  applyInflation,
   calculateLoanBalance,
   getBaseLog,
+  getInflationFn,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
 
@@ -19,7 +19,7 @@ describe("Cost function calculations", () => {
   });
 
   it("can apply inflation based on rate and input cost", () => {
-    const inflationFn = applyInflation(0.5);
+    const inflationFn = getInflationFn(0.5, 9);
     const input = [...Array(9).keys()].map((_) => 1);
     const inflationValues = inflationFn(input);
     expect(inflationValues).toHaveLength(9);

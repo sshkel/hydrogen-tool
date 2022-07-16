@@ -18,13 +18,7 @@ import {
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
 import { InputFields } from "../../types";
-import {
-  dropPadding,
-  fillProjectYearsArray,
-  mean,
-  padArray,
-  projectYears,
-} from "../../utils";
+import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
@@ -218,14 +212,12 @@ export default function WorkingData(props: Props) {
   );
 
   // Cost values
-  const paddedH2Produced: number[] = padArray(h2Produced);
-  const paddedElectricityProduced: number[] = padArray(electricityProduced);
 
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
 
-  const oxygenSalePrice: number[] = fillProjectYearsArray(
+  const oxygenSalePrice: number[] = fillYearsArray(
     plantLife,
     (i) => 8 * h2Produced[i] * oxygenRetailPrice
   );
@@ -233,27 +225,24 @@ export default function WorkingData(props: Props) {
   const {
     lch2,
     h2RetailPrice,
-    // totalCost,
-    // totalCostWithDiscount,
-    // h2ProducedKgLCA,
     h2Sales,
     electricitySales,
     oxygenSales,
     annualSales,
     hydrogenProductionCost,
   } = sales(
-    padArray(oxygenSalePrice),
-    averageElectricitySpotPrice,
-    inflationRate / 100,
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
     plantLife,
     discountRate / 100,
     salesMargin,
+    averageElectricitySpotPrice,
+    inflationRate / 100,
+    oxygenSalePrice,
     totalOpex,
-    paddedH2Produced,
-    paddedElectricityProduced
+    h2Produced,
+    electricityProduced
   );
 
   const cashFlow = cashFlowAnalysis(
@@ -287,7 +276,7 @@ export default function WorkingData(props: Props) {
       plantLife
     ) / hydrogenProductionCost;
 
-  const batteryCostPerYear: number[] = fillProjectYearsArray(
+  const batteryCostPerYear: number[] = fillYearsArray(
     plantLife,
     (i) => batteryOpexCost + batteryReplacementCostsOverProjectLife[i]
   );
@@ -322,7 +311,7 @@ export default function WorkingData(props: Props) {
       plantLife
     ) / hydrogenProductionCost;
 
-  const ppaCostOfElectricityConsumed = fillProjectYearsArray(
+  const ppaCostOfElectricityConsumed = fillYearsArray(
     plantLife,
     (i) =>
       (electricityConsumed[i] + electricityConsumedByBattery[i]) *
@@ -337,7 +326,7 @@ export default function WorkingData(props: Props) {
     : 0;
 
   // TODO: check in Retail mode
-  const retailElectricitySalePrice = fillProjectYearsArray(
+  const retailElectricitySalePrice = fillYearsArray(
     plantLife,
     (i) => electricityProduced[i] * averageElectricitySpotPrice
   );
@@ -470,17 +459,15 @@ export default function WorkingData(props: Props) {
         title="Sales"
         plantLife={plantLife}
         datapoints={[
-          { label: "Hydrogen Sales", data: dropPadding(h2Sales) },
-          { label: "Electricity Sales", data: dropPadding(electricitySales) },
-          { label: "Oxygen Sales", data: dropPadding(oxygenSales) },
-          { label: "Total Sales", data: dropPadding(annualSales) },
+          { label: "Hydrogen Sales", data: h2Sales },
+          { label: "Electricity Sales", data: electricitySales },
+          { label: "Oxygen Sales", data: oxygenSales },
+          { label: "Total Sales", data: annualSales },
         ]}
       />
       <CostBarChart
         title="Cash Flow Analysis"
-        labels={["Startup"]
-          .concat(projectYears(plantLife).map(String))
-          .concat(["Decomissioning"])}
+        labels={getActiveYearsLabels(plantLife)}
         datapoints={[
           {
             label: "Cash Flow Analysis",

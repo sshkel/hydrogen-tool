@@ -1,10 +1,5 @@
 import { InputFields } from "../../types";
-import {
-  fillProjectYearsArray,
-  isSolar,
-  isWind,
-  projectYears,
-} from "../../utils";
+import { fillYearsArray, isSolar, isWind, projectYears } from "../../utils";
 import { roundToNearestThousand, roundToTwoDP } from "./cost-functions";
 
 export function generateOpexValues(
@@ -133,7 +128,7 @@ export function generateOpexValues(
       : Array(plantLife).fill(0);
 
   const gridConnectionOpexPerYear: number[] = gridConnected
-    ? fillProjectYearsArray(
+    ? fillYearsArray(
         plantLife,
         (i) =>
           additionalTransmissionCharges *
@@ -145,7 +140,7 @@ export function generateOpexValues(
   const totalPPACost = ppaAgreement
     ? principalPPACost + additionalTransmissionCharges
     : 0;
-  const electricityOpexCost: number[] = fillProjectYearsArray(
+  const electricityOpexCost: number[] = fillYearsArray(
     plantLife,
     (i) =>
       totalPPACost * (electricityConsumed[i] + electricityConsumedByBattery[i])
@@ -156,7 +151,7 @@ export function generateOpexValues(
     plantLife
   );
 
-  const waterOpexCost: number[] = fillProjectYearsArray(
+  const waterOpexCost: number[] = fillYearsArray(
     plantLife,
     (i) =>
       electrolyserWaterCost * waterRequirementOfElectrolyser * h2Produced[i]
@@ -167,7 +162,7 @@ export function generateOpexValues(
     plantLife
   );
 
-  const totalOpex = fillProjectYearsArray(
+  const totalOpex = fillYearsArray(
     plantLife,
     (i: number) =>
       electrolyserOpexCost +
