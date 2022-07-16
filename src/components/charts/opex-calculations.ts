@@ -127,6 +127,7 @@ export function generateOpexValues(
         )
       : Array(plantLife).fill(0);
 
+  // TODO: Test for grid connection opex only when grid connected
   const gridConnectionOpexPerYear: number[] = gridConnected
     ? fillYearsArray(
         plantLife,

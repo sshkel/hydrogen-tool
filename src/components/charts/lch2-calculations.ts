@@ -39,50 +39,40 @@ export function generateLCValues(
   const lcPowerPlantCAPEX = powerPlantCAPEX / hydrogenProductionCost;
   const lcElectrolyserCAPEX = electrolyserCAPEX / hydrogenProductionCost;
   const lcIndirectCosts = totalIndirectCosts / hydrogenProductionCost;
-  const lcPowerPlantOPEX =
-    getSummedDiscountForOpexCost(powerPlantOpexCost, discountRate, plantLife) /
-    hydrogenProductionCost;
-  const lcElectrolyserOPEX =
-    getSummedDiscountForOpexCost(
-      electrolyserOpexCost,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
+
+  const powerPlantOpexPerYear = Array(plantLife).fill(powerPlantOpexCost);
+  const electrolyserOpexPerYear = Array(plantLife).fill(electrolyserOpexCost);
+  const additionalAnnualCostsPerYear = Array(plantLife).fill(
+    additionalAnnualCosts
+  );
+
+  const calculateLevelisedCost = getLevelisedCostCalculation(
+    discountRate,
+    plantLife,
+    hydrogenProductionCost
+  );
+
+  const lcPowerPlantOPEX = calculateLevelisedCost(powerPlantOpexPerYear);
+  const lcElectrolyserOPEX = calculateLevelisedCost(electrolyserOpexPerYear);
 
   const batteryCostPerYear: number[] = fillYearsArray(
     plantLife,
     (i) => batteryOpexCost + batteryReplacementCostsOverProjectLife[i]
   );
 
-  const lcBattery =
-    (batteryCAPEX +
-      getSummedDiscountForOpexValues(
-        batteryCostPerYear,
-        discountRate,
-        plantLife
-      )) /
-    hydrogenProductionCost;
-  const lcWater =
-    getSummedDiscountForOpexValues(waterOpexCost, discountRate, plantLife) /
-    hydrogenProductionCost;
-  const lcAdditionalCosts =
-    (additionalUpfrontCosts +
-      getSummedDiscountForOpexCost(
-        additionalAnnualCosts,
-        discountRate,
-        plantLife
-      )) /
-    hydrogenProductionCost;
-  const lcOxygenSale =
-    getSummedDiscountForOpexValues(oxygenSalePrice, discountRate, plantLife) /
-    hydrogenProductionCost;
+  const lcBattery = calculateLevelisedCost(batteryCostPerYear, batteryCAPEX);
+  const lcWater = calculateLevelisedCost(waterOpexCost);
 
-  const lcStackReplacement =
-    getSummedDiscountForOpexValues(
-      stackReplacementCostsOverProjectLife,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
+  const lcAdditionalCosts = calculateLevelisedCost(
+    additionalAnnualCostsPerYear,
+    additionalUpfrontCosts
+  );
+
+  const lcOxygenSale = calculateLevelisedCost(oxygenSalePrice);
+
+  const lcStackReplacement = calculateLevelisedCost(
+    stackReplacementCostsOverProjectLife
+  );
 
   const ppaCostOfElectricityConsumed = fillYearsArray(
     plantLife,
@@ -91,11 +81,7 @@ export function generateLCValues(
       principalPPACost
   );
   const lcElectricityPurchase = ppaAgreement
-    ? getSummedDiscountForOpexValues(
-        ppaCostOfElectricityConsumed,
-        discountRate,
-        plantLife
-      ) / hydrogenProductionCost
+    ? calculateLevelisedCost(ppaCostOfElectricityConsumed)
     : 0;
 
   // TODO: check in Retail mode
@@ -103,22 +89,12 @@ export function generateLCValues(
     plantLife,
     (i) => electricityProduced[i] * averageElectricitySpotPrice
   );
-  const lcElectricitySale =
-    getSummedDiscountForOpexValues(
-      retailElectricitySalePrice,
-      discountRate,
-      plantLife
-    ) / hydrogenProductionCost;
+  const lcElectricitySale = calculateLevelisedCost(retailElectricitySalePrice);
 
-  const gridOpex = gridConnected
-    ? getSummedDiscountForOpexValues(
-        gridConnectionOpexPerYear,
-        discountRate,
-        plantLife
-      )
-    : 0;
   const lcGridConnection =
-    (gridConnectionCAPEX + gridOpex) / hydrogenProductionCost;
+    gridConnected || ppaAgreement
+      ? calculateLevelisedCost(gridConnectionOpexPerYear, gridConnectionCAPEX)
+      : 0;
 
   return {
     lcPowerPlantCAPEX,
@@ -137,27 +113,17 @@ export function generateLCValues(
   };
 }
 
-function getSummedDiscountForOpexCost(
-  opex: number,
+function getLevelisedCostCalculation(
   discountRate: number,
-  years: number
-): number {
-  let sum = 0;
-  for (let i = 1; i <= years; i++) {
-    sum += opex / (1 + discountRate / 100) ** i;
-  }
-  return sum;
-}
-
-function getSummedDiscountForOpexValues(
-  opexValues: number[],
-  discountRate: number,
-  years: number
-): number {
-  let sum = 0;
-  for (let i = 1; i <= years; i++) {
-    // Need to minus 1 as assuming opexValues is zero indexes
-    sum += opexValues[i - 1] / (1 + discountRate / 100) ** i;
-  }
-  return sum;
+  years: number,
+  hydrogenProductionCost: number
+) {
+  return (opexValues: number[], additionalCAPEX: number = 0) => {
+    let sum = 0;
+    for (let i = 1; i <= years; i++) {
+      // Need to minus 1 as assuming opexValues is zero indexes
+      sum += opexValues[i - 1] / (1 + discountRate / 100) ** i;
+    }
+    return (sum + additionalCAPEX) / hydrogenProductionCost;
+  };
 }

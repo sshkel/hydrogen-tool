@@ -450,11 +450,11 @@ export class HydrogenModel {
   ): { electrolyser_cf: number[]; battery_net_charge: number[] } {
     const size = generator_cf.length;
     const excess_generation = generator_cf.map(
-      (x: number, i: number) =>
+      (_: number, i: number) =>
         (generator_cf[i] * oversize - electrolyser_cf[i]) * elecCapacity
     );
-    const battery_net_charge = new Array(size).fill(0.0);
-    const battery_soc = new Array(size).fill(0.0);
+    const battery_net_charge = Array(size).fill(0.0);
+    const battery_soc = Array(size).fill(0.0);
     const batt_losses = 1 - (1 - batteryEfficiency) / 2;
     const elec_min = elecMinLoad * elecCapacity;
     const elec_max = elecMaxLoad * elecCapacity;
@@ -532,7 +532,7 @@ export class HydrogenModel {
         battery_soc[hour - 1] + battery_net_charge[hour] / batteryEnergy;
     }
     const electrolyser_cf_batt = battery_net_charge.map(
-      (e: number, i: number) => {
+      (_: number, i: number) => {
         if (battery_net_charge[i] < 0) {
           return (
             electrolyser_cf[i] +
@@ -564,14 +564,26 @@ export class HydrogenModel {
     const windRatio = windCapacity / genCapacity;
     const solarDfValues = solarData.map((r: CsvRow) => r[location]);
     const windDfValues = windData.map((r: CsvRow) => r[location]);
-    if (solarRatio === 1 && solarDegradation === 0) {
-      return solarDfValues;
-    } else if (windRatio === 1 && windDegradation === 0) {
-      return windDfValues;
+    // Degradation values
+    const power = year - 1;
+    const solarDeg = 1 - solarDegradation / 100;
+    const windDeg = 1 - windDegradation / 100;
+    if (solarRatio === 1) {
+      if (solarDegradation === 0) {
+        return solarDfValues;
+      }
+      return solarDfValues.map(
+        (_: number, i: number) =>
+          solarDfValues[i] * solarRatio * solarDeg ** power
+      );
+    } else if (windRatio === 1) {
+      if (windDegradation === 0) {
+        return windDfValues;
+      }
+      return windDfValues.map(
+        (_: number, i: number) => windDfValues[i] * windRatio * windDeg ** power
+      );
     } else {
-      const solarDeg = 1 - solarDegradation / 100;
-      const windDeg = 1 - windDegradation / 100;
-      const power = year - 1;
       return solarDfValues.map(
         (_: number, i: number) =>
           solarDfValues[i] * solarRatio * solarDeg ** power +

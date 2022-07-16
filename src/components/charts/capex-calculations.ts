@@ -27,6 +27,8 @@ export function generateCapexValues(data: InputFields) {
     batteryStorageDuration = 0,
     batteryCosts = 0,
 
+    gridConnectionCost = 0,
+
     electrolyserEpcCosts,
     electrolyserLandProcurementCost,
     solarEpcCosts,
@@ -36,6 +38,9 @@ export function generateCapexValues(data: InputFields) {
     batteryEpcCosts,
     batteryLandProcurementCost,
   } = data;
+
+  const gridConnected: boolean = data.gridConnected === "true";
+  const ppaAgreement: boolean = data.ppaAgreement === "true";
 
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
@@ -96,6 +101,10 @@ export function generateCapexValues(data: InputFields) {
     batteryLandProcurementCost
   );
 
+  // TODO: test for grid connection CAPEX with ppa agreement or grid connected
+  const gridConnectionCAPEX =
+    gridConnected || ppaAgreement ? gridConnectionCost : 0;
+
   const totalIndirectCosts =
     electrolyserEpcCost +
     electrolyserLandCost +
@@ -106,6 +115,7 @@ export function generateCapexValues(data: InputFields) {
     electrolyserCAPEX,
     powerPlantCAPEX,
     batteryCAPEX,
+    gridConnectionCAPEX,
     electrolyserEpcCost,
     electrolyserLandCost,
     powerPlantEpcCost,

@@ -104,11 +104,7 @@ export default function WorkingData(props: Props) {
     windDegradation,
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
-    gridConnectionCost = 0,
   } = props.data;
-
-  const gridConnected: boolean = props.data.gridConnected === "true";
-  const ppaAgreement: boolean = props.data.ppaAgreement === "true";
 
   const dataModel: DataModel = {
     batteryLifetime,
@@ -144,6 +140,7 @@ export default function WorkingData(props: Props) {
     electrolyserCAPEX,
     powerPlantCAPEX,
     batteryCAPEX,
+    gridConnectionCAPEX,
     electrolyserEpcCost,
     electrolyserLandCost,
     powerPlantEpcCost,
@@ -152,9 +149,6 @@ export default function WorkingData(props: Props) {
     batteryLandCost,
     totalIndirectCosts,
   } = generateCapexValues(props.data);
-
-  const gridConnectionCAPEX =
-    gridConnected || ppaAgreement ? gridConnectionCost : 0;
 
   const totalCapexCost =
     electrolyserCAPEX +
