@@ -8,7 +8,7 @@ describe("LCH2 calculations", () => {
       ...defaultInputData,
       powerPlantConfiguration: "Grid Connected with Surplus Retailed",
       gridConnectionCost: 10,
-      plantLife: 10,
+      projectLife: 10,
       averageElectricitySpotPrice: 1,
     };
 
@@ -43,7 +43,7 @@ describe("LCH2 calculations", () => {
       ...defaultInputData,
       powerPlantConfiguration: "Standalone",
       gridConnectionCost: 10,
-      plantLife: 10,
+      projectLife: 10,
       averageElectricitySpotPrice: 1,
     };
 
@@ -78,7 +78,7 @@ describe("LCH2 calculations", () => {
       ...defaultInputData,
       powerPlantConfiguration: "Grid Connected",
       gridConnectionCost: 10,
-      plantLife: 10,
+      projectLife: 10,
       averageElectricitySpotPrice: 1,
     };
 

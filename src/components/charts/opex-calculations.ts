@@ -12,7 +12,7 @@ export function generateOpexValues(
   h2Produced: number[]
 ) {
   const {
-    plantLife,
+    projectLife,
     technology,
     powerPlantConfiguration,
 
@@ -53,12 +53,12 @@ export function generateOpexValues(
       ? maxDegradationStackReplacementYears(
           stackDegradation,
           maximumDegradationBeforeReplacement,
-          plantLife
+          projectLife
         )
       : cumulativeStackReplacementYears(
           totalOperatingHoursPerYear,
           stackLifetime,
-          plantLife
+          projectLife
         );
 
   const electrolyserStackReplacementCost =
@@ -72,13 +72,13 @@ export function generateOpexValues(
     getReplacementCostOverProjectLife(
       electrolyserStackReplacementCost,
       (year: number) => stackReplacementYears.includes(year),
-      plantLife
+      projectLife
     );
 
   const electrolyserOpexPerYear = getOpexPerYearInflationWithAdditionalCost(
     electrolyserOpexCost,
     inflationRate,
-    plantLife,
+    projectLife,
     stackReplacementCostsOverProjectLife
   );
 
@@ -93,13 +93,13 @@ export function generateOpexValues(
   const powerPlantOpexPerYear = getOpexPerYearInflationConstant(
     powerPlantOpexCost,
     inflationRate,
-    plantLife
+    projectLife
   );
 
   const additionalOpexPerYear = getOpexPerYearInflationConstant(
     additionalAnnualCosts,
     inflationRate,
-    plantLife
+    projectLife
   );
 
   // Battery costs
@@ -109,12 +109,12 @@ export function generateOpexValues(
   const actualBatteryReplacementCost =
     (batteryReplacementCost / 100) * batteryCAPEX;
   const shouldAddBatteryReplacementCost = (year: number): boolean =>
-    batteryLifetime > 0 && year % batteryLifetime === 0 && year < plantLife;
+    batteryLifetime > 0 && year % batteryLifetime === 0 && year < projectLife;
   const batteryReplacementCostsOverProjectLife =
     getReplacementCostOverProjectLife(
       actualBatteryReplacementCost,
       shouldAddBatteryReplacementCost,
-      plantLife
+      projectLife
     );
 
   const batteryOpexPerYear =
@@ -122,48 +122,48 @@ export function generateOpexValues(
       ? getOpexPerYearInflationWithAdditionalCost(
           batteryOpexCost,
           inflationRate,
-          plantLife,
+          projectLife,
           batteryReplacementCostsOverProjectLife
         )
-      : Array(plantLife).fill(0);
+      : Array(projectLife).fill(0);
 
   const gridConnectionOpexPerYear: number[] = gridConnected
     ? fillYearsArray(
-        plantLife,
+        projectLife,
         (i) =>
           additionalTransmissionCharges *
           (electricityConsumed[i] + electricityConsumedByBattery[i])
       )
-    : Array(plantLife).fill(0);
+    : Array(projectLife).fill(0);
 
   // Check for PPA Agreement
   const totalPPACost = ppaAgreement
     ? principalPPACost + additionalTransmissionCharges
     : 0;
   const electricityOpexCost: number[] = fillYearsArray(
-    plantLife,
+    projectLife,
     (i) =>
       totalPPACost * (electricityConsumed[i] + electricityConsumedByBattery[i])
   );
   const electricityPurchaseOpexPerYear = getOpexPerYearInflation(
     electricityOpexCost,
     inflationRate,
-    plantLife
+    projectLife
   );
 
   const waterOpexCost: number[] = fillYearsArray(
-    plantLife,
+    projectLife,
     (i) =>
       electrolyserWaterCost * waterRequirementOfElectrolyser * h2Produced[i]
   );
   const waterOpexPerYear = getOpexPerYearInflation(
     waterOpexCost,
     inflationRate,
-    plantLife
+    projectLife
   );
 
   const totalOpex = fillYearsArray(
-    plantLife,
+    projectLife,
     (i: number) =>
       electrolyserOpexCost +
       powerPlantOpexCost +

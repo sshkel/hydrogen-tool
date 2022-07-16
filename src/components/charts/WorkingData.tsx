@@ -76,7 +76,7 @@ export default function WorkingData(props: Props) {
     batteryEfficiency,
     additionalUpfrontCosts,
     batteryLifetime = 0,
-    plantLife,
+    projectLife,
     batteryStorageDuration = 0,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
@@ -132,7 +132,7 @@ export default function WorkingData(props: Props) {
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
 
-  let summary: ProjectModelSummary = model.calculateHydrogenModel(plantLife);
+  let summary: ProjectModelSummary = model.calculateHydrogenModel(projectLife);
   let hourlyOperations = model.getHourlyOperations();
 
   // CAPEX values
@@ -205,7 +205,7 @@ export default function WorkingData(props: Props) {
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
 
   const oxygenSalePrice: number[] = fillYearsArray(
-    plantLife,
+    projectLife,
     (i) => 8 * h2Produced[i] * oxygenRetailPrice
   );
 
@@ -221,7 +221,7 @@ export default function WorkingData(props: Props) {
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
-    plantLife,
+    projectLife,
     discountRate / 100,
     salesMargin,
     averageElectricitySpotPrice,
@@ -247,7 +247,7 @@ export default function WorkingData(props: Props) {
     interestOnLoan / 100,
     capitalDepreciationProfile,
     taxRate / 100,
-    plantLife,
+    projectLife,
     inflationRate / 100
   );
 
@@ -380,7 +380,7 @@ export default function WorkingData(props: Props) {
       />
       <CostLineChart
         title="Operating Costs"
-        plantLife={plantLife}
+        projectLife={projectLife}
         datapoints={[
           { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
           { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
@@ -395,7 +395,7 @@ export default function WorkingData(props: Props) {
       />
       <CostLineChart
         title="Sales"
-        plantLife={plantLife}
+        projectLife={projectLife}
         datapoints={[
           { label: "Hydrogen Sales", data: h2Sales },
           { label: "Electricity Sales", data: electricitySales },
@@ -405,7 +405,7 @@ export default function WorkingData(props: Props) {
       />
       <CostBarChart
         title="Cash Flow Analysis"
-        labels={getActiveYearsLabels(plantLife)}
+        labels={getActiveYearsLabels(projectLife)}
         datapoints={[
           {
             label: "Cash Flow Analysis",

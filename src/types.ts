@@ -80,7 +80,7 @@ export interface InputFields {
   windLandProcurementCost: number;
   windReferenceFoldIncrease: number;
   windOpex?: number;
-  plantLife: number;
+  projectLife: number;
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
   profile: SECType;

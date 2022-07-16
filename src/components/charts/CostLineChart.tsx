@@ -1,12 +1,12 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-import { checkLength } from "../../utils";
 import { ChartData } from "../../types";
+import { checkLength } from "../../utils";
 
 interface Props {
   title: string;
-  plantLife: number;
+  projectLife: number;
   datapoints: ChartData[];
 }
 
@@ -20,11 +20,11 @@ const colours = [
 ];
 
 export default function CostLineChart(props: Props) {
-  const { title, plantLife, datapoints } = props;
-  checkLength(datapoints, plantLife);
+  const { title, projectLife, datapoints } = props;
+  checkLength(datapoints, projectLife);
 
   const graphData = {
-    labels: [...Array(plantLife).keys()].map((i) => i + 1),
+    labels: [...Array(projectLife).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
       ...point,
       backgroundColor: colours[index],

@@ -113,13 +113,13 @@ export class HydrogenModel {
     this.specCons = this.parameters.specCons * this.H2VoltoMass;
   }
 
-  calculateHydrogenModel(plantLife: number): ProjectModelSummary {
+  calculateHydrogenModel(projectLife: number): ProjectModelSummary {
     const { stackDegradation, solarDegradation, windDegradation } =
       this.parameters;
     const projectSummary =
       stackDegradation + solarDegradation + windDegradation === 0
-        ? this.calculateHydrogenModelWithoutDegradation(plantLife)
-        : this.calculateHydrogenModelWithDegradation(plantLife);
+        ? this.calculateHydrogenModelWithoutDegradation(projectLife)
+        : this.calculateHydrogenModelWithDegradation(projectLife);
 
     return projectSummary;
   }
@@ -133,7 +133,7 @@ export class HydrogenModel {
   }
 
   private calculateHydrogenModelWithoutDegradation(
-    plantLife: number
+    projectLife: number
   ): ProjectModelSummary {
     const year = 1;
     const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
@@ -152,18 +152,18 @@ export class HydrogenModel {
 
     let projectSummary: ProjectModelSummary = {};
     SUMMARY_KEYS.forEach((key) => {
-      projectSummary[key] = Array(plantLife).fill(operatingOutputs[key]);
+      projectSummary[key] = Array(projectLife).fill(operatingOutputs[key]);
     });
 
     return projectSummary;
   }
 
   private calculateHydrogenModelWithDegradation(
-    plantLife: number
+    projectLife: number
   ): ProjectModelSummary {
     this.stackReplacementYears = this.initialiseStackReplacementYears(
       this.parameters,
-      plantLife
+      projectLife
     );
     let year = 1;
     // Calculate first year separately
@@ -174,7 +174,7 @@ export class HydrogenModel {
     let modelSummaryPerYear: ModelSummaryPerYear[] = [];
     modelSummaryPerYear.push(operatingOutputs);
 
-    for (year = 2; year <= plantLife; year++) {
+    for (year = 2; year <= projectLife; year++) {
       const hourlyOperationsByYear =
         this.calculateElectrolyserHourlyOperation(year);
       modelSummaryPerYear.push(

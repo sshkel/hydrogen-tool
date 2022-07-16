@@ -33,7 +33,7 @@ export function generateLCValues(
   const {
     powerPlantConfiguration,
     discountRate,
-    plantLife,
+    projectLife,
     additionalUpfrontCosts,
     additionalAnnualCosts,
     principalPPACost = 0,
@@ -47,15 +47,15 @@ export function generateLCValues(
   const lcElectrolyserCAPEX = electrolyserCAPEX / hydrogenProductionCost;
   const lcIndirectCosts = totalIndirectCosts / hydrogenProductionCost;
 
-  const powerPlantOpexPerYear = Array(plantLife).fill(powerPlantOpexCost);
-  const electrolyserOpexPerYear = Array(plantLife).fill(electrolyserOpexCost);
-  const additionalAnnualCostsPerYear = Array(plantLife).fill(
+  const powerPlantOpexPerYear = Array(projectLife).fill(powerPlantOpexCost);
+  const electrolyserOpexPerYear = Array(projectLife).fill(electrolyserOpexCost);
+  const additionalAnnualCostsPerYear = Array(projectLife).fill(
     additionalAnnualCosts
   );
 
   const calculateLevelisedCost = getLevelisedCostCalculation(
     discountRate,
-    plantLife,
+    projectLife,
     hydrogenProductionCost
   );
 
@@ -63,7 +63,7 @@ export function generateLCValues(
   const lcElectrolyserOPEX = calculateLevelisedCost(electrolyserOpexPerYear);
 
   const batteryCostPerYear: number[] = fillYearsArray(
-    plantLife,
+    projectLife,
     (i) => batteryOpexCost + batteryReplacementCostsOverProjectLife[i]
   );
 
@@ -82,7 +82,7 @@ export function generateLCValues(
   );
 
   const ppaCostOfElectricityConsumed = fillYearsArray(
-    plantLife,
+    projectLife,
     (i) =>
       (electricityConsumed[i] + electricityConsumedByBattery[i]) *
       principalPPACost
@@ -93,10 +93,10 @@ export function generateLCValues(
 
   const retailElectricitySalePrice = retailed
     ? fillYearsArray(
-        plantLife,
+        projectLife,
         (i) => electricityProduced[i] * averageElectricitySpotPrice
       )
-    : Array(plantLife).fill(0);
+    : Array(projectLife).fill(0);
   const lcElectricitySale = calculateLevelisedCost(retailElectricitySalePrice);
 
   const lcGridConnection =

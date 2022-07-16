@@ -129,7 +129,7 @@ describe("Opex calculations", () => {
     const data: InputFields = {
       ...defaultInputData,
       powerPlantConfiguration: "Grid Connected",
-      plantLife: 10,
+      projectLife: 10,
       additionalTransmissionCharges: 10,
     };
 
@@ -150,7 +150,7 @@ describe("Opex calculations", () => {
     const data: InputFields = {
       ...defaultInputData,
       powerPlantConfiguration: "PPA Agreement",
-      plantLife: 10,
+      projectLife: 10,
       additionalTransmissionCharges: 10,
     };
 
@@ -171,7 +171,7 @@ describe("Opex calculations", () => {
     const data: InputFields = {
       ...defaultInputData,
       powerPlantConfiguration: "Standalone",
-      plantLife: 10,
+      projectLife: 10,
       additionalTransmissionCharges: 10,
     };
 

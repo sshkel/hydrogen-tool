@@ -408,7 +408,7 @@ export const data: Field[] = [
   },
   /******* Financing Parameters *******/
   {
-    id: "plantLife",
+    id: "projectLife",
     label: "Plant Life",
     defaultValue: 20,
     adornmentLabel: "yrs",
