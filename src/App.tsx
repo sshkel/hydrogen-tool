@@ -1,4 +1,3 @@
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { useState } from "react";
 
 import WorkingData from "./components/charts/WorkingData";
