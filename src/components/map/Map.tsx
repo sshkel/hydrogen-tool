@@ -1,30 +1,43 @@
-import { Layer } from "leaflet";
-import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
+import { Button } from "@mui/material";
+import { MapContainer, Polygon, Popup, TileLayer } from "react-leaflet";
 
 interface Props {}
 
 export default function Map(props: Props) {
   const highlightFeature = (e: any) => {
-    console.log(e);
-    let layer = e.target;
-    layer.setStyle({
-      color: "black",
-    });
-  };
-  const unHighlightFeature = (e: any) => {
-    console.log(e);
     let layer = e.target;
     layer.setStyle({
       color: "blue",
     });
   };
-
-  const onEachZone = (zone: any, layer: Layer) => {
-    layer.on({
-      mouseover: highlightFeature,
-      mouseout: unHighlightFeature,
+  const unHighlightFeature = (e: any) => {
+    let layer = e.target;
+    layer.setStyle({
+      color: "#30D5C8",
     });
   };
+
+  const polygons = geoJson.features.map((feature: any) => {
+    return (
+      <Polygon
+        color="#30D5C8"
+        eventHandlers={{
+          mouseover: highlightFeature,
+          mouseout: unHighlightFeature,
+        }}
+        positions={feature.geometry.coordinates[0].map((v: any) => [
+          v[1],
+          v[0],
+        ])}
+      >
+        <Popup>
+          <p> Info about zone</p>
+          <Button variant="outlined">Start project</Button>
+        </Popup>
+      </Polygon>
+    );
+  });
+
   return (
     <div id="map">
       <MapContainer
@@ -36,7 +49,7 @@ export default function Map(props: Props) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <GeoJSON data={geoJson} onEachFeature={onEachZone} />
+        {polygons}
       </MapContainer>
     </div>
   );
