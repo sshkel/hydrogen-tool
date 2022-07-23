@@ -1,19 +1,34 @@
 import { Button } from "@mui/material";
-import { MapContainer, Polygon, Popup, TileLayer } from "react-leaflet";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { useState } from "react";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 
 interface Props {}
 
+type Anchor = "top" | "left" | "bottom" | "right";
+
 export default function Map(props: Props) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const highlightFeature = (e: any) => {
     let layer = e.target;
     layer.setStyle({
-      color: "blue",
+      color: "#30D5C8",
+      weight: 3,
     });
   };
   const unHighlightFeature = (e: any) => {
     let layer = e.target;
     layer.setStyle({
       color: "#30D5C8",
+      weight: 1,
     });
   };
 
@@ -24,22 +39,36 @@ export default function Map(props: Props) {
         eventHandlers={{
           mouseover: highlightFeature,
           mouseout: unHighlightFeature,
+          click: handleOpen,
         }}
-        positions={feature.geometry.coordinates[0].map((v: any) => [
+        positions={feature.geometry.coordinates[0].map((v: number[]) => [
           v[1],
           v[0],
         ])}
-      >
-        <Popup>
-          <p> Info about zone</p>
-          <Button variant="outlined">Start project</Button>
-        </Popup>
-      </Polygon>
+      />
     );
   });
-
+  const anchor = "left";
   return (
     <div id="map">
+      <div>
+        <Drawer anchor={anchor} open={open} onClose={handleClose}>
+          <Box sx={{ width: 300 }} role="presentation">
+            <List>
+              <ListItem key={"Location summary"}>
+                <ListItemText primary={"Location summary"} />
+              </ListItem>
+              <Divider />
+              <ListItem key={"Info"}>
+                <ListItemText primary={"Info"} />
+              </ListItem>
+              A bunch of information about the project
+            </List>
+            <Divider />
+            <Button variant="contained">Start project design</Button>
+          </Box>
+        </Drawer>
+      </div>
       <MapContainer
         center={[-32.27554173488815, 147.97835713324858]}
         zoom={7}
