@@ -110,8 +110,8 @@ function SideMenu(props: any) {
 
   return (
     <div>
-      {component == "location" && summary}
-      {component == "powerfuel" && powerfuel}
+      {component === "location" && summary}
+      {component === "powerfuel" && powerfuel}
     </div>
   );
 }
