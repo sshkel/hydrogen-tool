@@ -1,4 +1,5 @@
-import { Button } from "@mui/material";
+import { Power } from "@mui/icons-material";
+import { Button, ListItemButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -10,12 +11,10 @@ import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 
 interface Props {}
 
-type Anchor = "top" | "left" | "bottom" | "right";
-
 export default function Map(props: Props) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [sideMenuOpen, setSideMenuState] = useState(false);
+  const openSideMenu = () => setSideMenuState(true);
+  const closeSideMenu = () => setSideMenuState(false);
 
   const highlightFeature = (e: any) => {
     let layer = e.target;
@@ -39,7 +38,7 @@ export default function Map(props: Props) {
         eventHandlers={{
           mouseover: highlightFeature,
           mouseout: unHighlightFeature,
-          click: handleOpen,
+          click: openSideMenu,
         }}
         positions={feature.geometry.coordinates[0].map((v: number[]) => [
           v[1],
@@ -52,21 +51,8 @@ export default function Map(props: Props) {
   return (
     <div id="map">
       <div>
-        <Drawer anchor={anchor} open={open} onClose={handleClose}>
-          <Box sx={{ width: 300 }} role="presentation">
-            <List>
-              <ListItem key={"Location summary"}>
-                <ListItemText primary={"Location summary"} />
-              </ListItem>
-              <Divider />
-              <ListItem key={"Info"}>
-                <ListItemText primary={"Info"} />
-              </ListItem>
-              A bunch of information about the project
-            </List>
-            <Divider />
-            <Button variant="contained">Start project design</Button>
-          </Box>
+        <Drawer anchor={anchor} open={sideMenuOpen} onClose={closeSideMenu}>
+          <SideMenu />
         </Drawer>
       </div>
       <MapContainer
@@ -80,6 +66,53 @@ export default function Map(props: Props) {
         />
         {polygons}
       </MapContainer>
+    </div>
+  );
+}
+
+function SideMenu(props: any) {
+  const [component, setComponent] = useState("location");
+  const summary = (
+    <Box sx={{ width: 300 }} role="presentation">
+      <List>
+        <ListItem key={"Location summary"}>
+          <ListItemText primary={"Location summary"} />
+        </ListItem>
+        <Divider />
+        <ListItem key={"Info"}>
+          <ListItemText primary={"Info"} />
+        </ListItem>
+        A bunch of information about the project
+      </List>
+      <Divider />
+      <Button variant="contained" onClick={() => setComponent("powerfuel")}>
+        Start project design
+      </Button>
+    </Box>
+  );
+  const powerfuel = (
+    <Box sx={{ width: 300 }} role="presentation">
+      <List>
+        <ListItem key={"Hydrogen"}>
+          <ListItemButton>
+            <ListItemText primary={"Hydrogen"} />
+          </ListItemButton>
+        </ListItem>
+        <Divider />
+        <ListItem key={"Ammonia"}>
+          <ListItemButton>
+            <ListItemText primary={"Ammonia"} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <Divider />
+    </Box>
+  );
+
+  return (
+    <div>
+      {component == "location" && summary}
+      {component == "powerfuel" && powerfuel}
     </div>
   );
 }
