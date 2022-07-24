@@ -1,7 +1,11 @@
+import { Chart as ChartJS, ChartOptions } from "chart.js";
 import "chart.js/auto";
+import zoomPlugin from "chartjs-plugin-zoom";
 import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
+
+ChartJS.register(zoomPlugin);
 
 interface Props {
   datapoints: ChartData[];
@@ -12,7 +16,7 @@ const colours = ["#3E7DCC", "#00C8C8"];
 export default function HourlyCapacityFactors(props: Props) {
   // randomly sample for demo until we fix and have zoom in functionality
   // https://youtube.com/clip/UgkxlUpRBGgl1xSjlEPyATuGK1_Eaqu50GxV
-  const sampleToPlot = 250;
+  const sampleToPlot = 1000;
   const randomStart = 0;
   const { datapoints } = props;
 
@@ -27,10 +31,31 @@ export default function HourlyCapacityFactors(props: Props) {
       borderColor: colours[index],
     })),
   };
+  // TODO work with unsw on a smoother version of zoom and pan
+  const options: ChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: "x",
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          mode: "x",
+        },
+      },
+    },
+  };
 
   return (
     <div>
-      <Line data={graphData} />
+      <Line data={graphData} options={options} />
     </div>
   );
 }
