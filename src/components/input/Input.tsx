@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import React, { useState } from "react";
 
 import { PowerPlantConfiguration } from "../../types";
+import InputCard from "./InputCard";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
 import InputSelectField from "./InputSelectField";
@@ -26,6 +27,7 @@ export default function Input(props: Props) {
     useState<PowerPlantConfiguration>("Standalone");
 
   let pointer: number = 0;
+  let testPointer: number = 0;
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
@@ -109,12 +111,20 @@ export default function Input(props: Props) {
       sx={{
         width: "80%",
         height: "50%",
-        "& .MuiTextField-root": { m: 2, width: "40%" },
+        "& .MuiTextField-root": { m: 2 },
         "& .selectWrapper": { m: 2, width: "40%" },
         "& .MuiButton-root": { m: 2 },
       }}
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
+      <InputCard
+        title="Project Scale"
+        children={[...Array(4)].map((_) => {
+          let data = getData(testPointer);
+          --pointer;
+          return data;
+        })}
+      />
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
         <InputSelectField
           id="location"

@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 
 import Input from "../../../components/input/Input";
 import InputExpand from "../../../components/input/InputExpand";
@@ -22,9 +22,9 @@ describe("Input", () => {
     expect(wrapper.find(InputExpand).length).toBeGreaterThan(0);
     expect(wrapper.find(InputSelectField).length).toBeGreaterThan(0);
     expect(wrapper.find(InputNumberField).length).toBeGreaterThan(0);
-    expect(wrapper.find("button")).toHaveLength(1);
+    expect(wrapper.find(Button)).toHaveLength(1);
 
-    const button = wrapper.find("button").at(0);
+    const button = wrapper.find(Button).find("button").at(0);
     button.simulate("submit");
 
     expect(spy.mock.calls).toHaveLength(1);
