@@ -35,6 +35,7 @@ export default function Map(props: Props) {
     return (
       <Polygon
         color="#30D5C8"
+        weight={1}
         eventHandlers={{
           mouseover: highlightFeature,
           mouseout: unHighlightFeature,
