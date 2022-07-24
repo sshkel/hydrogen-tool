@@ -13,15 +13,17 @@ function App() {
     <div className="App2">
       <Routes>
         <Route path="/" element={<Map />} />
-        <Route path="/design" element={<Input setState={setState} />} />
         <Route
-          path="/result"
+          path="/design"
           element={
-            <WorkingData
-              data={state}
-              loadSolar={loadSolar}
-              loadWind={loadWind}
-            />
+            <div>
+              <Input setState={setState} />
+              <WorkingData
+                data={state}
+                loadSolar={loadSolar}
+                loadWind={loadWind}
+              />
+            </div>
           }
         />
         <Route

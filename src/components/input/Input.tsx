@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { PowerPlantConfiguration } from "../../types";
 import InputExpand from "./InputExpand";
@@ -27,7 +26,6 @@ export default function Input(props: Props) {
     useState<PowerPlantConfiguration>("Standalone");
 
   let pointer: number = 0;
-  const navigate = useNavigate();
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     let form: any = {};
@@ -39,7 +37,6 @@ export default function Input(props: Props) {
 
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
-    navigate("/result");
   };
 
   const savedState = localStorage.getItem("savedData") || "{}";
