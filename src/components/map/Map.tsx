@@ -7,6 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
@@ -29,7 +30,7 @@ export default function Map(props: Props) {
       weight: 1,
     });
   };
-
+  // TODO: replace back with <GeoJson> if we are not doing anything fancy with polygon styling
   const polygons = geoJson.features.map((feature: any) => {
     return (
       <Polygon
@@ -71,6 +72,10 @@ export default function Map(props: Props) {
 
 function SideMenu(props: any) {
   const [component, setComponent] = useState("location");
+  const navigate = useNavigate();
+  const startDesign = () => {
+    navigate("/design");
+  };
   const summary = (
     <Box sx={{ width: 300 }} role="presentation">
       <List>
@@ -93,13 +98,13 @@ function SideMenu(props: any) {
     <Box sx={{ width: 300 }} role="presentation">
       <List>
         <ListItem key={"Hydrogen"}>
-          <ListItemButton>
+          <ListItemButton onClick={startDesign}>
             <ListItemText primary={"Hydrogen"} />
           </ListItemButton>
         </ListItem>
         <Divider />
         <ListItem key={"Ammonia"}>
-          <ListItemButton>
+          <ListItemButton onClick={startDesign}>
             <ListItemText primary={"Ammonia"} />
           </ListItemButton>
         </ListItem>
