@@ -255,27 +255,27 @@ export class HydrogenModel {
     kgtoTonne: number,
     hoursPerYear: number
   ): ModelSummaryPerYear {
-    const generator_capacity_factor = mean(generatorCapFactor);
+    const generatorCapacityFactor = mean(generatorCapFactor);
     // Time Electrolyser is at its Rated Capacity"
-    const time_electrolyser =
+    const timeElectrolyser =
       electrolyserCapFactor.filter((e) => e === this.elecMaxLoad).length /
       hoursPerYear;
     //Total Time Electrolyser is Operating
-    const total_ops_time =
+    const totalOpsTime =
       electrolyserCapFactor.filter((e) => e > 0).length / hoursPerYear;
 
     // Achieved Electrolyser Capacity Factor
-    const achieved_electrolyser_cf = mean(electrolyserCapFactor);
+    const achievedElectrolyserCf = mean(electrolyserCapFactor);
     // Energy in to Electrolyser [MWh/yr]
-    const energy_in_electrolyser = sum(electrolyserCapFactor) * elecCapacity;
+    const energyInElectrolyser = sum(electrolyserCapFactor) * elecCapacity;
     // Surplus Energy [MWh/yr]
     const surplus =
       sum(generatorCapFactor) * genCapacity -
       sum(electrolyserCapFactor) * elecCapacity;
     // Hydrogen Output for Fixed Operation [t/yr]
-    const hydrogen_fixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
+    const hydrogenFixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
     // Hydrogen Output for Variable Operation [t/yr]
-    const hydrogen_variable =
+    const hydrogenVariable =
       sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
     // Total Battery Output (MWh/yr)
     const totalBatteryOutput =
@@ -284,15 +284,15 @@ export class HydrogenModel {
       (1 - (1 - this.batteryEfficiency) / 2);
 
     let summary: ModelSummaryPerYear = {};
-    summary[POWER_PLANT_CF] = generator_capacity_factor;
-    summary[RATED_CAPACITY_TIME] = time_electrolyser;
-    summary[TOTAL_OPERATING_TIME] = total_ops_time;
-    summary[ELECTROLYSER_CF] = achieved_electrolyser_cf;
-    summary[ENERGY_INPUT] = energy_in_electrolyser;
+    summary[POWER_PLANT_CF] = generatorCapacityFactor;
+    summary[RATED_CAPACITY_TIME] = timeElectrolyser;
+    summary[TOTAL_OPERATING_TIME] = totalOpsTime;
+    summary[ELECTROLYSER_CF] = achievedElectrolyserCf;
+    summary[ENERGY_INPUT] = energyInElectrolyser;
     summary[ENERGY_OUTPUT] = surplus;
     summary[BATTERY_OUTPUT] = totalBatteryOutput;
-    summary[HYDROGEN_OUTPUT_FIXED] = hydrogen_fixed;
-    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogen_variable;
+    summary[HYDROGEN_OUTPUT_FIXED] = hydrogenFixed;
+    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogenVariable;
 
     return summary;
   }
@@ -323,7 +323,7 @@ export class HydrogenModel {
     year: number
   ): ModelHourlyOperation {
     const oversize = genCapacity / elecCapacity;
-    const generator_cf = this.parseData(
+    const generatorCf = this.parseData(
       this.solarData,
       this.windData,
       genCapacity,
@@ -336,7 +336,7 @@ export class HydrogenModel {
     );
 
     // normal electrolyser calculation
-    const calculate_electrolyser = (x: number): number => {
+    const calculateElectrolyser = (x: number): number => {
       if (x * oversize > elecMaxLoad) {
         return elecMaxLoad;
       }
@@ -347,18 +347,18 @@ export class HydrogenModel {
       return x * oversize;
     };
 
-    let electrolyser_cf = generator_cf.map(calculate_electrolyser);
-    let battery_net_charge: number[] = new Array(8760).fill(0);
+    let electrolyserCf = generatorCf.map(calculateElectrolyser);
+    let batteryNetCharge: number[] = new Array(8760).fill(0);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
-      electrolyser_cf = this.overloading_model(
+      electrolyserCf = this.overloading_model(
         oversize,
         elecMaxLoad,
         elecOverloadRecharge,
         elecOverload,
-        generator_cf,
-        electrolyser_cf
+        generatorCf,
+        electrolyserCf
       );
     }
 
@@ -370,11 +370,11 @@ export class HydrogenModel {
           `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
         );
       }
-      const battery_model = this.battery_model(
+      const batteryModel = this.battery_model(
         oversize,
         elecCapacity,
-        generator_cf,
-        electrolyser_cf,
+        generatorCf,
+        electrolyserCf,
         batteryEfficiency,
         elecMinLoad,
         elecMaxLoad,
@@ -382,8 +382,8 @@ export class HydrogenModel {
         batteryEnergy,
         battMin
       );
-      electrolyser_cf = battery_model.electrolyser_cf;
-      battery_net_charge = battery_model.battery_net_charge;
+      electrolyserCf = batteryModel.electrolyser_cf;
+      batteryNetCharge = batteryModel.battery_net_charge;
     }
 
     let yearlyDegradationRate: number = 0;
@@ -392,7 +392,7 @@ export class HydrogenModel {
     if (stackDegradation > 0) {
       // Cumulative hour degradation logic if defined
       if (this.stackLifetime) {
-        this.currentStackOperatingHours += electrolyser_cf.filter(
+        this.currentStackOperatingHours += electrolyserCf.filter(
           (e) => e > 0
         ).length;
         if (this.currentStackOperatingHours >= this.stackLifetime) {
@@ -409,7 +409,7 @@ export class HydrogenModel {
     }
 
     // actual hydrogen calc
-    const hydrogen_prod_fixed = electrolyser_cf.map(
+    const hydrogenProdFixed = electrolyserCf.map(
       (x: number) => (x * hydOutput * (1 - yearlyDegradationRate)) / specCons
     );
 
@@ -420,27 +420,27 @@ export class HydrogenModel {
       return 1.25 * x ** 2 - 0.4286 * x + specCons - 0.85;
     };
 
-    const hydrogen_prod_variable = electrolyser_cf.map(
+    const hydrogenProdVariable = electrolyserCf.map(
       (x: number) =>
         ((x * hydOutput) / electrolyser_output_polynomial(x)) *
         (1 - yearlyDegradationRate)
     );
-    const working_df = {
-      Generator_CF: generator_cf,
-      Electrolyser_CF: electrolyser_cf,
-      Hydrogen_prod_fixed: hydrogen_prod_fixed,
-      Hydrogen_prod_variable: hydrogen_prod_variable,
-      Net_Battery_Flow: battery_net_charge,
+    const workingDf = {
+      Generator_CF: generatorCf,
+      Electrolyser_CF: electrolyserCf,
+      Hydrogen_prod_fixed: hydrogenProdFixed,
+      Hydrogen_prod_variable: hydrogenProdVariable,
+      Net_Battery_Flow: batteryNetCharge,
     };
 
-    return working_df;
+    return workingDf;
   }
 
   private battery_model(
     oversize: number,
     elecCapacity: number,
-    generator_cf: number[],
-    electrolyser_cf: number[],
+    generatorCf: number[],
+    electrolyserCf: number[],
     batteryEfficiency: number,
     elecMinLoad: number,
     elecMaxLoad: number,
@@ -448,104 +448,102 @@ export class HydrogenModel {
     batteryEnergy: number,
     battMin: number
   ): { electrolyser_cf: number[]; battery_net_charge: number[] } {
-    const size = generator_cf.length;
-    const excess_generation = generator_cf.map(
+    const size = generatorCf.length;
+    const excessGeneration = generatorCf.map(
       (_: number, i: number) =>
-        (generator_cf[i] * oversize - electrolyser_cf[i]) * elecCapacity
+        (generatorCf[i] * oversize - electrolyserCf[i]) * elecCapacity
     );
-    const battery_net_charge = Array(size).fill(0.0);
-    const battery_soc = Array(size).fill(0.0);
-    const batt_losses = 1 - (1 - batteryEfficiency) / 2;
-    const elec_min = elecMinLoad * elecCapacity;
-    const elec_max = elecMaxLoad * elecCapacity;
+    const batteryNetCharge = Array(size).fill(0.0);
+    const batterySoc = Array(size).fill(0.0);
+    const battLosses = 1 - (1 - batteryEfficiency) / 2;
+    const elecMin = elecMinLoad * elecCapacity;
+    const elecMax = elecMaxLoad * elecCapacity;
 
-    battery_net_charge[0] = Math.min(
+    batteryNetCharge[0] = Math.min(
       batteryPower,
-      excess_generation[0] * batt_losses
+      excessGeneration[0] * battLosses
     );
-    battery_soc[0] = battery_net_charge[0] / batteryEnergy;
+    batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
     // check for off by 1 error
     for (let hour = 1; hour < size; hour++) {
-      const batt_soc = battery_soc[hour - 1];
-      const spill = excess_generation[hour];
-      const elec_cons = electrolyser_cf[hour] * elecCapacity;
-      const batt_discharge_potential =
-        Math.min(batteryPower, (batt_soc - battMin) * batteryEnergy) *
-        batt_losses;
-      const elec_just_operating =
-        elec_cons > 0 ||
-        battery_net_charge[hour - 1] < 0 ||
-        electrolyser_cf[hour - 1] > 0;
+      const battSoc = batterySoc[hour - 1];
+      const spill = excessGeneration[hour];
+      const elecCons = electrolyserCf[hour] * elecCapacity;
+      const battDischargePotential =
+        Math.min(batteryPower, (battSoc - battMin) * batteryEnergy) *
+        battLosses;
+      const elecJustOperating =
+        elecCons > 0 ||
+        batteryNetCharge[hour - 1] < 0 ||
+        electrolyserCf[hour - 1] > 0;
       if (
-        elec_cons === 0 &&
-        spill + batt_discharge_potential > elec_min &&
-        elec_just_operating
+        elecCons === 0 &&
+        spill + battDischargePotential > elecMin &&
+        elecJustOperating
       ) {
         // When the generation is insufficient alone but combined with battery power can power the electrolyser
-        if (spill + batt_discharge_potential > elec_max) {
-          battery_net_charge[hour] =
-            -1 * Math.min(batteryPower, ((elec_max - spill) * 1) / batt_losses);
+        if (spill + battDischargePotential > elecMax) {
+          batteryNetCharge[hour] =
+            -1 * Math.min(batteryPower, ((elecMax - spill) * 1) / battLosses);
         } else {
-          battery_net_charge[hour] =
-            (-1 * batt_discharge_potential * 1) / batt_losses;
+          batteryNetCharge[hour] =
+            (-1 * battDischargePotential * 1) / battLosses;
         }
       } else if (
         spill > 0 &&
-        batt_soc + (spill / batteryEnergy) * batt_losses > 1
+        battSoc + (spill / batteryEnergy) * battLosses > 1
       ) {
         // When spilled generation is enough to completely charge the battery
-        battery_net_charge[hour] = Math.min(
+        batteryNetCharge[hour] = Math.min(
           batteryPower,
-          Math.max(batteryEnergy * (1.0 - batt_soc), 0.0)
+          Math.max(batteryEnergy * (1.0 - battSoc), 0.0)
         );
       } else if (spill > 0) {
         // Any other cases when there is spilled generation
-        battery_net_charge[hour] = Math.min(batteryPower, spill * batt_losses);
+        batteryNetCharge[hour] = Math.min(batteryPower, spill * battLosses);
       } else if (
-        elec_cons + batt_discharge_potential < elec_min ||
-        (spill === 0 && batt_soc <= battMin)
+        elecCons + battDischargePotential < elecMin ||
+        (spill === 0 && battSoc <= battMin)
       ) {
         //  generation and battery together are insufficient to power the electrolyser or there is no
         //  spilled generation and the battery is empty
-        battery_net_charge[hour] = 0;
+        batteryNetCharge[hour] = 0;
       } else if (
         spill === 0 &&
-        elec_max - elec_cons >
-          (batt_soc - battMin) * batt_losses * batteryEnergy &&
-        elec_just_operating
+        elecMax - elecCons > (battSoc - battMin) * battLosses * batteryEnergy &&
+        elecJustOperating
       ) {
         //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
-        battery_net_charge[hour] =
-          (-1 * batt_discharge_potential * 1) / batt_losses;
-      } else if (spill === 0 && elec_just_operating) {
+        batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
+      } else if (spill === 0 && elecJustOperating) {
         //  When the stored power is enough to power the electrolyser at max capacity
-        battery_net_charge[hour] =
-          -1 *
-          Math.min(batteryPower, ((elec_max - elec_cons) * 1) / batt_losses);
+        batteryNetCharge[hour] =
+          -1 * Math.min(batteryPower, ((elecMax - elecCons) * 1) / battLosses);
       } else if (spill === 0) {
-        battery_net_charge[hour] = 0;
+        batteryNetCharge[hour] = 0;
       } else {
         throw new Error("Error: battery configuration not accounted for");
       }
       //  Determine the battery state of charge based on the previous state of charge and the net change
-      battery_soc[hour] =
-        battery_soc[hour - 1] + battery_net_charge[hour] / batteryEnergy;
+      batterySoc[hour] =
+        batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
     }
-    const electrolyser_cf_batt = battery_net_charge.map(
-      (_: number, i: number) => {
-        if (battery_net_charge[i] < 0) {
-          return (
-            electrolyser_cf[i] +
-            (-1 * battery_net_charge[i] * batt_losses + excess_generation[i]) /
-              elecCapacity
-          );
-        } else {
-          return electrolyser_cf[i];
-        }
+    const electrolyserCfBatt = batteryNetCharge.map((_: number, i: number) => {
+      if (batteryNetCharge[i] < 0) {
+        return (
+          electrolyserCf[i] +
+          (-1 * batteryNetCharge[i] * battLosses + excessGeneration[i]) /
+            elecCapacity
+        );
+      } else {
+        return electrolyserCf[i];
       }
-    );
+    });
 
-    return { electrolyser_cf: electrolyser_cf_batt, battery_net_charge };
+    return {
+      electrolyser_cf: electrolyserCfBatt,
+      battery_net_charge: batteryNetCharge,
+    };
   }
 
   // returns Generator_CF series
@@ -597,37 +595,37 @@ export class HydrogenModel {
     elecMaxLoad: number,
     elecOverloadRecharge: number,
     elecOverload: number,
-    generator_cf: number[],
-    electrolyser_cf: number[]
+    generatorCf: number[],
+    electrolyserCf: number[]
   ): number[] {
-    const can_overload = generator_cf.map((x) => x * oversize > elecMaxLoad);
+    const canOverload = generatorCf.map((x) => x * oversize > elecMaxLoad);
 
-    for (let hour = 1; hour < generator_cf.length; hour++) {
+    for (let hour = 1; hour < generatorCf.length; hour++) {
       for (
-        let hour_i = 1;
-        hour_i < Math.min(hour, elecOverloadRecharge) + 1;
-        hour_i++
+        let hourI = 1;
+        hourI < Math.min(hour, elecOverloadRecharge) + 1;
+        hourI++
       ) {
-        if (can_overload[hour] && can_overload[hour - hour_i]) {
-          can_overload[hour] = false;
+        if (canOverload[hour] && canOverload[hour - hourI]) {
+          canOverload[hour] = false;
         }
       }
     }
     const maxOverload = elecOverload;
 
-    const electrolyser_CF_overload = can_overload.map(
+    const electrolyserCfoverload = canOverload.map(
       (canOverload: boolean, i: number) => {
-        const energy_generated = generator_cf[i] * oversize;
+        const energy_generated = generatorCf[i] * oversize;
         if (canOverload) {
           //Energy_for_overloading
           return Math.min(maxOverload, energy_generated);
         } else {
-          return electrolyser_cf[i];
+          return electrolyserCf[i];
         }
       }
     );
 
-    return electrolyser_CF_overload;
+    return electrolyserCfoverload;
   }
 
   private initialiseStackReplacementYears(
