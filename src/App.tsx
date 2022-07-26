@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import { useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -14,56 +13,21 @@ import Input from "./components/input/Input";
 import Map from "./components/map/Map";
 import { loadSolar, loadWind } from "./model/DataLoader";
 
-const drawerWidth = 200;
+const drawerWidth = 70;
 function App() {
   const [state, setState] = useState();
-  const navigate = useNavigate();
 
   return (
     <div className="App2">
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="permanent"
-          anchor="left"
-        >
-          <Toolbar />
-          <Divider />
-          <List>
-            {["Map"].map((text, _) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MapIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} onClick={() => navigate("/")} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-        </Drawer>
+        <SideBar />
         <Box
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default" }}
         >
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div>
-                  <Map />
-                </div>
-              }
-            />
+            <Route path="/" element={<Map />} />
             <Route
               path="/design"
               element={
@@ -89,6 +53,38 @@ function App() {
         </Box>
       </Box>
     </div>
+  );
+}
+
+function SideBar() {
+  const navigate = useNavigate();
+  return (
+    <Drawer
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          backgroundColor: "#1976d2",
+        },
+      }}
+      variant="permanent"
+      anchor="left"
+    >
+      <Toolbar />
+      <Divider />
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate("/")}>
+            <ListItemIcon>
+              <MapIcon style={{ color: "white" }} />
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <Divider />
+    </Drawer>
   );
 }
 

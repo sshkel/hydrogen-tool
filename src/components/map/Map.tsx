@@ -1,12 +1,11 @@
-import { Button, ListItemButton } from "@mui/material";
+import { Button, ListItemButton, Popover } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { MapContainer, Polygon, TileLayer, ZoomControl } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
 interface Props {}
@@ -48,25 +47,46 @@ export default function Map(props: Props) {
       />
     );
   });
-  const anchor = "left";
+
   return (
     <div id="map">
-      <div>
-        <Drawer anchor={anchor} open={sideMenuOpen} onClose={closeSideMenu}>
-          <SideMenu />
-        </Drawer>
-      </div>
-      <MapContainer
-        center={[-32.27554173488815, 147.97835713324858]}
-        zoom={7}
-        scrollWheelZoom={false}
+      <Box
+        sx={{
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {polygons}
-      </MapContainer>
+        <Popover
+          open={sideMenuOpen}
+          onClose={closeSideMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={{ top: 20, left: 100 }}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <SideMenu />
+        </Popover>
+        <MapContainer
+          center={[-32.27554173488815, 147.97835713324858]}
+          zoom={7}
+          scrollWheelZoom={false}
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <ZoomControl position="bottomright" />
+          {polygons}
+        </MapContainer>
+      </Box>
     </div>
   );
 }
