@@ -31,13 +31,14 @@ export default function InputHelpButton(props: Props) {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "inline-flex" }}>
       <IconButton
         aria-label="help"
         onClick={handleClick}
         style={{ backgroundColor: "transparent" }}
+        size="small"
       >
-        <HelpIcon />
+        <HelpIcon fontSize="inherit" />
       </IconButton>
       <Popover
         id={id}

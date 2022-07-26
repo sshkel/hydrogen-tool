@@ -3,11 +3,11 @@ import { ChartData } from "./types";
 export const isSolar = (tech: string): boolean => tech !== "Wind";
 export const isWind = (tech: string): boolean => tech !== "Solar";
 
-export function getActiveYearsLabels(plantLife: number): string[] {
+export function getActiveYearsLabels(projectLife: number): string[] {
   const labels: string[] = [];
   labels.push(
     "Startup",
-    ...projectYears(plantLife).map(String),
+    ...projectYears(projectLife).map(String),
     "Decommisioning"
   );
   return labels;
@@ -51,11 +51,11 @@ export function decomissioning(element: number, projectLife: number) {
 export function dropPadding(arr: number[]) {
   return arr.slice(1, arr.length - 1);
 }
-export function checkLength(datapoints: ChartData[], plantLife: number) {
+export function checkLength(datapoints: ChartData[], projectLife: number) {
   datapoints.forEach((p) => {
-    if (p.data.length !== plantLife) {
+    if (p.data.length !== projectLife) {
       throw new Error(
-        `Invalid size of ${p.data.length} for ${p.label}. Should be ${plantLife}. Data is ${p.data}`
+        `Invalid size of ${p.data.length} for ${p.label}. Should be ${projectLife}. Data is ${p.data}`
       );
     }
   });

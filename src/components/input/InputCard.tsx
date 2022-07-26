@@ -1,4 +1,4 @@
-import "@fontsource/nunito";
+import "@fontsource/nunito/800.css";
 import ExpandCircleIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -48,6 +48,7 @@ export default function InputCard(props: CardProps) {
       <Card
         sx={{
           fontSize: 14,
+          padding: 0.5,
         }}
       >
         <Box
@@ -60,9 +61,9 @@ export default function InputCard(props: CardProps) {
         >
           <Typography
             sx={{
-              fontSize: 18,
+              fontSize: 22,
               fontWeight: "bold",
-              color: expanded ? "orange" : "blue",
+              color: expanded ? "#ED7D31" : "#396AFF",
               padding: 1,
             }}
           >
@@ -76,7 +77,7 @@ export default function InputCard(props: CardProps) {
           >
             <ExpandCircleIcon
               sx={{
-                color: expanded ? "orange" : "inherit",
+                color: expanded ? "#ED7D31" : "inherit",
               }}
             />
           </ExpandMore>

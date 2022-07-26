@@ -7,6 +7,7 @@ import InputCard from "./InputCard";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
 import InputSelectField from "./InputSelectField";
+import InputSlider from "./InputSlider";
 import {
   capitalDepreciationProfile,
   data,
@@ -111,7 +112,7 @@ export default function Input(props: Props) {
       sx={{
         width: "80%",
         height: "50%",
-        "& .MuiTextField-root": { m: 2 },
+        "& .MuiTextField-root": { m: 1 },
         "& .selectWrapper": { m: 2, width: "40%" },
         "& .MuiButton-root": { m: 2 },
       }}
@@ -119,10 +120,13 @@ export default function Input(props: Props) {
     >
       <InputCard
         title="Project Scale"
-        children={[...Array(4)].map((_) => {
-          let data = getData(testPointer);
-          --pointer;
-          return data;
+        children={[...Array(2)].map((_, i) => {
+          if (i % 2 === 0) {
+            let data = getData(testPointer);
+            --pointer;
+            return data;
+          }
+          return <InputSlider title="Efficiency (%)" helperText="test" />;
         })}
       />
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
