@@ -18,14 +18,14 @@ export default function Map(props: Props) {
   const highlightFeature = (e: any) => {
     let layer = e.target;
     layer.setStyle({
-      color: "#30D5C8",
+      color: "#4472C4",
       weight: 3,
     });
   };
   const unHighlightFeature = (e: any) => {
     let layer = e.target;
     layer.setStyle({
-      color: "#30D5C8",
+      color: "#4472C4",
       weight: 1,
     });
   };
@@ -33,7 +33,7 @@ export default function Map(props: Props) {
   const polygons = geoJson.features.map((feature: any) => {
     return (
       <Polygon
-        color="#30D5C8"
+        color="#4472C4"
         weight={1}
         eventHandlers={{
           mouseover: highlightFeature,
