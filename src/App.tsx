@@ -66,7 +66,7 @@ function SideBar() {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "#1976d2",
+          backgroundColor: "#396aff",
         },
       }}
       variant="permanent"
