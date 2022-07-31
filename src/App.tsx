@@ -3,7 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { SideBar } from "./SideBar";
+import { SideBar } from "./components/SideBar";
 import WorkingData from "./components/charts/WorkingData";
 import Input from "./components/input/Input";
 import Map from "./components/map/Map";

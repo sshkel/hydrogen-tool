@@ -174,7 +174,7 @@ const geoJson: GeoJSON.FeatureCollection = {
     {
       type: "Feature",
       properties: {
-        zone: "South West, NSW",
+        zone: "South West NSW",
       },
       geometry: {
         type: "Polygon",
