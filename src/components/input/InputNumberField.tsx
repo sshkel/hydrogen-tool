@@ -1,7 +1,7 @@
+import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/system/Box";
 
 import InputTitle from "./InputTitle";
 
@@ -19,8 +19,6 @@ interface Props {
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
-    flexGrow: "inherit",
-    flexShrink: "inherit",
     "& fieldset": {
       borderColor: "#396AFF",
       borderWidth: "2px",
@@ -54,42 +52,39 @@ export default function InputNumberField(props: Props) {
   } = props;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        flexFlow: "wrap",
-        alignItems: "stretch",
-      }}
-    >
-      <InputTitle title={label} helperText={helperText} />
-      <StyledInputNumberField
-        id={name}
-        key={label}
-        // label={label}
-        name={name}
-        defaultValue={defaultValue}
-        value={value}
-        helperText={helperText}
-        required={required}
-        type="number"
-        onChange={onChange}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">{adornmentLabel}</InputAdornment>
-          ),
-        }}
-        inputProps={{
-          step: "0.01",
-        }}
-        sx={{
-          display: "flex",
-          flexGrow: "1",
-          flexShrink: "1",
-          flexBasis: "100%",
-          width: "100%",
-        }}
-      />
-    </Box>
+    <Grid container alignItems="center" columnSpacing={4}>
+      <Grid item xs={12}>
+        <InputTitle title={label} helperText={helperText} />
+      </Grid>
+      <Grid item xs={12}>
+        <StyledInputNumberField
+          id={name}
+          key={label}
+          // label={label}
+          name={name}
+          defaultValue={defaultValue}
+          value={value}
+          helperText={helperText}
+          required={required}
+          type="number"
+          onChange={onChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">{adornmentLabel}</InputAdornment>
+            ),
+          }}
+          inputProps={{
+            step: "0.01",
+          }}
+          sx={{
+            display: "flex",
+            flexGrow: "1",
+            flexShrink: "1",
+            flexBasis: "100%",
+            width: "100%",
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 }

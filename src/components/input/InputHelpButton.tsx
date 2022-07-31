@@ -9,9 +9,7 @@ interface Props {
 }
 
 export default function InputHelpButton(props: Props) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const { helperText } = props;
 
@@ -19,32 +17,38 @@ export default function InputHelpButton(props: Props) {
     return null;
   }
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handlePopoverClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+
+  const id = open ? "help-button" : undefined;
+  const popoverId = open ? "help-popup" : undefined;
 
   return (
     <div style={{ display: "inline-flex" }}>
       <IconButton
-        aria-label="help"
-        onClick={handleClick}
+        aria-label={id}
+        aria-owns={popoverId}
+        aria-haspopup="true"
+        onClick={handlePopoverOpen}
         style={{ backgroundColor: "transparent" }}
         size="small"
       >
         <HelpIcon fontSize="inherit" />
       </IconButton>
       <Popover
-        id={id}
+        id={popoverId}
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={handlePopoverClose}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",

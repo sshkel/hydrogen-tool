@@ -1,5 +1,4 @@
-import { TextField } from "@mui/material";
-import Box from "@mui/material/Box";
+import { TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
@@ -15,6 +14,9 @@ interface Props {
 const StyledSlider = styled(Slider)({
   height: 8,
   color: "#396AFF",
+  flexShrink: 1,
+  flexGrow: 1,
+  flexBasis: "90%",
 
   "& .MuiSlider-rail": {
     background: "linear-gradient(90deg ,#5A6FFA, #BDD7EF)",
@@ -60,38 +62,50 @@ export default function InputSlider(props: Props) {
   };
 
   return (
-    <Box>
-      <InputTitle title={title} helperText={helperText} />
-      <Grid container padding="0 18px" alignItems="center">
-        <Grid item xs>
-          <StyledSlider
-            value={typeof value === "number" ? value : 0}
-            onChange={handleSliderChange}
-            aria-labelledby="input-slider"
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            id={title}
-            key={title}
-            value={value}
-            variant="outlined"
-            size="small"
-            type="number"
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            inputProps={{
-              step: 10,
-              min: 0,
-              max: 100,
-              "aria-labelledby": "input-slider",
-              style: {
-                textAlign: "center",
-              },
-            }}
-          />
-        </Grid>
+    <Grid container columnSpacing={3.5}>
+      <Grid item xs={12}>
+        <InputTitle title={title} helperText={helperText} />
       </Grid>
-    </Box>
+      <Grid item flexGrow={1} flexShrink={1}>
+        <StyledSlider
+          value={typeof value === "number" ? value : 0}
+          onChange={handleSliderChange}
+          aria-labelledby="input-slider"
+        />
+      </Grid>
+      <Grid item minWidth="fit-content">
+        <TextField
+          id={title}
+          key={title}
+          value={value}
+          variant="outlined"
+          size="small"
+          type="number"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            step: 10,
+            min: 0,
+            max: 100,
+            "aria-labelledby": "input-slider",
+            style: {
+              textAlign: "center",
+            },
+          }}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography
+          sx={{
+            marginLeft: "14px",
+            fontSize: "0.75rem",
+            fontStyle: "italic",
+            color: "rgba(0, 0, 0, 0.6)",
+          }}
+        >
+          {helperText}
+        </Typography>
+      </Grid>
+    </Grid>
   );
 }

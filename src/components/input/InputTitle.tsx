@@ -16,12 +16,11 @@ export default function InputSlider(props: Props) {
       sx={{
         display: "flex",
         width: "100%",
-        padding: "0 18px",
       }}
     >
       <Typography
         id="input-title"
-        sx={{ lineHeight: "28px", flexBasis: "99%" }}
+        sx={{ lineHeight: "28px", fontWeight: "bold", flexBasis: "99%" }}
       >
         {title}
       </Typography>

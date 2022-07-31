@@ -1,3 +1,4 @@
+import "@fontsource/nunito";
 import "@fontsource/nunito/800.css";
 import ExpandCircleIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import Box from "@mui/material/Box";
@@ -5,7 +6,7 @@ import Card from "@mui/material/Card";
 import Collapse from "@mui/material/Collapse";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { createTheme, styled } from "@mui/material/styles";
+import { SxProps, Theme, createTheme, styled } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/system";
 import * as React from "react";
 
@@ -13,11 +14,20 @@ const theme = createTheme({
   typography: {
     fontFamily: "Nunito",
   },
+  palette: {
+    info: {
+      main: "rgba(0, 0, 0, 0.54)",
+      contrastText: "#000",
+    },
+  },
 });
 
 interface CardProps {
   title: string;
   children: JSX.Element[] | null;
+  expanded?: boolean;
+  onExpandChange?: () => void;
+  sx?: SxProps<Theme>;
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -36,10 +46,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function InputCard(props: CardProps) {
-  const { title, children } = props;
-  const [expanded, setExpanded] = React.useState(false);
+  const { title, children, onExpandChange } = props;
+  const [expanded, setExpanded] = React.useState(!!props.expanded);
 
   const handleExpandClick = () => {
+    if (onExpandChange) {
+      onExpandChange();
+    }
     setExpanded(!expanded);
   };
 
@@ -49,6 +62,7 @@ export default function InputCard(props: CardProps) {
         sx={{
           fontSize: 14,
           padding: 0.5,
+          ...props.sx,
         }}
       >
         <Box
