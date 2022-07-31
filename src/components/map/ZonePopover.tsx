@@ -1,11 +1,14 @@
-import { Button, ListItemButton, Popover } from "@mui/material";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import { Button, Grid, Paper, Popover, styled } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 export function ZonePopover(props: any) {
   const [component, setComponent] = useState("location");
@@ -13,41 +16,50 @@ export function ZonePopover(props: any) {
   const startDesign = () => {
     navigate("/design");
   };
+
   const summary = (
-    <Box sx={{ width: 300 }} role="presentation">
-      <List>
-        <ListItem key={"Location summary"}>
-          <ListItemText primary={"Location summary"} />
-        </ListItem>
-        <Divider />
-        <ListItem key={"Info"}>
-          <ListItemText primary={"Info"} />
-        </ListItem>
-        A bunch of information about the project
-      </List>
-      <Divider />
-      <Button variant="contained" onClick={() => setComponent("powerfuel")}>
-        Start project design
-      </Button>
-    </Box>
+    <Grid
+      container
+      role="presentation"
+      direction="column"
+      justifyContent="center"
+    >
+      <Grid item>
+        <Item>Location Summary</Item>
+      </Grid>
+      <Grid item>
+        <Item>Location </Item>
+      </Grid>
+      <Grid item>
+        <Item>Infrastructure</Item>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" onClick={() => setComponent("powerfuel")}>
+          Start project design
+        </Button>
+      </Grid>
+    </Grid>
   );
   const powerfuel = (
-    <Box sx={{ width: 300 }} role="presentation">
-      <List>
-        <ListItem key={"Hydrogen"}>
-          <ListItemButton onClick={startDesign}>
-            <ListItemText primary={"Hydrogen"} />
-          </ListItemButton>
-        </ListItem>
-        <Divider />
-        <ListItem key={"Ammonia"}>
-          <ListItemButton onClick={startDesign}>
-            <ListItemText primary={"Ammonia"} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Divider />
-    </Box>
+    <Grid
+      container
+      role="presentation"
+      direction="column"
+      alignItems="center"
+      spacing={3}
+    >
+      <Grid item>Powerfuel pathway</Grid>
+      <Grid item>
+        <Button variant="contained" onClick={startDesign}>
+          Hydrogen
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" onClick={startDesign}>
+          Ammonia
+        </Button>
+      </Grid>
+    </Grid>
   );
 
   return (
