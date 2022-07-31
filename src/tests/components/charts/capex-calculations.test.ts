@@ -28,7 +28,7 @@ describe("Capex calculations", () => {
 
   it("sets grid connection CAPEX when grid connected", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       gridConnectionCost: 10,
     };
@@ -40,7 +40,7 @@ describe("Capex calculations", () => {
 
   it("sets grid connection CAPEX when PPA agreement", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "PPA Agreement",
       gridConnectionCost: 10,
     };
@@ -52,7 +52,7 @@ describe("Capex calculations", () => {
 
   it("does not set grid connection CAPEX when standalone", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       gridConnectionCost: 10,
     };

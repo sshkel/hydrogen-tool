@@ -32,9 +32,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarScenario}
+          data={standaloneSolarScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneSolarScenario.location}
         />
       );
 
@@ -64,9 +65,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneSolarWithBatteryScenario.location}
         />
       );
 
@@ -96,9 +98,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneWindScenario}
+          data={standaloneWindScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneWindScenario.location}
         />
       );
 
@@ -128,9 +131,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for wind with ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithPPAScenario}
+          data={windWithPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={windWithPPAScenario.location}
         />
       );
 
@@ -160,9 +164,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for hybrid with battery, grid and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={hybridBatteryGridSurplusRetailScenario}
+          data={hybridBatteryGridSurplusRetailScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={hybridBatteryGridSurplusRetailScenario.location}
         />
       );
 
@@ -192,9 +197,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for wind with battery and PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithBatteryAndPPAScenario}
+          data={windWithBatteryAndPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={windWithBatteryAndPPAScenario.location}
         />
       );
 
@@ -224,9 +230,12 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar with oxygen and electricity sales", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario}
+          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={
+            gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
+          }
         />
       );
 
@@ -257,9 +266,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for solar with stack degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarWithStackDegradationScenario}
+          data={standaloneSolarWithStackDegradationScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneSolarWithStackDegradationScenario.location}
         />
       );
 
@@ -290,9 +300,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for hybrid with degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneHybridWithDegradationScenario}
+          data={standaloneHybridWithDegradationScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneHybridWithDegradationScenario.location}
         />
       );
 
@@ -323,9 +334,10 @@ describe("Working Data calculations", () => {
     it("calculates lch2 for wind with battery and degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneWindWithBatteryAndDegradationScenario}
+          data={standaloneWindWithBatteryAndDegradationScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneWindWithBatteryAndDegradationScenario.location}
         />
       );
 

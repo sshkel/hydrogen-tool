@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { PowerPlantConfiguration } from "../../types";
 import InputCard from "./InputCard";
@@ -13,7 +14,6 @@ import {
   capitalDepreciationProfile,
   data,
   isPowerPlantConfiguration,
-  locationData,
   powerPlantConfigurationData,
   profileData,
   replacementTypeData,
@@ -27,6 +27,8 @@ interface Props {
 export default function Input(props: Props) {
   const [powerPlantConfiguration, setPowerPlantConfiguration] =
     useState<PowerPlantConfiguration>("Standalone");
+
+  const navigate = useNavigate();
 
   let pointer: number = 0;
   let testPointer: number = 3;
@@ -42,6 +44,7 @@ export default function Input(props: Props) {
 
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
+    navigate("/result");
   };
 
   const savedState = localStorage.getItem("savedData") || "{}";
@@ -165,16 +168,6 @@ export default function Input(props: Props) {
         })}
       />
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
-        <InputSelectField
-          id="location"
-          label="Location"
-          values={locationData}
-          defaultValue={
-            parsedState["location"] !== undefined
-              ? parsedState["location"]
-              : locationData[0]
-          }
-        />
         <InputSelectField
           id="powerPlantConfiguration"
           label="Power Plant Configuration"

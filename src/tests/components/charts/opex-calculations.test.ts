@@ -127,7 +127,7 @@ describe("Opex calculations", () => {
 
   it("calculates grid connection opex when grid connected", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       projectLife: 10,
       additionalTransmissionCharges: 10,
@@ -148,7 +148,7 @@ describe("Opex calculations", () => {
 
   it("does not calculates grid connection opex when PPA agreement", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "PPA Agreement",
       projectLife: 10,
       additionalTransmissionCharges: 10,
@@ -169,7 +169,7 @@ describe("Opex calculations", () => {
 
   it("does not calculates grid connection opex when standalone", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       projectLife: 10,
       additionalTransmissionCharges: 10,

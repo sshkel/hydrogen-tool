@@ -1,21 +1,18 @@
-import MapIcon from "@mui/icons-material/Map";
-import { Drawer, List, ListItem, ListItemIcon } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import ListItemButton from "@mui/material/ListItemButton";
-import Toolbar from "@mui/material/Toolbar";
 import { useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
+import { SideBar } from "./components/SideBar";
 import WorkingData from "./components/charts/WorkingData";
 import Input from "./components/input/Input";
 import Map from "./components/map/Map";
 import { loadSolar, loadWind } from "./model/DataLoader";
+import { InputFields } from "./types";
 
-const drawerWidth = 70;
 function App() {
-  const [state, setState] = useState();
+  const [state, setState] = useState<InputFields | undefined>();
+  const [location, setLocation] = useState<string | undefined>();
 
   return (
     <div className="App2">
@@ -27,18 +24,17 @@ function App() {
           sx={{ flexGrow: 1, bgcolor: "background.default" }}
         >
           <Routes>
-            <Route path="/" element={<Map />} />
+            <Route path="/" element={<Map setLocation={setLocation} />} />
+            <Route path="/design" element={<Input setState={setState} />} />
             <Route
-              path="/design"
+              path="/result"
               element={
-                <div>
-                  <Input setState={setState} />
-                  <WorkingData
-                    data={state}
-                    loadSolar={loadSolar}
-                    loadWind={loadWind}
-                  />
-                </div>
+                <WorkingData
+                  data={state}
+                  location={location}
+                  loadSolar={loadSolar}
+                  loadWind={loadWind}
+                />
               }
             />
             <Route
@@ -53,38 +49,6 @@ function App() {
         </Box>
       </Box>
     </div>
-  );
-}
-
-function SideBar() {
-  const navigate = useNavigate();
-  return (
-    <Drawer
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          backgroundColor: "#1976d2",
-        },
-      }}
-      variant="permanent"
-      anchor="left"
-    >
-      <Toolbar />
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <MapIcon style={{ color: "white" }} />
-            </ListItemIcon>
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Divider />
-    </Drawer>
   );
 }
 

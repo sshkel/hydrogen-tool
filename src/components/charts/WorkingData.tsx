@@ -31,6 +31,7 @@ import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
 
 export interface Props {
+  location?: string;
   data?: InputFields;
   loadSolar: () => Promise<any[]>;
   loadWind: () => Promise<any[]>;
@@ -63,7 +64,7 @@ export default function WorkingData(props: Props) {
     });
   }, [props]);
 
-  if (!props.data) {
+  if (!(props.data && props.location)) {
     return null;
   }
 
@@ -82,7 +83,6 @@ export default function WorkingData(props: Props) {
     maximumLoadWhenOverloading,
     electrolyserMinimumLoad,
     electrolyserMaximumLoad,
-    location,
     stackReplacementType,
     stackLifetime,
     stackDegradation,
@@ -105,7 +105,7 @@ export default function WorkingData(props: Props) {
     secAtNominalLoad = 0,
     secCorrectionFactor = 0,
   } = props.data;
-
+  const location = props.location;
   const dataModel: DataModel = {
     batteryLifetime,
     batteryMinCharge,
