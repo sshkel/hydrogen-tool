@@ -5,7 +5,7 @@ import { defaultInputData } from "../../scenario";
 describe("LCH2 calculations", () => {
   it("calculates LC for electricity sales when in retail mode", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected with Surplus Retailed",
       gridConnectionCost: 10,
       projectLife: 10,
@@ -40,7 +40,7 @@ describe("LCH2 calculations", () => {
 
   it("does not calculates LC for electricity sales when standalone", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       gridConnectionCost: 10,
       projectLife: 10,
@@ -75,7 +75,7 @@ describe("LCH2 calculations", () => {
 
   it("does not calculates LC for electricity sales when grid connected without surplus retail", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       gridConnectionCost: 10,
       projectLife: 10,

@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import { mount } from "enzyme";
+import { MemoryRouter } from "react-router-dom";
 
 import Input from "../../../components/input/Input";
 import InputExpand from "../../../components/input/InputExpand";
@@ -11,12 +12,16 @@ import { defaultInputData } from "../../scenario";
 describe("Input", () => {
   it("renders expands", () => {
     const data: InputFields = {
-      ...defaultInputData,
+      ...defaultInputData.data,
     };
 
     const spy = jest.fn();
 
-    const wrapper = mount(<Input setState={spy} />);
+    const wrapper = mount(
+      <MemoryRouter initialEntries={["/random"]}>
+        <Input setState={spy} />
+      </MemoryRouter>
+    );
 
     // Make sure input components render
     expect(wrapper.find(InputExpand).length).toBeGreaterThan(0);

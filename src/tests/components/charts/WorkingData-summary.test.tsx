@@ -32,7 +32,8 @@ describe("Model summary", () => {
     it("calculates summary of results for solar", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarScenario}
+          data={standaloneSolarScenario.data}
+          location={standaloneSolarScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -74,7 +75,8 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario.data}
+          location={standaloneSolarWithBatteryScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -116,7 +118,8 @@ describe("Model summary", () => {
     it("calculates summary of results for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneWindScenario}
+          data={standaloneWindScenario.data}
+          location={standaloneWindScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -158,7 +161,8 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithPPAScenario}
+          data={windWithPPAScenario.data}
+          location={windWithPPAScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -200,7 +204,8 @@ describe("Model summary", () => {
     it("calculates summary of results for hybrid with battery, grid and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={hybridBatteryGridSurplusRetailScenario}
+          data={hybridBatteryGridSurplusRetailScenario.data}
+          location={hybridBatteryGridSurplusRetailScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -242,7 +247,8 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with battery and PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithBatteryAndPPAScenario}
+          data={windWithBatteryAndPPAScenario.data}
+          location={windWithBatteryAndPPAScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -284,7 +290,10 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with oxygen and electricity sales", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario}
+          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
+          location={
+            gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
+          }
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -326,7 +335,8 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with stack degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarWithStackDegradationScenario}
+          data={standaloneSolarWithStackDegradationScenario.data}
+          location={standaloneSolarWithStackDegradationScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -368,7 +378,8 @@ describe("Model summary", () => {
     it("calculates summary of results for hybrid with degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneHybridWithDegradationScenario}
+          data={standaloneHybridWithDegradationScenario.data}
+          location={standaloneHybridWithDegradationScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -410,7 +421,8 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with battery and degradation", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneWindWithBatteryAndDegradationScenario}
+          data={standaloneWindWithBatteryAndDegradationScenario.data}
+          location={standaloneWindWithBatteryAndDegradationScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />

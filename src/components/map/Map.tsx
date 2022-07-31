@@ -8,11 +8,15 @@ import { useState } from "react";
 import { MapContainer, Polygon, TileLayer, ZoomControl } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
-interface Props {}
+interface Props {
+  setLocation: (location: string) => void;
+}
 
 export default function Map(props: Props) {
   const [sideMenuOpen, setSideMenuState] = useState(false);
-  const openSideMenu = () => setSideMenuState(true);
+  const openSideMenu = () => {
+    setSideMenuState(true);
+  };
   const closeSideMenu = () => setSideMenuState(false);
 
   const highlightFeature = (e: any) => {
@@ -38,7 +42,10 @@ export default function Map(props: Props) {
         eventHandlers={{
           mouseover: highlightFeature,
           mouseout: unHighlightFeature,
-          click: openSideMenu,
+          click: () => {
+            props.setLocation(feature.properties.zone);
+            openSideMenu();
+          },
         }}
         positions={feature.geometry.coordinates[0].map((v: number[]) => [
           v[1],
@@ -147,7 +154,9 @@ const geoJson: GeoJSON.FeatureCollection = {
   features: [
     {
       type: "Feature",
-      properties: {},
+      properties: {
+        zone: "Broken Hill, NSW",
+      },
       geometry: {
         type: "Polygon",
         coordinates: [
@@ -164,7 +173,9 @@ const geoJson: GeoJSON.FeatureCollection = {
     },
     {
       type: "Feature",
-      properties: {},
+      properties: {
+        zone: "South West, NSW",
+      },
       geometry: {
         type: "Polygon",
         coordinates: [

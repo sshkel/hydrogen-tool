@@ -43,9 +43,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarScenario}
+          data={standaloneSolarScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneSolarScenario.location}
         />
       );
 
@@ -84,9 +85,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneSolarWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneSolarWithBatteryScenario.location}
         />
       );
 
@@ -124,9 +126,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={standaloneWindScenario}
+          data={standaloneWindScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={standaloneWindScenario.location}
         />
       );
 
@@ -164,9 +167,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithPPAScenario}
+          data={windWithPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={windWithPPAScenario.location}
         />
       );
 
@@ -205,9 +209,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={hybridBatteryGridSurplusRetailScenario}
+          data={hybridBatteryGridSurplusRetailScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={hybridBatteryGridSurplusRetailScenario.location}
         />
       );
 
@@ -250,9 +255,10 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
-          data={windWithBatteryAndPPAScenario}
+          data={windWithBatteryAndPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
+          location={windWithBatteryAndPPAScenario.location}
         />
       );
 
@@ -292,9 +298,10 @@ describe("Working Data calculations", () => {
   it("calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
     const wrapper = mount(
       <WorkingData
-        data={standaloneHybridWithDegradationScenario}
+        data={standaloneHybridWithDegradationScenario.data}
         loadSolar={loadSolar}
         loadWind={loadWind}
+        location={standaloneHybridWithDegradationScenario.location}
       />
     );
 

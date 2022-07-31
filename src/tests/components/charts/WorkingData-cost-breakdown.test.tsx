@@ -24,7 +24,7 @@ describe("Working Data calculations", () => {
   describe("Capital Cost Breakdown", () => {
     it("calculates electrolyser CAPEX as expected", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10000, // kW
         electrolyserReferencePurchaseCost: 1000, // A$/kw
@@ -33,7 +33,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -46,7 +51,7 @@ describe("Working Data calculations", () => {
 
     it("calculates solar CAPEX as expected", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Solar",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -56,7 +61,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -69,7 +79,7 @@ describe("Working Data calculations", () => {
 
     it("calculates wind CAPEX as expected", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Wind",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
@@ -79,7 +89,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -92,7 +107,7 @@ describe("Working Data calculations", () => {
 
     it("calculate does not factor in solar fields when wind technology", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Wind",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -102,7 +117,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -115,7 +135,7 @@ describe("Working Data calculations", () => {
 
     it("calculate does not factor in wind fields when solar technology", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Solar",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
@@ -125,7 +145,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -138,7 +163,7 @@ describe("Working Data calculations", () => {
 
     it("calculates combination of capacity when hybrid", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Hybrid",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -153,7 +178,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -166,14 +196,19 @@ describe("Working Data calculations", () => {
 
     it("calculates battery capex", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         batteryRatedPower: 2, // MW
         batteryStorageDuration: 2, // hr
         batteryCosts: 542, // A$/kWh
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -186,13 +221,18 @@ describe("Working Data calculations", () => {
 
     it("passes down grid connection cost", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         powerPlantConfiguration: "Grid Connected",
         gridConnectionCost: 2000,
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -205,12 +245,17 @@ describe("Working Data calculations", () => {
 
     it("passes down additional upfront costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         additionalUpfrontCosts: 2000,
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -223,7 +268,7 @@ describe("Working Data calculations", () => {
 
     it("calculates indirect cost as percentage of electrolyser and power plant capex", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Hybrid",
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
@@ -258,7 +303,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
@@ -272,9 +322,10 @@ describe("Working Data calculations", () => {
     it("calculates cost breakdown for complex scenario", () => {
       const wrapper = shallow(
         <WorkingData
-          data={standaloneSolarWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario.data}
           loadSolar={mockLoader}
           loadWind={mockLoader}
+          location={standaloneSolarWithBatteryScenario.location}
         />
       );
 
@@ -300,7 +351,7 @@ describe("Working Data calculations", () => {
   describe("Indirect Cost Breakdown", () => {
     it("calculates electrolyser indirect costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
@@ -313,7 +364,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
@@ -329,7 +385,7 @@ describe("Working Data calculations", () => {
 
     it("calculates solar indirect costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Solar",
 
         // Solar CAPEX = 100000
@@ -354,7 +410,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
@@ -369,7 +430,7 @@ describe("Working Data calculations", () => {
 
     it("calculates wind indirect costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Wind",
 
         // Solar CAPEX = ignored
@@ -394,7 +455,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
@@ -409,7 +475,7 @@ describe("Working Data calculations", () => {
 
     it("calculates hybrid indirect costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
         technology: "Hybrid",
 
         // Solar CAPEX = ignored
@@ -434,7 +500,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
@@ -449,7 +520,7 @@ describe("Working Data calculations", () => {
 
     it("calculates battery indirect costs", () => {
       const data: InputFields = {
-        ...defaultInputData,
+        ...defaultInputData.data,
 
         // Battery CAPEX = 100000
         batteryRatedPower: 5, // MW
@@ -461,7 +532,12 @@ describe("Working Data calculations", () => {
       };
 
       const wrapper = shallow(
-        <WorkingData data={data} loadSolar={mockLoader} loadWind={mockLoader} />
+        <WorkingData
+          data={data}
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={defaultInputData.location}
+        />
       );
 
       const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
@@ -477,9 +553,10 @@ describe("Working Data calculations", () => {
     it("calculates indirect costs in complex scenarios", () => {
       const wrapper = shallow(
         <WorkingData
-          data={standaloneSolarWithBatteryScenario}
+          data={standaloneSolarWithBatteryScenario.data}
           loadSolar={mockLoader}
           loadWind={mockLoader}
+          location={standaloneSolarWithBatteryScenario.location}
         />
       );
 
