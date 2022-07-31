@@ -1,10 +1,9 @@
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/system/Box";
 
-import InputHelpButton from "./InputHelpButton";
+import InputTitle from "./InputTitle";
 
 interface Props {
   label: string;
@@ -19,24 +18,26 @@ interface Props {
 }
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
-  "& .MuiInputLabel-root": {
-    fontWeight: "bold",
-    color: "black",
-  },
   "& .MuiOutlinedInput-root": {
     flexGrow: "inherit",
     flexShrink: "inherit",
     "& fieldset": {
-      borderColor: "blue",
+      borderColor: "#396AFF",
       borderWidth: "2px",
       borderRadius: "20px",
     },
     "&:hover fieldset": {
-      borderColor: "blue",
+      borderColor: "#396AFF",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "orange",
+      borderColor: "#ed7d31",
+      boxShadow:
+        "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
     },
+  },
+
+  "& .MuiFormHelperText-root": {
+    fontStyle: "italic",
   },
 }));
 
@@ -46,7 +47,6 @@ export default function InputNumberField(props: Props) {
     name,
     defaultValue,
     helperText,
-    disabled,
     required,
     onChange,
     adornmentLabel,
@@ -62,15 +62,15 @@ export default function InputNumberField(props: Props) {
         alignItems: "stretch",
       }}
     >
+      <InputTitle title={label} helperText={helperText} />
       <StyledInputNumberField
         id={name}
         key={label}
-        label={label}
+        // label={label}
         name={name}
         defaultValue={defaultValue}
         value={value}
-        // helperText={helperText}
-        disabled={disabled}
+        helperText={helperText}
         required={required}
         type="number"
         onChange={onChange}
@@ -86,22 +86,10 @@ export default function InputNumberField(props: Props) {
           display: "flex",
           flexGrow: "1",
           flexShrink: "1",
-          flexFlow: "nowrap",
-          alignItems: "stretch",
+          flexBasis: "100%",
+          width: "100%",
         }}
       />
-      <InputHelpButton helperText={helperText} />
-      <div style={{ display: "flex", flexBasis: "100%", height: 0 }} />
-      <Typography
-        paragraph
-        sx={{
-          fontStyle: "italic",
-          fontSize: "0.75rem",
-          margin: "-16px 0px 4px 16px",
-        }}
-      >
-        {helperText}
-      </Typography>
     </Box>
   );
 }
