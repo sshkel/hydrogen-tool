@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
 
 export function SideBar() {
-  const drawerWidth = 70;
+  const drawerWidth = 60;
   const navigate = useNavigate();
   return (
     <Drawer
@@ -27,8 +27,17 @@ export function SideBar() {
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <MapIcon style={{ color: "white" }} />
+            <ListItemIcon
+              style={{
+                justifyContent: "center",
+                minWidth: 0,
+              }}
+            >
+              <MapIcon
+                style={{
+                  color: "white",
+                }}
+              />
             </ListItemIcon>
           </ListItemButton>
         </ListItem>
