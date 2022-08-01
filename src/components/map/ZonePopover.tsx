@@ -23,6 +23,9 @@ export function ZonePopover(props: any) {
       role="presentation"
       direction="column"
       justifyContent="center"
+      alignItems="center"
+      height="60vh"
+      width="30vh"
     >
       <Grid item>
         <Item>Location Summary</Item>
@@ -45,16 +48,18 @@ export function ZonePopover(props: any) {
       container
       role="presentation"
       direction="column"
+      justifyContent="center"
       alignItems="center"
-      spacing={3}
+      height="60vh"
+      width="30vh"
     >
       <Grid item>Powerfuel pathway</Grid>
-      <Grid item>
+      <Grid item margin="10px">
         <Button variant="contained" onClick={startDesign}>
           Hydrogen
         </Button>
       </Grid>
-      <Grid item>
+      <Grid item margin="10px">
         <Button variant="contained" onClick={startDesign}>
           Ammonia
         </Button>
