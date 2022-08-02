@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { SideBar } from "./components/SideBar";
 import WorkingData from "./components/charts/WorkingData";
 import Input from "./components/input/Input";
+import StyledInput from "./components/input/StyledInput";
 import Map from "./components/map/Map";
 import { loadSolar, loadWind } from "./model/DataLoader";
 import { InputFields } from "./types";
@@ -25,6 +26,10 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Map setLocation={setLocation} />} />
+            <Route
+              path="/input"
+              element={<StyledInput setState={setState} />}
+            />
             <Route path="/design" element={<Input setState={setState} />} />
             <Route
               path="/result"

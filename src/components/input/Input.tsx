@@ -4,12 +4,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PowerPlantConfiguration } from "../../types";
-import InputCard from "./InputCard";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
-import InputSelect from "./InputSelect";
 import InputSelectField from "./InputSelectField";
-import InputSlider from "./InputSlider";
 import {
   capitalDepreciationProfile,
   data,
@@ -31,7 +28,6 @@ export default function Input(props: Props) {
   const navigate = useNavigate();
 
   let pointer: number = 0;
-  let testPointer: number = 3;
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
@@ -116,57 +112,12 @@ export default function Input(props: Props) {
       sx={{
         height: "50%",
         "& .selectWrapper": { m: 2, width: "40%" },
-        "& .MuiButton-root": { marginX: 2, marginY: 0.5 },
+        "& .MuiButton-root": { marginY: 0.5 },
         "& .MuiGrid-container": { paddingX: 2, paddingY: 0.5 },
-        "& .MuiCard-root": { m: 2 },
+        "& .MuiCard-root": { marginY: 1 },
       }}
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
-      <InputCard
-        title="Project Scale"
-        children={[...Array(3)].map((_, i) => {
-          if (i % 3 === 0) {
-            let data = getData(testPointer);
-            --pointer;
-            return data;
-          }
-          if (i % 3 === 1) {
-            return (
-              <InputSlider
-                title="Efficiency (%)"
-                helperText="Value: 50 - 100%"
-              />
-            );
-          }
-          return (
-            <InputSelect
-              titles={[
-                "Build powerplant option​",
-                "Purchase electricity via PPA",
-              ]}
-              helperTexts={["No PPA Agreement", undefined]}
-              buttonChildren={[
-                [
-                  <InputSlider
-                    title="Solar farm build cost​"
-                    helperText="Value: A$50 – 5,000 per kW​"
-                  />,
-                  <InputSlider
-                    title="Wind farm build cost​"
-                    helperText="Value: A$50 – 5,000 per kW​"
-                  />,
-                ],
-                [
-                  <InputSlider
-                    title="Override the powerplant cost with electricity price​"
-                    helperText="Value: A$0 – 100 per MWh​​"
-                  />,
-                ],
-              ]}
-            />
-          );
-        })}
-      />
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
         <InputSelectField
           id="powerPlantConfiguration"
