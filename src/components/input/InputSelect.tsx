@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid";
 import * as React from "react";
 
 import InputSelectButton from "./InputSelectButton";
+import InputTitle from "./InputTitle";
 
 interface Props {
   titles: string[];
@@ -21,7 +22,8 @@ export default function InputSelectField(props: Props) {
 
   const { titles, helperTexts, buttonChildren } = props;
   return (
-    <Grid>
+    <Grid sx={{ marginX: 2, marginY: 0.5 }}>
+      <InputTitle title="Select one option from below" />
       {titles.map((text, index) => (
         <InputSelectButton
           text={text}

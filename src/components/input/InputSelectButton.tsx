@@ -41,12 +41,7 @@ export default function InputSelectButton(props: Props) {
   const openExpand = () => props.onOpenExpand(index);
   const closeExpand = () => props.onCloseExpand();
   return expanded ? (
-    <InputCard
-      title={text}
-      onExpandChange={closeExpand}
-      expanded={true}
-      sx={{ borderRadius: 4 }}
-    >
+    <InputCard title={text} onExpandChange={closeExpand} expanded={true}>
       {children}
     </InputCard>
   ) : (
