@@ -1,4 +1,8 @@
-import { DepreciationProfile, PowerPlantConfiguration } from "../../types";
+import {
+  BasicDefaultInput,
+  DepreciationProfile,
+  PowerPlantConfiguration,
+} from "../../types";
 
 interface Field {
   id: string;
@@ -511,3 +515,126 @@ export function isPowerPlantConfiguration(
 ): value is PowerPlantConfiguration {
   return powerPlantConfigurationData.includes(value);
 }
+
+export const defaultInputs: BasicDefaultInput = {
+  projectScale: {
+    min: 100,
+    max: 1_000_000,
+    step: 50_000,
+    defaultValue: 100_000,
+    title: "Project Scale",
+  },
+  electrolyserEfficiency: {
+    min: 50,
+    max: 100,
+    step: 2.5,
+    defaultValue: 60,
+    title: "Electrolyser Efficiency",
+    helperText: "Value: 50 - 100%",
+  },
+  powerplantOversizeRatio: {
+    min: 1,
+    max: 3,
+    step: 0.1,
+    defaultValue: 2,
+    title: "Power Plant Oversize Ratio",
+  },
+  solarToWindRatio: {
+    min: 0,
+    max: 100,
+    step: 10,
+    defaultValue: 50,
+    title: "Solar to Wind Capacity Ratio",
+  },
+  electrolyserCapitalCost: {
+    min: 100,
+    max: 5000,
+    step: 100,
+    defaultValue: 2000,
+    title: "Electrolyser Capital Cost",
+  },
+  solarFarmBuildCost: {
+    min: 100,
+    max: 5000,
+    step: 100,
+    defaultValue: 1000,
+    title: "Solar Farm Build Cost",
+  },
+  windFarmBuildCost: {
+    min: 100,
+    max: 5000,
+    step: 100,
+    defaultValue: 2000,
+    title: "Wind Farm Build Cost",
+  },
+  ppaCost: {
+    min: 0,
+    max: 200,
+    step: 10,
+    defaultValue: 50,
+    title: "PPA Cost",
+  },
+  waterSupplyCost: {
+    min: 0,
+    max: 10,
+    step: 0.5,
+    defaultValue: 5,
+    title: "Water Supply Cost",
+  },
+  discountRate: {
+    min: 1,
+    max: 15,
+    step: 1,
+    defaultValue: 8,
+    title: "Discount Rate",
+  },
+  projectTimeline: {
+    min: 10,
+    max: 50,
+    step: 5,
+    defaultValue: 20,
+    title: "Project Timeline",
+  },
+  equityToLoanShare: {
+    min: 10,
+    max: 100,
+    step: 10,
+    defaultValue: 50,
+    title: "Equity to Loan Share",
+  },
+  interestOnLoan: {
+    min: 1,
+    max: 10,
+    step: 1,
+    defaultValue: 5,
+    title: "Interest on Loan",
+  },
+  loanTerm: {
+    min: 5,
+    max: 50,
+    step: 5,
+    defaultValue: 20,
+    title: "Loan Term",
+  },
+  inflationRate: {
+    min: 0,
+    max: 10,
+    step: 0.5,
+    defaultValue: 5,
+    title: "Inflation Rate",
+  },
+  taxRate: {
+    min: 0,
+    max: 50,
+    step: 5,
+    defaultValue: 30,
+    title: "Tax Rate",
+  },
+  hydrogenSalesMargin: {
+    min: 0,
+    max: 50,
+    step: 5,
+    defaultValue: 1,
+    title: "Hydrogen Sales Margin",
+  },
+};

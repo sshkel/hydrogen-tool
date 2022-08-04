@@ -32,6 +32,19 @@ export const isGridConnected = (
 export const isRetailed = (powerPlantConfiguration: PowerPlantConfiguration) =>
   powerPlantConfiguration === "Grid Connected with Surplus Retailed";
 
+export interface BasicDefaultInput {
+  [k: string]: SliderProps;
+}
+
+export interface SliderProps {
+  title: string;
+  helperText?: string;
+  defaultValue?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
 export interface InputFields {
   additionalUpfrontCosts: number;
   additionalAnnualCosts: number;

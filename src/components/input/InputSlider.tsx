@@ -3,13 +3,13 @@ import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { BLUE } from "./colors";
 
 import InputTitle from "./InputTitle";
+import { BLUE } from "./colors";
+import { defaultInputs } from "./data";
 
 interface Props {
-  title: string;
-  helperText?: string;
+  inputKey: string;
 }
 
 const StyledSlider = styled(Slider)({
@@ -39,14 +39,15 @@ const StyledSlider = styled(Slider)({
   },
 });
 
-export default function InputSlider(props: Props) {
-  const [value, setValue] = React.useState<
-    number | string | Array<number | string>
-  >(30);
+export default function InputSlider({ inputKey }: Props) {
+  const { title, helperText, min, max, defaultValue, step } =
+    defaultInputs[inputKey];
 
-  const { title, helperText } = props;
+  const [value, setValue] = React.useState<string | number | number[]>(
+    defaultValue || 30
+  );
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+  const handleSliderChange = (_: Event, newValue: number | number[]) => {
     setValue(newValue);
   };
 
@@ -72,6 +73,10 @@ export default function InputSlider(props: Props) {
           value={typeof value === "number" ? value : 0}
           onChange={handleSliderChange}
           aria-labelledby="input-slider"
+          min={min}
+          max={max}
+          step={step}
+          defaultValue={defaultValue}
         />
       </Grid>
       <Grid item minWidth="fit-content">
