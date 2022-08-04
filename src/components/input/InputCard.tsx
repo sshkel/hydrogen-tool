@@ -6,23 +6,10 @@ import Card, { CardProps } from "@mui/material/Card";
 import Collapse from "@mui/material/Collapse";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { createTheme, styled } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { BLUE, ORANGE } from "./colors";
-
-const theme = createTheme({
-  typography: {
-    fontFamily: "Nunito",
-  },
-  palette: {
-    info: {
-      main: "rgba(0, 0, 0, 0.54)",
-      contrastText: "#000",
-    },
-  },
-});
 
 interface InputCardProps {
   title: string;
@@ -42,7 +29,7 @@ interface ExpandMoreProps extends IconButtonProps {
 
 const StyledCard = styled(Card, {
   shouldForwardProp: (prop) => prop !== "expanded" && prop !== "onExpandChange",
-})<StyledCardProps>(({ expanded, onExpandChange, theme }) => ({
+})<StyledCardProps>(({ expanded, onExpandChange }) => ({
   fontSize: 14,
   padding: 0.5,
   borderRadius: 2,
@@ -83,41 +70,39 @@ export default function InputCard(props: InputCardProps) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <StyledCard
-        expanded={!!expanded}
-        onExpandChange={!!onExpandChange}
-        variant="outlined"
+    <StyledCard
+      expanded={!!expanded}
+      onExpandChange={!!onExpandChange}
+      variant="outlined"
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "stretch",
+        }}
       >
-        <Box
+        <Typography
           sx={{
-            display: "flex",
-            alignItems: "stretch",
+            fontSize: 22,
+            fontWeight: "bold",
+            color: expanded ? ORANGE : BLUE,
+            padding: 1,
           }}
         >
-          <Typography
-            sx={{
-              fontSize: 22,
-              fontWeight: "bold",
-              color: expanded ? ORANGE : BLUE,
-              padding: 1,
-            }}
-          >
-            {title}
-          </Typography>
-          <ExpandMore
-            expanded={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandCircleIcon />
-          </ExpandMore>
-        </Box>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          {children}
-        </Collapse>
-      </StyledCard>
-    </ThemeProvider>
+          {title}
+        </Typography>
+        <ExpandMore
+          expanded={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandCircleIcon />
+        </ExpandMore>
+      </Box>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {children}
+      </Collapse>
+    </StyledCard>
   );
 }

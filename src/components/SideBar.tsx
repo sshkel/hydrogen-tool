@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
+import { BLUE } from "./input/colors";
 
 export function SideBar() {
   const drawerWidth = 60;
@@ -16,7 +17,7 @@ export function SideBar() {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "#396aff",
+          backgroundColor: BLUE,
         },
       }}
       variant="permanent"

@@ -4,6 +4,7 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 
 import InputTitle from "./InputTitle";
+import { BLUE, ORANGE } from "./colors";
 
 interface Props {
   label: string;
@@ -20,15 +21,15 @@ interface Props {
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: "#396AFF",
+      borderColor: BLUE,
       borderWidth: "2px",
       borderRadius: "20px",
     },
     "&:hover fieldset": {
-      borderColor: "#396AFF",
+      borderColor: BLUE,
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#ed7d31",
+      borderColor: ORANGE,
       boxShadow:
         "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
     },

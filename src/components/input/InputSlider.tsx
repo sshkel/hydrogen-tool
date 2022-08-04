@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { BLUE } from "./colors";
 
 import InputTitle from "./InputTitle";
 
@@ -13,7 +14,7 @@ interface Props {
 
 const StyledSlider = styled(Slider)({
   height: 8,
-  color: "#396AFF",
+  color: BLUE,
   flexShrink: 1,
   flexGrow: 1,
   flexBasis: "90%",
