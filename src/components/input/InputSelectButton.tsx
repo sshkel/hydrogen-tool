@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
@@ -13,6 +14,7 @@ interface Props {
   helperText?: string;
   children: JSX.Element[] | null;
   expanded: boolean;
+  selected: boolean;
   onOpenExpand: (index: number) => void;
   onCloseExpand: () => void;
 }
@@ -28,7 +30,7 @@ export default function InputSelectButton(props: Props) {
     null
   );
 
-  const { expanded, index, text, helperText, children } = props;
+  const { expanded, selected, index, text, helperText, children } = props;
 
   const handleClose = (event: any) => {
     event.stopPropagation();
@@ -40,33 +42,39 @@ export default function InputSelectButton(props: Props) {
 
   const openExpand = () => props.onOpenExpand(index);
   const closeExpand = () => props.onCloseExpand();
-  return expanded ? (
-    <InputCard title={text} onExpandChange={closeExpand} expanded={true}>
-      {children}
-    </InputCard>
-  ) : (
-    <div style={{ display: "flex" }}>
-      <StyledButton
-        variant="outlined"
-        color="info"
-        fullWidth
-        endIcon={<InputHelpButton helperText={helperText} />}
-        onClick={openExpand}
-      >
-        {text}
-      </StyledButton>
-      <Popover
-        id={popoverId}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-      >
-        <Typography sx={{ p: 2 }}>{helperText}</Typography>
-      </Popover>
+
+  return (
+    <div>
+      {!expanded ? (
+        <div style={{ display: "flex" }}>
+          <StyledButton
+            variant={selected ? "contained" : "outlined"}
+            color={selected ? "success" : "info"}
+            fullWidth
+            endIcon={<InputHelpButton helperText={helperText} />}
+            onClick={openExpand}
+          >
+            {text}
+          </StyledButton>
+          <Popover
+            id={popoverId}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <Typography sx={{ p: 2 }}>{helperText}</Typography>
+          </Popover>
+        </div>
+      ) : null}
+      <Collapse in={expanded} timeout={0} unmountOnExit={!selected}>
+        <InputCard title={text} onExpandChange={closeExpand} expanded={true}>
+          {children}
+        </InputCard>
+      </Collapse>
     </div>
   );
 }

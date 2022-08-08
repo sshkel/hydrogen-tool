@@ -40,8 +40,14 @@ const StyledSlider = styled(Slider)({
 });
 
 export default function InputSlider({ inputKey }: Props) {
-  const { title, helperText, min, max, defaultValue, step } =
-    defaultInputs[inputKey];
+  const {
+    title,
+    helperText,
+    min = 0,
+    max = 100,
+    defaultValue = 50,
+    step = 10,
+  } = defaultInputs[inputKey];
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue || 30
@@ -58,8 +64,8 @@ export default function InputSlider({ inputKey }: Props) {
   const handleBlur = () => {
     if (value < 0) {
       setValue(0);
-    } else if (value > 100) {
-      setValue(100);
+    } else if (value > max) {
+      setValue(max);
     }
   };
 
@@ -81,8 +87,8 @@ export default function InputSlider({ inputKey }: Props) {
       </Grid>
       <Grid item minWidth="fit-content">
         <TextField
-          id={title}
-          key={title}
+          id={inputKey}
+          key={inputKey}
           value={value}
           variant="outlined"
           size="small"
@@ -90,9 +96,9 @@ export default function InputSlider({ inputKey }: Props) {
           onChange={handleInputChange}
           onBlur={handleBlur}
           inputProps={{
-            step: 10,
-            min: 0,
-            max: 100,
+            step: 0.1,
+            min: min,
+            max: max,
             "aria-labelledby": "input-slider",
             style: {
               textAlign: "center",

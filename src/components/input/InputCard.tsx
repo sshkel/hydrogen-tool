@@ -67,9 +67,11 @@ export default function InputCard(props: InputCardProps) {
 
   const handleExpandClick = () => {
     if (onExpandChange) {
+      // TODO: Introduce prop to force override state behaviour
       onExpandChange();
+    } else {
+      setExpanded(!expanded);
     }
-    setExpanded(!expanded);
   };
 
   return (
@@ -103,7 +105,7 @@ export default function InputCard(props: InputCardProps) {
           <ExpandCircleIcon />
         </ExpandMore>
       </Box>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto">
         {children}
       </Collapse>
     </StyledCard>

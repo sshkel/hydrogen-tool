@@ -12,9 +12,11 @@ interface Props {
 
 export default function InputSelectField(props: Props) {
   const [expanded, setExpanded] = React.useState<number>(-1);
+  const [selected, setSelected] = React.useState<number>(0);
 
   const onOpenExpand = (index: number) => {
     setExpanded(index);
+    setSelected(index);
   };
   const onCloseExpand = () => {
     setExpanded(-1);
@@ -32,6 +34,7 @@ export default function InputSelectField(props: Props) {
           onOpenExpand={onOpenExpand}
           onCloseExpand={onCloseExpand}
           expanded={expanded === index}
+          selected={selected === index}
           children={buttonChildren[index]}
         />
       ))}

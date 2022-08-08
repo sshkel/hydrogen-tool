@@ -14,7 +14,7 @@ import "../../input.css";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
-import { BLUE } from "./colors";
+import { BLUE, ORANGE } from "./colors";
 
 const theme = createTheme({
   typography: {
@@ -32,6 +32,12 @@ const theme = createTheme({
     info: {
       main: "rgba(0, 0, 0, 0.54)",
       contrastText: "#000",
+    },
+    success: {
+      main: ORANGE,
+      light: "#f5b58a",
+      dark: "#d35f12",
+      contrastText: "#FFF",
     },
   },
 });
@@ -53,12 +59,16 @@ export default function InputHomePage(props: Props) {
     let form: any = {};
 
     for (let input of e.target.getElementsByTagName("input")) {
-      const { name, value } = input;
-      form[name] = isNaN(value) ? value : Number(value);
+      if (input.type !== "number") {
+        continue;
+      }
+      const { id, value } = input;
+      form[id] = isNaN(value) ? value : Number(value);
     }
 
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
+    console.log(form);
     navigate("/result");
   };
 
