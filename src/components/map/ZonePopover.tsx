@@ -1,11 +1,11 @@
 import {
   Button,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
   Grid,
-  Paper,
   Popover,
   Typography,
   styled,
@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styled(Typography)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -113,20 +113,33 @@ export function ZonePopover(props: any) {
           role="presentation"
           direction="column"
           justifyContent="center"
-          alignItems="center"
+          alignItems="stretch"
           rowSpacing="30"
           sx={{ width: "35vh", height: "30vh" }}
         >
-          <Grid item>
-            <Button variant="contained" onClick={startDesign}>
-              Hydrogen: General hydrogen production cost for region
-            </Button>
+          <Grid item xs={2}>
+            <Card onClick={startDesign}>
+              <CardActionArea>
+                <CardContent>
+                  <Typography variant="body2">Hydrogen</Typography>
+                  <Typography variant="caption">
+                    General hydrogen production cost for region
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={startDesign}>
-              Ammonia: Integrated hydrogen production and conversion into
-              Ammonia
-            </Button>
+          <Grid item xs={2}>
+            <Card onClick={startDesign}>
+              <CardActionArea>
+                <CardContent>
+                  <Typography variant="body2">Ammonia</Typography>
+                  <Typography variant="caption">
+                    Integrated hydrogen production and conversion into Ammonia
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
         </Grid>
       </CardContent>
