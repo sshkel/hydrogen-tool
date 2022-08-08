@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MapContainer, Polygon, TileLayer, ZoomControl } from "react-leaflet";
 
 import { ZonePopover } from "./ZonePopover";
+import geoJson from "./zones.json";
 
 interface Props {
   setLocation: (location: string) => void;
@@ -81,47 +82,3 @@ export default function Map(props: Props) {
     </div>
   );
 }
-
-const geoJson: GeoJSON.FeatureCollection = {
-  type: "FeatureCollection",
-  features: [
-    {
-      type: "Feature",
-      properties: {
-        zone: "Broken Hill, NSW",
-      },
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [144.84375, -31.63467554954133],
-            [145.31616210937497, -33.5230788089042],
-            [148.095703125, -33.95247360616282],
-            [148.062744140625, -31.503629305773018],
-            [146.8212890625, -30.458144351018078],
-            [144.84375, -31.63467554954133],
-          ],
-        ],
-      },
-    },
-    {
-      type: "Feature",
-      properties: {
-        zone: "South West NSW",
-      },
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [144.810791015625, -31.62532121329918],
-            [143.712158203125, -29.935895213372433],
-            [142.020263671875, -31.287939892641734],
-            [142.833251953125, -33.7243396617476],
-            [145.447998046875, -33.46810795527895],
-            [144.810791015625, -31.62532121329918],
-          ],
-        ],
-      },
-    },
-  ],
-};

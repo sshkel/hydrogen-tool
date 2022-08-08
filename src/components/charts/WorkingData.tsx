@@ -53,12 +53,12 @@ export default function WorkingData(props: Props) {
   useEffect(() => {
     const { loadSolar, loadWind } = props;
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
-      if (solar.length !== 8760) {
-        console.error("Solar data is not 8760 rows in length");
+      if (solar.length !== 8784) {
+        console.error("Solar data is not 8784 rows in length");
       }
 
-      if (wind.length !== 8760) {
-        console.error("Wind data is not 8760 rows in length");
+      if (wind.length !== 8784) {
+        console.error("Wind data is not 8784 rows in length");
       }
       setState({ solarData: solar, windData: wind });
     });
@@ -134,7 +134,6 @@ export default function WorkingData(props: Props) {
 
   let summary: ProjectModelSummary = model.calculateHydrogenModel(projectLife);
   let hourlyOperations = model.getHourlyOperations();
-
   // CAPEX values
   const {
     electrolyserCAPEX,
