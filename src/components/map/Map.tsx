@@ -3,7 +3,7 @@ import { useState } from "react";
 import { MapContainer, Polygon, TileLayer, ZoomControl } from "react-leaflet";
 
 import { ZonePopover } from "./ZonePopover";
-import geoJson from "./map.json";
+import geoJson from "./zones.json";
 
 interface Props {
   setLocation: (location: string) => void;
