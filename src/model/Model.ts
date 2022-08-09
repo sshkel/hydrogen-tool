@@ -301,47 +301,6 @@ export class HydrogenModel {
     return summary;
   }
 
-  private calculateBasicHourlyOperation(
-    projectScale: number,
-    electrolyserEfficiency: number,
-    oversizeRatio: number,
-    solarToWindPercentage: number,
-    location: string
-  ) {
-    const windToSolarPercentage = 100 - solarToWindPercentage;
-    // const solarDegradation = 0;
-    // const windDegradation = 0;
-    const year = 1;
-
-    const generatorCf = calculateGeneratorCf(
-      this.solarData,
-      this.windData,
-      solarToWindPercentage / 100,
-      windToSolarPercentage / 100,
-      location,
-      this.parameters.solarDegradation,
-      this.parameters.windDegradation,
-      year
-    );
-
-    let electrolyserCf = calculateElectrolyserCf(
-      oversizeRatio,
-      this.elecMaxLoad,
-      this.elecMinLoad,
-      generatorCf
-    );
-
-    let electrolyserCfMean = mean(electrolyserCf);
-
-    const backcalculatedElectrolyserNominalCapacity =
-      projectScale *
-      1000 *
-      this.secAtNominalLoad *
-      (1 / electrolyserEfficiency) *
-      (1 / this.hoursPerYear) *
-      (1 / electrolyserCfMean);
-  }
-
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
