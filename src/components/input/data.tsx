@@ -539,7 +539,7 @@ export const defaultInputs: BasicDefaultInput = {
     defaultValue: 2,
     title: "Power Plant Oversize Ratio",
   },
-  solarToWindRatio: {
+  solarToWindPercentage: {
     min: 0,
     max: 100,
     step: 10,
@@ -595,7 +595,7 @@ export const defaultInputs: BasicDefaultInput = {
     defaultValue: 20,
     title: "Project Timeline",
   },
-  equityToLoanShare: {
+  shareOfTotalInvestmentFinancedViaEquity: {
     min: 10,
     max: 100,
     step: 10,
