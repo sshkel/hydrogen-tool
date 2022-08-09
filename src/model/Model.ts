@@ -60,6 +60,7 @@ export class HydrogenModel {
   readonly hoursPerYear = 8760;
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089;
+  readonly secAtNominalLoad = 33.33; // kWh/kg
 
   // calculated params
   genCapacity: number;
@@ -86,10 +87,12 @@ export class HydrogenModel {
 
   constructor(parameters: DataModel, solarData: CsvRow[], windData: CsvRow[]) {
     this.parameters = parameters;
+    // Loaded data
     this.solarData = solarData;
     this.windData = windData;
-    this.stackReplacementYears = [];
 
+    // Stack replacement logic for degradation
+    this.stackReplacementYears = [];
     this.stackLifetime =
       parameters.stackReplacementType === "Cumulative Hours"
         ? parameters.stackLifetime
@@ -113,13 +116,13 @@ export class HydrogenModel {
     this.specCons = this.parameters.specCons * this.H2VoltoMass;
   }
 
-  calculateHydrogenModel(projectLife: number): ProjectModelSummary {
+  calculateHydrogenModel(projectTimeline: number): ProjectModelSummary {
     const { stackDegradation, solarDegradation, windDegradation } =
       this.parameters;
     const projectSummary =
       stackDegradation + solarDegradation + windDegradation === 0
-        ? this.calculateHydrogenModelWithoutDegradation(projectLife)
-        : this.calculateHydrogenModelWithDegradation(projectLife);
+        ? this.calculateHydrogenModelWithoutDegradation(projectTimeline)
+        : this.calculateHydrogenModelWithDegradation(projectTimeline);
 
     return projectSummary;
   }
@@ -133,7 +136,7 @@ export class HydrogenModel {
   }
 
   private calculateHydrogenModelWithoutDegradation(
-    projectLife: number
+    projectTimeline: number
   ): ProjectModelSummary {
     const year = 1;
     const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
@@ -152,18 +155,18 @@ export class HydrogenModel {
 
     let projectSummary: ProjectModelSummary = {};
     SUMMARY_KEYS.forEach((key) => {
-      projectSummary[key] = Array(projectLife).fill(operatingOutputs[key]);
+      projectSummary[key] = Array(projectTimeline).fill(operatingOutputs[key]);
     });
 
     return projectSummary;
   }
 
   private calculateHydrogenModelWithDegradation(
-    projectLife: number
+    projectTimeline: number
   ): ProjectModelSummary {
     this.stackReplacementYears = this.initialiseStackReplacementYears(
       this.parameters,
-      projectLife
+      projectTimeline
     );
     let year = 1;
     // Calculate first year separately
@@ -174,7 +177,7 @@ export class HydrogenModel {
     let modelSummaryPerYear: ModelSummaryPerYear[] = [];
     modelSummaryPerYear.push(operatingOutputs);
 
-    for (year = 2; year <= projectLife; year++) {
+    for (year = 2; year <= projectTimeline; year++) {
       const hourlyOperationsByYear =
         this.calculateElectrolyserHourlyOperation(year);
       modelSummaryPerYear.push(
@@ -203,10 +206,10 @@ export class HydrogenModel {
     year: number
   ): ModelHourlyOperation {
     return this.calculateHourlyOperation(
-      this.genCapacity,
+      this.genCapacity / this.parameters.electrolyserNominalCapacity,
       this.parameters.electrolyserNominalCapacity,
-      this.parameters.solarNominalCapacity,
-      this.parameters.windNominalCapacity,
+      this.parameters.solarNominalCapacity / this.genCapacity,
+      this.parameters.windNominalCapacity / this.genCapacity,
       this.parameters.solarDegradation,
       this.parameters.windDegradation,
       this.parameters.stackDegradation,
@@ -291,20 +294,62 @@ export class HydrogenModel {
     summary[ENERGY_INPUT] = energyInElectrolyser;
     summary[ENERGY_OUTPUT] = surplus;
     summary[BATTERY_OUTPUT] = totalBatteryOutput;
+    // TODO: Return one based on profile
     summary[HYDROGEN_OUTPUT_FIXED] = hydrogenFixed;
     summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogenVariable;
 
     return summary;
   }
 
+  private calculateBasicHourlyOperation(
+    projectScale: number,
+    electrolyserEfficiency: number,
+    oversizeRatio: number,
+    solarToWindPercentage: number,
+    location: string
+  ) {
+    const windToSolarPercentage = 100 - solarToWindPercentage;
+    // const solarDegradation = 0;
+    // const windDegradation = 0;
+    const year = 1;
+
+    const generatorCf = calculateGeneratorCf(
+      this.solarData,
+      this.windData,
+      solarToWindPercentage / 100,
+      windToSolarPercentage / 100,
+      location,
+      this.parameters.solarDegradation,
+      this.parameters.windDegradation,
+      year
+    );
+
+    let electrolyserCf = calculateElectrolyserCf(
+      oversizeRatio,
+      this.elecMaxLoad,
+      this.elecMinLoad,
+      generatorCf
+    );
+
+    let electrolyserCfMean = mean(electrolyserCf);
+
+    const backcalculatedElectrolyserNominalCapacity =
+      projectScale *
+      1000 *
+      this.secAtNominalLoad *
+      (1 / electrolyserEfficiency) *
+      (1 / this.hoursPerYear) *
+      (1 / electrolyserCfMean);
+  }
+
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
   private calculateHourlyOperation(
-    genCapacity: number,
+    oversizeRatio: number,
     elecCapacity: number,
-    solarCapacity: number,
-    windCapacity: number,
+    solarRatio: number,
+    windRatio: number,
     solarDegradation: number,
     windDegradation: number,
     stackDegradation: number,
@@ -322,38 +367,31 @@ export class HydrogenModel {
     battMin: number,
     year: number
   ): ModelHourlyOperation {
-    const oversize = genCapacity / elecCapacity;
-    const generatorCf = this.parseData(
+    const generatorCf = calculateGeneratorCf(
       this.solarData,
       this.windData,
-      genCapacity,
-      solarCapacity,
-      windCapacity,
+      solarRatio,
+      windRatio,
+      location,
       solarDegradation,
       windDegradation,
-      year,
-      location
+      year
     );
 
     // normal electrolyser calculation
-    const calculateElectrolyser = (x: number): number => {
-      if (x * oversize > elecMaxLoad) {
-        return elecMaxLoad;
-      }
+    let electrolyserCf = calculateElectrolyserCf(
+      oversizeRatio,
+      elecMaxLoad,
+      elecMinLoad,
+      generatorCf
+    );
 
-      if (x * oversize < elecMinLoad) {
-        return 0;
-      }
-      return x * oversize;
-    };
-
-    let electrolyserCf = generatorCf.map(calculateElectrolyser);
     let batteryNetCharge: number[] = new Array(8760).fill(0);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
-      electrolyserCf = this.overloading_model(
-        oversize,
+      electrolyserCf = calculateOverloadingModel(
+        oversizeRatio,
         elecMaxLoad,
         elecOverloadRecharge,
         elecOverload,
@@ -370,8 +408,8 @@ export class HydrogenModel {
           `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
         );
       }
-      const batteryModel = this.battery_model(
-        oversize,
+      const batteryModel = calculateBatteryModel(
+        oversizeRatio,
         elecCapacity,
         generatorCf,
         electrolyserCf,
@@ -408,23 +446,20 @@ export class HydrogenModel {
       yearlyDegradationRate = 1 - 1 / (1 + stackDegradation / 100) ** power;
     }
 
-    // actual hydrogen calc
-    const hydrogenProdFixed = electrolyserCf.map(
-      (x: number) => (x * hydOutput * (1 - yearlyDegradationRate)) / specCons
+    const hydrogenProdFixed = calculateFixedHydrogenProduction(
+      electrolyserCf,
+      hydOutput,
+      yearlyDegradationRate,
+      specCons
     );
 
-    const electrolyser_output_polynomial = (x: number) => {
-      // """Calculates the specific energy consumption as a function of the electrolyser operating
-      //     capacity factor
-      //     """
-      return 1.25 * x ** 2 - 0.4286 * x + specCons - 0.85;
-    };
-
-    const hydrogenProdVariable = electrolyserCf.map(
-      (x: number) =>
-        ((x * hydOutput) / electrolyser_output_polynomial(x)) *
-        (1 - yearlyDegradationRate)
+    const hydrogenProdVariable = calculateVariableHydrogenProduction(
+      specCons,
+      electrolyserCf,
+      hydOutput,
+      yearlyDegradationRate
     );
+
     const workingDf = {
       Generator_CF: generatorCf,
       Electrolyser_CF: electrolyserCf,
@@ -436,209 +471,257 @@ export class HydrogenModel {
     return workingDf;
   }
 
-  private battery_model(
-    oversize: number,
-    elecCapacity: number,
-    generatorCf: number[],
-    electrolyserCf: number[],
-    batteryEfficiency: number,
-    elecMinLoad: number,
-    elecMaxLoad: number,
-    batteryPower: number,
-    batteryEnergy: number,
-    battMin: number
-  ): { electrolyser_cf: number[]; battery_net_charge: number[] } {
-    const size = generatorCf.length;
-    const excessGeneration = generatorCf.map(
-      (_: number, i: number) =>
-        (generatorCf[i] * oversize - electrolyserCf[i]) * elecCapacity
-    );
-    const batteryNetCharge = Array(size).fill(0.0);
-    const batterySoc = Array(size).fill(0.0);
-    const battLosses = 1 - (1 - batteryEfficiency) / 2;
-    const elecMin = elecMinLoad * elecCapacity;
-    const elecMax = elecMaxLoad * elecCapacity;
-
-    batteryNetCharge[0] = Math.min(
-      batteryPower,
-      excessGeneration[0] * battLosses
-    );
-    batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
-    // check for off by 1 error
-    for (let hour = 1; hour < size; hour++) {
-      const battSoc = batterySoc[hour - 1];
-      const spill = excessGeneration[hour];
-      const elecCons = electrolyserCf[hour] * elecCapacity;
-      const battDischargePotential =
-        Math.min(batteryPower, (battSoc - battMin) * batteryEnergy) *
-        battLosses;
-      const elecJustOperating =
-        elecCons > 0 ||
-        batteryNetCharge[hour - 1] < 0 ||
-        electrolyserCf[hour - 1] > 0;
-      if (
-        elecCons === 0 &&
-        spill + battDischargePotential > elecMin &&
-        elecJustOperating
-      ) {
-        // When the generation is insufficient alone but combined with battery power can power the electrolyser
-        if (spill + battDischargePotential > elecMax) {
-          batteryNetCharge[hour] =
-            -1 * Math.min(batteryPower, ((elecMax - spill) * 1) / battLosses);
-        } else {
-          batteryNetCharge[hour] =
-            (-1 * battDischargePotential * 1) / battLosses;
-        }
-      } else if (
-        spill > 0 &&
-        battSoc + (spill / batteryEnergy) * battLosses > 1
-      ) {
-        // When spilled generation is enough to completely charge the battery
-        batteryNetCharge[hour] = Math.min(
-          batteryPower,
-          Math.max(batteryEnergy * (1.0 - battSoc), 0.0)
-        );
-      } else if (spill > 0) {
-        // Any other cases when there is spilled generation
-        batteryNetCharge[hour] = Math.min(batteryPower, spill * battLosses);
-      } else if (
-        elecCons + battDischargePotential < elecMin ||
-        (spill === 0 && battSoc <= battMin)
-      ) {
-        //  generation and battery together are insufficient to power the electrolyser or there is no
-        //  spilled generation and the battery is empty
-        batteryNetCharge[hour] = 0;
-      } else if (
-        spill === 0 &&
-        elecMax - elecCons > (battSoc - battMin) * battLosses * batteryEnergy &&
-        elecJustOperating
-      ) {
-        //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
-        batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
-      } else if (spill === 0 && elecJustOperating) {
-        //  When the stored power is enough to power the electrolyser at max capacity
-        batteryNetCharge[hour] =
-          -1 * Math.min(batteryPower, ((elecMax - elecCons) * 1) / battLosses);
-      } else if (spill === 0) {
-        batteryNetCharge[hour] = 0;
-      } else {
-        throw new Error("Error: battery configuration not accounted for");
-      }
-      //  Determine the battery state of charge based on the previous state of charge and the net change
-      batterySoc[hour] =
-        batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
-    }
-    const electrolyserCfBatt = batteryNetCharge.map((_: number, i: number) => {
-      if (batteryNetCharge[i] < 0) {
-        return (
-          electrolyserCf[i] +
-          (-1 * batteryNetCharge[i] * battLosses + excessGeneration[i]) /
-            elecCapacity
-        );
-      } else {
-        return electrolyserCf[i];
-      }
-    });
-
-    return {
-      electrolyser_cf: electrolyserCfBatt,
-      battery_net_charge: batteryNetCharge,
-    };
-  }
-
-  // returns Generator_CF series
-  private parseData(
-    solarData: CsvRow[],
-    windData: CsvRow[],
-    genCapacity: number,
-    solarCapacity: number,
-    windCapacity: number,
-    solarDegradation: number,
-    windDegradation: number,
-    year: number,
-    location: string
-  ): number[] {
-    const solarRatio = solarCapacity / genCapacity;
-    const windRatio = windCapacity / genCapacity;
-    const solarDfValues = solarData.map((r: CsvRow) => r[location]);
-    const windDfValues = windData.map((r: CsvRow) => r[location]);
-    // Degradation values
-    const power = year - 1;
-    const solarDeg = 1 - solarDegradation / 100;
-    const windDeg = 1 - windDegradation / 100;
-    if (solarRatio === 1) {
-      if (solarDegradation === 0) {
-        return solarDfValues;
-      }
-      return solarDfValues.map(
-        (_: number, i: number) =>
-          solarDfValues[i] * solarRatio * solarDeg ** power
-      );
-    } else if (windRatio === 1) {
-      if (windDegradation === 0) {
-        return windDfValues;
-      }
-      return windDfValues.map(
-        (_: number, i: number) => windDfValues[i] * windRatio * windDeg ** power
-      );
-    } else {
-      return solarDfValues.map(
-        (_: number, i: number) =>
-          solarDfValues[i] * solarRatio * solarDeg ** power +
-          windDfValues[i] * windRatio * windDeg ** power
-      );
-    }
-  }
-
-  private overloading_model(
-    oversize: number,
-    elecMaxLoad: number,
-    elecOverloadRecharge: number,
-    elecOverload: number,
-    generatorCf: number[],
-    electrolyserCf: number[]
-  ): number[] {
-    const canOverload = generatorCf.map((x) => x * oversize > elecMaxLoad);
-
-    for (let hour = 1; hour < generatorCf.length; hour++) {
-      for (
-        let hourI = 1;
-        hourI < Math.min(hour, elecOverloadRecharge) + 1;
-        hourI++
-      ) {
-        if (canOverload[hour] && canOverload[hour - hourI]) {
-          canOverload[hour] = false;
-        }
-      }
-    }
-    const maxOverload = elecOverload;
-
-    const electrolyserCfoverload = canOverload.map(
-      (canOverload: boolean, i: number) => {
-        const energy_generated = generatorCf[i] * oversize;
-        if (canOverload) {
-          //Energy_for_overloading
-          return Math.min(maxOverload, energy_generated);
-        } else {
-          return electrolyserCf[i];
-        }
-      }
-    );
-
-    return electrolyserCfoverload;
-  }
-
   private initialiseStackReplacementYears(
     parameters: DataModel,
-    projectLife: number
+    projectTimeline: number
   ): number[] {
     if (parameters.stackReplacementType === "Maximum Degradation Level") {
       return maxDegradationStackReplacementYears(
         parameters.stackDegradation,
         parameters.maximumDegradationBeforeReplacement || 0,
-        projectLife
+        projectTimeline
       );
     }
     return [];
   }
+}
+
+// returns Generator_CF series
+function calculateGeneratorCf(
+  solarData: CsvRow[],
+  windData: CsvRow[],
+  solarRatio: number,
+  windRatio: number,
+  location: string,
+  solarDegradation: number = 0,
+  windDegradation: number = 0,
+  year: number = 1
+): number[] {
+  const solarDfValues = solarData.map((r: CsvRow) => r[location]);
+  const windDfValues = windData.map((r: CsvRow) => r[location]);
+  // Degradation values
+  const power = year - 1;
+  const solarDeg = 1 - solarDegradation / 100;
+  const windDeg = 1 - windDegradation / 100;
+  if (solarRatio === 1) {
+    if (solarDegradation === 0) {
+      return solarDfValues;
+    }
+    return solarDfValues.map(
+      (_: number, i: number) =>
+        solarDfValues[i] * solarRatio * solarDeg ** power
+    );
+  } else if (windRatio === 1) {
+    if (windDegradation === 0) {
+      return windDfValues;
+    }
+    return windDfValues.map(
+      (_: number, i: number) => windDfValues[i] * windRatio * windDeg ** power
+    );
+  } else {
+    return solarDfValues.map(
+      (_: number, i: number) =>
+        solarDfValues[i] * solarRatio * solarDeg ** power +
+        windDfValues[i] * windRatio * windDeg ** power
+    );
+  }
+}
+
+// returns Electrolyser_CF series
+function calculateElectrolyserCf(
+  oversizeRatio: number,
+  elecMaxLoad: number,
+  elecMinLoad: number,
+  generatorCf: number[]
+): number[] {
+  const calculateElectrolyser = (x: number): number => {
+    if (x * oversizeRatio > elecMaxLoad) {
+      return elecMaxLoad;
+    }
+
+    if (x * oversizeRatio < elecMinLoad) {
+      return 0;
+    }
+    return x * oversizeRatio;
+  };
+
+  return generatorCf.map(calculateElectrolyser);
+}
+
+function calculateBatteryModel(
+  oversize: number,
+  elecCapacity: number,
+  generatorCf: number[],
+  electrolyserCf: number[],
+  batteryEfficiency: number,
+  elecMinLoad: number,
+  elecMaxLoad: number,
+  batteryPower: number,
+  batteryEnergy: number,
+  battMin: number
+): { electrolyser_cf: number[]; battery_net_charge: number[] } {
+  const size = generatorCf.length;
+  const excessGeneration = generatorCf.map(
+    (_: number, i: number) =>
+      (generatorCf[i] * oversize - electrolyserCf[i]) * elecCapacity
+  );
+  const batteryNetCharge = Array(size).fill(0.0);
+  const batterySoc = Array(size).fill(0.0);
+  const battLosses = 1 - (1 - batteryEfficiency) / 2;
+  const elecMin = elecMinLoad * elecCapacity;
+  const elecMax = elecMaxLoad * elecCapacity;
+
+  batteryNetCharge[0] = Math.min(
+    batteryPower,
+    excessGeneration[0] * battLosses
+  );
+  batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
+  // check for off by 1 error
+  for (let hour = 1; hour < size; hour++) {
+    const battSoc = batterySoc[hour - 1];
+    const spill = excessGeneration[hour];
+    const elecCons = electrolyserCf[hour] * elecCapacity;
+    const battDischargePotential =
+      Math.min(batteryPower, (battSoc - battMin) * batteryEnergy) * battLosses;
+    const elecJustOperating =
+      elecCons > 0 ||
+      batteryNetCharge[hour - 1] < 0 ||
+      electrolyserCf[hour - 1] > 0;
+    if (
+      elecCons === 0 &&
+      spill + battDischargePotential > elecMin &&
+      elecJustOperating
+    ) {
+      // When the generation is insufficient alone but combined with battery power can power the electrolyser
+      if (spill + battDischargePotential > elecMax) {
+        batteryNetCharge[hour] =
+          -1 * Math.min(batteryPower, ((elecMax - spill) * 1) / battLosses);
+      } else {
+        batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
+      }
+    } else if (
+      spill > 0 &&
+      battSoc + (spill / batteryEnergy) * battLosses > 1
+    ) {
+      // When spilled generation is enough to completely charge the battery
+      batteryNetCharge[hour] = Math.min(
+        batteryPower,
+        Math.max(batteryEnergy * (1.0 - battSoc), 0.0)
+      );
+    } else if (spill > 0) {
+      // Any other cases when there is spilled generation
+      batteryNetCharge[hour] = Math.min(batteryPower, spill * battLosses);
+    } else if (
+      elecCons + battDischargePotential < elecMin ||
+      (spill === 0 && battSoc <= battMin)
+    ) {
+      //  generation and battery together are insufficient to power the electrolyser or there is no
+      //  spilled generation and the battery is empty
+      batteryNetCharge[hour] = 0;
+    } else if (
+      spill === 0 &&
+      elecMax - elecCons > (battSoc - battMin) * battLosses * batteryEnergy &&
+      elecJustOperating
+    ) {
+      //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
+      batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
+    } else if (spill === 0 && elecJustOperating) {
+      //  When the stored power is enough to power the electrolyser at max capacity
+      batteryNetCharge[hour] =
+        -1 * Math.min(batteryPower, ((elecMax - elecCons) * 1) / battLosses);
+    } else if (spill === 0) {
+      batteryNetCharge[hour] = 0;
+    } else {
+      throw new Error("Error: battery configuration not accounted for");
+    }
+    //  Determine the battery state of charge based on the previous state of charge and the net change
+    batterySoc[hour] =
+      batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
+  }
+  const electrolyserCfBatt = batteryNetCharge.map((_: number, i: number) => {
+    if (batteryNetCharge[i] < 0) {
+      return (
+        electrolyserCf[i] +
+        (-1 * batteryNetCharge[i] * battLosses + excessGeneration[i]) /
+          elecCapacity
+      );
+    } else {
+      return electrolyserCf[i];
+    }
+  });
+
+  return {
+    electrolyser_cf: electrolyserCfBatt,
+    battery_net_charge: batteryNetCharge,
+  };
+}
+
+function calculateVariableHydrogenProduction(
+  specCons: number,
+  electrolyserCf: number[],
+  hydOutput: number,
+  yearlyDegradationRate: number
+) {
+  const electrolyser_output_polynomial = (x: number) => {
+    // """Calculates the specific energy consumption as a function of the electrolyser operating
+    //     capacity factor
+    //     """
+    return 1.25 * x ** 2 - 0.4286 * x + specCons - 0.85;
+  };
+
+  const hydrogenProdVariable = electrolyserCf.map(
+    (x: number) =>
+      ((x * hydOutput) / electrolyser_output_polynomial(x)) *
+      (1 - yearlyDegradationRate)
+  );
+  return hydrogenProdVariable;
+}
+
+function calculateFixedHydrogenProduction(
+  electrolyserCf: number[],
+  hydOutput: number,
+  yearlyDegradationRate: number,
+  specCons: number
+) {
+  return electrolyserCf.map(
+    (x: number) => (x * hydOutput * (1 - yearlyDegradationRate)) / specCons
+  );
+}
+
+function calculateOverloadingModel(
+  oversize: number,
+  elecMaxLoad: number,
+  elecOverloadRecharge: number,
+  elecOverload: number,
+  generatorCf: number[],
+  electrolyserCf: number[]
+): number[] {
+  const canOverload = generatorCf.map((x) => x * oversize > elecMaxLoad);
+
+  for (let hour = 1; hour < generatorCf.length; hour++) {
+    for (
+      let hourI = 1;
+      hourI < Math.min(hour, elecOverloadRecharge) + 1;
+      hourI++
+    ) {
+      if (canOverload[hour] && canOverload[hour - hourI]) {
+        canOverload[hour] = false;
+      }
+    }
+  }
+  const maxOverload = elecOverload;
+
+  const electrolyserCfoverload = canOverload.map(
+    (canOverload: boolean, i: number) => {
+      const energy_generated = generatorCf[i] * oversize;
+      if (canOverload) {
+        //Energy_for_overloading
+        return Math.min(maxOverload, energy_generated);
+      } else {
+        return electrolyserCf[i];
+      }
+    }
+  );
+
+  return electrolyserCfoverload;
 }

@@ -83,7 +83,7 @@ describe("Hydrogen Model", () => {
       // electrolyserStackCost: 40,
       // waterCost: 5,
       // discountRate: 4,
-      // projectLife: 20,
+      // projectTimeline: 20,
     };
     const model = new HydrogenModel(example1, solar, wind);
     compareToModel(model, outputs1, workingdf1);
@@ -145,7 +145,7 @@ describe("Hydrogen Model", () => {
       // electrolyserStackCost: 40,
       // waterCost: 5,
       // discountRate: 4,
-      // projectLife: 20,
+      // projectTimeline: 20,
     };
     const model = new HydrogenModel(example2, solar, wind);
 
@@ -210,7 +210,7 @@ describe("Hydrogen Model", () => {
       waterCost: 5,
       discountRate: 4,
       */
-      // projectLife: 20,
+      // projectTimeline: 20,
     };
     const model = new HydrogenModel(example3, solar, wind);
     compareToModel(model, outputs3, workingdf3);

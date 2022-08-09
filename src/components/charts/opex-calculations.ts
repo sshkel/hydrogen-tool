@@ -1,9 +1,13 @@
-import { InputFields, isGridConnected, isPPAAgreement } from "../../types";
+import {
+  SynthesisedInputs,
+  isGridConnected,
+  isPPAAgreement,
+} from "../../types";
 import { fillYearsArray, isSolar, isWind, projectYears } from "../../utils";
 import { roundToNearestThousand, roundToTwoDP } from "./cost-functions";
 
 export function generateOpexValues(
-  data: InputFields,
+  data: SynthesisedInputs,
   electrolyserCAPEX: number,
   batteryCAPEX: number,
   totalOperatingHoursPerYear: number[],
@@ -12,7 +16,7 @@ export function generateOpexValues(
   h2Produced: number[]
 ) {
   const {
-    projectLife,
+    projectTimeline,
     technology,
     powerPlantConfiguration,
 
@@ -21,7 +25,7 @@ export function generateOpexValues(
 
     electrolyserOMCost,
     electrolyserStackReplacement,
-    electrolyserWaterCost,
+    waterSupplyCost,
     waterRequirementOfElectrolyser,
 
     solarOpex = 0,
@@ -53,12 +57,12 @@ export function generateOpexValues(
       ? maxDegradationStackReplacementYears(
           stackDegradation,
           maximumDegradationBeforeReplacement,
-          projectLife
+          projectTimeline
         )
       : cumulativeStackReplacementYears(
           totalOperatingHoursPerYear,
           stackLifetime,
-          projectLife
+          projectTimeline
         );
 
   const electrolyserStackReplacementCost =
@@ -72,13 +76,13 @@ export function generateOpexValues(
     getReplacementCostOverProjectLife(
       electrolyserStackReplacementCost,
       (year: number) => stackReplacementYears.includes(year),
-      projectLife
+      projectTimeline
     );
 
   const electrolyserOpexPerYear = getOpexPerYearInflationWithAdditionalCost(
     electrolyserOpexCost,
     inflationRate,
-    projectLife,
+    projectTimeline,
     stackReplacementCostsOverProjectLife
   );
 
@@ -93,13 +97,13 @@ export function generateOpexValues(
   const powerPlantOpexPerYear = getOpexPerYearInflationConstant(
     powerPlantOpexCost,
     inflationRate,
-    projectLife
+    projectTimeline
   );
 
   const additionalOpexPerYear = getOpexPerYearInflationConstant(
     additionalAnnualCosts,
     inflationRate,
-    projectLife
+    projectTimeline
   );
 
   // Battery costs
@@ -109,12 +113,14 @@ export function generateOpexValues(
   const actualBatteryReplacementCost =
     (batteryReplacementCost / 100) * batteryCAPEX;
   const shouldAddBatteryReplacementCost = (year: number): boolean =>
-    batteryLifetime > 0 && year % batteryLifetime === 0 && year < projectLife;
+    batteryLifetime > 0 &&
+    year % batteryLifetime === 0 &&
+    year < projectTimeline;
   const batteryReplacementCostsOverProjectLife =
     getReplacementCostOverProjectLife(
       actualBatteryReplacementCost,
       shouldAddBatteryReplacementCost,
-      projectLife
+      projectTimeline
     );
 
   const batteryOpexPerYear =
@@ -122,48 +128,47 @@ export function generateOpexValues(
       ? getOpexPerYearInflationWithAdditionalCost(
           batteryOpexCost,
           inflationRate,
-          projectLife,
+          projectTimeline,
           batteryReplacementCostsOverProjectLife
         )
-      : Array(projectLife).fill(0);
+      : Array(projectTimeline).fill(0);
 
   const gridConnectionOpexPerYear: number[] = gridConnected
     ? fillYearsArray(
-        projectLife,
+        projectTimeline,
         (i) =>
           additionalTransmissionCharges *
           (electricityConsumed[i] + electricityConsumedByBattery[i])
       )
-    : Array(projectLife).fill(0);
+    : Array(projectTimeline).fill(0);
 
   // Check for PPA Agreement
   const totalPPACost = ppaAgreement
     ? principalPPACost + additionalTransmissionCharges
     : 0;
   const electricityOpexCost: number[] = fillYearsArray(
-    projectLife,
+    projectTimeline,
     (i) =>
       totalPPACost * (electricityConsumed[i] + electricityConsumedByBattery[i])
   );
   const electricityPurchaseOpexPerYear = getOpexPerYearInflation(
     electricityOpexCost,
     inflationRate,
-    projectLife
+    projectTimeline
   );
 
   const waterOpexCost: number[] = fillYearsArray(
-    projectLife,
-    (i) =>
-      electrolyserWaterCost * waterRequirementOfElectrolyser * h2Produced[i]
+    projectTimeline,
+    (i) => waterSupplyCost * waterRequirementOfElectrolyser * h2Produced[i]
   );
   const waterOpexPerYear = getOpexPerYearInflation(
     waterOpexCost,
     inflationRate,
-    projectLife
+    projectTimeline
   );
 
   const totalOpex = fillYearsArray(
-    projectLife,
+    projectTimeline,
     (i: number) =>
       electrolyserOpexCost +
       powerPlantOpexCost +
@@ -199,10 +204,10 @@ export function generateOpexValues(
 }
 
 export function cumulativeStackReplacementYears(
-  // array of size projectLife with operating hours per year
+  // array of size projectTimeline with operating hours per year
   operatingHoursPerYear: number[],
   stackLifetime: number,
-  projectLife: number
+  projectTimeline: number
 ): number[] {
   // """Private method - Returns a list of the years in which the electrolyser stack will need replacing, defined as
   //the total operating time surpassing a multiple of the stack lifetime.
@@ -210,7 +215,7 @@ export function cumulativeStackReplacementYears(
   //"""
   let currentStackLifetime: number = stackLifetime;
 
-  const candidateReplacementYears = projectYears(projectLife - 1);
+  const candidateReplacementYears = projectYears(projectTimeline - 1);
 
   const stackReplacementYears = [];
   // Don't include final project year as there is no need for stack replacement
@@ -229,11 +234,11 @@ export function cumulativeStackReplacementYears(
 export function maxDegradationStackReplacementYears(
   stackDegradation: number,
   maximumDegradationBeforeReplacement: number,
-  projectLife: number
+  projectTimeline: number
 ): number[] {
   let currentStackDegradation = 0;
   const replacementYears = [];
-  for (let year of projectYears(projectLife)) {
+  for (let year of projectYears(projectTimeline)) {
     if (currentStackDegradation >= maximumDegradationBeforeReplacement) {
       replacementYears.push(year);
       currentStackDegradation = 0;
@@ -247,10 +252,10 @@ export function maxDegradationStackReplacementYears(
 export function getReplacementCostOverProjectLife(
   cost: number,
   isReplacementYear: (year: number) => boolean,
-  projectLife: number
+  projectTimeline: number
 ): number[] {
-  const costArray: number[] = new Array(projectLife).fill(0);
-  for (let year = 1; year <= projectLife; year++) {
+  const costArray: number[] = new Array(projectTimeline).fill(0);
+  for (let year = 1; year <= projectTimeline; year++) {
     if (isReplacementYear(year)) {
       costArray[year - 1] = cost;
     }

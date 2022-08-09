@@ -17,7 +17,7 @@ import {
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
-import { InputFields } from "../../types";
+import { SynthesisedInputs } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -32,7 +32,7 @@ import { generateOpexValues } from "./opex-calculations";
 
 export interface Props {
   location?: string;
-  data?: InputFields;
+  data?: SynthesisedInputs;
   loadSolar: () => Promise<any[]>;
   loadWind: () => Promise<any[]>;
 }
@@ -77,7 +77,7 @@ export default function WorkingData(props: Props) {
     batteryEfficiency,
     additionalUpfrontCosts,
     batteryLifetime = 0,
-    projectLife,
+    projectTimeline,
     batteryStorageDuration = 0,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
@@ -88,7 +88,7 @@ export default function WorkingData(props: Props) {
     stackDegradation,
     maximumDegradationBeforeReplacement,
     discountRate,
-    salesMargin,
+    hydrogenSalesMargin,
     oxygenRetailPrice,
     averageElectricitySpotPrice,
     shareOfTotalInvestmentFinancedViaEquity,
@@ -103,7 +103,7 @@ export default function WorkingData(props: Props) {
     solarDegradation,
     windDegradation,
     secAtNominalLoad = 0,
-    secCorrectionFactor = 0,
+    electrolyserEfficiency = 0,
   } = props.data;
   const location = props.location;
   const dataModel: DataModel = {
@@ -127,12 +127,13 @@ export default function WorkingData(props: Props) {
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
     specCons: secAtNominalLoad,
-    elecEff: secCorrectionFactor,
+    elecEff: electrolyserEfficiency,
   };
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
 
-  let summary: ProjectModelSummary = model.calculateHydrogenModel(projectLife);
+  let summary: ProjectModelSummary =
+    model.calculateHydrogenModel(projectTimeline);
   let hourlyOperations = model.getHourlyOperations();
   // CAPEX values
   const {
@@ -204,7 +205,7 @@ export default function WorkingData(props: Props) {
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
 
   const oxygenSalePrice: number[] = fillYearsArray(
-    projectLife,
+    projectTimeline,
     (i) => 8 * h2Produced[i] * oxygenRetailPrice
   );
 
@@ -220,9 +221,9 @@ export default function WorkingData(props: Props) {
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
-    projectLife,
+    projectTimeline,
     discountRate / 100,
-    salesMargin,
+    hydrogenSalesMargin,
     averageElectricitySpotPrice,
     inflationRate / 100,
     oxygenSalePrice,
@@ -246,7 +247,7 @@ export default function WorkingData(props: Props) {
     interestOnLoan / 100,
     capitalDepreciationProfile,
     taxRate / 100,
-    projectLife,
+    projectTimeline,
     inflationRate / 100
   );
 
@@ -379,7 +380,7 @@ export default function WorkingData(props: Props) {
       />
       <CostLineChart
         title="Operating Costs"
-        projectLife={projectLife}
+        projectTimeline={projectTimeline}
         datapoints={[
           { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
           { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
@@ -394,7 +395,7 @@ export default function WorkingData(props: Props) {
       />
       <CostLineChart
         title="Sales"
-        projectLife={projectLife}
+        projectTimeline={projectTimeline}
         datapoints={[
           { label: "Hydrogen Sales", data: h2Sales },
           { label: "Electricity Sales", data: electricitySales },
@@ -404,7 +405,7 @@ export default function WorkingData(props: Props) {
       />
       <CostBarChart
         title="Cash Flow Analysis"
-        labels={getActiveYearsLabels(projectLife)}
+        labels={getActiveYearsLabels(projectTimeline)}
         datapoints={[
           {
             label: "Cash Flow Analysis",

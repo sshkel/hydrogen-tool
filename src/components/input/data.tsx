@@ -66,7 +66,7 @@ export const data: Field[] = [
     adornmentLabel: kWhNmLabel,
   },
   {
-    id: "secCorrectionFactor",
+    id: "electrolyserEfficiency",
     label: "SEC Correction Factor",
     defaultValue: 100,
     adornmentLabel: "%",
@@ -136,7 +136,7 @@ export const data: Field[] = [
     adornmentLabel: "kW",
   },
   {
-    id: "electrolyserReferencePurchaseCost",
+    id: "electrolyserCapitalCost",
     label: "Reference Electrolyser Purchase Cost",
     defaultValue: 1000,
     adornmentLabel: "A$/kW",
@@ -182,7 +182,7 @@ export const data: Field[] = [
     helperText: "Percentage of Electrolyser Purchase Cost",
   },
   {
-    id: "electrolyserWaterCost",
+    id: "waterSupplyCost",
     label: "Water Cost",
     defaultValue: 5,
     adornmentLabel: "A$/kL",
@@ -211,7 +211,7 @@ export const data: Field[] = [
     adornmentLabel: "kW",
   },
   {
-    id: "solarPVFarmReferenceCost",
+    id: "solarFarmBuildCost",
     label: "Reference Solar PV Farm Cost",
     defaultValue: 1200,
     adornmentLabel: "A$/kW",
@@ -257,7 +257,7 @@ export const data: Field[] = [
     adornmentLabel: "kW",
   },
   {
-    id: "windFarmReferenceCost",
+    id: "windFarmBuildCost",
     label: "Reference Wind Farm Cost",
     defaultValue: 1950,
     adornmentLabel: "A$/kW",
@@ -389,8 +389,8 @@ export const data: Field[] = [
   },
   // Additional Revenue streams
   {
-    id: "salesMargin",
-    label: "Sales Margin",
+    id: "hydrogenSalesMargin",
+    label: "Hydrogen Sales Margin",
     defaultValue: 1,
     adornmentLabel: "A$/kgH2",
     helperText: "Sales margin for H2",
@@ -412,7 +412,7 @@ export const data: Field[] = [
   },
   /******* Financing Parameters *******/
   {
-    id: "projectLife",
+    id: "projectTimeline",
     label: "Plant Life",
     defaultValue: 20,
     adornmentLabel: "yrs",
@@ -447,7 +447,7 @@ export const data: Field[] = [
     label: "Loan Term",
     defaultValue: 10,
     adornmentLabel: "yrs",
-    helperText: "Loan repayment duration.",
+    helperText: "Loan repayment duration",
   },
   {
     id: "interestOnLoan",

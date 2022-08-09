@@ -46,6 +46,80 @@ export interface SliderProps {
 }
 
 export interface InputFields {
+  additionalUpfrontCost?: number;
+  additionalAnnualCosts?: number;
+  batteryEpcCosts?: number;
+  batteryEfficiency: number;
+  batteryMinCharge?: number;
+  batteryLandProcurementCost?: number;
+  batteryRatedPower?: number;
+  batteryCosts?: number;
+  batteryOMCost?: number;
+  batteryReplacementCost?: number;
+  batteryLifetime?: number;
+  discountRate: number;
+  batteryStorageDuration?: number;
+  electrolyserCostReductionWithScale?: number;
+  electrolyserEpcCosts?: number;
+  electrolyserLandProcurementCost?: number;
+  electrolyserReferenceFoldIncrease?: number;
+  electrolyserOMCost?: number;
+  electrolyserStackReplacement?: number;
+  gridConnectionCost?: number;
+  electrolyserNominalCapacity?: number;
+  solarNominalCapacity?: number;
+  windNominalCapacity?: number;
+  solarReferenceCapacity?: number;
+  windReferenceCapacity?: number;
+  electrolyserReferenceCapacity?: number;
+  electrolyserCapitalCost?: number;
+  solarFarmBuildCost?: number;
+  windFarmBuildCost?: number;
+  solarEpcCosts?: number;
+  solarLandProcurementCost?: number;
+  solarPVCostReductionWithScale?: number;
+  solarReferenceFoldIncrease?: number;
+  solarDegradation?: number;
+  windDegradation?: number;
+  solarOpex?: number;
+  stackReplacementType?: StackReplacementType;
+  stackLifetime?: number;
+  stackDegradation?: number;
+  maximumDegradationBeforeReplacement?: number;
+  technology?: Technology;
+  waterSupplyCost?: number;
+  windCostReductionWithScale?: number;
+  windEpcCosts?: number;
+  windLandProcurementCost?: number;
+  windReferenceFoldIncrease?: number;
+  windOpex?: number;
+  projectTimeline?: number;
+  additionalTransmissionCharges?: number;
+  principalPPACost?: number;
+  profile?: SECType;
+  electrolyserMaximumLoad?: number;
+  electrolyserMinimumLoad?: number;
+  timeBetweenOverloading?: number;
+  maximumLoadWhenOverloading?: number;
+  waterRequirementOfElectrolyser?: number;
+  hydrogenSalesMargin?: number;
+  oxygenRetailPrice?: number;
+  averageElectricitySpotPrice?: number;
+  shareOfTotalInvestmentFinancedViaEquity?: number;
+  directEquityShare?: number;
+  salvageCostShare?: number;
+  decommissioningCostShare?: number;
+  loanTerm?: number;
+  interestOnLoan?: number;
+  capitalDepreciationProfile?: DepreciationProfile;
+  taxRate?: number;
+  inflationRate?: number;
+  secAtNominalLoad?: number;
+  electrolyserEfficiency?: number;
+  powerPlantConfiguration?: PowerPlantConfiguration;
+}
+
+export interface SynthesisedInputs {
   additionalUpfrontCosts: number;
   additionalAnnualCosts: number;
   batteryEpcCosts?: number;
@@ -72,9 +146,9 @@ export interface InputFields {
   solarReferenceCapacity: number;
   windReferenceCapacity: number;
   electrolyserReferenceCapacity: number;
-  electrolyserReferencePurchaseCost: number;
-  solarPVFarmReferenceCost: number;
-  windFarmReferenceCost: number;
+  electrolyserCapitalCost: number;
+  solarFarmBuildCost: number;
+  windFarmBuildCost: number;
   solarEpcCosts: number;
   solarLandProcurementCost: number;
   solarPVCostReductionWithScale: number;
@@ -87,13 +161,13 @@ export interface InputFields {
   stackDegradation: number;
   maximumDegradationBeforeReplacement: number;
   technology: Technology;
-  electrolyserWaterCost: number;
+  waterSupplyCost: number;
   windCostReductionWithScale: number;
   windEpcCosts: number;
   windLandProcurementCost: number;
   windReferenceFoldIncrease: number;
   windOpex?: number;
-  projectLife: number;
+  projectTimeline: number;
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
   profile: SECType;
@@ -102,7 +176,7 @@ export interface InputFields {
   timeBetweenOverloading: number;
   maximumLoadWhenOverloading: number;
   waterRequirementOfElectrolyser: number;
-  salesMargin: number;
+  hydrogenSalesMargin: number;
   oxygenRetailPrice: number;
   averageElectricitySpotPrice: number;
   shareOfTotalInvestmentFinancedViaEquity: number;
@@ -115,6 +189,6 @@ export interface InputFields {
   taxRate: number;
   inflationRate: number;
   secAtNominalLoad?: number;
-  secCorrectionFactor?: number;
+  electrolyserEfficiency?: number;
   powerPlantConfiguration: PowerPlantConfiguration;
 }

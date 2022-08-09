@@ -6,7 +6,7 @@ import { checkLength } from "../../utils";
 
 interface Props {
   title: string;
-  projectLife: number;
+  projectTimeline: number;
   datapoints: ChartData[];
 }
 
@@ -20,11 +20,11 @@ const colours = [
 ];
 
 export default function CostLineChart(props: Props) {
-  const { title, projectLife, datapoints } = props;
-  checkLength(datapoints, projectLife);
+  const { title, projectTimeline, datapoints } = props;
+  checkLength(datapoints, projectTimeline);
 
   const graphData = {
-    labels: [...Array(projectLife).keys()].map((i) => i + 1),
+    labels: [...Array(projectTimeline).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
       ...point,
       backgroundColor: colours[index],

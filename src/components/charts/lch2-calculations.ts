@@ -1,5 +1,5 @@
 import {
-  InputFields,
+  SynthesisedInputs,
   isGridConnected,
   isPPAAgreement,
   isRetailed,
@@ -7,7 +7,7 @@ import {
 import { fillYearsArray } from "../../utils";
 
 export function generateLCValues(
-  data: InputFields,
+  data: SynthesisedInputs,
   powerPlantCAPEX: number,
   electrolyserCAPEX: number,
   batteryCAPEX: number,
@@ -33,7 +33,7 @@ export function generateLCValues(
   const {
     powerPlantConfiguration,
     discountRate,
-    projectLife,
+    projectTimeline,
     additionalUpfrontCosts,
     additionalAnnualCosts,
     principalPPACost = 0,
@@ -47,15 +47,16 @@ export function generateLCValues(
   const lcElectrolyserCAPEX = electrolyserCAPEX / hydrogenProductionCost;
   const lcIndirectCosts = totalIndirectCosts / hydrogenProductionCost;
 
-  const powerPlantOpexPerYear = Array(projectLife).fill(powerPlantOpexCost);
-  const electrolyserOpexPerYear = Array(projectLife).fill(electrolyserOpexCost);
-  const additionalAnnualCostsPerYear = Array(projectLife).fill(
+  const powerPlantOpexPerYear = Array(projectTimeline).fill(powerPlantOpexCost);
+  const electrolyserOpexPerYear =
+    Array(projectTimeline).fill(electrolyserOpexCost);
+  const additionalAnnualCostsPerYear = Array(projectTimeline).fill(
     additionalAnnualCosts
   );
 
   const calculateLevelisedCost = getLevelisedCostCalculation(
     discountRate,
-    projectLife,
+    projectTimeline,
     hydrogenProductionCost
   );
 
@@ -63,7 +64,7 @@ export function generateLCValues(
   const lcElectrolyserOPEX = calculateLevelisedCost(electrolyserOpexPerYear);
 
   const batteryCostPerYear: number[] = fillYearsArray(
-    projectLife,
+    projectTimeline,
     (i) => batteryOpexCost + batteryReplacementCostsOverProjectLife[i]
   );
 
@@ -82,7 +83,7 @@ export function generateLCValues(
   );
 
   const ppaCostOfElectricityConsumed = fillYearsArray(
-    projectLife,
+    projectTimeline,
     (i) =>
       (electricityConsumed[i] + electricityConsumedByBattery[i]) *
       principalPPACost
@@ -93,10 +94,10 @@ export function generateLCValues(
 
   const retailElectricitySalePrice = retailed
     ? fillYearsArray(
-        projectLife,
+        projectTimeline,
         (i) => electricityProduced[i] * averageElectricitySpotPrice
       )
-    : Array(projectLife).fill(0);
+    : Array(projectTimeline).fill(0);
   const lcElectricitySale = calculateLevelisedCost(retailElectricitySalePrice);
 
   const lcGridConnection =

@@ -5,7 +5,7 @@ import {
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
 } from "../../../components/charts/opex-calculations";
-import { InputFields } from "../../../types";
+import { SynthesisedInputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 
 describe("Opex calculations", () => {
@@ -100,11 +100,11 @@ describe("Opex calculations", () => {
   it("handles electrolyser degradation for basic case", () => {
     const maxElecDegradation = 0.6;
     const yearlyElecDegradation = 0.1;
-    const projectLife = 20;
+    const projectTimeline = 20;
     const actual = maxDegradationStackReplacementYears(
       yearlyElecDegradation,
       maxElecDegradation,
-      projectLife
+      projectTimeline
     );
     const expected = [7, 14];
     // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
@@ -114,11 +114,11 @@ describe("Opex calculations", () => {
   it("handles electrolyser degradation when no replacements", () => {
     const maxElecDegradation = 0.7;
     const yearlyElecDegradation = 0.1;
-    const projectLife = 7;
+    const projectTimeline = 7;
     const actual = maxDegradationStackReplacementYears(
       yearlyElecDegradation,
       maxElecDegradation,
-      projectLife
+      projectTimeline
     );
     const expected: number[] = [];
     // electrolyser replacement at years 7 and 14 as degrades more than 60 percent
@@ -126,10 +126,10 @@ describe("Opex calculations", () => {
   });
 
   it("calculates grid connection opex when grid connected", () => {
-    const data: InputFields = {
+    const data: SynthesisedInputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
-      projectLife: 10,
+      projectTimeline: 10,
       additionalTransmissionCharges: 10,
     };
 
@@ -147,10 +147,10 @@ describe("Opex calculations", () => {
   });
 
   it("does not calculates grid connection opex when PPA agreement", () => {
-    const data: InputFields = {
+    const data: SynthesisedInputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "PPA Agreement",
-      projectLife: 10,
+      projectTimeline: 10,
       additionalTransmissionCharges: 10,
     };
 
@@ -168,10 +168,10 @@ describe("Opex calculations", () => {
   });
 
   it("does not calculates grid connection opex when standalone", () => {
-    const data: InputFields = {
+    const data: SynthesisedInputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
-      projectLife: 10,
+      projectTimeline: 10,
       additionalTransmissionCharges: 10,
     };
 
