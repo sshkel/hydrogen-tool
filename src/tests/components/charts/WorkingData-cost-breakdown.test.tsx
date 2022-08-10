@@ -35,7 +35,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -64,7 +64,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -93,7 +93,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -122,7 +122,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -151,7 +151,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -185,7 +185,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -211,7 +211,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -236,7 +236,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -260,7 +260,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -314,7 +314,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -333,7 +333,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={standaloneSolarWithBatteryScenario.data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={standaloneSolarWithBatteryScenario.location}
@@ -377,7 +377,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -424,7 +424,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -470,7 +470,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -516,7 +516,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -548,7 +548,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={defaultInputData.location}
@@ -569,7 +569,7 @@ describe("Working Data calculations", () => {
       const wrapper = shallow(
         <WorkingData
           data={standaloneSolarWithBatteryScenario.data}
-          inputConfiguration="Basic"
+          inputConfiguration="Advanced"
           loadSolar={mockLoader}
           loadWind={mockLoader}
           location={standaloneSolarWithBatteryScenario.location}
