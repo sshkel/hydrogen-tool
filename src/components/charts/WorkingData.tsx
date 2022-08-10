@@ -1,6 +1,7 @@
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
+import SynthesisedInputs from "../../SynthesisedInput";
 import {
   DataModel,
   HydrogenModel,
@@ -17,7 +18,7 @@ import {
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
-import { SynthesisedInputs } from "../../types";
+import { UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -32,7 +33,7 @@ import { generateOpexValues } from "./opex-calculations";
 
 export interface Props {
   location?: string;
-  data?: SynthesisedInputs;
+  data?: UserInputFields;
   loadSolar: () => Promise<any[]>;
   loadWind: () => Promise<any[]>;
 }
@@ -67,6 +68,10 @@ export default function WorkingData(props: Props) {
   if (!(props.data && props.location)) {
     return null;
   }
+
+  const inputs = new SynthesisedInputs(props.data);
+
+  console.log("HERE INPUTS ", inputs);
 
   const {
     electrolyserNominalCapacity,
@@ -104,7 +109,7 @@ export default function WorkingData(props: Props) {
     windDegradation,
     secAtNominalLoad = 0,
     electrolyserEfficiency = 0,
-  } = props.data;
+  } = inputs;
   const location = props.location;
   const dataModel: DataModel = {
     batteryLifetime,
@@ -148,7 +153,7 @@ export default function WorkingData(props: Props) {
     batteryEpcCost,
     batteryLandCost,
     totalIndirectCosts,
-  } = generateCapexValues(props.data);
+  } = generateCapexValues(inputs);
 
   const totalCapexCost =
     electrolyserCAPEX +
@@ -166,7 +171,7 @@ export default function WorkingData(props: Props) {
   );
 
   const h2Produced =
-    props.data.profile === "Fixed"
+    inputs.profile === "Fixed"
       ? summary[`${HYDROGEN_OUTPUT_FIXED}`]
       : summary[`${HYDROGEN_OUTPUT_VARIABLE}`];
 
@@ -190,7 +195,7 @@ export default function WorkingData(props: Props) {
     gridConnectionOpexPerYear,
     totalOpex,
   } = generateOpexValues(
-    props.data,
+    inputs,
     electrolyserCAPEX,
     batteryCAPEX,
     totalOperatingHours,
@@ -267,7 +272,7 @@ export default function WorkingData(props: Props) {
     lcAdditionalCosts,
     lcOxygenSale,
   } = generateLCValues(
-    props.data,
+    inputs,
     powerPlantCAPEX,
     electrolyserCAPEX,
     batteryCAPEX,

@@ -9,11 +9,11 @@ import Input from "./components/input/Input";
 import InputHomePage from "./components/input/InputHomePage";
 import Map from "./components/map/Map";
 import { loadSolar, loadWind } from "./model/DataLoader";
-import { SynthesisedInputs } from "./types";
+import { UserInputFields } from "./types";
 
 function App() {
-  const [state, setState] = useState<SynthesisedInputs | undefined>();
-  const [location, setLocation] = useState<string | undefined>();
+  const [state, setState] = useState<UserInputFields | undefined>();
+  const [location, setLocation] = useState<string | undefined>("Z1");
 
   return (
     <div className="App2">

@@ -4,7 +4,7 @@ import {
   generateCapexValues,
   getIndirectCost,
 } from "../../../components/charts/capex-calculations";
-import { SynthesisedInputs } from "../../../types";
+import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 
 describe("Capex calculations", () => {
@@ -27,7 +27,7 @@ describe("Capex calculations", () => {
   });
 
   it("sets grid connection CAPEX when grid connected", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       gridConnectionCost: 10,
@@ -39,7 +39,7 @@ describe("Capex calculations", () => {
   });
 
   it("sets grid connection CAPEX when PPA agreement", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "PPA Agreement",
       gridConnectionCost: 10,
@@ -51,7 +51,7 @@ describe("Capex calculations", () => {
   });
 
   it("does not set grid connection CAPEX when standalone", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       gridConnectionCost: 10,

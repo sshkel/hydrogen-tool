@@ -6,15 +6,9 @@ import Input from "../../../components/input/Input";
 import InputExpand from "../../../components/input/InputExpand";
 import InputNumberField from "../../../components/input/InputNumberField";
 import InputSelectField from "../../../components/input/InputSelectField";
-import { SynthesisedInputs } from "../../../types";
-import { defaultInputData } from "../../scenario";
 
 describe("Input", () => {
   it("renders expands", () => {
-    const data: SynthesisedInputs = {
-      ...defaultInputData.data,
-    };
-
     const spy = jest.fn();
 
     const wrapper = mount(

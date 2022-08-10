@@ -2,7 +2,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 
 import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
 import WorkingData from "../../../components/charts/WorkingData";
-import { SynthesisedInputs } from "../../../types";
+import { Inputs, UserInputFields } from "../../../types";
 import {
   defaultInputData,
   standaloneSolarWithBatteryScenario,
@@ -20,11 +20,16 @@ const findIndirectCostBreakdownChart = (wrapper: ShallowWrapper) =>
     .find(CostBreakdownDoughnutChart)
     .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
 
+const defaultUserInputData: UserInputFields = {
+  ...defaultInputData.data,
+  inputConfiguration: "Advanced",
+};
+
 describe("Working Data calculations", () => {
   describe("Capital Cost Breakdown", () => {
     it("calculates electrolyser CAPEX as expected", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10000, // kW
         electrolyserCapitalCost: 1000, // A$/kw
@@ -50,8 +55,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates solar CAPEX as expected", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Solar",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -78,8 +83,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates wind CAPEX as expected", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Wind",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
@@ -106,8 +111,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculate does not factor in solar fields when wind technology", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Wind",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -134,8 +139,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculate does not factor in wind fields when solar technology", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Solar",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
@@ -162,8 +167,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates combination of capacity when hybrid", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Hybrid",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
@@ -195,8 +200,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates battery capex", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         batteryRatedPower: 2, // MW
         batteryStorageDuration: 2, // hr
         batteryCosts: 542, // A$/kWh
@@ -220,8 +225,8 @@ describe("Working Data calculations", () => {
     });
 
     it("passes down grid connection cost", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         powerPlantConfiguration: "Grid Connected",
         gridConnectionCost: 2000,
       };
@@ -244,8 +249,8 @@ describe("Working Data calculations", () => {
     });
 
     it("passes down additional upfront costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         additionalUpfrontCosts: 2000,
       };
 
@@ -267,8 +272,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates indirect cost as percentage of electrolyser and power plant capex", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Hybrid",
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
@@ -350,8 +355,8 @@ describe("Working Data calculations", () => {
 
   describe("Indirect Cost Breakdown", () => {
     it("calculates electrolyser indirect costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
@@ -384,8 +389,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates solar indirect costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Solar",
 
         // Solar CAPEX = 100000
@@ -429,8 +434,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates wind indirect costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Wind",
 
         // Solar CAPEX = ignored
@@ -474,8 +479,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates hybrid indirect costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         technology: "Hybrid",
 
         // Solar CAPEX = ignored
@@ -519,9 +524,8 @@ describe("Working Data calculations", () => {
     });
 
     it("calculates battery indirect costs", () => {
-      const data: SynthesisedInputs = {
-        ...defaultInputData.data,
-
+      const data: UserInputFields = {
+        ...defaultUserInputData,
         // Battery CAPEX = 100000
         batteryRatedPower: 5, // MW
         batteryStorageDuration: 2, // hr

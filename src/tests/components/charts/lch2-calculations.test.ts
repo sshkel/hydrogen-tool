@@ -1,10 +1,10 @@
 import { generateLCValues } from "../../../components/charts/lch2-calculations";
-import { SynthesisedInputs } from "../../../types";
+import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 
 describe("LCH2 calculations", () => {
   it("calculates LC for electricity sales when in retail mode", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected with Surplus Retailed",
       gridConnectionCost: 10,
@@ -39,7 +39,7 @@ describe("LCH2 calculations", () => {
   });
 
   it("does not calculates LC for electricity sales when standalone", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       gridConnectionCost: 10,
@@ -74,7 +74,7 @@ describe("LCH2 calculations", () => {
   });
 
   it("does not calculates LC for electricity sales when grid connected without surplus retail", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       gridConnectionCost: 10,

@@ -1,6 +1,6 @@
-import { SynthesisedInputs } from "../types";
+import { Inputs, UserInputFields } from "../types";
 
-export const defaultInputData: { location: string; data: SynthesisedInputs } = {
+export const defaultInputData: { location: string; data: Inputs } = {
   location: "WA",
   data: {
     powerPlantConfiguration: "Standalone",
@@ -77,10 +77,11 @@ export const defaultInputData: { location: string; data: SynthesisedInputs } = {
 
 export const standaloneSolarWithBatteryScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Port Hedland, WA",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
     electrolyserNominalCapacity: 10,
@@ -157,10 +158,11 @@ export const standaloneSolarWithBatteryScenario: {
 
 export const standaloneSolarScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Fitzroy, QLD",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
     electrolyserNominalCapacity: 10,
@@ -237,10 +239,11 @@ export const standaloneSolarScenario: {
 
 export const standaloneWindScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Central West NSW",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Wind",
     electrolyserNominalCapacity: 10,
@@ -317,10 +320,11 @@ export const standaloneWindScenario: {
 
 export const windWithPPAScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Wagga Wagga, NSW",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "PPA Agreement",
     technology: "Wind",
     electrolyserNominalCapacity: 10,
@@ -397,10 +401,11 @@ export const windWithPPAScenario: {
 
 export const hybridBatteryGridSurplusRetailScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "New England",
   data: {
+    inputConfiguration: "Advanced",
     technology: "Hybrid",
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
     electrolyserNominalCapacity: 10,
@@ -477,10 +482,11 @@ export const hybridBatteryGridSurplusRetailScenario: {
 
 export const windWithBatteryAndPPAScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "South West NSW",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "PPA Agreement",
     technology: "Wind",
     electrolyserNominalCapacity: 10,
@@ -557,10 +563,11 @@ export const windWithBatteryAndPPAScenario: {
 
 export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Fitzroy, QLD",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
     technology: "Solar",
     electrolyserNominalCapacity: 10,
@@ -637,10 +644,11 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
 
 export const standaloneSolarWithStackDegradationScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Tumut, NSW",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
     electrolyserNominalCapacity: 10,
@@ -717,10 +725,11 @@ export const standaloneSolarWithStackDegradationScenario: {
 
 export const standaloneHybridWithDegradationScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Cooma Monaro, NSW",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Hybrid",
     electrolyserNominalCapacity: 10,
@@ -797,10 +806,11 @@ export const standaloneHybridWithDegradationScenario: {
 
 export const standaloneWindWithBatteryAndDegradationScenario: {
   location: string;
-  data: SynthesisedInputs;
+  data: UserInputFields;
 } = {
   location: "Southern NSW Tablelands",
   data: {
+    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Wind",
     electrolyserNominalCapacity: 10,

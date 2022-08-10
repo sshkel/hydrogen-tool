@@ -1,5 +1,5 @@
 import {
-  SynthesisedInputs,
+  Inputs,
   isGridConnected,
   isPPAAgreement,
   isRetailed,
@@ -7,7 +7,7 @@ import {
 import { fillYearsArray } from "../../utils";
 
 export function generateLCValues(
-  data: SynthesisedInputs,
+  data: Inputs,
   powerPlantCAPEX: number,
   electrolyserCAPEX: number,
   batteryCAPEX: number,

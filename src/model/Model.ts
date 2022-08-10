@@ -345,7 +345,7 @@ export class HydrogenModel {
       generatorCf
     );
 
-    let batteryNetCharge: number[] = new Array(8760).fill(0);
+    let batteryNetCharge: number[] = new Array(this.hoursPerYear).fill(0);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {

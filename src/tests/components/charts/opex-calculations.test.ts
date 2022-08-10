@@ -5,7 +5,7 @@ import {
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
 } from "../../../components/charts/opex-calculations";
-import { SynthesisedInputs } from "../../../types";
+import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 
 describe("Opex calculations", () => {
@@ -126,7 +126,7 @@ describe("Opex calculations", () => {
   });
 
   it("calculates grid connection opex when grid connected", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
       projectTimeline: 10,
@@ -147,7 +147,7 @@ describe("Opex calculations", () => {
   });
 
   it("does not calculates grid connection opex when PPA agreement", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "PPA Agreement",
       projectTimeline: 10,
@@ -168,7 +168,7 @@ describe("Opex calculations", () => {
   });
 
   it("does not calculates grid connection opex when standalone", () => {
-    const data: SynthesisedInputs = {
+    const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Standalone",
       projectTimeline: 10,

@@ -45,8 +45,12 @@ export interface SliderProps {
   step?: number;
 }
 
-export interface InputFields {
-  additionalUpfrontCost?: number;
+export interface UserInputFields {
+  inputConfiguration: "Basic" | "Advanced";
+  projectScale?: number;
+  powerplantOversizeRatio?: number;
+  solarToWindPercentage?: number;
+  additionalUpfrontCosts?: number;
   additionalAnnualCosts?: number;
   batteryEpcCosts?: number;
   batteryEfficiency: number;
@@ -119,7 +123,7 @@ export interface InputFields {
   powerPlantConfiguration?: PowerPlantConfiguration;
 }
 
-export interface SynthesisedInputs {
+export interface Inputs {
   additionalUpfrontCosts: number;
   additionalAnnualCosts: number;
   batteryEpcCosts?: number;

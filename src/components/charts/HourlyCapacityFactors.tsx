@@ -31,7 +31,6 @@ export default function HourlyCapacityFactors(props: Props) {
       borderColor: colours[index],
     })),
   };
-  // TODO work with unsw on a smoother version of zoom and pan
   const options: ChartOptions = {
     responsive: true,
     plugins: {

@@ -1,12 +1,8 @@
-import {
-  SynthesisedInputs,
-  isGridConnected,
-  isPPAAgreement,
-} from "../../types";
+import { Inputs, isGridConnected, isPPAAgreement } from "../../types";
 import { isSolar, isWind } from "../../utils";
 import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
-export function generateCapexValues(data: SynthesisedInputs) {
+export function generateCapexValues(data: Inputs) {
   const {
     technology,
     powerPlantConfiguration,
