@@ -1,9 +1,11 @@
+import { Card, CardContent, CardHeader, Grid } from "@mui/material";
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import {
   DataModel,
   HydrogenModel,
+  ModelHourlyOperation,
   ProjectModelSummary,
 } from "../../model/Model";
 import {
@@ -288,175 +290,346 @@ export default function WorkingData(props: Props) {
   );
 
   return (
-    <div>
-      <BasicTable
-        title="Summary of Results"
-        data={{
-          "Power Plant Capacity Factor": [
-            mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100)),
-          ],
-          "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": [
-            mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)),
-          ],
-          "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
-            mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)),
-          ],
-          "Electrolyser Capacity Factor": [
-            mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)),
-          ],
-          "Energy Consumed by Electrolyser (MWh/yr)": [
-            mean(electricityConsumed),
-          ],
-          "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
-            mean(electricityProduced),
-          ],
-          "Hydrogen Output [t/yr]": [mean(h2Produced)],
-          LCH2: [lch2],
-          "H2 Retail Price": [h2RetailPrice],
-        }}
-      />
-      {/* Comment out for displaying */}
-      {/* <BasicTable
-        data={{
-          paddedH2Produced,
-          paddedElectricityProduced,
-          h2Sales,
-          totalCost,
-          totalCostWithDiscount,
-          h2ProducedKgLCA,
-          electricitySales,
-          oxygenSales,
-          annualSales,
-          waterOpexCost: padArray(waterOpexCost),
-          waterCost: padArray(waterCost),
-          ...cashFlow,
-        }}
-      /> */}
-      <DurationCurve
-        title="Generator Duration Curve"
-        data={hourlyOperations.Generator_CF}
-      />
-      <DurationCurve
-        title="Electrolyser Duration Curve"
-        data={hourlyOperations.Electrolyser_CF}
-      />
-      <CostBreakdownDoughnutChart
-        title="Capital Cost Breakdown"
-        labels={[
-          "Electrolyser System",
-          "Power Plant",
-          "Battery",
-          "Grid Connection",
-          "Additional Upfront Costs",
-          "Indirect Costs",
-        ]}
-        data={[
+    <Grid container direction="column">
+      <Grid item>
+        {FirstGraph(
+          summary,
+          electricityConsumed,
+          electricityProduced,
+          h2Produced,
+          lch2,
+          h2RetailPrice,
           electrolyserCAPEX,
           powerPlantCAPEX,
           batteryCAPEX,
           gridConnectionCAPEX,
           additionalUpfrontCosts,
           totalIndirectCosts,
-        ]}
-      />
-      <CostBreakdownDoughnutChart
-        title="Indirect Cost Breakdown"
-        labels={[
-          "Electrolyser EPC",
-          "Electrolyser Land",
-          "Power Plant EPC",
-          "Power Plant Land",
-          "Battery EPC",
-          "Battery Land",
-        ]}
-        data={[
           electrolyserEpcCost,
           electrolyserLandCost,
           powerPlantEpcCost,
           powerPlantLandCost,
           batteryEpcCost,
           batteryLandCost,
-        ]}
-      />
-      <CostLineChart
-        title="Operating Costs"
-        projectTimeline={projectTimeline}
-        datapoints={[
-          { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
-          { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
-          { label: "Battery OPEX", data: batteryOpexPerYear },
-          { label: "Additional Annual Costs", data: additionalOpexPerYear },
-          { label: "Water Costs", data: waterOpexPerYear },
-          {
-            label: "Electricity Purchase",
-            data: electricityPurchaseOpexPerYear,
-          },
-        ]}
-      />
-      <CostLineChart
-        title="Sales"
-        projectTimeline={projectTimeline}
-        datapoints={[
-          { label: "Hydrogen Sales", data: h2Sales },
-          { label: "Electricity Sales", data: electricitySales },
-          { label: "Oxygen Sales", data: oxygenSales },
-          { label: "Total Sales", data: annualSales },
-        ]}
-      />
-      <CostBarChart
-        title="Cash Flow Analysis"
-        labels={getActiveYearsLabels(projectTimeline)}
-        datapoints={[
-          {
-            label: "Cash Flow Analysis",
-            data: cumulativeCashFlow,
-          },
-        ]}
-      />
-      <CostBarChart
-        title="Breakdown of Cost Components in LCH2"
-        labels={[
-          "Power Plant CAPEX",
-          "Electrolyser CAPEX",
-          "Indirect Costs",
-          "Power Plant OPEX",
-          "Electrolyser O&M",
-          "Electricity Purchase",
-          "Electricity Sale",
-          "Stack Replacement",
-          "Water Cost",
-          "Battery Cost",
-          "Grid Connection Cost",
-          "Additional Costs",
-          "Oxygen Sale",
-        ]}
-        datapoints={[
-          {
-            label: "Breakdown of Cost Components in Levelised Cost of Hydrogen",
-            data: [
-              lcPowerPlantCAPEX,
-              lcElectrolyserCAPEX,
-              lcIndirectCosts,
-              lcPowerPlantOPEX,
-              lcElectrolyserOPEX,
-              lcElectricityPurchase,
-              lcElectricitySale,
-              lcStackReplacement,
-              lcWater,
-              lcBattery,
-              lcGridConnection,
-              lcAdditionalCosts,
-              lcOxygenSale,
-            ],
-          },
-        ]}
-      />
-      <HourlyCapacityFactors
-        datapoints={[
-          { label: "Electrolyser", data: hourlyOperations.Electrolyser_CF },
-          { label: "Power Plant", data: hourlyOperations.Generator_CF },
-        ]}
-      />
-    </div>
+          hourlyOperations,
+          lcPowerPlantCAPEX,
+          lcElectrolyserCAPEX,
+          lcIndirectCosts,
+          lcPowerPlantOPEX,
+          lcElectrolyserOPEX,
+          lcElectricityPurchase,
+          lcElectricitySale,
+          lcStackReplacement,
+          lcWater,
+          lcBattery,
+          lcGridConnection,
+          lcAdditionalCosts,
+          lcOxygenSale
+        )}
+      </Grid>
+      <Grid item>
+        {OperatingCosts(
+          projectTimeline,
+          electrolyserOpexPerYear,
+          powerPlantOpexPerYear,
+          batteryOpexPerYear,
+          additionalOpexPerYear,
+          waterOpexPerYear,
+          electricityPurchaseOpexPerYear,
+          h2Sales,
+          electricitySales,
+          oxygenSales,
+          annualSales
+        )}
+      </Grid>
+      <Grid item>
+        <Card>
+          <CardHeader title="Cash Flow Analysis" />
+          <CostBarChart
+            title="Cash Flow Analysis"
+            labels={getActiveYearsLabels(projectTimeline)}
+            datapoints={[
+              {
+                label: "Cash Flow Analysis",
+                data: cumulativeCashFlow,
+              },
+            ]}
+          />
+        </Card>
+      </Grid>
+    </Grid>
+  );
+}
+function OperatingCosts(
+  projectTimeline: number,
+  electrolyserOpexPerYear: number[],
+  powerPlantOpexPerYear: number[],
+  batteryOpexPerYear: any[],
+  additionalOpexPerYear: number[],
+  waterOpexPerYear: number[],
+  electricityPurchaseOpexPerYear: number[],
+  h2Sales: number[],
+  electricitySales: number[],
+  oxygenSales: number[],
+  annualSales: number[]
+) {
+  return (
+    <Card>
+      <CardHeader title="Operating Costs" />
+      <CardContent>
+        <Grid container item>
+          <Grid item xs={6}>
+            <CostLineChart
+              title="Operating Costs"
+              projectTimeline={projectTimeline}
+              datapoints={[
+                { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
+                { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
+                { label: "Battery OPEX", data: batteryOpexPerYear },
+                {
+                  label: "Additional Annual Costs",
+                  data: additionalOpexPerYear,
+                },
+                { label: "Water Costs", data: waterOpexPerYear },
+                {
+                  label: "Electricity Purchase",
+                  data: electricityPurchaseOpexPerYear,
+                },
+              ]}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <CostLineChart
+              title="Sales"
+              projectTimeline={projectTimeline}
+              datapoints={[
+                { label: "Hydrogen Sales", data: h2Sales },
+                { label: "Electricity Sales", data: electricitySales },
+                { label: "Oxygen Sales", data: oxygenSales },
+                { label: "Total Sales", data: annualSales },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+}
+
+function FirstGraph(
+  summary: ProjectModelSummary,
+  electricityConsumed: number[],
+  electricityProduced: number[],
+  h2Produced: number[],
+  lch2: number,
+  h2RetailPrice: number,
+  electrolyserCAPEX: number,
+  powerPlantCAPEX: number,
+  batteryCAPEX: number,
+  gridConnectionCAPEX: number,
+  additionalUpfrontCosts: number,
+  totalIndirectCosts: number,
+  electrolyserEpcCost: number,
+  electrolyserLandCost: number,
+  powerPlantEpcCost: number,
+  powerPlantLandCost: number,
+  batteryEpcCost: number,
+  batteryLandCost: number,
+  hourlyOperations: ModelHourlyOperation,
+  lcPowerPlantCAPEX: number,
+  lcElectrolyserCAPEX: number,
+  lcIndirectCosts: number,
+  lcPowerPlantOPEX: number,
+  lcElectrolyserOPEX: number,
+  lcElectricityPurchase: number,
+  lcElectricitySale: number,
+  lcStackReplacement: number,
+  lcWater: number,
+  lcBattery: number,
+  lcGridConnection: number,
+  lcAdditionalCosts: number,
+  lcOxygenSale: number
+) {
+  return (
+    <Grid container className="outside results box" wrap="nowrap">
+      <Grid
+        container
+        item
+        direction="column"
+        className="summary and cost breakdown"
+      >
+        <Grid item>
+          <Card>
+            <CardHeader title="Summary of results" />
+
+            <BasicTable
+              title="Summary of Results"
+              data={{
+                "Power Plant Capacity Factor": [
+                  mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100)),
+                ],
+                "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
+                  [mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))],
+                "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
+                  mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)),
+                ],
+                "Electrolyser Capacity Factor": [
+                  mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)),
+                ],
+                "Energy Consumed by Electrolyser (MWh/yr)": [
+                  mean(electricityConsumed),
+                ],
+                "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
+                  mean(electricityProduced),
+                ],
+                "Hydrogen Output [t/yr]": [mean(h2Produced)],
+                LCH2: [lch2],
+                "H2 Retail Price": [h2RetailPrice],
+              }}
+            />
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card>
+            <CardHeader title="Capital cost breakdown" />
+
+            <CostBreakdownDoughnutChart
+              title="Capital Cost Breakdown"
+              labels={[
+                "Electrolyser System",
+                "Power Plant",
+                "Battery",
+                "Grid Connection",
+                "Additional Upfront Costs",
+                "Indirect Costs",
+              ]}
+              data={[
+                electrolyserCAPEX,
+                powerPlantCAPEX,
+                batteryCAPEX,
+                gridConnectionCAPEX,
+                additionalUpfrontCosts,
+                totalIndirectCosts,
+              ]}
+            />
+            <CostBreakdownDoughnutChart
+              title="Indirect Cost Breakdown"
+              labels={[
+                "Electrolyser EPC",
+                "Electrolyser Land",
+                "Power Plant EPC",
+                "Power Plant Land",
+                "Battery EPC",
+                "Battery Land",
+              ]}
+              data={[
+                electrolyserEpcCost,
+                electrolyserLandCost,
+                powerPlantEpcCost,
+                powerPlantLandCost,
+                batteryEpcCost,
+                batteryLandCost,
+              ]}
+            />
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Grid container item>
+        <Grid
+          container
+          item
+          direction="column"
+          className="curves and lch2"
+          justifyContent={"space-between"}
+        >
+          <Grid container item className="duration curves">
+            <Grid item xs={6}>
+              <Card>
+                <CardHeader title="Powerplant duration curve" />
+
+                <DurationCurve
+                  title="Generator Duration Curve"
+                  data={hourlyOperations.Generator_CF}
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={6}>
+              <Card>
+                <CardHeader title="Electrolyser duration curve" />
+
+                <DurationCurve
+                  title="Electrolyser Duration Curve"
+                  data={hourlyOperations.Electrolyser_CF}
+                />
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Card>
+              <CardHeader title="Hourly capacity factors" />
+
+              <HourlyCapacityFactors
+                datapoints={[
+                  {
+                    label: "Electrolyser",
+                    data: hourlyOperations.Electrolyser_CF,
+                  },
+                  {
+                    label: "Power Plant",
+                    data: hourlyOperations.Generator_CF,
+                  },
+                ]}
+              />
+            </Card>
+          </Grid>
+          <Grid item>
+            <Card>
+              <CardHeader title="Breakdown of cost components in LCH2" />
+
+              <CostBarChart
+                title="Breakdown of Cost Components in LCH2"
+                labels={[
+                  "Power Plant CAPEX",
+                  "Electrolyser CAPEX",
+                  "Indirect Costs",
+                  "Power Plant OPEX",
+                  "Electrolyser O&M",
+                  "Electricity Purchase",
+                  "Electricity Sale",
+                  "Stack Replacement",
+                  "Water Cost",
+                  "Battery Cost",
+                  "Grid Connection Cost",
+                  "Additional Costs",
+                  "Oxygen Sale",
+                ]}
+                datapoints={[
+                  {
+                    label:
+                      "Breakdown of Cost Components in Levelised Cost of Hydrogen",
+                    data: [
+                      lcPowerPlantCAPEX,
+                      lcElectrolyserCAPEX,
+                      lcIndirectCosts,
+                      lcPowerPlantOPEX,
+                      lcElectrolyserOPEX,
+                      lcElectricityPurchase,
+                      lcElectricitySale,
+                      lcStackReplacement,
+                      lcWater,
+                      lcBattery,
+                      lcGridConnection,
+                      lcAdditionalCosts,
+                      lcOxygenSale,
+                    ],
+                  },
+                ]}
+              />
+            </Card>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
