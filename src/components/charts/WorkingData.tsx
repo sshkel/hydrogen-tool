@@ -1,4 +1,15 @@
-import { Card, CardContent, CardHeader, Grid } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
@@ -450,6 +461,31 @@ function FirstGraph(
   lcAdditionalCosts: number,
   lcOxygenSale: number
 ) {
+  const summaryDict: { [key: string]: number } = {
+    "Power Plant Capacity Factor": mean(
+      summary[`${POWER_PLANT_CF}`].map((x) => x * 100)
+    ),
+
+    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": mean(
+      summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)
+    ),
+    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": mean(
+      summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)
+    ),
+
+    "Electrolyser Capacity Factor": mean(
+      summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)
+    ),
+
+    "Energy Consumed by Electrolyser (MWh/yr)": mean(electricityConsumed),
+
+    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      mean(electricityProduced),
+
+    "Hydrogen Output [t/yr]": mean(h2Produced),
+    LCH2: lch2,
+    "H2 Retail Price": h2RetailPrice,
+  };
   return (
     <Grid container className="outside results box" wrap="nowrap">
       <Grid
@@ -461,32 +497,7 @@ function FirstGraph(
         <Grid item>
           <Card>
             <CardHeader title="Summary of results" />
-
-            <BasicTable
-              title="Summary of Results"
-              data={{
-                "Power Plant Capacity Factor": [
-                  mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100)),
-                ],
-                "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
-                  [mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))],
-                "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": [
-                  mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)),
-                ],
-                "Electrolyser Capacity Factor": [
-                  mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)),
-                ],
-                "Energy Consumed by Electrolyser (MWh/yr)": [
-                  mean(electricityConsumed),
-                ],
-                "Excess Energy Not Utilised by Electrolyser (MWh/yr)": [
-                  mean(electricityProduced),
-                ],
-                "Hydrogen Output [t/yr]": [mean(h2Produced)],
-                LCH2: [lch2],
-                "H2 Retail Price": [h2RetailPrice],
-              }}
-            />
+            <BasicTable title="Summary of Results" data={summaryDict} />
           </Card>
         </Grid>
         <Grid item>
