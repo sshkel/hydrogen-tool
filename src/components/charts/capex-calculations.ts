@@ -1,27 +1,31 @@
-import { InputFields, isGridConnected, isPPAAgreement } from "../../types";
+import {
+  SynthesisedInputs,
+  isGridConnected,
+  isPPAAgreement,
+} from "../../types";
 import { isSolar, isWind } from "../../utils";
 import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
-export function generateCapexValues(data: InputFields) {
+export function generateCapexValues(data: SynthesisedInputs) {
   const {
     technology,
     powerPlantConfiguration,
 
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
-    electrolyserReferencePurchaseCost,
+    electrolyserCapitalCost,
     electrolyserCostReductionWithScale,
     electrolyserReferenceFoldIncrease,
 
     solarNominalCapacity,
     solarReferenceCapacity,
-    solarPVFarmReferenceCost,
+    solarFarmBuildCost,
     solarPVCostReductionWithScale,
     solarReferenceFoldIncrease,
 
     windNominalCapacity,
     windReferenceCapacity,
-    windFarmReferenceCost,
+    windFarmBuildCost,
     windCostReductionWithScale,
     windReferenceFoldIncrease,
 
@@ -47,7 +51,7 @@ export function generateCapexValues(data: InputFields) {
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
-    electrolyserReferencePurchaseCost,
+    electrolyserCapitalCost,
     electrolyserCostReductionWithScale,
     electrolyserReferenceFoldIncrease
   );
@@ -56,7 +60,7 @@ export function generateCapexValues(data: InputFields) {
     ? calculateCapex(
         solarNominalCapacity,
         solarReferenceCapacity,
-        solarPVFarmReferenceCost,
+        solarFarmBuildCost,
         solarPVCostReductionWithScale,
         solarReferenceFoldIncrease
       )
@@ -65,7 +69,7 @@ export function generateCapexValues(data: InputFields) {
     ? calculateCapex(
         windNominalCapacity,
         windReferenceCapacity,
-        windFarmReferenceCost,
+        windFarmBuildCost,
         windCostReductionWithScale,
         windReferenceFoldIncrease
       )

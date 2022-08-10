@@ -30,10 +30,10 @@ export function cashFlowAnalysis(
   interestOnLoan: number,
   capitalDepreciationProfile: DepreciationProfile,
   taxRate: number,
-  projectLife: number,
+  projectTimeline: number,
   inflationRate: number
 ) {
-  const activeLife = projectLife + 2;
+  const activeLife = projectTimeline + 2;
   const applyInflation = getInflationFn(inflationRate, activeLife);
   const paddedAnnualSales = padArray(annualSales);
 
@@ -48,14 +48,14 @@ export function cashFlowAnalysis(
   const directEquityCost = roundToNearestThousand(
     totalEquity * directEquityShare
   );
-  const directEquityPayment = startup(directEquityCost, projectLife);
+  const directEquityPayment = startup(directEquityCost, projectTimeline);
   // indirect equity
   const indirectEquityShare = 1 - directEquityShare;
   // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
   const indrectEquityCost = roundToNearestThousand(
     totalEquity * indirectEquityShare
   );
-  const indirectEquity = startup(indrectEquityCost, projectLife);
+  const indirectEquity = startup(indrectEquityCost, projectTimeline);
   const shareOfTotalInvestmentFinancedViaLoan =
     1 - shareOfTotalInvestmentFinancedViaEquity;
   // cost financed via loan
@@ -64,12 +64,12 @@ export function cashFlowAnalysis(
 
   // salvage cost
   const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
-  const salvageCost = decomissioning(totalSalvageCost, projectLife);
+  const salvageCost = decomissioning(totalSalvageCost, projectTimeline);
 
   // decomissioning cost
   const decomissioningCost = decomissioning(
     totalInvestmentRequired * decommissioningCostShare,
-    projectLife
+    projectTimeline
   );
 
   // cost of setting up or decommissioning the project
@@ -93,7 +93,7 @@ export function cashFlowAnalysis(
 
   const loanBalance = calculateLoanBalance(
     totalLoan,
-    projectLife,
+    projectTimeline,
     loanRepayment
   );
 
@@ -116,7 +116,7 @@ export function cashFlowAnalysis(
   const totalDepreciableCapex = totalCapexCost + totalEpcCost;
   const conversionFactors = getConversionFactors(
     capitalDepreciationProfile,
-    projectLife
+    projectTimeline
   );
   const depreciation = fillYearsArray(
     activeLife,
@@ -157,12 +157,12 @@ export function cashFlowAnalysis(
 
 export function calculateLoanBalance(
   totalLoan: number,
-  projectLife: number,
+  projectTimeline: number,
   loanRepayment: number
 ) {
   const loanBalance: number[] = [0, totalLoan];
 
-  for (let i = 1; i <= projectLife; i++) {
+  for (let i = 1; i <= projectTimeline; i++) {
     const newBalance = loanBalance[i] - loanRepayment;
     if (newBalance > 0) {
       loanBalance.push(newBalance);
@@ -179,9 +179,9 @@ export function sales(
   totalEpcCost: number,
   totalLandCost: number,
   // Inputs
-  projectLife: number,
+  projectTimeline: number,
   discountRate: number,
-  salesMargin: number,
+  hydrogenSalesMargin: number,
   averageElectricitySpotPrice: number,
   inflationRate: number,
   // Values per year of project life
@@ -190,7 +190,7 @@ export function sales(
   h2Produced: number[],
   electricityProduced: number[]
 ) {
-  const activeLife = projectLife + 2;
+  const activeLife = projectTimeline + 2;
 
   const paddedH2Produced = padArray(h2Produced);
   const paddedElectricityProduced = padArray(electricityProduced);
@@ -204,7 +204,7 @@ export function sales(
 
   const totalInvestmentRequired = startup(
     totalCapexCost + totalEpcCost + totalLandCost,
-    projectLife
+    projectTimeline
   );
 
   const totalCost = fillYearsArray(
@@ -226,7 +226,7 @@ export function sales(
 
   const hydrogenProductionCost = sum(h2ProducedKgLCA);
   const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
-  const h2RetailPrice = lch2 + salesMargin;
+  const h2RetailPrice = lch2 + hydrogenSalesMargin;
 
   // The values can be used to create sales graphs.
   const inflatedElectricitySales = applyInflation(electricitySales);
@@ -296,7 +296,7 @@ export function getDiscountFn(rate: number, years: number) {
 
 export function getConversionFactors(
   capitalDepreciationProfile: DepreciationProfile,
-  projectLife: number
+  projectTimeline: number
 ) {
   let selectedModel = null;
   // come from conversion factors tab
@@ -304,7 +304,7 @@ export function getConversionFactors(
   switch (capitalDepreciationProfile) {
     // TODO when default to straight line it breaks with undefined
     case "Straight Line": {
-      selectedModel = Array(projectLife).fill(1 / projectLife);
+      selectedModel = Array(projectTimeline).fill(1 / projectTimeline);
       break;
     }
     case "MACRs - 3 year Schedule": {
@@ -345,12 +345,12 @@ export function getConversionFactors(
       throw new Error("Unknown depreciation profile");
     }
   }
-  const padding = projectLife - selectedModel.length;
+  const padding = projectTimeline - selectedModel.length;
 
   if (padding > 0) {
     selectedModel.push(...Array(padding).fill(0));
   } else {
-    selectedModel = selectedModel.slice(0, projectLife);
+    selectedModel = selectedModel.slice(0, projectTimeline);
   }
 
   return padArray(selectedModel);

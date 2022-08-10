@@ -63,7 +63,7 @@ export default function InputHomePage() {
             title="Power Plant Capacity"
             children={[
               <InputSlider inputKey="powerplantOversizeRatio" />,
-              <InputSlider inputKey="solarToWindRatio" />,
+              <InputSlider inputKey="solarToWindPercentage" />,
             ]}
           />
         </Grid>
@@ -110,7 +110,7 @@ export default function InputHomePage() {
                   [
                     <InputSlider inputKey="discountRate" />,
                     <InputSlider inputKey="projectTimeline" />,
-                    <InputSlider inputKey="equityToLoanShare" />,
+                    <InputSlider inputKey="shareOfTotalInvestmentFinancedViaEquity" />,
                     <InputSlider inputKey="interestOnLoan" />,
                     <InputSlider inputKey="loanTerm" />,
                     <InputSlider inputKey="inflationRate" />,

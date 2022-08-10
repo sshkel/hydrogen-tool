@@ -32,48 +32,52 @@ describe("Cost function calculations", () => {
   it("calculates loan balance correctly", () => {
     const totalLoan = 7_500_000;
     const loanRepayment = 750_000;
-    const projectLife = 20;
-    const result = calculateLoanBalance(totalLoan, projectLife, loanRepayment);
+    const projectTimeline = 20;
+    const result = calculateLoanBalance(
+      totalLoan,
+      projectTimeline,
+      loanRepayment
+    );
     const expected = [
       0, 7_500_000, 6750000, 6000000, 5250000, 4500000, 3750000, 3000000,
       2250000, 1500000, 750000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ];
-    expect(result.length).toEqual(projectLife + 2);
+    expect(result.length).toEqual(projectTimeline + 2);
     expect(result).toEqual(expected);
   });
 
   it("handles when project life exceeds requested conversion factors", () => {
-    const projectLife = 10;
+    const projectTimeline = 10;
     const conversionFactors = getConversionFactors(
       "MACRs - 3 year Schedule",
-      projectLife
+      projectTimeline
     );
     const expected = [0, 0.3333, 0.4445, 0.1481, 0.0741, 0, 0, 0, 0, 0, 0, 0];
-    expect(conversionFactors.length).toEqual(projectLife + 2);
+    expect(conversionFactors.length).toEqual(projectTimeline + 2);
     expect(conversionFactors).toEqual(expected);
   });
 
   it("handles when project life equals requested conversion factors", () => {
-    const projectLife = 6;
+    const projectTimeline = 6;
     const conversionFactors = getConversionFactors(
       "MACRs - 5 year Schedule",
-      projectLife
+      projectTimeline
     );
     const expected = [0, 0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576, 0];
-    expect(conversionFactors.length).toEqual(projectLife + 2);
+    expect(conversionFactors.length).toEqual(projectTimeline + 2);
     expect(conversionFactors).toEqual(expected);
   });
 
   it("handles when project life is less than requested conversion factors", () => {
-    const projectLife = 8;
+    const projectTimeline = 8;
     const conversionFactors = getConversionFactors(
       "MACRs - 10 year Schedule",
-      projectLife
+      projectTimeline
     );
     const expected = [
       0, 0.1, 0.18, 0.144, 0.1152, 0.0922, 0.0737, 0.0655, 0.0655, 0,
     ];
-    expect(conversionFactors.length).toEqual(projectLife + 2);
+    expect(conversionFactors.length).toEqual(projectTimeline + 2);
     expect(conversionFactors).toEqual(expected);
   });
 });
