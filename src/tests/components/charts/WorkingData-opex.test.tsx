@@ -34,6 +34,7 @@ describe("Working Data calculations", () => {
         <WorkingData
           data={standaloneSolarScenario.data}
           location={standaloneSolarScenario.location}
+          inputConfiguration={standaloneSolarScenario.inputConfiguration}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -114,6 +115,9 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={standaloneSolarWithBatteryScenario.data}
         location={standaloneSolarWithBatteryScenario.location}
+        inputConfiguration={
+          standaloneSolarWithBatteryScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -202,6 +206,7 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={standaloneWindScenario.data}
         location={standaloneWindScenario.location}
+        inputConfiguration={standaloneWindScenario.inputConfiguration}
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -281,6 +286,7 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={windWithPPAScenario.data}
         location={windWithPPAScenario.location}
+        inputConfiguration={windWithPPAScenario.inputConfiguration}
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -360,6 +366,9 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={hybridBatteryGridSurplusRetailScenario.data}
         location={hybridBatteryGridSurplusRetailScenario.location}
+        inputConfiguration={
+          hybridBatteryGridSurplusRetailScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -444,6 +453,7 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={windWithBatteryAndPPAScenario.data}
         location={windWithBatteryAndPPAScenario.location}
+        inputConfiguration={windWithBatteryAndPPAScenario.inputConfiguration}
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -528,6 +538,9 @@ describe("Working Data calculations", () => {
         location={
           gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
         }
+        inputConfiguration={
+          gridSolarWithRetailAndAdditionalRevenueStreamsScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -607,6 +620,9 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={standaloneSolarWithStackDegradationScenario.data}
         location={standaloneSolarWithStackDegradationScenario.location}
+        inputConfiguration={
+          standaloneSolarWithStackDegradationScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -686,6 +702,9 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={standaloneHybridWithDegradationScenario.data}
         location={standaloneHybridWithDegradationScenario.location}
+        inputConfiguration={
+          standaloneHybridWithDegradationScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />
@@ -765,6 +784,9 @@ describe("Working Data calculations", () => {
       <WorkingData
         data={standaloneWindWithBatteryAndDegradationScenario.data}
         location={standaloneWindWithBatteryAndDegradationScenario.location}
+        inputConfiguration={
+          standaloneWindWithBatteryAndDegradationScenario.inputConfiguration
+        }
         loadSolar={loadSolar}
         loadWind={loadWind}
       />

@@ -1,5 +1,5 @@
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
-import { StackReplacementType } from "../types";
+import { InputConfiguration, StackReplacementType } from "../types";
 import { mean, sum } from "../utils";
 import {
   BATTERY_OUTPUT,
@@ -15,6 +15,7 @@ import {
 } from "./consts";
 
 export type DataModel = {
+  inputConfiguration: InputConfiguration;
   batteryLifetime: number;
   batteryMinCharge: number;
   batteryEfficiency: number;
@@ -25,6 +26,8 @@ export type DataModel = {
   electrolyserNominalCapacity: number;
   solarNominalCapacity: number;
   windNominalCapacity: number;
+  powerPlantOversizeRatio: number;
+  solarToWindPercentage: number;
   location: string;
   electrolyserMaximumLoad: number;
   electrolyserMinimumLoad: number;
@@ -117,8 +120,17 @@ export class HydrogenModel {
   }
 
   calculateHydrogenModel(projectTimeline: number): ProjectModelSummary {
-    const { stackDegradation, solarDegradation, windDegradation } =
-      this.parameters;
+    const {
+      stackDegradation,
+      solarDegradation,
+      windDegradation,
+      inputConfiguration,
+    } = this.parameters;
+
+    if (inputConfiguration === "Basic") {
+      return this.calculateBasicHydrogenModel(projectTimeline);
+    }
+
     const projectSummary =
       stackDegradation + solarDegradation + windDegradation === 0
         ? this.calculateHydrogenModelWithoutDegradation(projectTimeline)
@@ -139,7 +151,8 @@ export class HydrogenModel {
     projectTimeline: number
   ): ProjectModelSummary {
     const year = 1;
-    const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
+    const hourlyOperation =
+      this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
     const operatingOutputs = this.getTabulatedOutput(
       hourlyOperation.Generator_CF,
@@ -170,7 +183,8 @@ export class HydrogenModel {
     );
     let year = 1;
     // Calculate first year separately
-    const hourlyOperation = this.calculateElectrolyserHourlyOperation(year);
+    const hourlyOperation =
+      this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
     const operatingOutputs = this.calculateElectrolyserOutput(hourlyOperation);
 
@@ -179,7 +193,7 @@ export class HydrogenModel {
 
     for (year = 2; year <= projectTimeline; year++) {
       const hourlyOperationsByYear =
-        this.calculateElectrolyserHourlyOperation(year);
+        this.calculateAdvancedElectrolyserHourlyOperation(year);
       modelSummaryPerYear.push(
         this.calculateElectrolyserOutput(hourlyOperationsByYear)
       );
@@ -200,9 +214,57 @@ export class HydrogenModel {
     return projectSummary;
   }
 
+  private calculateBasicHydrogenModel(
+    projectTimeline: number
+  ): ProjectModelSummary {
+    console.log("Parameters are ", this.parameters);
+    const hourlyOperation = this.calculateHourlyOperation(
+      this.parameters.powerPlantOversizeRatio,
+      this.parameters.electrolyserNominalCapacity,
+      this.parameters.solarToWindPercentage / 100,
+      1 - this.parameters.solarToWindPercentage / 100,
+      this.parameters.solarDegradation,
+      this.parameters.windDegradation,
+      this.parameters.stackDegradation,
+      this.parameters.location,
+      this.elecMaxLoad,
+      this.elecMinLoad,
+      this.hydOutput,
+      this.specCons,
+      this.elecOverload,
+      this.parameters.timeBetweenOverloading,
+      this.batteryEnergy,
+      this.parameters.batteryStorageDuration,
+      this.batteryEfficiency,
+      this.parameters.batteryRatedPower,
+      this.battMin,
+      1
+    );
+
+    this.hourlyOperationsInYearOne = hourlyOperation;
+    const operatingOutputs = this.getTabulatedOutput(
+      hourlyOperation.Generator_CF,
+      hourlyOperation.Electrolyser_CF,
+      hourlyOperation.Hydrogen_prod_fixed,
+      hourlyOperation.Hydrogen_prod_variable,
+      hourlyOperation.Net_Battery_Flow,
+      this.parameters.electrolyserNominalCapacity,
+      this.genCapacity,
+      this.kgtoTonne,
+      this.hoursPerYear
+    );
+
+    let projectSummary: ProjectModelSummary = {};
+    SUMMARY_KEYS.forEach((key) => {
+      projectSummary[key] = Array(projectTimeline).fill(operatingOutputs[key]);
+    });
+
+    return projectSummary;
+  }
+
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
-  private calculateElectrolyserHourlyOperation(
+  private calculateAdvancedElectrolyserHourlyOperation(
     year: number
   ): ModelHourlyOperation {
     return this.calculateHourlyOperation(

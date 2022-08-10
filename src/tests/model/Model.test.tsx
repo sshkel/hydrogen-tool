@@ -84,6 +84,9 @@ describe("Hydrogen Model", () => {
       // waterCost: 5,
       // discountRate: 4,
       // projectTimeline: 20,
+      inputConfiguration: "Advanced",
+      powerPlantOversizeRatio: 1,
+      solarToWindPercentage: 50,
     };
     const model = new HydrogenModel(example1, solar, wind);
     compareToModel(model, outputs1, workingdf1);
@@ -146,6 +149,9 @@ describe("Hydrogen Model", () => {
       // waterCost: 5,
       // discountRate: 4,
       // projectTimeline: 20,
+      inputConfiguration: "Advanced",
+      powerPlantOversizeRatio: 1,
+      solarToWindPercentage: 50,
     };
     const model = new HydrogenModel(example2, solar, wind);
 
@@ -193,6 +199,9 @@ describe("Hydrogen Model", () => {
       batteryEfficiency: 85,
       batteryMinCharge: 0.0,
       batteryLifetime: 10,
+      inputConfiguration: "Advanced",
+      powerPlantOversizeRatio: 1,
+      solarToWindPercentage: 50,
       /*
       solarCapex: 1120,
       solarOpex: 16990,

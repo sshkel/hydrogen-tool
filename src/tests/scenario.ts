@@ -1,9 +1,16 @@
-import { Inputs, UserInputFields } from "../types";
+import { InputConfiguration, Inputs, UserInputFields } from "../types";
 
-export const defaultInputData: { location: string; data: Inputs } = {
+export const defaultInputData: {
+  location: string;
+  inputConfiguration: InputConfiguration;
+  data: Inputs;
+} = {
   location: "WA",
+  inputConfiguration: "Basic",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerPlantOversizeRatio: 1,
+    solarToWindPercentage: 100,
     additionalUpfrontCosts: 0,
     additionalAnnualCosts: 0,
     batteryEpcCosts: 0,
@@ -77,13 +84,16 @@ export const defaultInputData: { location: string; data: Inputs } = {
 
 export const standaloneSolarWithBatteryScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Port Hedland, WA",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 15,
     windNominalCapacity: 0,
@@ -158,13 +168,16 @@ export const standaloneSolarWithBatteryScenario: {
 
 export const standaloneSolarScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Fitzroy, QLD",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 15,
     windNominalCapacity: 0,
@@ -239,13 +252,16 @@ export const standaloneSolarScenario: {
 
 export const standaloneWindScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Central West NSW",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Wind",
+    powerPlantOversizeRatio: 1.2,
+    solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 0,
     windNominalCapacity: 12,
@@ -320,13 +336,16 @@ export const standaloneWindScenario: {
 
 export const windWithPPAScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Wagga Wagga, NSW",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "PPA Agreement",
     technology: "Wind",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 0,
     windNominalCapacity: 15,
@@ -401,12 +420,15 @@ export const windWithPPAScenario: {
 
 export const hybridBatteryGridSurplusRetailScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "New England",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     technology: "Hybrid",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 66.66666,
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 10,
@@ -482,13 +504,16 @@ export const hybridBatteryGridSurplusRetailScenario: {
 
 export const windWithBatteryAndPPAScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "South West NSW",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "PPA Agreement",
     technology: "Wind",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 0,
     windNominalCapacity: 15,
@@ -563,13 +588,16 @@ export const windWithBatteryAndPPAScenario: {
 
 export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Fitzroy, QLD",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
     technology: "Solar",
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 15,
     windNominalCapacity: 0,
@@ -644,13 +672,16 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
 
 export const standaloneSolarWithStackDegradationScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Tumut, NSW",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Solar",
+    powerPlantOversizeRatio: 1,
+    solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 10,
     windNominalCapacity: 0,
@@ -725,13 +756,16 @@ export const standaloneSolarWithStackDegradationScenario: {
 
 export const standaloneHybridWithDegradationScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Cooma Monaro, NSW",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Hybrid",
+    powerPlantOversizeRatio: 1,
+    solarToWindPercentage: 57.692307,
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 15,
     windNominalCapacity: 12,
@@ -806,11 +840,12 @@ export const standaloneHybridWithDegradationScenario: {
 
 export const standaloneWindWithBatteryAndDegradationScenario: {
   location: string;
+  inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
   location: "Southern NSW Tablelands",
+  inputConfiguration: "Advanced",
   data: {
-    inputConfiguration: "Advanced",
     powerPlantConfiguration: "Standalone",
     technology: "Wind",
     electrolyserNominalCapacity: 10,

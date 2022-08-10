@@ -9,11 +9,13 @@ import Input from "./components/input/Input";
 import InputHomePage from "./components/input/InputHomePage";
 import Map from "./components/map/Map";
 import { loadSolar, loadWind } from "./model/DataLoader";
-import { UserInputFields } from "./types";
+import { InputConfiguration, UserInputFields } from "./types";
 
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
   const [location, setLocation] = useState<string | undefined>("Z1");
+  const [inputConfiguration, setInputConfiguration] =
+    useState<InputConfiguration>("Basic");
 
   return (
     <div className="App2">
@@ -27,16 +29,22 @@ function App() {
           <Routes>
             <Route path="/" element={<Map setLocation={setLocation} />} />
             <Route
-              path="/input"
-              element={<InputHomePage setState={setState} />}
+              path="/design"
+              element={
+                <InputHomePage
+                  setState={setState}
+                  setInputConfiguration={setInputConfiguration}
+                />
+              }
             />
-            <Route path="/design" element={<Input setState={setState} />} />
+            <Route path="/input" element={<Input setState={setState} />} />
             <Route
               path="/result"
               element={
                 <WorkingData
                   data={state}
                   location={location}
+                  inputConfiguration={inputConfiguration}
                   loadSolar={loadSolar}
                   loadWind={loadWind}
                 />

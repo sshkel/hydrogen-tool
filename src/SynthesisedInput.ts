@@ -80,15 +80,14 @@ class DefaultInputs implements Inputs {
   secAtNominalLoad = 1 / 3;
   electrolyserEfficiency = 0;
   powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
+  powerPlantOversizeRatio = 1;
+  solarToWindPercentage = 50;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {
   constructor(userInputs: UserInputFields) {
     super();
-    console.log("This input 1", this);
     let sanitisedUserInputFields: any = { ...userInputs };
-
-    console.log("This input 1", this);
 
     Object.keys(sanitisedUserInputFields).forEach((key) => {
       if (sanitisedUserInputFields[key] === undefined) {
@@ -96,7 +95,6 @@ export default class SynthesisedInputs extends DefaultInputs {
       }
     });
 
-    console.log("This input 2", sanitisedUserInputFields);
     return { ...this, ...sanitisedUserInputFields };
   }
 }

@@ -1,15 +1,7 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import Grid from "@mui/material/Grid";
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
@@ -31,7 +23,7 @@ import {
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
-import { UserInputFields } from "../../types";
+import { InputConfiguration, Inputs, UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -39,6 +31,7 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
+import { backcalculateInputFields } from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
 import { cashFlowAnalysis, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
@@ -47,6 +40,7 @@ import { generateOpexValues } from "./opex-calculations";
 export interface Props {
   location?: string;
   data?: UserInputFields;
+  inputConfiguration: InputConfiguration;
   loadSolar: () => Promise<any[]>;
   loadWind: () => Promise<any[]>;
 }
@@ -82,14 +76,9 @@ export default function WorkingData(props: Props) {
     return null;
   }
 
-  const inputs = new SynthesisedInputs(props.data);
-
-  console.log("HERE INPUTS ", inputs);
+  let inputs: Inputs = new SynthesisedInputs(props.data);
 
   const {
-    electrolyserNominalCapacity,
-    solarNominalCapacity,
-    windNominalCapacity,
     batteryRatedPower = 0,
     batteryMinCharge = 0,
     batteryEfficiency,
@@ -122,9 +111,12 @@ export default function WorkingData(props: Props) {
     windDegradation,
     secAtNominalLoad = 0,
     electrolyserEfficiency = 0,
+    powerPlantOversizeRatio,
+    solarToWindPercentage,
   } = inputs;
   const location = props.location;
   const dataModel: DataModel = {
+    inputConfiguration: props.inputConfiguration,
     batteryLifetime,
     batteryMinCharge,
     batteryEfficiency,
@@ -132,9 +124,11 @@ export default function WorkingData(props: Props) {
     batteryRatedPower,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
-    electrolyserNominalCapacity,
-    solarNominalCapacity,
-    windNominalCapacity,
+    electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
+    solarNominalCapacity: inputs.solarNominalCapacity,
+    windNominalCapacity: inputs.windNominalCapacity,
+    powerPlantOversizeRatio,
+    solarToWindPercentage,
     solarDegradation,
     windDegradation,
     stackDegradation,
@@ -153,6 +147,15 @@ export default function WorkingData(props: Props) {
   let summary: ProjectModelSummary =
     model.calculateHydrogenModel(projectTimeline);
   let hourlyOperations = model.getHourlyOperations();
+
+  if (props.inputConfiguration === "Basic") {
+    inputs = backcalculateInputFields(
+      inputs,
+      props.data,
+      mean(summary[ELECTROLYSER_CF])
+    );
+  }
+
   // CAPEX values
   const {
     electrolyserCAPEX,

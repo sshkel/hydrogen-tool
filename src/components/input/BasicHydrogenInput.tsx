@@ -62,7 +62,7 @@ export default function InputHomePage() {
           <InputCard
             title="Power Plant Capacity"
             children={[
-              <InputSlider inputKey="powerplantOversizeRatio" />,
+              <InputSlider inputKey="powerPlantOversizeRatio" />,
               <InputSlider inputKey="solarToWindPercentage" />,
             ]}
           />

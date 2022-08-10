@@ -43,6 +43,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneSolarScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -85,6 +86,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneSolarWithBatteryScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -126,6 +128,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneWindScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -167,6 +170,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={windWithPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -209,6 +213,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={hybridBatteryGridSurplusRetailScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -255,6 +260,7 @@ describe("Working Data calculations", () => {
     it("calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={windWithBatteryAndPPAScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
@@ -298,6 +304,7 @@ describe("Working Data calculations", () => {
   it("calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
     const wrapper = mount(
       <WorkingData
+        inputConfiguration="Advanced"
         data={standaloneHybridWithDegradationScenario.data}
         loadSolar={loadSolar}
         loadWind={loadWind}

@@ -32,6 +32,7 @@ describe("Model summary", () => {
     it("calculates summary of results for solar", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneSolarScenario.data}
           location={standaloneSolarScenario.location}
           loadSolar={loadSolar}
@@ -73,6 +74,7 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneSolarWithBatteryScenario.data}
           location={standaloneSolarWithBatteryScenario.location}
           loadSolar={loadSolar}
@@ -114,6 +116,7 @@ describe("Model summary", () => {
     it("calculates summary of results for wind", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneWindScenario.data}
           location={standaloneWindScenario.location}
           loadSolar={loadSolar}
@@ -155,6 +158,7 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={windWithPPAScenario.data}
           location={windWithPPAScenario.location}
           loadSolar={loadSolar}
@@ -196,6 +200,7 @@ describe("Model summary", () => {
     it("calculates summary of results for hybrid with battery, grid and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={hybridBatteryGridSurplusRetailScenario.data}
           location={hybridBatteryGridSurplusRetailScenario.location}
           loadSolar={loadSolar}
@@ -237,6 +242,7 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with battery and PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={windWithBatteryAndPPAScenario.data}
           location={windWithBatteryAndPPAScenario.location}
           loadSolar={loadSolar}
@@ -278,6 +284,7 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with oxygen and electricity sales", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
           location={
             gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
@@ -321,6 +328,7 @@ describe("Model summary", () => {
     it("calculates summary of results for solar with stack degradation", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneSolarWithStackDegradationScenario.data}
           location={standaloneSolarWithStackDegradationScenario.location}
           loadSolar={loadSolar}
@@ -362,6 +370,7 @@ describe("Model summary", () => {
     it("calculates summary of results for hybrid with degradation", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneHybridWithDegradationScenario.data}
           location={standaloneHybridWithDegradationScenario.location}
           loadSolar={loadSolar}
@@ -403,6 +412,7 @@ describe("Model summary", () => {
     it("calculates summary of results for wind with battery and degradation", (done) => {
       const wrapper = mount(
         <WorkingData
+          inputConfiguration="Advanced"
           data={standaloneWindWithBatteryAndDegradationScenario.data}
           location={standaloneWindWithBatteryAndDegradationScenario.location}
           loadSolar={loadSolar}

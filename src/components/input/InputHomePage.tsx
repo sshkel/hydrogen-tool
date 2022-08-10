@@ -11,6 +11,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../../input.css";
+import { InputConfiguration } from "../../types";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
@@ -43,6 +44,7 @@ const theme = createTheme({
 });
 
 interface Props {
+  setInputConfiguration: (config: InputConfiguration) => void;
   setState: (obj: any) => void;
 }
 
@@ -51,6 +53,9 @@ export default function InputHomePage(props: Props) {
   const [tab, setTab] = React.useState("Basic");
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
+    if (newTab === "Basic" || newTab === "Advanced") {
+      props.setInputConfiguration(newTab);
+    }
     setTab(newTab);
   };
 
@@ -68,7 +73,6 @@ export default function InputHomePage(props: Props) {
 
     localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
-    console.log(form);
     navigate("/result");
   };
 

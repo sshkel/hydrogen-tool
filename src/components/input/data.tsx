@@ -532,7 +532,7 @@ export const defaultInputs: BasicDefaultInput = {
     title: "Electrolyser Efficiency",
     helperText: "Value: 50 - 100%",
   },
-  powerplantOversizeRatio: {
+  powerPlantOversizeRatio: {
     min: 1,
     max: 3,
     step: 0.1,

@@ -21,6 +21,8 @@ export type PowerPlantConfiguration =
 
 export type ChartData = { label: string; data: number[] };
 
+export type InputConfiguration = "Basic" | "Advanced";
+
 export const isPPAAgreement = (
   powerPlantConfiguration: PowerPlantConfiguration
 ) => powerPlantConfiguration === "PPA Agreement";
@@ -46,9 +48,8 @@ export interface SliderProps {
 }
 
 export interface UserInputFields {
-  inputConfiguration: "Basic" | "Advanced";
   projectScale?: number;
-  powerplantOversizeRatio?: number;
+  powerPlantOversizeRatio?: number;
   solarToWindPercentage?: number;
   additionalUpfrontCosts?: number;
   additionalAnnualCosts?: number;
@@ -153,6 +154,8 @@ export interface Inputs {
   electrolyserCapitalCost: number;
   solarFarmBuildCost: number;
   windFarmBuildCost: number;
+  powerPlantOversizeRatio: number;
+  solarToWindPercentage: number;
   solarEpcCosts: number;
   solarLandProcurementCost: number;
   solarPVCostReductionWithScale: number;
