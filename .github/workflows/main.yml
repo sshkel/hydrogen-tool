@@ -30,7 +30,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Copy traces into build directory
-        run: cp ./assets ./build
+        run: cp -r ./assets ./build
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
