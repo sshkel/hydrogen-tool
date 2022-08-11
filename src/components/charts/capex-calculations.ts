@@ -9,7 +9,7 @@ export function generateCapexValues(data: Inputs) {
 
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
-    electrolyserCapitalCost,
+    electrolyserPurchaseCost,
     electrolyserCostReductionWithScale,
     electrolyserReferenceFoldIncrease,
 
@@ -47,7 +47,7 @@ export function generateCapexValues(data: Inputs) {
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
-    electrolyserCapitalCost,
+    electrolyserPurchaseCost,
     electrolyserCostReductionWithScale,
     electrolyserReferenceFoldIncrease
   );

@@ -68,6 +68,7 @@ export default function InputSlider({ inputKey }: Props) {
       setValue(max);
     }
   };
+  const valueText: string = "Value: " + min + " - " + max;
 
   return (
     <Grid container columnSpacing={3.5}>
@@ -115,7 +116,7 @@ export default function InputSlider({ inputKey }: Props) {
             color: "rgba(0, 0, 0, 0.6)",
           }}
         >
-          {helperText}
+          {valueText}
         </Typography>
       </Grid>
     </Grid>

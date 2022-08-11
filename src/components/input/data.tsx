@@ -136,7 +136,7 @@ export const data: Field[] = [
     adornmentLabel: "kW",
   },
   {
-    id: "electrolyserCapitalCost",
+    id: "electrolyserPurchaseCost",
     label: "Reference Electrolyser Purchase Cost",
     defaultValue: 1000,
     adornmentLabel: "A$/kW",
@@ -523,6 +523,7 @@ export const defaultInputs: BasicDefaultInput = {
     step: 50_000,
     defaultValue: 100_000,
     title: "Project Scale",
+    helperText: "A description goes here",
   },
   electrolyserEfficiency: {
     min: 50,
@@ -530,7 +531,6 @@ export const defaultInputs: BasicDefaultInput = {
     step: 2.5,
     defaultValue: 60,
     title: "Electrolyser Efficiency",
-    helperText: "Value: 50 - 100%",
   },
   powerPlantOversizeRatio: {
     min: 1,
@@ -546,7 +546,7 @@ export const defaultInputs: BasicDefaultInput = {
     defaultValue: 50,
     title: "Solar to Wind Capacity Ratio",
   },
-  electrolyserCapitalCost: {
+  electrolyserPurchaseCost: {
     min: 100,
     max: 5000,
     step: 100,
@@ -567,7 +567,7 @@ export const defaultInputs: BasicDefaultInput = {
     defaultValue: 2000,
     title: "Wind Farm Build Cost",
   },
-  ppaCost: {
+  principalPPACost: {
     min: 0,
     max: 200,
     step: 10,

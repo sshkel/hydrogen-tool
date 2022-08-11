@@ -74,7 +74,7 @@ export default function InputHomePage() {
           <InputCard
             title="Capital & Operating Cost"
             children={[
-              <InputSlider inputKey="electrolyserCapitalCost" />,
+              <InputSlider inputKey="electrolyserPurchaseCost" />,
               <InputSelect
                 titles={["Build Power Plant​", "Purchase Electricity via PPA"]}
                 helperTexts={["No PPA Agreement", undefined]}
@@ -84,7 +84,7 @@ export default function InputHomePage() {
                     <InputSlider inputKey="windFarmBuildCost" />,
                   ],
                   [
-                    <InputSlider inputKey="ppaCost" />,
+                    <InputSlider inputKey="principalPPACost" />,
                     <InputSlider inputKey="waterSupplyCost" />,
                   ],
                 ]}

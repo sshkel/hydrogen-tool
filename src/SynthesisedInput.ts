@@ -9,8 +9,26 @@ import {
 } from "./types";
 
 class DefaultInputs implements Inputs {
-  additionalUpfrontCosts = 0;
-  additionalAnnualCosts = 0;
+  // Electrolyser
+  electrolyserNominalCapacity = 1;
+  electrolyserEfficiency = 0;
+  electrolyserReferenceCapacity = 10;
+  electrolyserCostReductionWithScale = 10;
+  electrolyserReferenceFoldIncrease = 1;
+  electrolyserEpcCosts = 0;
+  electrolyserLandProcurementCost = 0;
+  electrolyserPurchaseCost = 1000;
+  electrolyserOMCost = 2.5;
+  electrolyserStackReplacement = 40;
+  electrolyserMaximumLoad = 100;
+  electrolyserMinimumLoad = 10;
+  timeBetweenOverloading = 0;
+  maximumLoadWhenOverloading = 100;
+  waterRequirementOfElectrolyser = 10;
+  secAtNominalLoad = 33.33;
+  profile = "Fixed" as SECType;
+
+  // Battery
   batteryEpcCosts = 0;
   batteryEfficiency = 0;
   batteryMinCharge = 0;
@@ -20,68 +38,63 @@ class DefaultInputs implements Inputs {
   batteryOMCost = 0;
   batteryReplacementCost = 0;
   batteryLifetime = 0;
-  discountRate = 0;
   batteryStorageDuration = 0;
-  electrolyserCostReductionWithScale = 0;
-  electrolyserEpcCosts = 0;
-  electrolyserLandProcurementCost = 0;
-  electrolyserReferenceFoldIncrease = 0;
-  electrolyserOMCost = 0;
-  electrolyserStackReplacement = 0;
-  gridConnectionCost = 0;
-  electrolyserNominalCapacity = 1;
+
+  // Power Plant
+  powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
+  technology = "Hybrid" as Technology;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
-  solarReferenceCapacity = 0;
-  windReferenceCapacity = 0;
-  electrolyserReferenceCapacity = 0;
-  electrolyserCapitalCost = 0;
-  solarFarmBuildCost = 0;
-  windFarmBuildCost = 0;
-  solarEpcCosts = 0;
-  solarLandProcurementCost = 0;
-  solarPVCostReductionWithScale = 0;
-  solarReferenceFoldIncrease = 0;
-  solarDegradation = 0;
-  windDegradation = 0;
-  solarOpex = 0;
-  stackReplacementType = "Cumulative Hours" as StackReplacementType;
-  stackLifetime = 0;
-  stackDegradation = 0;
-  maximumDegradationBeforeReplacement = 0;
-  technology = "Hybrid" as Technology;
-  waterSupplyCost = 0;
-  windCostReductionWithScale = 0;
-  windEpcCosts = 0;
-  windLandProcurementCost = 0;
-  windReferenceFoldIncrease = 0;
-  windOpex = 0;
-  projectTimeline = 0;
-  additionalTransmissionCharges = 0;
-  principalPPACost = 0;
-  profile = "Fixed" as SECType;
-  electrolyserMaximumLoad = 100;
-  electrolyserMinimumLoad = 10;
-  timeBetweenOverloading = 0;
-  maximumLoadWhenOverloading = 0;
-  waterRequirementOfElectrolyser = 0;
-  hydrogenSalesMargin = 0;
-  oxygenRetailPrice = 0;
-  averageElectricitySpotPrice = 0;
-  shareOfTotalInvestmentFinancedViaEquity = 0;
-  directEquityShare = 0;
-  salvageCostShare = 0;
-  decommissioningCostShare = 0;
-  loanTerm = 0;
-  interestOnLoan = 0;
-  capitalDepreciationProfile = "Straight Line" as DepreciationProfile;
-  taxRate = 0;
-  inflationRate = 0;
-  secAtNominalLoad = 1 / 3;
-  electrolyserEfficiency = 0;
-  powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
+  solarReferenceCapacity = 10;
+  windReferenceCapacity = 10;
+  solarFarmBuildCost = 1200;
+  windFarmBuildCost = 1950;
   powerPlantOversizeRatio = 1;
   solarToWindPercentage = 50;
+  solarEpcCosts = 0;
+  solarLandProcurementCost = 0;
+  solarPVCostReductionWithScale = 10;
+  solarReferenceFoldIncrease = 1;
+  solarDegradation = 0;
+  windDegradation = 0;
+  solarOpex = 17_000;
+  windCostReductionWithScale = 10;
+  windEpcCosts = 0;
+  windLandProcurementCost = 0;
+  windReferenceFoldIncrease = 1;
+  windOpex = 25_000;
+
+  // Stack
+  stackReplacementType = "Cumulative Hours" as StackReplacementType;
+  stackLifetime = 60_000;
+  stackDegradation = 0;
+  maximumDegradationBeforeReplacement = 0;
+
+  // Grid connection and PPA
+  additionalTransmissionCharges = 0;
+  principalPPACost = 0;
+  gridConnectionCost = 0;
+  averageElectricitySpotPrice = 0;
+  waterSupplyCost = 0;
+
+  // Additional costs
+  additionalUpfrontCosts = 0;
+  additionalAnnualCosts = 0;
+
+  // Cost analysis
+  projectTimeline = 0;
+  hydrogenSalesMargin = 0;
+  oxygenRetailPrice = 0;
+  discountRate = 0;
+  shareOfTotalInvestmentFinancedViaEquity = 0;
+  directEquityShare = 100;
+  salvageCostShare = 0;
+  decommissioningCostShare = 0;
+  loanTerm = 10;
+  interestOnLoan = 2.5;
+  capitalDepreciationProfile = "Straight Line" as DepreciationProfile;
+  taxRate = 30;
+  inflationRate = 2.5;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

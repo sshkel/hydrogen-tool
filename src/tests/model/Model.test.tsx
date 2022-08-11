@@ -51,13 +51,13 @@ describe("Hydrogen Model", () => {
       electrolyserMinimumLoad: 10,
       maximumLoadWhenOverloading: 120,
       timeBetweenOverloading: 4,
-      specCons: 4.7,
+      secAtNominalLoad: 4.7,
       stackLifetime: 60000,
       // electrolyserCapex: 1000,
       // electrolyserOandM: 4,
       // waterNeeds: 10,
 
-      elecEff: 83,
+      electrolyserEfficiency: 83,
 
       stackReplacementType: "Cumulative Hours",
       stackDegradation: 0,
@@ -87,6 +87,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
+      projectScale: 10000,
     };
     const model = new HydrogenModel(example1, solar, wind);
     compareToModel(model, outputs1, workingdf1);
@@ -116,13 +117,13 @@ describe("Hydrogen Model", () => {
       electrolyserMinimumLoad: 20,
       maximumLoadWhenOverloading: 100,
       timeBetweenOverloading: 0,
-      specCons: 4.5,
+      secAtNominalLoad: 4.5,
       stackLifetime: 80000,
       // electrolyserCapex: 1000,
       // electrolyserOandM: 2.5,
       // waterNeeds: 10,
 
-      elecEff: 83,
+      electrolyserEfficiency: 83,
 
       stackReplacementType: "Cumulative Hours",
       stackDegradation: 0,
@@ -152,6 +153,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
+      projectScale: 10000,
     };
     const model = new HydrogenModel(example2, solar, wind);
 
@@ -182,13 +184,13 @@ describe("Hydrogen Model", () => {
       electrolyserMinimumLoad: 20,
       maximumLoadWhenOverloading: 100,
       timeBetweenOverloading: 0,
-      specCons: 4.5,
+      secAtNominalLoad: 4.5,
       stackLifetime: 80000,
       // electrolyserCapex: 1000,
       // electrolyserOandM: 2.5,
       // waterNeeds: 10,
 
-      elecEff: 83,
+      electrolyserEfficiency: 83,
 
       stackReplacementType: "Cumulative Hours",
       stackDegradation: 0,
@@ -202,6 +204,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
+      projectScale: 10000,
       /*
       solarCapex: 1120,
       solarOpex: 16990,

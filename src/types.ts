@@ -77,7 +77,7 @@ export interface UserInputFields {
   solarReferenceCapacity?: number;
   windReferenceCapacity?: number;
   electrolyserReferenceCapacity?: number;
-  electrolyserCapitalCost?: number;
+  electrolyserPurchaseCost?: number;
   solarFarmBuildCost?: number;
   windFarmBuildCost?: number;
   solarEpcCosts?: number;
@@ -125,8 +125,26 @@ export interface UserInputFields {
 }
 
 export interface Inputs {
-  additionalUpfrontCosts: number;
-  additionalAnnualCosts: number;
+  // Electrolyser
+  electrolyserNominalCapacity: number;
+  electrolyserReferenceCapacity: number;
+  electrolyserEfficiency?: number;
+  electrolyserCostReductionWithScale: number;
+  electrolyserReferenceFoldIncrease: number;
+  electrolyserEpcCosts: number;
+  electrolyserLandProcurementCost: number;
+  electrolyserPurchaseCost: number;
+  electrolyserOMCost: number;
+  electrolyserStackReplacement: number;
+  electrolyserMaximumLoad: number;
+  electrolyserMinimumLoad: number;
+  timeBetweenOverloading: number;
+  maximumLoadWhenOverloading: number;
+  waterRequirementOfElectrolyser: number;
+  secAtNominalLoad?: number;
+  profile: SECType;
+
+  // Battery
   batteryEpcCosts?: number;
   batteryEfficiency: number;
   batteryMinCharge?: number;
@@ -136,22 +154,15 @@ export interface Inputs {
   batteryOMCost?: number;
   batteryReplacementCost?: number;
   batteryLifetime?: number;
-  discountRate: number;
   batteryStorageDuration?: number;
-  electrolyserCostReductionWithScale: number;
-  electrolyserEpcCosts: number;
-  electrolyserLandProcurementCost: number;
-  electrolyserReferenceFoldIncrease: number;
-  electrolyserOMCost: number;
-  electrolyserStackReplacement: number;
-  gridConnectionCost: number;
-  electrolyserNominalCapacity: number;
+
+  // Power Plant
+  powerPlantConfiguration: PowerPlantConfiguration;
+  technology: Technology;
   solarNominalCapacity: number;
   windNominalCapacity: number;
   solarReferenceCapacity: number;
   windReferenceCapacity: number;
-  electrolyserReferenceCapacity: number;
-  electrolyserCapitalCost: number;
   solarFarmBuildCost: number;
   windFarmBuildCost: number;
   powerPlantOversizeRatio: number;
@@ -163,29 +174,34 @@ export interface Inputs {
   solarDegradation: number;
   windDegradation: number;
   solarOpex?: number;
-  stackReplacementType: StackReplacementType;
-  stackLifetime: number;
-  stackDegradation: number;
-  maximumDegradationBeforeReplacement: number;
-  technology: Technology;
-  waterSupplyCost: number;
   windCostReductionWithScale: number;
   windEpcCosts: number;
   windLandProcurementCost: number;
   windReferenceFoldIncrease: number;
   windOpex?: number;
-  projectTimeline: number;
+
+  // Stack
+  stackReplacementType: StackReplacementType;
+  stackLifetime: number;
+  stackDegradation: number;
+  maximumDegradationBeforeReplacement: number;
+
+  // Grid connection and PPA
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
-  profile: SECType;
-  electrolyserMaximumLoad: number;
-  electrolyserMinimumLoad: number;
-  timeBetweenOverloading: number;
-  maximumLoadWhenOverloading: number;
-  waterRequirementOfElectrolyser: number;
+  gridConnectionCost: number;
+  averageElectricitySpotPrice: number;
+  waterSupplyCost: number;
+
+  // Additional costs
+  additionalUpfrontCosts: number;
+  additionalAnnualCosts: number;
+
+  // Cost analysis
+  projectTimeline: number;
   hydrogenSalesMargin: number;
   oxygenRetailPrice: number;
-  averageElectricitySpotPrice: number;
+  discountRate: number;
   shareOfTotalInvestmentFinancedViaEquity: number;
   directEquityShare: number;
   salvageCostShare: number;
@@ -195,7 +211,4 @@ export interface Inputs {
   capitalDepreciationProfile: DepreciationProfile;
   taxRate: number;
   inflationRate: number;
-  secAtNominalLoad?: number;
-  electrolyserEfficiency?: number;
-  powerPlantConfiguration: PowerPlantConfiguration;
 }

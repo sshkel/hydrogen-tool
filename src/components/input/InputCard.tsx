@@ -67,7 +67,6 @@ export default function InputCard(props: InputCardProps) {
 
   const handleExpandClick = () => {
     if (onExpandChange) {
-      // TODO: Introduce prop to force override state behaviour
       onExpandChange();
     } else {
       setExpanded(!expanded);

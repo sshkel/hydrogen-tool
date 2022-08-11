@@ -27,7 +27,7 @@ describe("Working Data calculations", () => {
         ...defaultInputData.data,
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10000, // kW
-        electrolyserCapitalCost: 1000, // A$/kw
+        electrolyserPurchaseCost: 1000, // A$/kw
         electrolyserCostReductionWithScale: 20, // %
         electrolyserReferenceFoldIncrease: 10,
       };
@@ -282,7 +282,7 @@ describe("Working Data calculations", () => {
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
-        electrolyserCapitalCost: 10, // A$/kw
+        electrolyserPurchaseCost: 10, // A$/kw
         electrolyserCostReductionWithScale: 10, // %
         electrolyserReferenceFoldIncrease: 0,
 
@@ -366,7 +366,7 @@ describe("Working Data calculations", () => {
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
-        electrolyserCapitalCost: 10, // A$/kw
+        electrolyserPurchaseCost: 10, // A$/kw
         electrolyserCostReductionWithScale: 10, // %
         electrolyserReferenceFoldIncrease: 0,
 

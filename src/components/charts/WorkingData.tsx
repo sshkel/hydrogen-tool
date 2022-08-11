@@ -31,7 +31,7 @@ import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
-import { backcalculateInputFields } from "./basic-calculations";
+import { backCalculateInputFields } from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
 import { cashFlowAnalysis, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
@@ -76,6 +76,11 @@ export default function WorkingData(props: Props) {
     return null;
   }
 
+  const {
+    inputConfiguration,
+    data: { projectScale = 0 },
+  } = props;
+
   let inputs: Inputs = new SynthesisedInputs(props.data);
 
   const {
@@ -116,7 +121,7 @@ export default function WorkingData(props: Props) {
   } = inputs;
   const location = props.location;
   const dataModel: DataModel = {
-    inputConfiguration: props.inputConfiguration,
+    inputConfiguration,
     batteryLifetime,
     batteryMinCharge,
     batteryEfficiency,
@@ -124,6 +129,7 @@ export default function WorkingData(props: Props) {
     batteryRatedPower,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
+    projectScale,
     electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
     solarNominalCapacity: inputs.solarNominalCapacity,
     windNominalCapacity: inputs.windNominalCapacity,
@@ -138,8 +144,8 @@ export default function WorkingData(props: Props) {
     location,
     electrolyserMaximumLoad,
     electrolyserMinimumLoad,
-    specCons: secAtNominalLoad,
-    elecEff: electrolyserEfficiency,
+    secAtNominalLoad,
+    electrolyserEfficiency,
   };
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
@@ -149,9 +155,9 @@ export default function WorkingData(props: Props) {
   let hourlyOperations = model.getHourlyOperations();
 
   if (props.inputConfiguration === "Basic") {
-    inputs = backcalculateInputFields(
+    inputs = backCalculateInputFields(
       inputs,
-      props.data,
+      projectScale,
       mean(summary[ELECTROLYSER_CF])
     );
   }
