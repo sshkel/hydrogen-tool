@@ -13,6 +13,11 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+type Props = {
+  sideMenuState: boolean;
+  closeSideMenu: () => void;
+};
+
 const Item = styled(Typography)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -20,12 +25,14 @@ const Item = styled(Typography)(({ theme }) => ({
   textAlign: "left",
 }));
 
-export function ZonePopover(props: any) {
+export function ZonePopover(props: Props) {
   const [component, setComponent] = useState("location");
   const navigate = useNavigate();
   const startDesign = () => {
     navigate("/design");
   };
+  type ObjectKey = keyof typeof zoneInfo;
+  const zone = "Z1" as ObjectKey;
 
   const summary = (
     <Card sx={{ width: "40vh", height: "60vh" }}>
@@ -43,7 +50,7 @@ export function ZonePopover(props: any) {
               <Item>Location</Item>
             </Grid>
             <Grid item xs>
-              <Item>xxxxxxxxxxxxxx</Item>
+              <Item>{zoneInfo[zone].location}</Item>
             </Grid>
           </Grid>
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
@@ -51,7 +58,7 @@ export function ZonePopover(props: any) {
               <Item>Regional Centers:</Item>
             </Grid>
             <Grid item xs>
-              <Item>Broken Hill, White Cliffs, Wilcannia, Buronga</Item>
+              <Item>{zoneInfo[zone].regionalCenters}</Item>
             </Grid>
           </Grid>
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
@@ -59,7 +66,9 @@ export function ZonePopover(props: any) {
               <Item>Solar/Wind capacity factor:</Item>
             </Grid>
             <Grid item xs>
-              <Item>25% 49% </Item>
+              <Item>
+                {zoneInfo[zone].solarCapFactor} {zoneInfo[zone].windCapFactor}{" "}
+              </Item>
             </Grid>
           </Grid>
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
@@ -67,7 +76,7 @@ export function ZonePopover(props: any) {
               <Item>Main industries:</Item>
             </Grid>
             <Grid item xs>
-              <Item>Agriculture, mining</Item>
+              <Item>{zoneInfo[zone].mainIndustries}</Item>
             </Grid>
           </Grid>
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
@@ -75,7 +84,7 @@ export function ZonePopover(props: any) {
               <Item>Water availability:</Item>
             </Grid>
             <Grid item xs>
-              <Item>Low</Item>
+              <Item>{zoneInfo[zone].waterAvailability}</Item>
             </Grid>
           </Grid>
           <Grid item>
@@ -84,12 +93,7 @@ export function ZonePopover(props: any) {
                 Infrastructure
               </Typography>
               <Typography variant="body2">
-                Includes existing electricity infrastructure e.g., transmission
-                lines, existing renewable energy sites, gas pipelines, major
-                highways, rail lines, airports Local Energy Generation: • Broken
-                Hill Solar Plant @53 MW • Silverton Wind Farm @200 MW Renewable
-                Energy Zone: AEMO Suggests Broken Hill can host a solar and wind
-                powered REZ
+                {zoneInfo[zone].infrastructure}
               </Typography>
             </Item>
           </Grid>
@@ -169,3 +173,20 @@ export function ZonePopover(props: any) {
     </div>
   );
 }
+
+const zoneInfo = {
+  Z1: {
+    location: "xxxxxxxxxxxxxx",
+    regionalCenters: "Broken Hill, White Cliffs, Wilcannia, Buronga",
+    solarCapFactor: "25%",
+    windCapFactor: "49%",
+    mainIndustries: "Agriculture, mining",
+    waterAvailability: "low",
+    infrastructure: `Includes existing electricity infrastructure e.g., transmission
+      lines, existing renewable energy sites, gas pipelines, major
+      highways, rail lines, airports Local Energy Generation: • Broken
+      Hill Solar Plant @53 MW • Silverton Wind Farm @200 MW Renewable
+      Energy Zone: AEMO Suggests Broken Hill can host a solar and wind
+      powered REZ`,
+  },
+};
