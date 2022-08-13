@@ -150,6 +150,7 @@ export function ZonePopover(props: any) {
     <div>
       <Popover
         open={props.sideMenuState}
+        TransitionProps={{ onExited: () => setComponent("location") }}
         onClose={props.closeSideMenu}
         anchorReference="anchorPosition"
         anchorPosition={{ top: 20, left: 100 }}
