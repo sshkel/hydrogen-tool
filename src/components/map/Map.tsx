@@ -11,7 +11,9 @@ interface Props {
 
 export default function Map(props: Props) {
   const [sideMenuOpen, setSideMenuState] = useState(false);
-  const openSideMenu = () => {
+  const [zone, setSideMenuZone] = useState<string>("Z1");
+  const openSideMenu = (zone: string) => {
+    setSideMenuZone(zone);
     setSideMenuState(true);
   };
   const closeSideMenu = () => setSideMenuState(false);
@@ -41,7 +43,7 @@ export default function Map(props: Props) {
           mouseout: unHighlightFeature,
           click: () => {
             props.setLocation(feature.properties.zone);
-            openSideMenu();
+            openSideMenu(feature.properties.zone);
           },
         }}
         positions={feature.geometry.coordinates[0].map((v: number[]) => [
@@ -62,6 +64,7 @@ export default function Map(props: Props) {
         }}
       >
         <ZonePopover
+          zone={zone}
           sideMenuState={sideMenuOpen}
           closeSideMenu={closeSideMenu}
         />
