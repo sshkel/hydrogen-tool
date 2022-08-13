@@ -16,7 +16,10 @@
           ]
         ]
       },
-      "properties": { "zone": "Z1", "name": "North Far West NSW" }
+      "properties": {
+        "zone": "Z1",
+        "name": "Far North West NSW"
+      }
     },
     {
       "type": "Feature",
@@ -34,7 +37,10 @@
           ]
         ]
       },
-      "properties": { "zone": "Z2", "name": "Central Far West NSW" }
+      "properties": {
+        "zone": "Z2",
+        "name": "Central Far West NSW – Western Part"
+      }
     },
     {
       "type": "Feature",
@@ -92,7 +98,7 @@
           ]
         ]
       },
-      "properties": { "zone": "Z4", "name": "Central North Far West NSW" }
+      "properties": { "zone": "Z4", "name": "Central North West NSW" }
     },
     {
       "type": "Feature",
@@ -109,7 +115,10 @@
           ]
         ]
       },
-      "properties": { "zone": "Z5", "name": "Central Far West NSW Part 2" }
+      "properties": {
+        "zone": "Z5",
+        "name": "Central Far West NSW – Eastern Part"
+      }
     },
     {
       "type": "Feature",
@@ -577,7 +586,7 @@
       },
       "properties": {
         "zone": "Z12",
-        "name": "North East NSW Region - East Part"
+        "name": "North East NSW"
       }
     },
     {
@@ -668,7 +677,7 @@
           ]
         ]
       },
-      "properties": { "zone": "Z19", "name": "North Coast Region" }
+      "properties": { "zone": "Z17", "name": "North Coast Region" }
     },
     {
       "type": "Feature",
@@ -715,7 +724,7 @@
           ]
         ]
       },
-      "properties": { "zone": "Z19", "name": "Offshore North Coast NSW" }
+      "properties": { "zone": "Z19", "name": "Offshore North Coast" }
     },
     {
       "type": "Feature",
@@ -757,7 +766,7 @@
           ]
         ]
       },
-      "properties": { "zone": "Z18", "name": "Central Coast NSW" }
+      "properties": { "zone": "Z18", "name": "Central Coast Region" }
     },
     {
       "type": "Feature",
@@ -799,7 +808,7 @@
           ]
         ]
       },
-      "properties": { "zone": "Z20", "name": "Offshore Central Coast NSW" }
+      "properties": { "zone": "Z20", "name": "Offshore Central Coast Region" }
     },
     {
       "type": "Feature",
