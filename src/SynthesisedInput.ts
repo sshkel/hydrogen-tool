@@ -14,10 +14,10 @@ class DefaultInputs implements Inputs {
   electrolyserEfficiency = 0;
   electrolyserReferenceCapacity = 10;
   electrolyserCostReductionWithScale = 10;
-  electrolyserReferenceFoldIncrease = 1;
+  electrolyserReferenceFoldIncrease = 10;
   electrolyserEpcCosts = 0;
   electrolyserLandProcurementCost = 0;
-  electrolyserPurchaseCost = 1000;
+  electrolyserPurchaseCost = 1500;
   electrolyserOMCost = 2.5;
   electrolyserStackReplacement = 40;
   electrolyserMaximumLoad = 100;
@@ -48,20 +48,20 @@ class DefaultInputs implements Inputs {
   solarReferenceCapacity = 10;
   windReferenceCapacity = 10;
   solarFarmBuildCost = 1200;
-  windFarmBuildCost = 1950;
+  windFarmBuildCost = 2000;
   powerPlantOversizeRatio = 1;
   solarToWindPercentage = 50;
   solarEpcCosts = 0;
   solarLandProcurementCost = 0;
   solarPVCostReductionWithScale = 10;
-  solarReferenceFoldIncrease = 1;
+  solarReferenceFoldIncrease = 10;
   solarDegradation = 0;
   windDegradation = 0;
   solarOpex = 17_000;
   windCostReductionWithScale = 10;
   windEpcCosts = 0;
   windLandProcurementCost = 0;
-  windReferenceFoldIncrease = 1;
+  windReferenceFoldIncrease = 10;
   windOpex = 25_000;
 
   // Stack
@@ -75,7 +75,7 @@ class DefaultInputs implements Inputs {
   principalPPACost = 0;
   gridConnectionCost = 0;
   averageElectricitySpotPrice = 0;
-  waterSupplyCost = 0;
+  waterSupplyCost = 5;
 
   // Additional costs
   additionalUpfrontCosts = 0;
@@ -86,12 +86,12 @@ class DefaultInputs implements Inputs {
   hydrogenSalesMargin = 0;
   oxygenRetailPrice = 0;
   discountRate = 0;
-  shareOfTotalInvestmentFinancedViaEquity = 0;
+  shareOfTotalInvestmentFinancedViaEquity = 70;
   directEquityShare = 100;
   salvageCostShare = 0;
   decommissioningCostShare = 0;
   loanTerm = 10;
-  interestOnLoan = 2.5;
+  interestOnLoan = 3;
   capitalDepreciationProfile = "Straight Line" as DepreciationProfile;
   taxRate = 30;
   inflationRate = 2.5;

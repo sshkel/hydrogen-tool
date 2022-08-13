@@ -37,3 +37,15 @@ export async function read_csv(file: any, options?: any): Promise<any[]> {
     });
   });
 }
+
+export class HoursPerYear {
+  private hoursPerYear: number = 8760;
+
+  get() {
+    return this.hoursPerYear;
+  }
+
+  set(hoursPerYear: number) {
+    this.hoursPerYear = hoursPerYear;
+  }
+}

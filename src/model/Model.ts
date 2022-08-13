@@ -10,6 +10,7 @@ import {
   ELECTROLYSER_CF,
   ENERGY_INPUT,
   ENERGY_OUTPUT,
+  HOURS_PER_YEAR,
   HYDROGEN_OUTPUT_FIXED,
   HYDROGEN_OUTPUT_VARIABLE,
   POWER_PLANT_CF,
@@ -65,7 +66,7 @@ export type ProjectModelSummary = {
 export class HydrogenModel {
   // consts
   readonly MWtokW = 1000; // kW/MW
-  readonly hoursPerYear = 8760;
+  readonly hoursPerYear = HOURS_PER_YEAR;
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089;
   readonly secAtNominalLoad = 33.33; // kWh/kg
