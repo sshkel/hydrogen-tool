@@ -1,3 +1,7 @@
+import FactoryIcon from "@mui/icons-material/Factory";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import { List, ListItem } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -313,9 +317,30 @@ export default function WorkingData(props: Props) {
     electricityConsumedByBattery,
     hydrogenProductionCost
   );
-
+  const powerplantCapacity =
+    inputs.solarNominalCapacity + inputs.windNominalCapacity;
   return (
     <Grid container direction="column">
+      <Card>
+        <CardHeader title="Key inputs" />
+        <CardContent>
+          <Grid container item justifyContent={"center"}>
+            <Grid item xs={4}>
+              <LocationOnIcon />
+              {location}
+            </Grid>
+            <Grid item xs={4}>
+              <SignalCellularAltIcon />
+              {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
+            </Grid>
+            <Grid item xs={4}>
+              <FactoryIcon />
+              {powerplantCapacity.toLocaleString("en-US")}
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
       <Grid item>
         {FirstGraph(
           summary,
