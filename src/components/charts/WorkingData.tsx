@@ -5,8 +5,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
-import ThemeProvider from "@mui/material/styles/ThemeProvider";
-import createTheme from "@mui/material/styles/createTheme";
+import { createTheme } from "@mui/material/styles";
+import ThemeProvider from "@mui/system/ThemeProvider";
 import "chart.js/auto";
 import { useEffect, useState } from "react";
 
@@ -388,7 +388,9 @@ export default function WorkingData(props: Props) {
           lcBattery,
           lcGridConnection,
           lcAdditionalCosts,
-          lcOxygenSale
+          lcOxygenSale,
+          projectTimeline,
+          cumulativeCashFlow
         )}
       </Grid>
       <Grid item>
@@ -408,14 +410,17 @@ export default function WorkingData(props: Props) {
       </Grid>
       <Grid item>
         <Card>
-          <CardHeader title="Cash Flow Analysis" />
-          <CostBarChart
-            title="Cash Flow Analysis"
-            labels={getActiveYearsLabels(projectTimeline)}
+          <CardHeader title="Hourly capacity factors" />
+
+          <HourlyCapacityFactors
             datapoints={[
               {
-                label: "Cash Flow Analysis",
-                data: cumulativeCashFlow,
+                label: "Electrolyser",
+                data: hourlyOperations.Electrolyser_CF,
+              },
+              {
+                label: "Power Plant",
+                data: hourlyOperations.Generator_CF,
               },
             ]}
           />
@@ -514,7 +519,9 @@ function FirstGraph(
   lcBattery: number,
   lcGridConnection: number,
   lcAdditionalCosts: number,
-  lcOxygenSale: number
+  lcOxygenSale: number,
+  projectTimeline: number,
+  cumulativeCashFlow: number[]
 ) {
   const summaryDict: { [key: string]: number } = {
     "Power Plant Capacity Factor": mean(
@@ -558,49 +565,53 @@ function FirstGraph(
               <BasicTable title="Summary of Results" data={summaryDict} />
             </Card>
           </Grid>
-          <Grid item>
-            <Card>
-              <CardHeader title="Capital cost breakdown" />
-
-              <CostBreakdownDoughnutChart
-                title="Capital Cost Breakdown"
-                labels={[
-                  "Electrolyser System",
-                  "Power Plant",
-                  "Battery",
-                  "Grid Connection",
-                  "Additional Upfront Costs",
-                  "Indirect Costs",
-                ]}
-                data={[
-                  electrolyserCAPEX,
-                  powerPlantCAPEX,
-                  batteryCAPEX,
-                  gridConnectionCAPEX,
-                  additionalUpfrontCosts,
-                  totalIndirectCosts,
-                ]}
-              />
-              <CostBreakdownDoughnutChart
-                title="Indirect Cost Breakdown"
-                labels={[
-                  "Electrolyser EPC",
-                  "Electrolyser Land",
-                  "Power Plant EPC",
-                  "Power Plant Land",
-                  "Battery EPC",
-                  "Battery Land",
-                ]}
-                data={[
-                  electrolyserEpcCost,
-                  electrolyserLandCost,
-                  powerPlantEpcCost,
-                  powerPlantLandCost,
-                  batteryEpcCost,
-                  batteryLandCost,
-                ]}
-              />
-            </Card>
+          <Grid container item>
+            <Grid item xs={6}>
+              <Card>
+                <CostBreakdownDoughnutChart
+                  title="Capital Cost Breakdown"
+                  labels={[
+                    "Electrolyser System",
+                    "Power Plant",
+                    "Battery",
+                    "Grid Connection",
+                    "Additional Upfront Costs",
+                    "Indirect Costs",
+                  ]}
+                  data={[
+                    electrolyserCAPEX,
+                    powerPlantCAPEX,
+                    batteryCAPEX,
+                    gridConnectionCAPEX,
+                    additionalUpfrontCosts,
+                    totalIndirectCosts,
+                  ]}
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={6}>
+              <Card>
+                <CostBreakdownDoughnutChart
+                  title="Indirect Cost Breakdown"
+                  labels={[
+                    "Electrolyser EPC",
+                    "Electrolyser Land",
+                    "Power Plant EPC",
+                    "Power Plant Land",
+                    "Battery EPC",
+                    "Battery Land",
+                  ]}
+                  data={[
+                    electrolyserEpcCost,
+                    electrolyserLandCost,
+                    powerPlantEpcCost,
+                    powerPlantLandCost,
+                    batteryEpcCost,
+                    batteryLandCost,
+                  ]}
+                />
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -636,17 +647,14 @@ function FirstGraph(
             </Grid>
             <Grid item>
               <Card>
-                <CardHeader title="Hourly capacity factors" />
-
-                <HourlyCapacityFactors
+                <CardHeader title="Cash Flow Analysis" />
+                <CostBarChart
+                  title="Cash Flow Analysis"
+                  labels={getActiveYearsLabels(projectTimeline)}
                   datapoints={[
                     {
-                      label: "Electrolyser",
-                      data: hourlyOperations.Electrolyser_CF,
-                    },
-                    {
-                      label: "Power Plant",
-                      data: hourlyOperations.Generator_CF,
+                      label: "Cash Flow Analysis",
+                      data: cumulativeCashFlow,
                     },
                   ]}
                 />
