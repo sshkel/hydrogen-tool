@@ -15,6 +15,8 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { BLUE, GREY } from "../input/colors";
+
 type Props = {
   zone: string;
   sideMenuState: boolean;
@@ -27,11 +29,18 @@ const theme = createTheme({
   },
 });
 
-const Item = styled(Typography)(({ theme }) => ({
-  backgroundColor: "#fff",
+const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "left",
+  fontWeight: "bold",
+}));
+const ItemText = styled(Typography)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+}));
+const ItemCaption = styled(Typography)(({ theme }) => ({
+  ...theme.typography.caption,
+  padding: theme.spacing(1),
 }));
 
 const SideCard = styled(Card)(({ theme }) => ({
@@ -51,12 +60,11 @@ export function ZonePopover(props: Props) {
   const summary = (
     <SideCard>
       <ThemeProvider theme={theme}>
-        <CardHeader title="Location summary" />
+        <CardHeader title="Location summary" sx={{ backgroundColor: GREY }} />
         <CardContent>
           <Grid
             container
             role="presentation"
-            // direction="column"
             justifyContent="center"
             alignItems="center"
           >
@@ -67,23 +75,10 @@ export function ZonePopover(props: Props) {
               flexWrap="nowrap"
             >
               <Grid item xs>
-                <Item>Location</Item>
+                <ItemTitle>Location:</ItemTitle>
               </Grid>
               <Grid item xs>
-                <Item>{zoneInfo[zone].location}</Item>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-            >
-              <Grid item xs>
-                <Item>Regional Centers:</Item>
-              </Grid>
-              <Grid item xs>
-                <Item>{zoneInfo[zone].regionalCenters}</Item>
+                <ItemText>{zoneInfo[zone].location}</ItemText>
               </Grid>
             </Grid>
             <Grid
@@ -93,12 +88,25 @@ export function ZonePopover(props: Props) {
               flexWrap="nowrap"
             >
               <Grid item xs>
-                <Item>Solar/Wind capacity factor:</Item>
+                <ItemTitle>Regional Centers:</ItemTitle>
               </Grid>
               <Grid item xs>
-                <Item>
+                <ItemText>{zoneInfo[zone].regionalCenters}</ItemText>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <ItemTitle>Solar/Wind capacity factor:</ItemTitle>
+              </Grid>
+              <Grid item xs>
+                <ItemText>
                   {zoneInfo[zone].solarCapFactor} {zoneInfo[zone].windCapFactor}{" "}
-                </Item>
+                </ItemText>
               </Grid>
             </Grid>
             <Grid
@@ -108,10 +116,10 @@ export function ZonePopover(props: Props) {
               flexWrap="nowrap"
             >
               <Grid item xs>
-                <Item>Main industries:</Item>
+                <ItemTitle>Main industries:</ItemTitle>
               </Grid>
               <Grid item xs>
-                <Item>{zoneInfo[zone].mainIndustries}</Item>
+                <ItemText>{zoneInfo[zone].mainIndustries}</ItemText>
               </Grid>
             </Grid>
             <Grid
@@ -121,27 +129,27 @@ export function ZonePopover(props: Props) {
               flexWrap="nowrap"
             >
               <Grid item xs>
-                <Item>Water availability:</Item>
+                <ItemTitle>Water availability:</ItemTitle>
               </Grid>
               <Grid item xs>
-                <Item>{zoneInfo[zone].waterAvailability}</Item>
+                <ItemText>{zoneInfo[zone].waterAvailability}</ItemText>
               </Grid>
             </Grid>
             <Grid item>
-              <Item>
-                <Typography variant="h5" component="div">
-                  Infrastructure
-                </Typography>
-                <Typography variant="body2">
-                  {zoneInfo[zone].infrastructure}
-                </Typography>
-              </Item>
+              <ItemTitle>
+                Infrastructure:
+                <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+              </ItemTitle>
             </Grid>
             <Grid item></Grid>
           </Grid>
         </CardContent>
         <CardActions style={{ justifyContent: "center" }}>
-          <Button variant="contained" onClick={() => setComponent("powerfuel")}>
+          <Button
+            variant="contained"
+            onClick={() => setComponent("powerfuel")}
+            style={{ backgroundColor: BLUE }}
+          >
             Start project design
           </Button>
         </CardActions>
@@ -152,7 +160,10 @@ export function ZonePopover(props: Props) {
   const powerfuel = (
     <SideCard>
       <ThemeProvider theme={theme}>
-        <CardHeader title="Select powerfuel pathway" />
+        <CardHeader
+          title="Select powerfuel pathway"
+          sx={{ backgroundColor: GREY }}
+        />
         <CardContent>
           <Grid
             container
@@ -166,10 +177,10 @@ export function ZonePopover(props: Props) {
               <Card onClick={startDesign}>
                 <CardActionArea>
                   <CardContent>
-                    <Typography variant="body2">Hydrogen</Typography>
-                    <Typography variant="caption">
+                    <ItemTitle>Hydrogen</ItemTitle>
+                    <ItemCaption>
                       General hydrogen production cost for region
-                    </Typography>
+                    </ItemCaption>
                   </CardContent>
                 </CardActionArea>
               </Card>
@@ -178,10 +189,10 @@ export function ZonePopover(props: Props) {
               <Card onClick={startDesign}>
                 <CardActionArea>
                   <CardContent>
-                    <Typography variant="body2">Ammonia</Typography>
-                    <Typography variant="caption">
+                    <ItemTitle>Ammonia</ItemTitle>
+                    <ItemCaption>
                       Integrated hydrogen production and conversion into Ammonia
-                    </Typography>
+                    </ItemCaption>
                   </CardContent>
                 </CardActionArea>
               </Card>
