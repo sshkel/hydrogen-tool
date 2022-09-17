@@ -341,12 +341,8 @@ export default function WorkingData(props: Props) {
         <CardContent>
           <Grid container item justifyContent={"center"}>
             <Grid item xs={4}>
-              <Grid container item>
-                <Grid item>
-                  <LocationOnIcon fontSize="large" />
-                </Grid>
-                <Grid item>{zoneInfo[zone].location}</Grid>
-              </Grid>
+              <LocationOnIcon fontSize="large" />
+              {zoneInfo[zone].location}
             </Grid>
             <Grid item xs={4}>
               <SignalCellularAltIcon fontSize="large" />
