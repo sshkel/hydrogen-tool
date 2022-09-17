@@ -7,7 +7,9 @@ import {
   CardHeader,
   Grid,
   Popover,
+  ThemeProvider,
   Typography,
+  createTheme,
   styled,
 } from "@mui/material";
 import { useState } from "react";
@@ -19,11 +21,22 @@ type Props = {
   closeSideMenu: () => void;
 };
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "Nunito",
+  },
+});
+
 const Item = styled(Typography)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
+}));
+
+const SideCard = styled(Card)(({ theme }) => ({
+  width: "400px",
+  minHeight: "60vh",
 }));
 
 export function ZonePopover(props: Props) {
@@ -36,119 +49,147 @@ export function ZonePopover(props: Props) {
   const zone = props.zone as ObjectKey;
 
   const summary = (
-    <Card sx={{ width: "40vh", height: "60vh" }}>
-      <CardHeader title="Location summary" />
-      <CardContent>
-        <Grid
-          container
-          role="presentation"
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid container item justifyContent="space-between" flexWrap="nowrap">
-            <Grid item xs>
-              <Item>Location</Item>
+    <SideCard>
+      <ThemeProvider theme={theme}>
+        <CardHeader title="Location summary" />
+        <CardContent>
+          <Grid
+            container
+            role="presentation"
+            // direction="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <Item>Location</Item>
+              </Grid>
+              <Grid item xs>
+                <Item>{zoneInfo[zone].location}</Item>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <Item>{zoneInfo[zone].location}</Item>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <Item>Regional Centers:</Item>
+              </Grid>
+              <Grid item xs>
+                <Item>{zoneInfo[zone].regionalCenters}</Item>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container item justifyContent="space-between" flexWrap="nowrap">
-            <Grid item xs>
-              <Item>Regional Centers:</Item>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <Item>Solar/Wind capacity factor:</Item>
+              </Grid>
+              <Grid item xs>
+                <Item>
+                  {zoneInfo[zone].solarCapFactor} {zoneInfo[zone].windCapFactor}{" "}
+                </Item>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <Item>{zoneInfo[zone].regionalCenters}</Item>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <Item>Main industries:</Item>
+              </Grid>
+              <Grid item xs>
+                <Item>{zoneInfo[zone].mainIndustries}</Item>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container item justifyContent="space-between" flexWrap="nowrap">
-            <Grid item xs>
-              <Item>Solar/Wind capacity factor:</Item>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              flexWrap="nowrap"
+            >
+              <Grid item xs>
+                <Item>Water availability:</Item>
+              </Grid>
+              <Grid item xs>
+                <Item>{zoneInfo[zone].waterAvailability}</Item>
+              </Grid>
             </Grid>
-            <Grid item xs>
+            <Grid item>
               <Item>
-                {zoneInfo[zone].solarCapFactor} {zoneInfo[zone].windCapFactor}{" "}
+                <Typography variant="h5" component="div">
+                  Infrastructure
+                </Typography>
+                <Typography variant="body2">
+                  {zoneInfo[zone].infrastructure}
+                </Typography>
               </Item>
             </Grid>
+            <Grid item></Grid>
           </Grid>
-          <Grid container item justifyContent="space-between" flexWrap="nowrap">
-            <Grid item xs>
-              <Item>Main industries:</Item>
-            </Grid>
-            <Grid item xs>
-              <Item>{zoneInfo[zone].mainIndustries}</Item>
-            </Grid>
-          </Grid>
-          <Grid container item justifyContent="space-between" flexWrap="nowrap">
-            <Grid item xs>
-              <Item>Water availability:</Item>
-            </Grid>
-            <Grid item xs>
-              <Item>{zoneInfo[zone].waterAvailability}</Item>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Item>
-              <Typography variant="h5" component="div">
-                Infrastructure
-              </Typography>
-              <Typography variant="body2">
-                {zoneInfo[zone].infrastructure}
-              </Typography>
-            </Item>
-          </Grid>
-          <Grid item></Grid>
-        </Grid>
-      </CardContent>
-      <CardActions style={{ justifyContent: "center" }}>
-        <Button variant="contained" onClick={() => setComponent("powerfuel")}>
-          Start project design
-        </Button>
-      </CardActions>
-    </Card>
+        </CardContent>
+        <CardActions style={{ justifyContent: "center" }}>
+          <Button variant="contained" onClick={() => setComponent("powerfuel")}>
+            Start project design
+          </Button>
+        </CardActions>
+      </ThemeProvider>
+    </SideCard>
   );
 
   const powerfuel = (
-    <Card sx={{ width: "40vh", height: "60vh" }}>
-      <CardHeader title="Select powerfuel pathway" />
-      <CardContent>
-        <Grid
-          container
-          role="presentation"
-          direction="column"
-          justifyContent="center"
-          alignItems="stretch"
-          rowSpacing="30"
-          sx={{ width: "35vh", height: "30vh" }}
-        >
-          <Grid item xs={2}>
-            <Card onClick={startDesign}>
-              <CardActionArea>
-                <CardContent>
-                  <Typography variant="body2">Hydrogen</Typography>
-                  <Typography variant="caption">
-                    General hydrogen production cost for region
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+    <SideCard>
+      <ThemeProvider theme={theme}>
+        <CardHeader title="Select powerfuel pathway" />
+        <CardContent>
+          <Grid
+            container
+            role="presentation"
+            direction="column"
+            justifyContent="center"
+            alignItems="stretch"
+            rowSpacing="30"
+          >
+            <Grid item xs={2}>
+              <Card onClick={startDesign}>
+                <CardActionArea>
+                  <CardContent>
+                    <Typography variant="body2">Hydrogen</Typography>
+                    <Typography variant="caption">
+                      General hydrogen production cost for region
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={2}>
+              <Card onClick={startDesign}>
+                <CardActionArea>
+                  <CardContent>
+                    <Typography variant="body2">Ammonia</Typography>
+                    <Typography variant="caption">
+                      Integrated hydrogen production and conversion into Ammonia
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs={2}>
-            <Card onClick={startDesign}>
-              <CardActionArea>
-                <CardContent>
-                  <Typography variant="body2">Ammonia</Typography>
-                  <Typography variant="caption">
-                    Integrated hydrogen production and conversion into Ammonia
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </ThemeProvider>
+    </SideCard>
   );
 
   return (
