@@ -1,4 +1,4 @@
-import RoomIcon from "@mui/icons-material/Room";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import { Drawer, List, ListItem, ListItemIcon } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -42,7 +42,7 @@ export function SideBar() {
                 minWidth: 0,
               }}
             >
-              <RoomIcon
+              <LocationOnRoundedIcon
                 fontSize="large"
                 style={{
                   color: "white",

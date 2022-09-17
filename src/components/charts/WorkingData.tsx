@@ -1,13 +1,16 @@
-import FactoryIcon from "@mui/icons-material/Factory";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import { BorderStyle } from "@mui/icons-material";
+import FactoryRoundedIcon from "@mui/icons-material/FactoryRounded";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import SignalCellularAltRoundedIcon from "@mui/icons-material/SignalCellularAltRounded";
+import { Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
-import { createTheme } from "@mui/material/styles";
+import { createTheme, styled } from "@mui/material/styles";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import "chart.js/auto";
+import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
@@ -57,11 +60,21 @@ interface DownloadedData {
   windData: any[];
 }
 
+const ItemTitle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.body2,
+  fontWeight: "bold",
+}));
+const ItemText = styled(Typography)(({ theme }) => ({
+  ...theme.typography.body2,
+}));
+
 const theme = createTheme({
   typography: {
     fontFamily: "Nunito",
   },
 });
+// setup default fonts for the charts
+Chart.defaults.font.family = "Nunito";
 
 export default function WorkingData(props: Props) {
   const [state, setState] = useState<DownloadedData>({
@@ -335,101 +348,141 @@ export default function WorkingData(props: Props) {
   type ObjectKey = keyof typeof zoneInfo;
   const zone = location as ObjectKey;
   return (
-    <Grid container direction="column">
-      <Card>
-        <CardHeader title="Key inputs" />
-        <CardContent>
-          <Grid container item justifyContent={"center"}>
-            <Grid item xs={4}>
-              <LocationOnIcon fontSize="large" />
-              {zoneInfo[zone].location}
-            </Grid>
-            <Grid item xs={4}>
-              <SignalCellularAltIcon fontSize="large" />
-              {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
-            </Grid>
-            <Grid item xs={4}>
-              <FactoryIcon fontSize="large" />
-              {powerplantCapacity.toLocaleString("en-US")}
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      <Grid item>
-        {FirstGraph(
-          summary,
-          electricityConsumed,
-          electricityProduced,
-          h2Produced,
-          lch2,
-          netProfit,
-          returnOnInvestment,
-          h2RetailPrice,
-          electrolyserCAPEX,
-          powerPlantCAPEX,
-          batteryCAPEX,
-          gridConnectionCAPEX,
-          additionalUpfrontCosts,
-          totalIndirectCosts,
-          electrolyserEpcCost,
-          electrolyserLandCost,
-          powerPlantEpcCost,
-          powerPlantLandCost,
-          batteryEpcCost,
-          batteryLandCost,
-          hourlyOperations,
-          lcPowerPlantCAPEX,
-          lcElectrolyserCAPEX,
-          lcIndirectCosts,
-          lcPowerPlantOPEX,
-          lcElectrolyserOPEX,
-          lcElectricityPurchase,
-          lcElectricitySale,
-          lcStackReplacement,
-          lcWater,
-          lcBattery,
-          lcGridConnection,
-          lcAdditionalCosts,
-          lcOxygenSale,
-          projectTimeline,
-          cumulativeCashFlow
-        )}
-      </Grid>
-      <Grid item>
-        {OperatingCosts(
-          projectTimeline,
-          electrolyserOpexPerYear,
-          powerPlantOpexPerYear,
-          batteryOpexPerYear,
-          additionalOpexPerYear,
-          waterOpexPerYear,
-          electricityPurchaseOpexPerYear,
-          h2Sales,
-          electricitySales,
-          oxygenSales,
-          annualSales
-        )}
-      </Grid>
-      <Grid item>
+    <ThemeProvider theme={theme}>
+      <Grid container direction="column">
         <Card>
-          <CardHeader title="Hourly capacity factors" />
+          <CardHeader title="Key inputs" />
+          <CardContent>
+            <Grid container item>
+              <Grid item xs={4}>
+                <Grid container item flexWrap={"nowrap"}>
+                  <Grid item>
+                    <LocationOnRoundedIcon fontSize="large" />
+                  </Grid>
+                  <Grid container item direction={"column"}>
+                    <Grid>
+                      <ItemTitle>Location</ItemTitle>
+                    </Grid>
+                    <Grid>
+                      <ItemText>{zoneInfo[zone].location}</ItemText>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
 
-          <HourlyCapacityFactors
-            datapoints={[
-              {
-                label: "Electrolyser",
-                data: hourlyOperations.Electrolyser_CF,
-              },
-              {
-                label: "Power Plant",
-                data: hourlyOperations.Generator_CF,
-              },
-            ]}
-          />
+              <Grid item xs={4}>
+                <Grid container item flexWrap={"nowrap"}>
+                  <Grid item>
+                    <SignalCellularAltRoundedIcon fontSize="large" />
+                  </Grid>
+                  <Grid container item direction={"column"}>
+                    <Grid item>
+                      <ItemTitle>Electrolyster Capacity</ItemTitle>
+                    </Grid>
+                    <Grid item>
+                      <ItemText>
+                        {inputs.electrolyserNominalCapacity.toLocaleString(
+                          "en-US"
+                        )}
+                      </ItemText>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <Grid container item flexWrap={"nowrap"}>
+                  <Grid item>
+                    <FactoryRoundedIcon fontSize="large" />
+                  </Grid>
+                  <Grid container item direction={"column"}>
+                    <ItemTitle>Powerplant Capacity</ItemTitle>
+                    <Grid item>
+                      <ItemText>
+                        {powerplantCapacity.toLocaleString("en-US")}
+                      </ItemText>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardContent>
         </Card>
+
+        <Grid item>
+          {FirstGraph(
+            summary,
+            electricityConsumed,
+            electricityProduced,
+            h2Produced,
+            lch2,
+            netProfit,
+            returnOnInvestment,
+            h2RetailPrice,
+            electrolyserCAPEX,
+            powerPlantCAPEX,
+            batteryCAPEX,
+            gridConnectionCAPEX,
+            additionalUpfrontCosts,
+            totalIndirectCosts,
+            electrolyserEpcCost,
+            electrolyserLandCost,
+            powerPlantEpcCost,
+            powerPlantLandCost,
+            batteryEpcCost,
+            batteryLandCost,
+            hourlyOperations,
+            lcPowerPlantCAPEX,
+            lcElectrolyserCAPEX,
+            lcIndirectCosts,
+            lcPowerPlantOPEX,
+            lcElectrolyserOPEX,
+            lcElectricityPurchase,
+            lcElectricitySale,
+            lcStackReplacement,
+            lcWater,
+            lcBattery,
+            lcGridConnection,
+            lcAdditionalCosts,
+            lcOxygenSale,
+            projectTimeline,
+            cumulativeCashFlow
+          )}
+        </Grid>
+        <Grid item>
+          {OperatingCosts(
+            projectTimeline,
+            electrolyserOpexPerYear,
+            powerPlantOpexPerYear,
+            batteryOpexPerYear,
+            additionalOpexPerYear,
+            waterOpexPerYear,
+            electricityPurchaseOpexPerYear,
+            h2Sales,
+            electricitySales,
+            oxygenSales,
+            annualSales
+          )}
+        </Grid>
+        <Grid item>
+          <Card>
+            <CardHeader title="Hourly capacity factors" />
+
+            <HourlyCapacityFactors
+              datapoints={[
+                {
+                  label: "Electrolyser",
+                  data: hourlyOperations.Electrolyser_CF,
+                },
+                {
+                  label: "Power Plant",
+                  data: hourlyOperations.Generator_CF,
+                },
+              ]}
+            />
+          </Card>
+        </Grid>
       </Grid>
-    </Grid>
+    </ThemeProvider>
   );
 }
 function OperatingCosts(
@@ -554,163 +607,161 @@ function FirstGraph(
     "Return on Investment (%)": returnOnInvestment,
   };
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container className="outside results box" wrap="nowrap">
+    <Grid container className="outside results box" wrap="nowrap">
+      <Grid
+        container
+        item
+        direction="column"
+        className="summary and cost breakdown"
+      >
+        <Grid item>
+          <Card>
+            <CardHeader title="Summary of results" />
+            <BasicTable title="Summary of Results" data={summaryDict} />
+          </Card>
+        </Grid>
+        <Grid container item>
+          <Grid item xs={6}>
+            <Card>
+              <CostBreakdownDoughnutChart
+                title="Capital Cost Breakdown"
+                labels={[
+                  "Electrolyser System",
+                  "Power Plant",
+                  "Battery",
+                  "Grid Connection",
+                  "Additional Upfront Costs",
+                  "Indirect Costs",
+                ]}
+                data={[
+                  electrolyserCAPEX,
+                  powerPlantCAPEX,
+                  batteryCAPEX,
+                  gridConnectionCAPEX,
+                  additionalUpfrontCosts,
+                  totalIndirectCosts,
+                ]}
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card>
+              <CostBreakdownDoughnutChart
+                title="Indirect Cost Breakdown"
+                labels={[
+                  "Electrolyser EPC",
+                  "Electrolyser Land",
+                  "Power Plant EPC",
+                  "Power Plant Land",
+                  "Battery EPC",
+                  "Battery Land",
+                ]}
+                data={[
+                  electrolyserEpcCost,
+                  electrolyserLandCost,
+                  powerPlantEpcCost,
+                  powerPlantLandCost,
+                  batteryEpcCost,
+                  batteryLandCost,
+                ]}
+              />
+            </Card>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid container item>
         <Grid
           container
           item
           direction="column"
-          className="summary and cost breakdown"
+          className="curves and lch2"
+          justifyContent={"space-between"}
         >
+          <Grid container item className="duration curves">
+            <Grid item xs={6}>
+              <Card>
+                <CardHeader title="Powerplant duration curve" />
+
+                <DurationCurve
+                  title="Generator Duration Curve"
+                  data={hourlyOperations.Generator_CF}
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={6}>
+              <Card>
+                <CardHeader title="Electrolyser duration curve" />
+
+                <DurationCurve
+                  title="Electrolyser Duration Curve"
+                  data={hourlyOperations.Electrolyser_CF}
+                />
+              </Card>
+            </Grid>
+          </Grid>
           <Grid item>
             <Card>
-              <CardHeader title="Summary of results" />
-              <BasicTable title="Summary of Results" data={summaryDict} />
+              <CardHeader title="Cash Flow Analysis" />
+              <CostBarChart
+                title="Cash Flow Analysis"
+                labels={getActiveYearsLabels(projectTimeline)}
+                datapoints={[
+                  {
+                    label: "Cash Flow Analysis",
+                    data: cumulativeCashFlow,
+                  },
+                ]}
+              />
             </Card>
           </Grid>
-          <Grid container item>
-            <Grid item xs={6}>
-              <Card>
-                <CostBreakdownDoughnutChart
-                  title="Capital Cost Breakdown"
-                  labels={[
-                    "Electrolyser System",
-                    "Power Plant",
-                    "Battery",
-                    "Grid Connection",
-                    "Additional Upfront Costs",
-                    "Indirect Costs",
-                  ]}
-                  data={[
-                    electrolyserCAPEX,
-                    powerPlantCAPEX,
-                    batteryCAPEX,
-                    gridConnectionCAPEX,
-                    additionalUpfrontCosts,
-                    totalIndirectCosts,
-                  ]}
-                />
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card>
-                <CostBreakdownDoughnutChart
-                  title="Indirect Cost Breakdown"
-                  labels={[
-                    "Electrolyser EPC",
-                    "Electrolyser Land",
-                    "Power Plant EPC",
-                    "Power Plant Land",
-                    "Battery EPC",
-                    "Battery Land",
-                  ]}
-                  data={[
-                    electrolyserEpcCost,
-                    electrolyserLandCost,
-                    powerPlantEpcCost,
-                    powerPlantLandCost,
-                    batteryEpcCost,
-                    batteryLandCost,
-                  ]}
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </Grid>
+          <Grid item>
+            <Card>
+              <CardHeader title="Breakdown of cost components in LCH2" />
 
-        <Grid container item>
-          <Grid
-            container
-            item
-            direction="column"
-            className="curves and lch2"
-            justifyContent={"space-between"}
-          >
-            <Grid container item className="duration curves">
-              <Grid item xs={6}>
-                <Card>
-                  <CardHeader title="Powerplant duration curve" />
-
-                  <DurationCurve
-                    title="Generator Duration Curve"
-                    data={hourlyOperations.Generator_CF}
-                  />
-                </Card>
-              </Grid>
-              <Grid item xs={6}>
-                <Card>
-                  <CardHeader title="Electrolyser duration curve" />
-
-                  <DurationCurve
-                    title="Electrolyser Duration Curve"
-                    data={hourlyOperations.Electrolyser_CF}
-                  />
-                </Card>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Card>
-                <CardHeader title="Cash Flow Analysis" />
-                <CostBarChart
-                  title="Cash Flow Analysis"
-                  labels={getActiveYearsLabels(projectTimeline)}
-                  datapoints={[
-                    {
-                      label: "Cash Flow Analysis",
-                      data: cumulativeCashFlow,
-                    },
-                  ]}
-                />
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card>
-                <CardHeader title="Breakdown of cost components in LCH2" />
-
-                <CostBarChart
-                  title="Breakdown of Cost Components in LCH2"
-                  labels={[
-                    "Power Plant CAPEX",
-                    "Electrolyser CAPEX",
-                    "Indirect Costs",
-                    "Power Plant OPEX",
-                    "Electrolyser O&M",
-                    "Electricity Purchase",
-                    "Electricity Sale",
-                    "Stack Replacement",
-                    "Water Cost",
-                    "Battery Cost",
-                    "Grid Connection Cost",
-                    "Additional Costs",
-                    "Oxygen Sale",
-                  ]}
-                  datapoints={[
-                    {
-                      label:
-                        "Breakdown of Cost Components in Levelised Cost of Hydrogen",
-                      data: [
-                        lcPowerPlantCAPEX,
-                        lcElectrolyserCAPEX,
-                        lcIndirectCosts,
-                        lcPowerPlantOPEX,
-                        lcElectrolyserOPEX,
-                        lcElectricityPurchase,
-                        lcElectricitySale,
-                        lcStackReplacement,
-                        lcWater,
-                        lcBattery,
-                        lcGridConnection,
-                        lcAdditionalCosts,
-                        lcOxygenSale,
-                      ],
-                    },
-                  ]}
-                />
-              </Card>
-            </Grid>
+              <CostBarChart
+                title="Breakdown of Cost Components in LCH2"
+                labels={[
+                  "Power Plant CAPEX",
+                  "Electrolyser CAPEX",
+                  "Indirect Costs",
+                  "Power Plant OPEX",
+                  "Electrolyser O&M",
+                  "Electricity Purchase",
+                  "Electricity Sale",
+                  "Stack Replacement",
+                  "Water Cost",
+                  "Battery Cost",
+                  "Grid Connection Cost",
+                  "Additional Costs",
+                  "Oxygen Sale",
+                ]}
+                datapoints={[
+                  {
+                    label:
+                      "Breakdown of Cost Components in Levelised Cost of Hydrogen",
+                    data: [
+                      lcPowerPlantCAPEX,
+                      lcElectrolyserCAPEX,
+                      lcIndirectCosts,
+                      lcPowerPlantOPEX,
+                      lcElectrolyserOPEX,
+                      lcElectricityPurchase,
+                      lcElectricitySale,
+                      lcStackReplacement,
+                      lcWater,
+                      lcBattery,
+                      lcGridConnection,
+                      lcAdditionalCosts,
+                      lcOxygenSale,
+                    ],
+                  },
+                ]}
+              />
+            </Card>
           </Grid>
         </Grid>
       </Grid>
-    </ThemeProvider>
+    </Grid>
   );
 }
