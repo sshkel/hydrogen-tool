@@ -31,6 +31,7 @@ import {
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
+import { zoneInfo } from "../map/ZoneInfo";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
@@ -331,6 +332,8 @@ export default function WorkingData(props: Props) {
   const returnOnInvestment = netProfit / totalInvestmentRequired;
   const powerplantCapacity =
     inputs.solarNominalCapacity + inputs.windNominalCapacity;
+  type ObjectKey = keyof typeof zoneInfo;
+  const zone = location as ObjectKey;
   return (
     <Grid container direction="column">
       <Card>
@@ -338,15 +341,19 @@ export default function WorkingData(props: Props) {
         <CardContent>
           <Grid container item justifyContent={"center"}>
             <Grid item xs={4}>
-              <LocationOnIcon />
-              {location}
+              <Grid container item>
+                <Grid item>
+                  <LocationOnIcon fontSize="large" />
+                </Grid>
+                <Grid item>{zoneInfo[zone].location}</Grid>
+              </Grid>
             </Grid>
             <Grid item xs={4}>
-              <SignalCellularAltIcon />
+              <SignalCellularAltIcon fontSize="large" />
               {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
             </Grid>
             <Grid item xs={4}>
-              <FactoryIcon />
+              <FactoryIcon fontSize="large" />
               {powerplantCapacity.toLocaleString("en-US")}
             </Grid>
           </Grid>
