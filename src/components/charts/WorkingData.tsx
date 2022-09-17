@@ -363,7 +363,7 @@ export default function WorkingData(props: Props) {
                       <ItemTitle>Location</ItemTitle>
                     </Grid>
                     <Grid>
-                      <ItemText>{zoneInfo[zone].location}</ItemText>
+                      <ItemText>{zoneInfo[zone]?.location}</ItemText>
                     </Grid>
                   </Grid>
                 </Grid>
