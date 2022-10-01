@@ -17,9 +17,9 @@ export default function CostBarChart(props: Props) {
       data: buildWaterfall(ds.data),
     };
   });
-  labels.push("Total");
+
   const graphData = {
-    labels: labels,
+    labels: labels.concat(["Total"]),
     datasets: transformedPoints.map((point) => ({
       ...point,
       backgroundColor: "rgba(75,192,192,0.2)",
