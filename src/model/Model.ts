@@ -536,7 +536,11 @@ function calculateGeneratorCf(
   windDegradation: number = 0,
   year: number = 1
 ): number[] {
-  const solarDfValues = solarData.map((r: CsvRow) => r[location]);
+  // padd with zeros for zones where there is no solar data available
+  const solarDfValues = solarData.map((r: CsvRow) =>
+    r[location] ? r[location] : 0
+  );
+
   const windDfValues = windData.map((r: CsvRow) => r[location]);
   // Degradation values
   const power = year - 1;
