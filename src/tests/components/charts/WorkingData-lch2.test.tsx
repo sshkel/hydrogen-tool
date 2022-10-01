@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 
-import CostBarChart from "../../../components/charts/CostBarChart";
+import CostWaterfallBarChart from "../../../components/charts/CostWaterfallBarChart";
 import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
@@ -48,7 +48,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -82,7 +82,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -116,7 +116,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -150,7 +150,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -184,7 +184,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -218,7 +218,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -254,7 +254,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -289,7 +289,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -324,7 +324,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
@@ -359,7 +359,7 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostBarChart)
+          .find(CostWaterfallBarChart)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );

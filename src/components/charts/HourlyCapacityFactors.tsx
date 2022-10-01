@@ -23,7 +23,11 @@ export default function HourlyCapacityFactors(props: Props) {
     labels: [...Array(sampleToPlot).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
       label: point.label,
-      data: point.data.map((x) => x * 100),
+      data: point.data.map((x) => {
+        if (typeof x === "number") {
+          return x * 100;
+        }
+      }),
       backgroundColor: colours[index],
       borderColor: colours[index],
     })),

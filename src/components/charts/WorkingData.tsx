@@ -38,6 +38,7 @@ import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
+import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import { backCalculateInputFields } from "./basic-calculations";
@@ -613,7 +614,7 @@ function FirstGraph(
         direction="column"
         className="summary and cost breakdown"
       >
-        <Grid item>
+        <Grid item xs>
           <Card>
             <CardHeader title="Summary of results" />
             <BasicTable title="Summary of Results" data={summaryDict} />
@@ -718,7 +719,7 @@ function FirstGraph(
             <Card>
               <CardHeader title="Breakdown of cost components in LCH2" />
 
-              <CostBarChart
+              <CostWaterfallBarChart
                 title="Breakdown of Cost Components in LCH2"
                 labels={[
                   "Power Plant CAPEX",
