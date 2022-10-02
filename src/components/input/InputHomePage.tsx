@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 import "../../input.css";
 import { InputConfiguration } from "../../types";
+import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
@@ -122,6 +123,9 @@ export default function InputHomePage(props: Props) {
           </TabList>
           <TabPanel value="Basic" sx={{ background: "#F2F2F2" }}>
             <BasicHydrogenInput />
+          </TabPanel>
+          <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
+            <AdvancedHydrogenInput />
           </TabPanel>
         </TabContext>
       </ThemeProvider>

@@ -4,12 +4,13 @@ import Typography from "@mui/material/Typography";
 import InputHelpButton from "./InputHelpButton";
 
 interface Props {
+  id?: string;
   title: string;
   helperText?: string;
 }
 
 export default function InputSlider(props: Props) {
-  const { title, helperText } = props;
+  const { id = "input-title", title, helperText } = props;
 
   return (
     <Box
@@ -19,7 +20,7 @@ export default function InputSlider(props: Props) {
       }}
     >
       <Typography
-        id="input-title"
+        id={id}
         sx={{ lineHeight: "28px", fontWeight: "bold", flexBasis: "99%" }}
       >
         {title}

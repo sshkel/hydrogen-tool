@@ -3,9 +3,9 @@ import { mount } from "enzyme";
 import { MemoryRouter } from "react-router-dom";
 
 import Input from "../../../components/input/Input";
+import InputDropdownField from "../../../components/input/InputDropdownField";
 import InputExpand from "../../../components/input/InputExpand";
 import InputNumberField from "../../../components/input/InputNumberField";
-import InputSelectField from "../../../components/input/InputSelectField";
 
 describe("Input", () => {
   it("renders expands", () => {
@@ -19,7 +19,7 @@ describe("Input", () => {
 
     // Make sure input components render
     expect(wrapper.find(InputExpand).length).toBeGreaterThan(0);
-    expect(wrapper.find(InputSelectField).length).toBeGreaterThan(0);
+    expect(wrapper.find(InputDropdownField).length).toBeGreaterThan(0);
     expect(wrapper.find(InputNumberField).length).toBeGreaterThan(0);
     expect(wrapper.find(Button)).toHaveLength(1);
 

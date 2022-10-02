@@ -1,8 +1,10 @@
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
+
+import InputTitle from "./InputTitle";
+import { ORANGE } from "./colors";
 
 interface Props {
   id: string;
@@ -12,7 +14,7 @@ interface Props {
   onChange?: (val: string) => void;
 }
 
-export default function InputTextField(props: Props) {
+export default function InputDropdownField(props: Props) {
   const { id, label, defaultValue, values, onChange } = props;
   const labelId = `${id}-label`;
 
@@ -26,16 +28,29 @@ export default function InputTextField(props: Props) {
   };
 
   return (
-    <FormControl className="selectWrapper">
-      <InputLabel id={labelId}>{label}</InputLabel>
+    <FormControl sx={{ display: "flex", width: "inherit", p: 2 }}>
+      <InputTitle title={label} id={labelId} />
       <Select
+        color="success"
+        displayEmpty
         name={id}
         key={id}
         labelId={labelId}
         id={id}
         value={value}
-        label={label}
         onChange={onSelectChange}
+        sx={{
+          borderRadius: 2,
+          boxShadow: "0px 0px 2px 2px rgb(180 180 180 / 75%)",
+        }}
+        MenuProps={{
+          sx: {
+            "&& .Mui-selected": {
+              backgroundColor: ORANGE,
+              color: "white",
+            },
+          },
+        }}
       >
         {values.map((item) => (
           <MenuItem key={item} value={item}>

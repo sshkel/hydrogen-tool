@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PowerPlantConfiguration } from "../../types";
+import InputDropdownField from "./InputDropdownField";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
-import InputSelectField from "./InputSelectField";
 import {
   capitalDepreciationProfile,
   data,
@@ -119,7 +119,7 @@ export default function Input(props: Props) {
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
       <InputExpand title="Scope of Analysis" id="scope-of-analysis">
-        <InputSelectField
+        <InputDropdownField
           id="powerPlantConfiguration"
           label="Power Plant Configuration"
           values={powerPlantConfigurationData}
@@ -132,7 +132,7 @@ export default function Input(props: Props) {
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
-        <InputSelectField
+        <InputDropdownField
           id="technology"
           label="Technology"
           values={technologyData}
@@ -149,7 +149,7 @@ export default function Input(props: Props) {
           title="Electrolyser Specific Consumption - SEC"
           id="electrolyser-specific-consumption"
         >
-          <InputSelectField
+          <InputDropdownField
             id="profile"
             label="SEC vs Load Profile"
             values={profileData}
@@ -171,7 +171,7 @@ export default function Input(props: Props) {
           title="Other Operational Factors"
           id="other-operational-factors"
         >
-          <InputSelectField
+          <InputDropdownField
             id="stackReplacementType"
             label="Stack Replacement Type"
             values={replacementTypeData}
@@ -266,7 +266,7 @@ export default function Input(props: Props) {
             {[...Array(2)].map((_) => getData(pointer))}
           </InputExpand>
           <InputExpand title="Depreciation" id="depreciation">
-            <InputSelectField
+            <InputDropdownField
               id="capitalDepreciationProfile"
               label="Depreciation Profile"
               values={capitalDepreciationProfile}
