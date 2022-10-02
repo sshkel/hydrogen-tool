@@ -1,6 +1,6 @@
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
-import { Drawer, List, ListItem, ListItemIcon } from "@mui/material";
+import { Drawer, List, ListItem } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
 import Toolbar from "@mui/material/Toolbar";
