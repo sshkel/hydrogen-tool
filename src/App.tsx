@@ -8,6 +8,7 @@ import WorkingData from "./components/charts/WorkingData";
 import Input from "./components/input/Input";
 import InputHomePage from "./components/input/InputHomePage";
 import Map from "./components/map/Map";
+import { About } from "./components/misc/About";
 import { loadSolar, loadWind } from "./model/DataLoader";
 import { InputConfiguration, UserInputFields } from "./types";
 
@@ -50,6 +51,7 @@ function App() {
                 />
               }
             />
+            <Route path="/about" element={<About />} />
             <Route
               path="*"
               element={
