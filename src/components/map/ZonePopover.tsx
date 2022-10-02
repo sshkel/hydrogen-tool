@@ -1,3 +1,5 @@
+import WbSunnyRoundedIcon from "@mui/icons-material/WbSunnyRounded";
+import WindPowerRoundedIcon from "@mui/icons-material/WindPowerRounded";
 import {
   Button,
   Card,
@@ -104,10 +106,19 @@ export function ZonePopover(props: Props) {
               <Grid item xs>
                 <ItemTitle>Solar/Wind capacity factor:</ItemTitle>
               </Grid>
-              <Grid item xs>
-                <ItemText>
-                  {zoneInfo[zone].solarCapFactor} {zoneInfo[zone].windCapFactor}{" "}
-                </ItemText>
+              <Grid container item xs>
+                <Grid item>
+                  <WbSunnyRoundedIcon />
+                </Grid>
+                <Grid item>
+                  <ItemText>{zoneInfo[zone].solarCapFactor}</ItemText>
+                </Grid>
+                <Grid item>
+                  <WindPowerRoundedIcon />
+                </Grid>
+                <Grid item>
+                  <ItemText>{zoneInfo[zone].windCapFactor}</ItemText>
+                </Grid>
               </Grid>
             </Grid>
             <Grid
