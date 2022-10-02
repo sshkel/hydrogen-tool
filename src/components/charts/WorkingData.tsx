@@ -27,14 +27,16 @@ import {
   HOURS_PER_YEAR,
   HYDROGEN_OUTPUT_FIXED,
   HYDROGEN_OUTPUT_VARIABLE,
+  POWER_PLANT_CF,
+  RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
-import { fillYearsArray, mean } from "../../utils";
+import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import { BLUE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
-import { CashFlowAnalysisPane } from "../panes/CashFlowAnalysisPane";
-import { SummaryOfResultsPane } from "../panes/SummaryOfResultsPane";
+import BasicTable from "./BasicTable";
+import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
@@ -746,5 +748,71 @@ function Lch2BreakdownPane(
       label="Breakdown of Cost Components in Levelised Cost of Hydrogen"
       items={data}
     />
+  );
+}
+
+function CashFlowAnalysisPane(
+  projectTimeline: number,
+  cumulativeCashFlow: number[]
+) {
+  return (
+    <Card>
+      <CardHeader title="Cash Flow Analysis" />
+      <CostBarChart
+        title="Cash Flow Analysis"
+        labels={getActiveYearsLabels(projectTimeline)}
+        datapoints={[
+          {
+            label: "Cash Flow Analysis",
+            data: cumulativeCashFlow,
+          },
+        ]}
+      />
+    </Card>
+  );
+}
+
+export function SummaryOfResultsPane(
+  summary: ProjectModelSummary,
+  electricityConsumed: number[],
+  electricityProduced: number[],
+  h2Produced: number[],
+  lch2: number,
+  netProfit: number,
+  returnOnInvestment: number,
+  h2RetailPrice: number
+) {
+  const summaryDict: { [key: string]: number } = {
+    "Power Plant Capacity Factor": mean(
+      summary[`${POWER_PLANT_CF}`].map((x) => x * 100)
+    ),
+
+    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": mean(
+      summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)
+    ),
+    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": mean(
+      summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)
+    ),
+
+    "Electrolyser Capacity Factor": mean(
+      summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)
+    ),
+
+    "Energy Consumed by Electrolyser (MWh/yr)": mean(electricityConsumed),
+
+    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      mean(electricityProduced),
+
+    "Hydrogen Output [t/yr]": mean(h2Produced),
+    LCH2: lch2,
+    "H2 Retail Price": h2RetailPrice,
+    "Net Profit (A$)": netProfit,
+    "Return on Investment (%)": returnOnInvestment,
+  };
+  return (
+    <Card>
+      <CardHeader title="Summary of results" />
+      <BasicTable title="Summary of Results" data={summaryDict} />
+    </Card>
   );
 }
