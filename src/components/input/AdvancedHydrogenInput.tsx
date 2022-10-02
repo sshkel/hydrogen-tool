@@ -5,7 +5,6 @@ import InputCard from "./InputCard";
 import InputDropdownField from "./InputDropdownField";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
-import InputSlider from "./InputSlider";
 import { capitalDepreciationProfile } from "./data";
 
 export default function BasicHydrogenInput() {
