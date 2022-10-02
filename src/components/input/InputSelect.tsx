@@ -8,6 +8,7 @@ interface Props {
   titles: string[];
   helperTexts: (string | undefined)[];
   buttonChildren: JSX.Element[][];
+  prompt?: string;
 }
 
 export default function InputSelectField(props: Props) {
@@ -15,17 +16,27 @@ export default function InputSelectField(props: Props) {
   const [selected, setSelected] = React.useState<number>(0);
 
   const onOpenExpand = (index: number) => {
-    setExpanded(index);
+    // TODO: test empty children
+    if (buttonChildren[index].length > 0) {
+      setExpanded(index);
+    } else {
+      setExpanded(-1);
+    }
     setSelected(index);
   };
   const onCloseExpand = () => {
     setExpanded(-1);
   };
 
-  const { titles, helperTexts, buttonChildren } = props;
+  const {
+    titles,
+    helperTexts,
+    buttonChildren,
+    prompt = "Select one option from below",
+  } = props;
   return (
     <Grid sx={{ marginX: 2, marginY: 0.5 }}>
-      <InputTitle title="Select one option from below" />
+      <InputTitle title={prompt} />
       {titles.map((text, index) => (
         <InputSelectButton
           text={text}

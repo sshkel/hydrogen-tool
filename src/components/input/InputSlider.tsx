@@ -6,7 +6,7 @@ import * as React from "react";
 
 import InputTitle from "./InputTitle";
 import { BLUE } from "./colors";
-import { defaultInputs } from "./data";
+import { basicDefaultInputs } from "./data";
 
 interface Props {
   inputKey: string;
@@ -47,7 +47,7 @@ export default function InputSlider({ inputKey }: Props) {
     max = 100,
     defaultValue = 50,
     step = 10,
-  } = defaultInputs[inputKey];
+  } = basicDefaultInputs[inputKey];
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue || 30

@@ -44,10 +44,16 @@ export default function InputDropdownField(props: Props) {
           boxShadow: "0px 0px 2px 2px rgb(180 180 180 / 75%)",
         }}
         MenuProps={{
+          MenuListProps: {
+            sx: {
+              backgroundColor: "#F4F9FA",
+            },
+          },
           sx: {
             "&& .Mui-selected": {
               backgroundColor: ORANGE,
               color: "white",
+              "&.Mui-focusVisible": { background: ORANGE },
             },
           },
         }}

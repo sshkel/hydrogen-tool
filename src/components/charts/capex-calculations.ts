@@ -32,13 +32,13 @@ export function generateCapexValues(data: Inputs) {
     gridConnectionCost = 0,
 
     electrolyserEpcCosts,
-    electrolyserLandProcurementCost,
+    electrolyserLandProcurementCosts,
     solarEpcCosts,
-    solarLandProcurementCost,
+    solarLandProcurementCosts,
     windEpcCosts,
-    windLandProcurementCost,
+    windLandProcurementCosts,
     batteryEpcCosts,
-    batteryLandProcurementCost,
+    batteryLandProcurementCosts,
   } = data;
 
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
@@ -85,14 +85,14 @@ export function generateCapexValues(data: Inputs) {
   );
   const electrolyserLandCost = getIndirectCost(
     electrolyserCAPEX,
-    electrolyserLandProcurementCost
+    electrolyserLandProcurementCosts
   );
 
   const solarEpcCost = getIndirectCost(solarCAPEX, solarEpcCosts);
-  const solarLandCost = getIndirectCost(solarCAPEX, solarLandProcurementCost);
+  const solarLandCost = getIndirectCost(solarCAPEX, solarLandProcurementCosts);
 
   const windEpcCost = getIndirectCost(windCAPEX, windEpcCosts);
-  const windLandCost = getIndirectCost(windCAPEX, windLandProcurementCost);
+  const windLandCost = getIndirectCost(windCAPEX, windLandProcurementCosts);
 
   const powerPlantEpcCost = solarEpcCost + windEpcCost;
   const powerPlantLandCost = solarLandCost + windLandCost;
@@ -100,7 +100,7 @@ export function generateCapexValues(data: Inputs) {
   const batteryEpcCost = getIndirectCost(batteryCAPEX, batteryEpcCosts);
   const batteryLandCost = getIndirectCost(
     batteryCAPEX,
-    batteryLandProcurementCost
+    batteryLandProcurementCosts
   );
 
   const gridConnectionCAPEX =

@@ -38,6 +38,10 @@ export interface BasicDefaultInput {
   [k: string]: SliderProps;
 }
 
+export interface AdvancedDefaultInput {
+  [k: string]: InputNumberFieldProps;
+}
+
 export interface SliderProps {
   title: string;
   helperText?: string;
@@ -45,6 +49,18 @@ export interface SliderProps {
   min?: number;
   max?: number;
   step?: number;
+}
+
+export interface InputNumberFieldProps {
+  title: string;
+  id?: string;
+  defaultValue?: string | number;
+  value?: number;
+  helperText?: string;
+  disabled?: boolean;
+  required?: boolean;
+  adornmentLabel?: string | JSX.Element;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export interface UserInputFields {
@@ -56,7 +72,7 @@ export interface UserInputFields {
   batteryEpcCosts?: number;
   batteryEfficiency: number;
   batteryMinCharge?: number;
-  batteryLandProcurementCost?: number;
+  batteryLandProcurementCosts?: number;
   batteryRatedPower?: number;
   batteryCosts?: number;
   batteryOMCost?: number;
@@ -66,7 +82,7 @@ export interface UserInputFields {
   batteryStorageDuration?: number;
   electrolyserCostReductionWithScale?: number;
   electrolyserEpcCosts?: number;
-  electrolyserLandProcurementCost?: number;
+  electrolyserLandProcurementCosts?: number;
   electrolyserReferenceFoldIncrease?: number;
   electrolyserOMCost?: number;
   electrolyserStackReplacement?: number;
@@ -81,7 +97,7 @@ export interface UserInputFields {
   solarFarmBuildCost?: number;
   windFarmBuildCost?: number;
   solarEpcCosts?: number;
-  solarLandProcurementCost?: number;
+  solarLandProcurementCosts?: number;
   solarPVCostReductionWithScale?: number;
   solarReferenceFoldIncrease?: number;
   solarDegradation?: number;
@@ -95,7 +111,7 @@ export interface UserInputFields {
   waterSupplyCost?: number;
   windCostReductionWithScale?: number;
   windEpcCosts?: number;
-  windLandProcurementCost?: number;
+  windLandProcurementCosts?: number;
   windReferenceFoldIncrease?: number;
   windOpex?: number;
   projectTimeline?: number;
@@ -132,7 +148,7 @@ export interface Inputs {
   electrolyserCostReductionWithScale: number;
   electrolyserReferenceFoldIncrease: number;
   electrolyserEpcCosts: number;
-  electrolyserLandProcurementCost: number;
+  electrolyserLandProcurementCosts: number;
   electrolyserPurchaseCost: number;
   electrolyserOMCost: number;
   electrolyserStackReplacement: number;
@@ -148,7 +164,7 @@ export interface Inputs {
   batteryEpcCosts?: number;
   batteryEfficiency: number;
   batteryMinCharge?: number;
-  batteryLandProcurementCost?: number;
+  batteryLandProcurementCosts?: number;
   batteryRatedPower?: number;
   batteryCosts?: number;
   batteryOMCost?: number;
@@ -168,7 +184,7 @@ export interface Inputs {
   powerPlantOversizeRatio: number;
   solarToWindPercentage: number;
   solarEpcCosts: number;
-  solarLandProcurementCost: number;
+  solarLandProcurementCosts: number;
   solarPVCostReductionWithScale: number;
   solarReferenceFoldIncrease: number;
   solarDegradation: number;
@@ -176,7 +192,7 @@ export interface Inputs {
   solarOpex?: number;
   windCostReductionWithScale: number;
   windEpcCosts: number;
-  windLandProcurementCost: number;
+  windLandProcurementCosts: number;
   windReferenceFoldIncrease: number;
   windOpex?: number;
 

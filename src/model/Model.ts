@@ -644,12 +644,12 @@ function calculateBatteryModel(
       }
     } else if (
       spill > 0 &&
-      battSoc + (spill / batteryEnergy) * battLosses > 1
+      battSoc + (spill / batteryEnergy) * battLosses > 1 // -> > battMax
     ) {
       // When spilled generation is enough to completely charge the battery
       batteryNetCharge[hour] = Math.min(
         batteryPower,
-        Math.max(batteryEnergy * (1.0 - battSoc), 0.0)
+        Math.max(batteryEnergy * (1.0 - battSoc), 0.0) // 1.0 -> battMax
       );
     } else if (spill > 0) {
       // Any other cases when there is spilled generation
