@@ -11,8 +11,6 @@ import {
   styled,
 } from "@mui/material";
 
-import { BLUE } from "../input/colors";
-
 const theme = createTheme({
   typography: {
     fontFamily: "Nunito",
@@ -45,10 +43,11 @@ export function About() {
                 <ListItem>Muhammad Haider Ali Khan (Lead Developer)</ListItem>
                 <ListItem>Phoebe Heywood (Co Developer)</ListItem>
                 <ListItem>Aaron Kuswara (Co Developer)</ListItem>
+                <ListItem>Jack Shepherd (Co Developer)</ListItem>
                 <ListItem>Iain MacGill (Project Supervisor)</ListItem>
                 <ListItem>Rahman Daiyan (Project Supervisor)</ListItem>
-                <ListItem>Tara Tjandra (DR PR MC DJ)</ListItem>
-                <ListItem>Stanis Shkel (PIR KTLO MVP)</ListItem>
+                <ListItem>Tara Tjandra (Team Lead)</ListItem>
+                <ListItem>Stanis Shkel (Intern)</ListItem>
               </List>
             </CardContent>
           </StyledCard>
@@ -63,9 +62,6 @@ export function About() {
                   Charles Johnston (Tool Troubleshooting and Debugging Support)
                 </ListItem>
                 <ListItem>Nicholas Gorman (Tool Licensing Support)</ListItem>
-                <ListItem>
-                  Jack Shepherd (Tool Troubleshooting and Debugging Support)
-                </ListItem>
               </List>
             </CardContent>
           </StyledCard>
