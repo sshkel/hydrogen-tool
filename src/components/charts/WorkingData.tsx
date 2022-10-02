@@ -33,6 +33,7 @@ import {
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
+import { BLUE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -357,7 +358,10 @@ export default function WorkingData(props: Props) {
               <Grid item xs={4}>
                 <Grid container item flexWrap={"nowrap"}>
                   <Grid item>
-                    <LocationOnRoundedIcon fontSize="large" />
+                    <LocationOnRoundedIcon
+                      fontSize="large"
+                      style={{ color: BLUE }}
+                    />
                   </Grid>
                   <Grid container item direction={"column"}>
                     <Grid>
@@ -373,7 +377,10 @@ export default function WorkingData(props: Props) {
               <Grid item xs={4}>
                 <Grid container item flexWrap={"nowrap"}>
                   <Grid item>
-                    <SignalCellularAltRoundedIcon fontSize="large" />
+                    <SignalCellularAltRoundedIcon
+                      fontSize="large"
+                      style={{ color: BLUE }}
+                    />
                   </Grid>
                   <Grid container item direction={"column"}>
                     <Grid item>
@@ -392,7 +399,10 @@ export default function WorkingData(props: Props) {
               <Grid item xs={4}>
                 <Grid container item flexWrap={"nowrap"}>
                   <Grid item>
-                    <FactoryRoundedIcon fontSize="large" />
+                    <FactoryRoundedIcon
+                      fontSize="large"
+                      style={{ color: BLUE }}
+                    />
                   </Grid>
                   <Grid container item direction={"column"}>
                     <ItemTitle>Powerplant Capacity</ItemTitle>
