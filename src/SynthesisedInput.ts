@@ -15,8 +15,8 @@ class DefaultInputs implements Inputs {
   electrolyserReferenceCapacity = 10;
   electrolyserCostReductionWithScale = 10;
   electrolyserReferenceFoldIncrease = 10;
-  electrolyserEpcCosts = 0;
-  electrolyserLandProcurementCost = 0;
+  electrolyserEpcCosts = 30;
+  electrolyserLandProcurementCost = 6;
   electrolyserPurchaseCost = 1500;
   electrolyserOMCost = 2.5;
   electrolyserStackReplacement = 40;
@@ -51,16 +51,16 @@ class DefaultInputs implements Inputs {
   windFarmBuildCost = 2000;
   powerPlantOversizeRatio = 1;
   solarToWindPercentage = 50;
-  solarEpcCosts = 0;
-  solarLandProcurementCost = 0;
+  solarEpcCosts = 30;
+  solarLandProcurementCost = 6;
   solarPVCostReductionWithScale = 10;
   solarReferenceFoldIncrease = 10;
   solarDegradation = 0;
   windDegradation = 0;
   solarOpex = 17_000;
   windCostReductionWithScale = 10;
-  windEpcCosts = 0;
-  windLandProcurementCost = 0;
+  windEpcCosts = 30;
+  windLandProcurementCost = 6;
   windReferenceFoldIncrease = 10;
   windOpex = 25_000;
 
