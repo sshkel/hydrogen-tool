@@ -346,77 +346,11 @@ export default function WorkingData(props: Props) {
   const returnOnInvestment = netProfit / totalInvestmentRequired;
   const powerplantCapacity =
     inputs.solarNominalCapacity + inputs.windNominalCapacity;
-  type ObjectKey = keyof typeof zoneInfo;
-  const zone = location as ObjectKey;
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container direction="column">
-        <Card>
-          <CardHeader title="Key inputs" />
-          <CardContent>
-            <Grid container item>
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <LocationOnRoundedIcon
-                      fontSize="large"
-                      style={{ color: BLUE }}
-                    />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <Grid>
-                      <ItemTitle>Location</ItemTitle>
-                    </Grid>
-                    <Grid>
-                      <ItemText>{zoneInfo[zone]?.location}</ItemText>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <SignalCellularAltRoundedIcon
-                      fontSize="large"
-                      style={{ color: BLUE }}
-                    />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <Grid item>
-                      <ItemTitle>Electrolyster Capacity</ItemTitle>
-                    </Grid>
-                    <Grid item>
-                      <ItemText>
-                        {inputs.electrolyserNominalCapacity.toLocaleString(
-                          "en-US"
-                        )}
-                      </ItemText>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <FactoryRoundedIcon
-                      fontSize="large"
-                      style={{ color: BLUE }}
-                    />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <ItemTitle>Powerplant Capacity</ItemTitle>
-                    <Grid item>
-                      <ItemText>
-                        {powerplantCapacity.toLocaleString("en-US")}
-                      </ItemText>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
+        {KeyInputsPane(location, inputs, powerplantCapacity)}
 
         <Grid item>
           {FirstGraph(
@@ -495,6 +429,78 @@ export default function WorkingData(props: Props) {
     </ThemeProvider>
   );
 }
+function KeyInputsPane(
+  location: string,
+  inputs: Inputs,
+  powerplantCapacity: number
+) {
+  type ObjectKey = keyof typeof zoneInfo;
+  const zone = location as ObjectKey;
+  return (
+    <Card>
+      <CardHeader title="Key inputs" />
+      <CardContent>
+        <Grid container item>
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <LocationOnRoundedIcon
+                  fontSize="large"
+                  style={{ color: BLUE }}
+                />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <Grid>
+                  <ItemTitle>Location</ItemTitle>
+                </Grid>
+                <Grid>
+                  <ItemText>{zoneInfo[zone]?.location}</ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <SignalCellularAltRoundedIcon
+                  fontSize="large"
+                  style={{ color: BLUE }}
+                />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <Grid item>
+                  <ItemTitle>Electrolyster Capacity</ItemTitle>
+                </Grid>
+                <Grid item>
+                  <ItemText>
+                    {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
+                  </ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <FactoryRoundedIcon fontSize="large" style={{ color: BLUE }} />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <ItemTitle>Powerplant Capacity</ItemTitle>
+                <Grid item>
+                  <ItemText>
+                    {powerplantCapacity.toLocaleString("en-US")}
+                  </ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+}
+
 function OperatingCosts(
   projectTimeline: number,
   electrolyserOpexPerYear: number[],
