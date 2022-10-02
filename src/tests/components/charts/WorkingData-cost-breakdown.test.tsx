@@ -302,13 +302,13 @@ describe("Working Data calculations", () => {
 
         // 6% of CAPEX = 6000
         electrolyserEpcCosts: 1,
-        electrolyserLandProcurementCost: 5,
+        electrolyserLandProcurementCosts: 5,
 
         // 10% of CAPEX = 5000 (nearest 1000)
         solarEpcCosts: 10,
 
         // 15% of CAPEX = 9000
-        windLandProcurementCost: 15,
+        windLandProcurementCosts: 15,
       };
 
       const wrapper = shallow(
@@ -371,7 +371,7 @@ describe("Working Data calculations", () => {
         electrolyserReferenceFoldIncrease: 0,
 
         electrolyserEpcCosts: 5,
-        electrolyserLandProcurementCost: 0.5,
+        electrolyserLandProcurementCosts: 0.5,
       };
 
       const wrapper = shallow(
@@ -415,10 +415,10 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 0,
 
         solarEpcCosts: 5,
-        solarLandProcurementCost: 0.5,
+        solarLandProcurementCosts: 0.5,
 
         windEpcCosts: 5,
-        windLandProcurementCost: 1,
+        windLandProcurementCosts: 1,
       };
 
       const wrapper = shallow(
@@ -461,10 +461,10 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 0,
 
         solarEpcCosts: 5,
-        solarLandProcurementCost: 0.5,
+        solarLandProcurementCosts: 0.5,
 
         windEpcCosts: 5,
-        windLandProcurementCost: 1,
+        windLandProcurementCosts: 1,
       };
 
       const wrapper = shallow(
@@ -507,10 +507,10 @@ describe("Working Data calculations", () => {
         windReferenceFoldIncrease: 0,
 
         solarEpcCosts: 5,
-        solarLandProcurementCost: 0.5,
+        solarLandProcurementCosts: 0.5,
 
         windEpcCosts: 5,
-        windLandProcurementCost: 1,
+        windLandProcurementCosts: 1,
       };
 
       const wrapper = shallow(
@@ -542,7 +542,7 @@ describe("Working Data calculations", () => {
         batteryCosts: 10, // A$/kWh
 
         batteryEpcCosts: 10,
-        batteryLandProcurementCost: 10,
+        batteryLandProcurementCosts: 10,
       };
 
       const wrapper = shallow(

@@ -5,18 +5,7 @@ import { styled } from "@mui/material/styles";
 
 import InputTitle from "./InputTitle";
 import { BLUE, ORANGE } from "./colors";
-
-interface Props {
-  label: string;
-  name: string;
-  defaultValue?: string | number;
-  value?: number;
-  helperText?: string;
-  disabled?: boolean;
-  required?: boolean;
-  adornmentLabel?: string | JSX.Element;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-}
+import { advancedDefaultInputs } from "./data";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
@@ -40,29 +29,32 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   },
 }));
 
-export default function InputNumberField(props: Props) {
+interface Props {
+  inputKey: string;
+}
+
+export default function InputNumberField({ inputKey }: Props) {
   const {
-    label,
-    name,
-    defaultValue,
+    title,
+    id = inputKey,
+    defaultValue = 0,
     helperText,
     required,
     onChange,
     adornmentLabel,
     value,
-  } = props;
+  } = advancedDefaultInputs[inputKey];
 
   return (
     <Grid container alignItems="center" columnSpacing={4}>
       <Grid item xs={12}>
-        <InputTitle title={label} helperText={helperText} />
+        <InputTitle title={title} helperText={helperText} />
       </Grid>
       <Grid item xs={12}>
         <StyledInputNumberField
-          id={name}
-          key={label}
-          // label={label}
-          name={name}
+          id={id}
+          key={title}
+          name={id}
           defaultValue={defaultValue}
           value={value}
           helperText={helperText}

@@ -2,10 +2,9 @@ import Grid from "@mui/material/Grid";
 
 import "../../input.css";
 import InputCard from "./InputCard";
-import InputDropdownField from "./InputDropdownField";
+import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 import InputSlider from "./InputSlider";
-import { technologyData } from "./data";
 
 export default function BasicHydrogenInput() {
   // let pointer: number = 0;
@@ -35,6 +34,18 @@ export default function BasicHydrogenInput() {
   //   );
   // };
 
+  // secAtNominalLoad: {
+  //   id: "secAtNominalLoad",
+  //   title: "SEC At Nominal Load",
+  //   defaultValue: 50,
+  //   adornmentLabel: "kWh/kg",
+  // },
+  // secCorrectionFactor: {
+  //   title: "Electolyser System SEC vs Load Profile",
+  //   defaultValue: 100,
+  //   adornmentLabel: "%",
+  // },
+  // waterRequirementOfElectrolyser
   return (
     <Grid
       container
@@ -50,13 +61,16 @@ export default function BasicHydrogenInput() {
       <Grid xs={4} container item rowSpacing={1} flexDirection="column">
         <Grid item>
           <InputCard
-            title="Project Scale"
+            title="Electrolyser Parameters"
             children={[
-              <InputDropdownField
-                id="technology"
-                label="Technology"
-                values={technologyData}
-                defaultValue={technologyData[0]}
+              <InputNumberField inputKey="electrolyserNominalCapacity" />,
+              <InputCard
+                title="Electrolyser Efficiency"
+                children={[
+                  <InputNumberField inputKey="secAtNominalLoad" />,
+                  <InputNumberField inputKey="secCorrectionFactor" />,
+                  <InputNumberField inputKey="waterRequirementOfElectrolyser" />,
+                ]}
               />,
             ]}
           />

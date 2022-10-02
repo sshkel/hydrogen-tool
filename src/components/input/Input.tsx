@@ -45,54 +45,52 @@ export default function Input(props: Props) {
 
   const savedState = localStorage.getItem("savedData") || "{}";
   const parsedState = JSON.parse(savedState);
-  const getData = (index: number) => {
+  const getData = (pointer: number) => {
     ++pointer;
-    const { label, id, defaultValue, adornmentLabel, disabled, helperText } =
-      data[index];
+    // const { label, id, defaultValue, adornmentLabel, disabled, helperText } =
+    //   data[index];
 
-    let savedValue;
-    if (savedState) {
-      const value = parsedState[id];
-      savedValue = isNaN(value) ? value : Number(value);
-    }
+    // let savedValue;
+    // if (savedState) {
+    //   const value = parsedState[id];
+    //   savedValue = isNaN(value) ? value : Number(value);
+    // }
     return (
       <InputNumberField
-        key={id}
-        label={label}
-        name={id}
-        defaultValue={savedValue !== undefined ? savedValue : defaultValue}
-        adornmentLabel={adornmentLabel}
-        disabled={disabled}
-        helperText={helperText}
+        inputKey="test"
+        // key={id}
+        // id={id}
+        // defaultValue={savedValue !== undefined ? savedValue : defaultValue}
+        // adornmentLabel={adornmentLabel}
+        // disabled={disabled}
+        // helperText={helperText}
       />
     );
   };
 
   const getDataWithDisabledCheck = (index: number, disabled: boolean) => {
     ++pointer;
-    const { label, id, defaultValue, adornmentLabel, helperText } = data[index];
+    const { id } = data[index];
 
-    let savedValue;
-    if (savedState) {
-      const value = parsedState[id];
-      savedValue = isNaN(value) ? value : Number(value);
-    }
+    // let savedValue;
+    // if (savedState) {
+    //   const value = parsedState[id];
+    //   savedValue = isNaN(value) ? value : Number(value);
+    // }
     return (
       <InputNumberField
-        key={id}
-        label={label}
-        name={id}
-        defaultValue={
-          disabled
-            ? undefined
-            : savedValue !== undefined
-            ? savedValue
-            : defaultValue
-        }
-        value={disabled ? 0 : undefined}
-        adornmentLabel={adornmentLabel}
-        disabled={disabled}
-        helperText={helperText}
+        inputKey={id}
+        // defaultValue={
+        //   disabled
+        //     ? undefined
+        //     : savedValue !== undefined
+        //     ? savedValue
+        //     : defaultValue
+        // }
+        // value={disabled ? 0 : undefined}
+        // adornmentLabel={adornmentLabel}
+        // disabled={disabled}
+        // helperText={helperText}
       />
     );
   };

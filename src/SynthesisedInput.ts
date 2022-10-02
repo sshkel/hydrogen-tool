@@ -16,7 +16,7 @@ class DefaultInputs implements Inputs {
   electrolyserCostReductionWithScale = 10;
   electrolyserReferenceFoldIncrease = 10;
   electrolyserEpcCosts = 30;
-  electrolyserLandProcurementCost = 6;
+  electrolyserLandProcurementCosts = 6;
   electrolyserPurchaseCost = 1500;
   electrolyserOMCost = 2.5;
   electrolyserStackReplacement = 40;
@@ -32,7 +32,7 @@ class DefaultInputs implements Inputs {
   batteryEpcCosts = 0;
   batteryEfficiency = 0;
   batteryMinCharge = 0;
-  batteryLandProcurementCost = 0;
+  batteryLandProcurementCosts = 0;
   batteryRatedPower = 0;
   batteryCosts = 0;
   batteryOMCost = 0;
@@ -52,7 +52,7 @@ class DefaultInputs implements Inputs {
   powerPlantOversizeRatio = 1;
   solarToWindPercentage = 50;
   solarEpcCosts = 30;
-  solarLandProcurementCost = 6;
+  solarLandProcurementCosts = 6;
   solarPVCostReductionWithScale = 10;
   solarReferenceFoldIncrease = 10;
   solarDegradation = 0;
@@ -60,7 +60,7 @@ class DefaultInputs implements Inputs {
   solarOpex = 17_000;
   windCostReductionWithScale = 10;
   windEpcCosts = 30;
-  windLandProcurementCost = 6;
+  windLandProcurementCosts = 6;
   windReferenceFoldIncrease = 10;
   windOpex = 25_000;
 
