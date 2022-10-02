@@ -1,7 +1,8 @@
 import { ShallowWrapper, shallow } from "enzyme";
 
-import CostBreakdownDoughnutChart from "../../../components/charts/CostBreakdownDoughnutChart";
-import WorkingData from "../../../components/charts/WorkingData";
+import WorkingData, {
+  DoughnutPane,
+} from "../../../components/charts/WorkingData";
 import { UserInputFields } from "../../../types";
 import {
   defaultInputData,
@@ -12,12 +13,12 @@ const mockLoader: () => Promise<any[]> = () => new Promise(() => {});
 
 const findCapitalCostBreakdownChart = (wrapper: ShallowWrapper) =>
   wrapper
-    .find(CostBreakdownDoughnutChart)
+    .find(DoughnutPane)
     .filterWhere((e) => e.prop("title") === "Capital Cost Breakdown");
 
 const findIndirectCostBreakdownChart = (wrapper: ShallowWrapper) =>
   wrapper
-    .find(CostBreakdownDoughnutChart)
+    .find(DoughnutPane)
     .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
 
 describe("Working Data calculations", () => {
@@ -47,7 +48,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Electrolyser Default CAPEX = 10_000_000
-      expect(costBreakdownChart.at(0).prop("data").at(0)).toEqual(10_000_000);
+      expect(
+        costBreakdownChart.at(0).prop("items")["Electrolyser System"]
+      ).toEqual(10_000_000);
     });
 
     it("calculates solar CAPEX as expected", () => {
@@ -76,7 +79,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Solar Default CAPEX = 13_845_000
-      expect(costBreakdownChart.at(0).prop("data").at(1)).toEqual(13_845_000);
+      expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(
+        13_845_000
+      );
     });
 
     it("calculates wind CAPEX as expected", () => {
@@ -105,7 +110,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Wind Default CAPEX = 22_498_000
-      expect(costBreakdownChart.at(0).prop("data").at(1)).toEqual(22_498_000);
+      expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(
+        22_498_000
+      );
     });
 
     it("calculate does not factor in solar fields when wind technology", () => {
@@ -134,7 +141,7 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Wind Default CAPEX = 0
-      expect(costBreakdownChart.at(0).prop("data").at(1)).toEqual(0);
+      expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(0);
     });
 
     it("calculate does not factor in wind fields when solar technology", () => {
@@ -163,7 +170,7 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Solar Default CAPEX = 0
-      expect(costBreakdownChart.at(0).prop("data").at(1)).toEqual(0);
+      expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(0);
     });
 
     it("calculates combination of capacity when hybrid", () => {
@@ -197,7 +204,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Power Plant CAPEX = 36_343_000
-      expect(costBreakdownChart.at(0).prop("data").at(1)).toEqual(36_343_000);
+      expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(
+        36_343_000
+      );
     });
 
     it("calculates battery capex", () => {
@@ -223,7 +232,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Battery CAPEX = 2168000
-      expect(costBreakdownChart.at(0).prop("data").at(2)).toEqual(2_168_000);
+      expect(costBreakdownChart.at(0).prop("items")["Battery"]).toEqual(
+        2_168_000
+      );
     });
 
     it("passes down grid connection cost", () => {
@@ -248,7 +259,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Grid Connection Cost = 2000
-      expect(costBreakdownChart.at(0).prop("data").at(3)).toEqual(2000);
+      expect(costBreakdownChart.at(0).prop("items")["Grid Connection"]).toEqual(
+        2000
+      );
     });
 
     it("passes down additional upfront costs", () => {
@@ -272,7 +285,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Additional Upfront Cost = 2000
-      expect(costBreakdownChart.at(0).prop("data").at(4)).toEqual(2000);
+      expect(
+        costBreakdownChart.at(0).prop("items")["Additional Upfront Costs"]
+      ).toEqual(2000);
     });
 
     it("calculates indirect cost as percentage of electrolyser and power plant capex", () => {
@@ -326,7 +341,9 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       // Indirect Cost = 20_000
-      expect(costBreakdownChart.at(0).prop("data").at(5)).toEqual(20_000);
+      expect(costBreakdownChart.at(0).prop("items")["Indirect Costs"]).toEqual(
+        20_000
+      );
     });
 
     it("calculates cost breakdown for complex scenario", () => {
@@ -344,18 +361,18 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const dataArray: number[] = costBreakdownChart.at(0).prop("data");
+      const dataArray = costBreakdownChart.at(0).prop("items");
 
       // Electrolyser CAPEX = 10_380_000
-      expect(dataArray.at(0)).toEqual(10_380_000);
+      expect(dataArray["Electrolyser System"]).toEqual(10_380_000);
       // Power Plant CAPEX = 11_985_000
-      expect(dataArray.at(1)).toEqual(11_985_000);
+      expect(dataArray["Power Plant"]).toEqual(11_985_000);
       // Battery CAPEX = 6_784_000
-      expect(dataArray.at(2)).toEqual(6_784_000);
+      expect(dataArray["Battery"]).toEqual(6_784_000);
       // Additional Cost = 100_000
-      expect(dataArray.at(4)).toEqual(100_000);
+      expect(dataArray["Additional Upfront Costs"]).toEqual(100_000);
       // Indirect Cost = 224_000
-      expect(dataArray.at(5)).toEqual(224_000);
+      expect(dataArray["Indirect Costs"]).toEqual(224_000);
     });
   });
 
@@ -388,11 +405,11 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
 
       // EPC: 5000, Land: 1000
-      expect(chartData.at(0)).toEqual(5_000);
-      expect(chartData.at(1)).toEqual(1_000);
+      expect(chartData["Electrolyser EPC"]).toEqual(5_000);
+      expect(chartData["Electrolyser Land"]).toEqual(1_000);
     });
 
     it("calculates solar indirect costs", () => {
@@ -435,10 +452,10 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
       // EPC: 5000, Land: 1000
-      expect(chartData.at(2)).toEqual(5_000);
-      expect(chartData.at(3)).toEqual(1_000);
+      expect(chartData["Power Plant EPC"]).toEqual(5_000);
+      expect(chartData["Power Plant Land"]).toEqual(1_000);
     });
 
     it("calculates wind indirect costs", () => {
@@ -481,10 +498,10 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
       // EPC: 10000, Land: 2000
-      expect(chartData.at(2)).toEqual(10_000);
-      expect(chartData.at(3)).toEqual(2_000);
+      expect(chartData["Power Plant EPC"]).toEqual(10_000);
+      expect(chartData["Power Plant Land"]).toEqual(2_000);
     });
 
     it("calculates hybrid indirect costs", () => {
@@ -527,10 +544,10 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
       // EPC: 15000, Land: 3000
-      expect(chartData.at(2)).toEqual(15_000);
-      expect(chartData.at(3)).toEqual(3_000);
+      expect(chartData["Power Plant EPC"]).toEqual(15_000);
+      expect(chartData["Power Plant Land"]).toEqual(3_000);
     });
 
     it("calculates battery indirect costs", () => {
@@ -559,10 +576,10 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
       // EPC: 10000, Land: 10000
-      expect(chartData.at(4)).toEqual(10_000);
-      expect(chartData.at(5)).toEqual(10_000);
+      expect(chartData["Battery EPC"]).toEqual(10_000);
+      expect(chartData["Battery Land"]).toEqual(10_000);
     });
 
     it("calculates indirect costs in complex scenarios", () => {
@@ -580,13 +597,13 @@ describe("Working Data calculations", () => {
 
       expect(costBreakdownChart).toHaveLength(1);
 
-      const chartData = costBreakdownChart.at(0).prop("data");
+      const chartData = costBreakdownChart.at(0).prop("items");
       // Electrolyser EPC = 104_000
-      expect(chartData.at(0)).toEqual(104_000);
+      expect(chartData["Electrolyser EPC"]).toEqual(104_000);
       // Power Plant Land = 120_000
-      expect(chartData.at(3)).toEqual(120_000);
+      expect(chartData["Power Plant Land"]).toEqual(120_000);
       // Battery Land = 339_000
-      expect(chartData.at(5)).toEqual(339_000);
+      expect(chartData["Battery Land"]).toEqual(339_000);
     });
   });
 });
