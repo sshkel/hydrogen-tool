@@ -27,15 +27,14 @@ import {
   HOURS_PER_YEAR,
   HYDROGEN_OUTPUT_FIXED,
   HYDROGEN_OUTPUT_VARIABLE,
-  POWER_PLANT_CF,
-  RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
-import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
+import { fillYearsArray, mean } from "../../utils";
+import { BLUE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
-import BasicTable from "./BasicTable";
-import CostBarChart from "./CostBarChart";
+import { CashFlowAnalysisPane } from "../panes/CashFlowAnalysisPane";
+import { SummaryOfResultsPane } from "../panes/SummaryOfResultsPane";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
@@ -345,111 +344,109 @@ export default function WorkingData(props: Props) {
   const returnOnInvestment = netProfit / totalInvestmentRequired;
   const powerplantCapacity =
     inputs.solarNominalCapacity + inputs.windNominalCapacity;
-  type ObjectKey = keyof typeof zoneInfo;
-  const zone = location as ObjectKey;
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container direction="column">
-        <Card>
-          <CardHeader title="Key inputs" />
-          <CardContent>
-            <Grid container item>
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <LocationOnRoundedIcon fontSize="large" />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <Grid>
-                      <ItemTitle>Location</ItemTitle>
-                    </Grid>
-                    <Grid>
-                      <ItemText>{zoneInfo[zone]?.location}</ItemText>
-                    </Grid>
-                  </Grid>
-                </Grid>
+        <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
+        <Grid item>
+          <Grid container className="outside results box" wrap="nowrap">
+            <Grid
+              container
+              item
+              direction="column"
+              className="summary and cost breakdown"
+            >
+              <Grid item xs>
+                {SummaryOfResultsPane(
+                  summary,
+                  electricityConsumed,
+                  electricityProduced,
+                  h2Produced,
+                  lch2,
+                  netProfit,
+                  returnOnInvestment,
+                  h2RetailPrice
+                )}
               </Grid>
-
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <SignalCellularAltRoundedIcon fontSize="large" />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <Grid item>
-                      <ItemTitle>Electrolyster Capacity</ItemTitle>
-                    </Grid>
-                    <Grid item>
-                      <ItemText>
-                        {inputs.electrolyserNominalCapacity.toLocaleString(
-                          "en-US"
-                        )}
-                      </ItemText>
-                    </Grid>
-                  </Grid>
+              <Grid container item>
+                <Grid item xs={6}>
+                  {CaptitalCostBreakdownPane(
+                    electrolyserCAPEX,
+                    powerPlantCAPEX,
+                    batteryCAPEX,
+                    gridConnectionCAPEX,
+                    additionalUpfrontCosts,
+                    totalIndirectCosts
+                  )}
                 </Grid>
-              </Grid>
-              <Grid item xs={4}>
-                <Grid container item flexWrap={"nowrap"}>
-                  <Grid item>
-                    <FactoryRoundedIcon fontSize="large" />
-                  </Grid>
-                  <Grid container item direction={"column"}>
-                    <ItemTitle>Powerplant Capacity</ItemTitle>
-                    <Grid item>
-                      <ItemText>
-                        {powerplantCapacity.toLocaleString("en-US")}
-                      </ItemText>
-                    </Grid>
-                  </Grid>
+                <Grid item xs={6}>
+                  {IndirectCostPane(
+                    electrolyserEpcCost,
+                    electrolyserLandCost,
+                    powerPlantEpcCost,
+                    powerPlantLandCost,
+                    batteryEpcCost,
+                    batteryLandCost
+                  )}
                 </Grid>
               </Grid>
             </Grid>
-          </CardContent>
-        </Card>
+            <Grid container item>
+              <Grid
+                container
+                item
+                direction="column"
+                className="curves and lch2"
+                justifyContent={"space-between"}
+              >
+                <Grid container item className="duration curves">
+                  <Grid item xs={6}>
+                    <Card>
+                      <CardHeader title="Powerplant duration curve" />
 
-        <Grid item>
-          {FirstGraph(
-            summary,
-            electricityConsumed,
-            electricityProduced,
-            h2Produced,
-            lch2,
-            netProfit,
-            returnOnInvestment,
-            h2RetailPrice,
-            electrolyserCAPEX,
-            powerPlantCAPEX,
-            batteryCAPEX,
-            gridConnectionCAPEX,
-            additionalUpfrontCosts,
-            totalIndirectCosts,
-            electrolyserEpcCost,
-            electrolyserLandCost,
-            powerPlantEpcCost,
-            powerPlantLandCost,
-            batteryEpcCost,
-            batteryLandCost,
-            hourlyOperations,
-            lcPowerPlantCAPEX,
-            lcElectrolyserCAPEX,
-            lcIndirectCosts,
-            lcPowerPlantOPEX,
-            lcElectrolyserOPEX,
-            lcElectricityPurchase,
-            lcElectricitySale,
-            lcStackReplacement,
-            lcWater,
-            lcBattery,
-            lcGridConnection,
-            lcAdditionalCosts,
-            lcOxygenSale,
-            projectTimeline,
-            cumulativeCashFlow
-          )}
+                      <DurationCurve
+                        title="Generator Duration Curve"
+                        data={hourlyOperations.Generator_CF}
+                      />
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card>
+                      <CardHeader title="Electrolyser duration curve" />
+                      <DurationCurve
+                        title="Electrolyser Duration Curve"
+                        data={hourlyOperations.Electrolyser_CF}
+                      />
+                    </Card>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  {CashFlowAnalysisPane(projectTimeline, cumulativeCashFlow)}
+                </Grid>
+                <Grid item>
+                  {Lch2BreakdownPane(
+                    lcPowerPlantCAPEX,
+                    lcElectrolyserCAPEX,
+                    lcIndirectCosts,
+                    lcPowerPlantOPEX,
+                    lcElectrolyserOPEX,
+                    lcElectricityPurchase,
+                    lcElectricitySale,
+                    lcStackReplacement,
+                    lcWater,
+                    lcBattery,
+                    lcGridConnection,
+                    lcAdditionalCosts,
+                    lcOxygenSale
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item>
-          {OperatingCosts(
+          {OperatingCostsPane(
             projectTimeline,
             electrolyserOpexPerYear,
             powerPlantOpexPerYear,
@@ -463,29 +460,105 @@ export default function WorkingData(props: Props) {
             annualSales
           )}
         </Grid>
-        <Grid item>
-          <Card>
-            <CardHeader title="Hourly capacity factors" />
-
-            <HourlyCapacityFactors
-              datapoints={[
-                {
-                  label: "Electrolyser",
-                  data: hourlyOperations.Electrolyser_CF,
-                },
-                {
-                  label: "Power Plant",
-                  data: hourlyOperations.Generator_CF,
-                },
-              ]}
-            />
-          </Card>
-        </Grid>
+        <Grid item>{HourlyCapacityFactorsPane(hourlyOperations)}</Grid>
       </Grid>
     </ThemeProvider>
   );
 }
-function OperatingCosts(
+function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
+  return (
+    <Card>
+      <CardHeader title="Hourly capacity factors" />
+
+      <HourlyCapacityFactors
+        datapoints={[
+          {
+            label: "Electrolyser",
+            data: hourlyOperations.Electrolyser_CF,
+          },
+          {
+            label: "Power Plant",
+            data: hourlyOperations.Generator_CF,
+          },
+        ]}
+      />
+    </Card>
+  );
+}
+
+function KeyInputsPane(
+  location: string,
+  inputs: Inputs,
+  powerplantCapacity: number
+) {
+  type ObjectKey = keyof typeof zoneInfo;
+  const zone = location as ObjectKey;
+  return (
+    <Card>
+      <CardHeader title="Key inputs" />
+      <CardContent>
+        <Grid container item>
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <LocationOnRoundedIcon
+                  fontSize="large"
+                  style={{ color: BLUE }}
+                />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <Grid>
+                  <ItemTitle>Location</ItemTitle>
+                </Grid>
+                <Grid>
+                  <ItemText>{zoneInfo[zone]?.location}</ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <SignalCellularAltRoundedIcon
+                  fontSize="large"
+                  style={{ color: BLUE }}
+                />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <Grid item>
+                  <ItemTitle>Electrolyster Capacity</ItemTitle>
+                </Grid>
+                <Grid item>
+                  <ItemText>
+                    {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
+                  </ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={4}>
+            <Grid container item flexWrap={"nowrap"}>
+              <Grid item>
+                <FactoryRoundedIcon fontSize="large" style={{ color: BLUE }} />
+              </Grid>
+              <Grid container item direction={"column"}>
+                <ItemTitle>Powerplant Capacity</ItemTitle>
+                <Grid item>
+                  <ItemText>
+                    {powerplantCapacity.toLocaleString("en-US")}
+                  </ItemText>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+}
+
+function OperatingCostsPane(
   projectTimeline: number,
   electrolyserOpexPerYear: number[],
   powerPlantOpexPerYear: number[],
@@ -541,28 +614,103 @@ function OperatingCosts(
   );
 }
 
-function FirstGraph(
-  summary: ProjectModelSummary,
-  electricityConsumed: number[],
-  electricityProduced: number[],
-  h2Produced: number[],
-  lch2: number,
-  netProfit: number,
-  returnOnInvestment: number,
-  h2RetailPrice: number,
-  electrolyserCAPEX: number,
-  powerPlantCAPEX: number,
-  batteryCAPEX: number,
-  gridConnectionCAPEX: number,
-  additionalUpfrontCosts: number,
-  totalIndirectCosts: number,
+type DoughnutPaneData = {
+  title: string;
+  items: { [key: string]: number };
+};
+
+export function DoughnutPane(data: DoughnutPaneData) {
+  const labels = [];
+  const items = [];
+  for (const [key, val] of Object.entries(data.items)) {
+    if (val !== 0) {
+      labels.push(key);
+      items.push(val);
+    }
+  }
+  return (
+    <Card>
+      <CostBreakdownDoughnutChart
+        title={data.title}
+        labels={labels}
+        data={items}
+      />
+    </Card>
+  );
+}
+
+function IndirectCostPane(
   electrolyserEpcCost: number,
   electrolyserLandCost: number,
   powerPlantEpcCost: number,
   powerPlantLandCost: number,
   batteryEpcCost: number,
-  batteryLandCost: number,
-  hourlyOperations: ModelHourlyOperation,
+  batteryLandCost: number
+) {
+  const data = {
+    "Electrolyser EPC": electrolyserEpcCost,
+    "Electrolyser Land": electrolyserLandCost,
+    "Power Plant EPC": powerPlantEpcCost,
+    "Power Plant Land": powerPlantLandCost,
+    "Battery EPC": batteryEpcCost,
+    "Battery Land": batteryLandCost,
+  };
+  return <DoughnutPane title="Indirect Cost Breakdown" items={data} />;
+}
+
+function CaptitalCostBreakdownPane(
+  electrolyserCAPEX: number,
+  powerPlantCAPEX: number,
+  batteryCAPEX: number,
+  gridConnectionCAPEX: number,
+  additionalUpfrontCosts: number,
+  totalIndirectCosts: number
+) {
+  const data = {
+    "Electrolyser System": electrolyserCAPEX,
+    "Power Plant": powerPlantCAPEX,
+    Battery: batteryCAPEX,
+    "Grid Connection": gridConnectionCAPEX,
+    "Additional Upfront Costs": additionalUpfrontCosts,
+    "Indirect Costs": totalIndirectCosts,
+  };
+  return <DoughnutPane title="Capital Cost Breakdown" items={data} />;
+}
+
+type WaterfallPaneData = {
+  title: string;
+  label: string;
+  items: { [key: string]: number };
+};
+
+export function WaterFallPane(data: WaterfallPaneData) {
+  const labels = [];
+  const items = [];
+  for (const [key, val] of Object.entries(data.items)) {
+    if (val !== 0) {
+      labels.push(key);
+      items.push(val);
+    }
+  }
+  const datapoints = [
+    {
+      label: data.label,
+      data: items,
+    },
+  ];
+  return (
+    <Card>
+      <CardHeader title={data.title} />
+      <CostWaterfallBarChart
+        title={data.title}
+        labels={labels}
+        datapoints={datapoints}
+      />
+    </Card>
+  );
+}
+
+function Lch2BreakdownPane(
   lcPowerPlantCAPEX: number,
   lcElectrolyserCAPEX: number,
   lcIndirectCosts: number,
@@ -575,193 +723,28 @@ function FirstGraph(
   lcBattery: number,
   lcGridConnection: number,
   lcAdditionalCosts: number,
-  lcOxygenSale: number,
-  projectTimeline: number,
-  cumulativeCashFlow: number[]
+  lcOxygenSale: number
 ) {
-  const summaryDict: { [key: string]: number } = {
-    "Power Plant Capacity Factor": mean(
-      summary[`${POWER_PLANT_CF}`].map((x) => x * 100)
-    ),
-
-    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": mean(
-      summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)
-    ),
-    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": mean(
-      summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)
-    ),
-
-    "Electrolyser Capacity Factor": mean(
-      summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)
-    ),
-
-    "Energy Consumed by Electrolyser (MWh/yr)": mean(electricityConsumed),
-
-    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-      mean(electricityProduced),
-
-    "Hydrogen Output [t/yr]": mean(h2Produced),
-    LCH2: lch2,
-    "H2 Retail Price": h2RetailPrice,
-    "Net Profit (A$)": netProfit,
-    "Return on Investment (%)": returnOnInvestment,
+  const data = {
+    "Power Plant CAPEX": lcPowerPlantCAPEX,
+    "Electrolyser CAPEX": lcElectrolyserCAPEX,
+    "Indirect Costs": lcIndirectCosts,
+    "Power Plant OPEX": lcPowerPlantOPEX,
+    "Electrolyser O&M": lcElectrolyserOPEX,
+    "Electricity Purchase": lcElectricityPurchase,
+    "Electricity Sale": -1 * lcElectricitySale,
+    "Stack Replacement": lcStackReplacement,
+    "Water Cost": lcWater,
+    "Battery Cost": lcBattery,
+    "Grid Connection Cost": lcGridConnection,
+    "Additional Costs": lcAdditionalCosts,
+    "Oxygen Sale": -1 * lcOxygenSale,
   };
   return (
-    <Grid container className="outside results box" wrap="nowrap">
-      <Grid
-        container
-        item
-        direction="column"
-        className="summary and cost breakdown"
-      >
-        <Grid item xs>
-          <Card>
-            <CardHeader title="Summary of results" />
-            <BasicTable title="Summary of Results" data={summaryDict} />
-          </Card>
-        </Grid>
-        <Grid container item>
-          <Grid item xs={6}>
-            <Card>
-              <CostBreakdownDoughnutChart
-                title="Capital Cost Breakdown"
-                labels={[
-                  "Electrolyser System",
-                  "Power Plant",
-                  "Battery",
-                  "Grid Connection",
-                  "Additional Upfront Costs",
-                  "Indirect Costs",
-                ]}
-                data={[
-                  electrolyserCAPEX,
-                  powerPlantCAPEX,
-                  batteryCAPEX,
-                  gridConnectionCAPEX,
-                  additionalUpfrontCosts,
-                  totalIndirectCosts,
-                ]}
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={6}>
-            <Card>
-              <CostBreakdownDoughnutChart
-                title="Indirect Cost Breakdown"
-                labels={[
-                  "Electrolyser EPC",
-                  "Electrolyser Land",
-                  "Power Plant EPC",
-                  "Power Plant Land",
-                  "Battery EPC",
-                  "Battery Land",
-                ]}
-                data={[
-                  electrolyserEpcCost,
-                  electrolyserLandCost,
-                  powerPlantEpcCost,
-                  powerPlantLandCost,
-                  batteryEpcCost,
-                  batteryLandCost,
-                ]}
-              />
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid container item>
-        <Grid
-          container
-          item
-          direction="column"
-          className="curves and lch2"
-          justifyContent={"space-between"}
-        >
-          <Grid container item className="duration curves">
-            <Grid item xs={6}>
-              <Card>
-                <CardHeader title="Powerplant duration curve" />
-
-                <DurationCurve
-                  title="Generator Duration Curve"
-                  data={hourlyOperations.Generator_CF}
-                />
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card>
-                <CardHeader title="Electrolyser duration curve" />
-
-                <DurationCurve
-                  title="Electrolyser Duration Curve"
-                  data={hourlyOperations.Electrolyser_CF}
-                />
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Card>
-              <CardHeader title="Cash Flow Analysis" />
-              <CostBarChart
-                title="Cash Flow Analysis"
-                labels={getActiveYearsLabels(projectTimeline)}
-                datapoints={[
-                  {
-                    label: "Cash Flow Analysis",
-                    data: cumulativeCashFlow,
-                  },
-                ]}
-              />
-            </Card>
-          </Grid>
-          <Grid item>
-            <Card>
-              <CardHeader title="Breakdown of cost components in LCH2" />
-
-              <CostWaterfallBarChart
-                title="Breakdown of Cost Components in LCH2"
-                labels={[
-                  "Power Plant CAPEX",
-                  "Electrolyser CAPEX",
-                  "Indirect Costs",
-                  "Power Plant OPEX",
-                  "Electrolyser O&M",
-                  "Electricity Purchase",
-                  "Electricity Sale",
-                  "Stack Replacement",
-                  "Water Cost",
-                  "Battery Cost",
-                  "Grid Connection Cost",
-                  "Additional Costs",
-                  "Oxygen Sale",
-                ]}
-                datapoints={[
-                  {
-                    label:
-                      "Breakdown of Cost Components in Levelised Cost of Hydrogen",
-                    data: [
-                      lcPowerPlantCAPEX,
-                      lcElectrolyserCAPEX,
-                      lcIndirectCosts,
-                      lcPowerPlantOPEX,
-                      lcElectrolyserOPEX,
-                      lcElectricityPurchase,
-                      -1 * lcElectricitySale,
-                      lcStackReplacement,
-                      lcWater,
-                      lcBattery,
-                      lcGridConnection,
-                      lcAdditionalCosts,
-                      -1 * lcOxygenSale,
-                    ],
-                  },
-                ]}
-              />
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+    <WaterFallPane
+      title="Breakdown of Cost Components in LCH2"
+      label="Breakdown of Cost Components in Levelised Cost of Hydrogen"
+      items={data}
+    />
   );
 }

@@ -1,7 +1,9 @@
+import { Water } from "@mui/icons-material";
 import { mount } from "enzyme";
 
-import CostWaterfallBarChart from "../../../components/charts/CostWaterfallBarChart";
-import WorkingData from "../../../components/charts/WorkingData";
+import WorkingData, {
+  WaterFallPane,
+} from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
@@ -48,14 +50,13 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -82,14 +83,13 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -116,14 +116,13 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -150,14 +149,14 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -184,14 +183,14 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -218,14 +217,14 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -254,15 +253,14 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("items");
 
-        datapoints[0].data.forEach((cost, i) =>
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -289,15 +287,14 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("items");
 
-        datapoints[0].data.forEach((cost, i) =>
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -324,15 +321,13 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
@@ -359,15 +354,13 @@ describe("Working Data calculations", () => {
       setTimeout(() => {
         wrapper.update();
         const cashFlowChart = wrapper
-          .find(CostWaterfallBarChart)
+          .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
           );
         expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("datapoints");
-        expect(datapoints).toHaveLength(1);
-
-        datapoints[0].data.forEach((cost, i) =>
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
 
