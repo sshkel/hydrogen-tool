@@ -25,16 +25,27 @@ export default function CostBarChart(props: Props) {
       backgroundColor: "rgba(75,192,192,0.2)",
       borderColor: "rgba(75,192,192,1)",
     })),
-    options: {
-      ticks: {
-        stepSize: 100,
+  };
+
+  const options = {
+    ticks: {
+      stepSize: 100,
+    },
+    plugins: {
+      // override label to display the length of the bar rather than coordinates
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            return (context.raw[1] - context.raw[0]).toLocaleString("en-US");
+          },
+        },
       },
     },
   };
 
   return (
     <div>
-      <Bar title={title} data={graphData} />
+      <Bar title={title} data={graphData} options={options} />
     </div>
   );
 }
