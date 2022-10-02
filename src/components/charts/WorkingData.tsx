@@ -350,8 +350,7 @@ export default function WorkingData(props: Props) {
   return (
     <ThemeProvider theme={theme}>
       <Grid container direction="column">
-        {KeyInputsPane(location, inputs, powerplantCapacity)}
-
+        <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
         <Grid item>
           {FirstGraph(
             summary,
