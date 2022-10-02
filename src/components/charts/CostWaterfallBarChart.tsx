@@ -28,9 +28,6 @@ export default function CostBarChart(props: Props) {
   };
 
   const options = {
-    ticks: {
-      stepSize: 100,
-    },
     plugins: {
       // override label to display the length of the bar rather than coordinates
       tooltip: {
