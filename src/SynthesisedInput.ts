@@ -2,17 +2,17 @@ import {
   DepreciationProfile,
   Inputs,
   PowerPlantConfiguration,
+  PowerPlantType,
   SECType,
   StackReplacementType,
-  Technology,
   UserInputFields,
 } from "./types";
 
 class DefaultInputs implements Inputs {
   // Electrolyser
   electrolyserNominalCapacity = 1;
-  electrolyserEfficiency = 0;
-  electrolyserReferenceCapacity = 10;
+  electrolyserEfficiency = 50;
+  electrolyserReferenceCapacity = 1000;
   electrolyserCostReductionWithScale = 10;
   electrolyserReferenceFoldIncrease = 10;
   electrolyserEpcCosts = 30;
@@ -23,8 +23,8 @@ class DefaultInputs implements Inputs {
   electrolyserMaximumLoad = 100;
   electrolyserMinimumLoad = 10;
   timeBetweenOverloading = 0;
-  maximumLoadWhenOverloading = 100;
-  waterRequirementOfElectrolyser = 10;
+  maximumLoadWhenOverloading = 0;
+  waterRequirementOfElectrolyser = 15;
   secAtNominalLoad = 33.33;
   profile = "Fixed" as SECType;
 
@@ -42,7 +42,7 @@ class DefaultInputs implements Inputs {
 
   // Power Plant
   powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
-  technology = "Hybrid" as Technology;
+  powerPlantType = "Hybrid" as PowerPlantType;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
   solarReferenceCapacity = 10;
@@ -66,7 +66,7 @@ class DefaultInputs implements Inputs {
 
   // Stack
   stackReplacementType = "Cumulative Hours" as StackReplacementType;
-  stackLifetime = 60_000;
+  stackLifetime = 80_000;
   stackDegradation = 0;
   maximumDegradationBeforeReplacement = 0;
 
@@ -82,10 +82,10 @@ class DefaultInputs implements Inputs {
   additionalAnnualCosts = 0;
 
   // Cost analysis
-  projectTimeline = 0;
-  hydrogenSalesMargin = 0;
+  projectTimeline = 20;
+  hydrogenSalesMargin = 1;
   oxygenRetailPrice = 0;
-  discountRate = 0;
+  discountRate = 7;
   shareOfTotalInvestmentFinancedViaEquity = 70;
   directEquityShare = 100;
   salvageCostShare = 0;

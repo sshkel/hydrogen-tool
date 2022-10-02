@@ -17,6 +17,7 @@ import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
 import { BLUE, ORANGE } from "./colors";
+import { configurationTypes } from "./data";
 
 const theme = createTheme({
   typography: {
@@ -65,11 +66,24 @@ export default function InputHomePage(props: Props) {
     let form: any = {};
 
     for (let input of e.target.getElementsByTagName("input")) {
-      if (input.type !== "number") {
-        continue;
+      const { id, name, value } = input;
+      const key = id || name;
+      if (key) {
+        form[key] = isNaN(value) ? value : Number(value);
       }
-      const { id, value } = input;
-      form[id] = isNaN(value) ? value : Number(value);
+    }
+
+    for (let button of e.target.getElementsByTagName("button")) {
+      const classList = button.classList;
+      if (classList.contains("MuiButton-containedSuccess")) {
+        const value = button.textContent;
+
+        configurationTypes.forEach((config) => {
+          if (classList.contains(config)) {
+            form[config] = value;
+          }
+        });
+      }
     }
 
     localStorage.setItem("savedData", JSON.stringify(form));

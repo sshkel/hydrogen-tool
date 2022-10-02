@@ -31,12 +31,12 @@ export default function InputDropdownField(props: Props) {
     <FormControl sx={{ display: "flex", width: "inherit", p: 2 }}>
       <InputTitle title={label} id={labelId} />
       <Select
+        id={id}
         color="success"
         displayEmpty
         name={id}
         key={id}
         labelId={labelId}
-        id={id}
         value={value}
         onChange={onSelectChange}
         sx={{

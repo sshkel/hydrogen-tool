@@ -56,7 +56,7 @@ describe("Working Data calculations", () => {
     it("calculates solar CAPEX as expected", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Solar",
+        powerPlantType: "Solar",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
         solarFarmBuildCost: 1200, // A$/kw
@@ -87,7 +87,7 @@ describe("Working Data calculations", () => {
     it("calculates wind CAPEX as expected", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Wind",
+        powerPlantType: "Wind",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
         windFarmBuildCost: 1950, // A$/kw
@@ -115,10 +115,10 @@ describe("Working Data calculations", () => {
       );
     });
 
-    it("calculate does not factor in solar fields when wind technology", () => {
+    it("calculate does not factor in solar fields when wind powerPlantType", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Wind",
+        powerPlantType: "Wind",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
         solarFarmBuildCost: 1200, // A$/kw
@@ -144,10 +144,10 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart.at(0).prop("items")["Power Plant"]).toEqual(0);
     });
 
-    it("calculate does not factor in wind fields when solar technology", () => {
+    it("calculate does not factor in wind fields when solar powerPlantType", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Solar",
+        powerPlantType: "Solar",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
         windFarmBuildCost: 1950, // A$/kw
@@ -176,7 +176,7 @@ describe("Working Data calculations", () => {
     it("calculates combination of capacity when hybrid", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Hybrid",
+        powerPlantType: "Hybrid",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
         solarFarmBuildCost: 1200, // A$/kw
@@ -293,7 +293,7 @@ describe("Working Data calculations", () => {
     it("calculates indirect cost as percentage of electrolyser and power plant capex", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Hybrid",
+        powerPlantType: "Hybrid",
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
@@ -415,7 +415,7 @@ describe("Working Data calculations", () => {
     it("calculates solar indirect costs", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Solar",
+        powerPlantType: "Solar",
 
         // Solar CAPEX = 100000
         solarNominalCapacity: 10, // MW
@@ -461,7 +461,7 @@ describe("Working Data calculations", () => {
     it("calculates wind indirect costs", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Wind",
+        powerPlantType: "Wind",
 
         // Solar CAPEX = ignored
         solarNominalCapacity: 10, // MW
@@ -507,7 +507,7 @@ describe("Working Data calculations", () => {
     it("calculates hybrid indirect costs", () => {
       const data: UserInputFields = {
         ...defaultInputData.data,
-        technology: "Hybrid",
+        powerPlantType: "Hybrid",
 
         // Solar CAPEX = ignored
         solarNominalCapacity: 10, // MW

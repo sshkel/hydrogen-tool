@@ -49,7 +49,7 @@ export const defaultInputData: {
     stackLifetime: 0,
     stackDegradation: 0,
     maximumDegradationBeforeReplacement: 0,
-    technology: "Solar",
+    powerPlantType: "Solar",
     waterSupplyCost: 0,
     windCostReductionWithScale: 0,
     windEpcCosts: 0,
@@ -91,7 +91,7 @@ export const standaloneSolarWithBatteryScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Solar",
+    powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
@@ -175,7 +175,7 @@ export const standaloneSolarScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Solar",
+    powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
@@ -259,7 +259,7 @@ export const standaloneWindScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Wind",
+    powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.2,
     solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
@@ -343,7 +343,7 @@ export const windWithPPAScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "PPA Agreement",
-    technology: "Wind",
+    powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
@@ -426,7 +426,7 @@ export const hybridBatteryGridSurplusRetailScenario: {
   location: "New England",
   inputConfiguration: "Advanced",
   data: {
-    technology: "Hybrid",
+    powerPlantType: "Hybrid",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 66.66666,
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
@@ -511,7 +511,7 @@ export const windWithBatteryAndPPAScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "PPA Agreement",
-    technology: "Wind",
+    powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 0,
     electrolyserNominalCapacity: 10,
@@ -595,7 +595,7 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
-    technology: "Solar",
+    powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
@@ -679,7 +679,7 @@ export const standaloneSolarWithStackDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Solar",
+    powerPlantType: "Solar",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 100,
     electrolyserNominalCapacity: 10,
@@ -763,7 +763,7 @@ export const standaloneHybridWithDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Hybrid",
+    powerPlantType: "Hybrid",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 57.692307,
     electrolyserNominalCapacity: 10,
@@ -847,7 +847,7 @@ export const standaloneWindWithBatteryAndDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
-    technology: "Wind",
+    powerPlantType: "Wind",
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 0,
     windNominalCapacity: 15,

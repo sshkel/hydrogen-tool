@@ -9,12 +9,11 @@ import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
 import {
   capitalDepreciationProfile,
-  data,
   isPowerPlantConfiguration,
   powerPlantConfigurationData,
+  powerPlantTypeData,
   profileData,
   replacementTypeData,
-  technologyData,
 } from "./data";
 
 interface Props {
@@ -70,7 +69,7 @@ export default function Input(props: Props) {
 
   const getDataWithDisabledCheck = (index: number, disabled: boolean) => {
     ++pointer;
-    const { id } = data[index];
+    const id = "test";
 
     // let savedValue;
     // if (savedState) {
@@ -131,13 +130,13 @@ export default function Input(props: Props) {
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
         <InputDropdownField
-          id="technology"
-          label="Technology"
-          values={technologyData}
+          id="powerPlantType"
+          label="PowerPlantType"
+          values={powerPlantTypeData}
           defaultValue={
-            parsedState["technology"] !== undefined
-              ? parsedState["technology"]
-              : technologyData[0]
+            parsedState["powerPlantType"] !== undefined
+              ? parsedState["powerPlantType"]
+              : powerPlantTypeData[0]
           }
         />
         {[...Array(5)].map((_) => getData(pointer))}

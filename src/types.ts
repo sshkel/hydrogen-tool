@@ -1,4 +1,4 @@
-export type Technology = "Solar" | "Wind" | "Hybrid";
+export type PowerPlantType = "Solar" | "Wind" | "Hybrid";
 export type SECType = "Fixed" | "Variable";
 export type StackReplacementType =
   | "Cumulative Hours"
@@ -107,7 +107,7 @@ export interface UserInputFields {
   stackLifetime?: number;
   stackDegradation?: number;
   maximumDegradationBeforeReplacement?: number;
-  technology?: Technology;
+  powerPlantType?: PowerPlantType;
   waterSupplyCost?: number;
   windCostReductionWithScale?: number;
   windEpcCosts?: number;
@@ -174,7 +174,7 @@ export interface Inputs {
 
   // Power Plant
   powerPlantConfiguration: PowerPlantConfiguration;
-  technology: Technology;
+  powerPlantType: PowerPlantType;
   solarNominalCapacity: number;
   windNominalCapacity: number;
   solarReferenceCapacity: number;

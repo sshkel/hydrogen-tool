@@ -13,7 +13,7 @@ export function generateOpexValues(
 ) {
   const {
     projectTimeline,
-    technology,
+    powerPlantType,
     powerPlantConfiguration,
 
     principalPPACost = 0,
@@ -82,10 +82,10 @@ export function generateOpexValues(
     stackReplacementCostsOverProjectLife
   );
 
-  const solarOpexCost = isSolar(technology)
+  const solarOpexCost = isSolar(powerPlantType)
     ? roundToNearestThousand(solarOpex * solarNominalCapacity)
     : 0;
-  const windOpexCost = isWind(technology)
+  const windOpexCost = isWind(powerPlantType)
     ? roundToNearestThousand(windOpex * windNominalCapacity)
     : 0;
 

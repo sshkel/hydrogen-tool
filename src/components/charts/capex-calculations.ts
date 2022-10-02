@@ -4,7 +4,7 @@ import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
 export function generateCapexValues(data: Inputs) {
   const {
-    technology,
+    powerPlantType,
     powerPlantConfiguration,
 
     electrolyserNominalCapacity,
@@ -52,7 +52,7 @@ export function generateCapexValues(data: Inputs) {
     electrolyserReferenceFoldIncrease
   );
 
-  const solarCAPEX = isSolar(technology)
+  const solarCAPEX = isSolar(powerPlantType)
     ? calculateCapex(
         solarNominalCapacity,
         solarReferenceCapacity,
@@ -61,7 +61,7 @@ export function generateCapexValues(data: Inputs) {
         solarReferenceFoldIncrease
       )
     : 0;
-  const windCAPEX = isWind(technology)
+  const windCAPEX = isWind(powerPlantType)
     ? calculateCapex(
         windNominalCapacity,
         windReferenceCapacity,

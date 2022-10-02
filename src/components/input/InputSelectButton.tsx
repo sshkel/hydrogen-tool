@@ -15,6 +15,7 @@ interface Props {
   children: JSX.Element[] | null;
   expanded: boolean;
   selected: boolean;
+  className?: string;
   onOpenExpand: (index: number) => void;
   onCloseExpand: () => void;
 }
@@ -30,7 +31,8 @@ export default function InputSelectButton(props: Props) {
     null
   );
 
-  const { expanded, selected, index, text, helperText, children } = props;
+  const { expanded, selected, index, text, helperText, children, className } =
+    props;
 
   const handleClose = (event: any) => {
     event.stopPropagation();
@@ -50,6 +52,7 @@ export default function InputSelectButton(props: Props) {
           <StyledButton
             variant={selected ? "contained" : "outlined"}
             color={selected ? "success" : "info"}
+            className={className}
             fullWidth
             endIcon={<InputHelpButton helperText={helperText} />}
             onClick={openExpand}

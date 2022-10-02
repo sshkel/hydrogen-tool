@@ -9,6 +9,7 @@ interface Props {
   helperTexts: (string | undefined)[];
   buttonChildren: JSX.Element[][];
   prompt?: string;
+  selectClass?: string;
 }
 
 export default function InputSelectField(props: Props) {
@@ -33,6 +34,7 @@ export default function InputSelectField(props: Props) {
     helperTexts,
     buttonChildren,
     prompt = "Select one option from below",
+    selectClass,
   } = props;
   return (
     <Grid sx={{ marginX: 2, marginY: 0.5 }}>
@@ -41,6 +43,7 @@ export default function InputSelectField(props: Props) {
         <InputSelectButton
           text={text}
           index={index}
+          className={selectClass}
           helperText={helperTexts[index]}
           onOpenExpand={onOpenExpand}
           onCloseExpand={onCloseExpand}

@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import InputTitle from "./InputTitle";
 import { BLUE, ORANGE } from "./colors";
 import { advancedDefaultInputs } from "./data";
+import { defaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
@@ -37,13 +38,13 @@ export default function InputNumberField({ inputKey }: Props) {
   const {
     title,
     id = inputKey,
-    defaultValue = 0,
     helperText,
     required,
     onChange,
     adornmentLabel,
     value,
   } = advancedDefaultInputs[inputKey];
+  const defaultValue = defaultInputs[inputKey];
 
   return (
     <Grid container alignItems="center" columnSpacing={4}>

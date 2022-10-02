@@ -23,11 +23,11 @@ export function backCalculateInputFields(
     powerPlantOversizeRatio * electrolyserNominalCapacity;
 
   if (solarToWindPercentage === 100) {
-    recalculatedInputs.technology = "Solar";
+    recalculatedInputs.powerPlantType = "Solar";
   }
 
   if (solarToWindPercentage === 0) {
-    recalculatedInputs.technology = "Wind";
+    recalculatedInputs.powerPlantType = "Wind";
   }
 
   recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;

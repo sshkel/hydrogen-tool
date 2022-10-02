@@ -7,46 +7,7 @@ import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 import { capitalDepreciationProfile } from "./data";
 
-export default function BasicHydrogenInput() {
-  // let pointer: number = 0;
-
-  // const savedState = localStorage.getItem("savedData") || "{}";
-  // const parsedState = JSON.parse(savedState);
-  // const getData = (index: number) => {
-  //   ++pointer;
-  //   const { label, id, defaultValue, adornmentLabel, disabled, helperText } =
-  //     data[index];
-
-  //   let savedValue;
-  //   if (savedState) {
-  //     const value = parsedState[id];
-  //     savedValue = isNaN(value) ? value : Number(value);
-  //   }
-  //   return (
-  //     <InputNumberField
-  //       key={id}
-  //       label={label}
-  //       name={id}
-  //       defaultValue={savedValue !== undefined ? savedValue : defaultValue}
-  //       adornmentLabel={adornmentLabel}
-  //       disabled={disabled}
-  //       helperText={helperText}
-  //     />
-  //   );
-  // };
-
-  // secAtNominalLoad: {
-  //   id: "secAtNominalLoad",
-  //   title: "SEC At Nominal Load",
-  //   defaultValue: 50,
-  //   adornmentLabel: "kWh/kg",
-  // },
-  // secCorrectionFactor: {
-  //   title: "Electolyser System SEC vs Load Profile",
-  //   defaultValue: 100,
-  //   adornmentLabel: "%",
-  // },
-  // waterRequirementOfElectrolyser
+export default function AdvancedHydrogenInput() {
   return (
     <Grid
       container
@@ -84,6 +45,7 @@ export default function BasicHydrogenInput() {
               />,
               <InputSelect
                 prompt="Stack Replacement Type"
+                selectClass="stackReplacementType"
                 titles={["Cumulative Hours", "Maximum Degradation Level"]}
                 helperTexts={[
                   "Replace stack lifetime exceeds an hourly threshold",
@@ -127,6 +89,7 @@ export default function BasicHydrogenInput() {
               <InputSelect
                 prompt="Power Plant Type"
                 titles={["Solar", "Wind", "Hybrid"]}
+                selectClass="powerPlantType"
                 helperTexts={[undefined, undefined, undefined]}
                 buttonChildren={[
                   [
@@ -185,6 +148,7 @@ export default function BasicHydrogenInput() {
               />,
               <InputSelect
                 prompt="Power Plant Configuration"
+                selectClass="powerPlantConfiguration"
                 titles={["Standalone", "Grid Connected"]}
                 helperTexts={[undefined, undefined]}
                 buttonChildren={[
@@ -204,7 +168,8 @@ export default function BasicHydrogenInput() {
               />,
               <InputSelect
                 prompt="Power Supply Option"
-                titles={["Self Build​", "Power Purchase Agreement (PPA)"]}
+                selectClass="powerSupplyOption"
+                titles={["Self Build", "Power Purchase Agreement (PPA)"]}
                 helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
