@@ -1,4 +1,5 @@
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import { Drawer, List, ListItem } from "@mui/material";
 import Divider from "@mui/material/Divider";
@@ -37,6 +38,24 @@ export function SideBar() {
             }}
           >
             <LocationOnRoundedIcon
+              fontSize="large"
+              style={{
+                color: "white",
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <Divider />
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => navigate("/tool")}
+            sx={{
+              minHeight: 48,
+              justifyContent: "center",
+              px: 3.5,
+            }}
+          >
+            <MenuBookRoundedIcon
               fontSize="large"
               style={{
                 color: "white",
