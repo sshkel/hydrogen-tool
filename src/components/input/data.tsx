@@ -659,7 +659,7 @@ export const advancedDefaultInputs: AdvancedDefaultInput = {
     defaultValue: 50,
     adornmentLabel: "kWh/kg",
   },
-  secCorrectionFactor: {
+  electrolyserEfficiency: {
     title: "Electrolyser System SEC vs Load Profile",
     defaultValue: 100,
     adornmentLabel: "%",
@@ -707,7 +707,7 @@ export const advancedDefaultInputs: AdvancedDefaultInput = {
       "Cumulative hours of operation before stack replacement is due.",
   },
   maximumDegradationBeforeReplacement: {
-    title: "Maximum Degradation Ratet",
+    title: "Maximum Degradation Rate",
     defaultValue: 0,
     adornmentLabel: "%",
     helperText: "Maximum allowable degradation before stack must be replaced.",
@@ -859,7 +859,7 @@ export const advancedDefaultInputs: AdvancedDefaultInput = {
     adornmentLabel: "%",
     helperText: "Percentage of CAPEX",
   },
-  windEpicCosts: {
+  windEpcCosts: {
     title: "EPC/Installation Costs of Wind Farm",
     defaultValue: 30,
     adornmentLabel: "%",
