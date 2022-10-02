@@ -352,7 +352,7 @@ export default function WorkingData(props: Props) {
       <Grid container direction="column">
         <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
         <Grid item>
-          {FirstGraph(
+          {CoreResultsPane(
             summary,
             electricityConsumed,
             electricityProduced,
@@ -392,7 +392,7 @@ export default function WorkingData(props: Props) {
           )}
         </Grid>
         <Grid item>
-          {OperatingCosts(
+          {OperatingCostsPane(
             projectTimeline,
             electrolyserOpexPerYear,
             powerPlantOpexPerYear,
@@ -406,28 +406,32 @@ export default function WorkingData(props: Props) {
             annualSales
           )}
         </Grid>
-        <Grid item>
-          <Card>
-            <CardHeader title="Hourly capacity factors" />
-
-            <HourlyCapacityFactors
-              datapoints={[
-                {
-                  label: "Electrolyser",
-                  data: hourlyOperations.Electrolyser_CF,
-                },
-                {
-                  label: "Power Plant",
-                  data: hourlyOperations.Generator_CF,
-                },
-              ]}
-            />
-          </Card>
-        </Grid>
+        <Grid item>{HourlyCapacityFactorsPane(hourlyOperations)}</Grid>
       </Grid>
     </ThemeProvider>
   );
 }
+function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
+  return (
+    <Card>
+      <CardHeader title="Hourly capacity factors" />
+
+      <HourlyCapacityFactors
+        datapoints={[
+          {
+            label: "Electrolyser",
+            data: hourlyOperations.Electrolyser_CF,
+          },
+          {
+            label: "Power Plant",
+            data: hourlyOperations.Generator_CF,
+          },
+        ]}
+      />
+    </Card>
+  );
+}
+
 function KeyInputsPane(
   location: string,
   inputs: Inputs,
@@ -500,7 +504,7 @@ function KeyInputsPane(
   );
 }
 
-function OperatingCosts(
+function OperatingCostsPane(
   projectTimeline: number,
   electrolyserOpexPerYear: number[],
   powerPlantOpexPerYear: number[],
@@ -556,7 +560,7 @@ function OperatingCosts(
   );
 }
 
-function FirstGraph(
+function CoreResultsPane(
   summary: ProjectModelSummary,
   electricityConsumed: number[],
   electricityProduced: number[],
