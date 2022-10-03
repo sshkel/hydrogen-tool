@@ -1,7 +1,7 @@
 import FactoryRoundedIcon from "@mui/icons-material/FactoryRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import SignalCellularAltRoundedIcon from "@mui/icons-material/SignalCellularAltRounded";
-import { Typography } from "@mui/material";
+import { CssBaseline, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -33,7 +33,7 @@ import {
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
-import { BLUE } from "../input/colors";
+import { BLUE, SAPPHIRE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
@@ -67,6 +67,11 @@ const ItemTitle = styled(Typography)(({ theme }) => ({
 }));
 const ItemText = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  ...theme.typography.body2,
+  margin: "15px",
 }));
 
 const theme = createTheme({
@@ -349,7 +354,8 @@ export default function WorkingData(props: Props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container direction="column">
+      <CssBaseline />
+      <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
         <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
         <Grid item>
           <Grid container className="outside results box" wrap="nowrap">
@@ -404,23 +410,23 @@ export default function WorkingData(props: Props) {
               >
                 <Grid container item className="duration curves">
                   <Grid item xs={6}>
-                    <Card>
+                    <StyledCard>
                       <CardHeader title="Powerplant duration curve" />
 
                       <DurationCurve
                         title="Generator Duration Curve"
                         data={hourlyOperations.Generator_CF}
                       />
-                    </Card>
+                    </StyledCard>
                   </Grid>
                   <Grid item xs={6}>
-                    <Card>
+                    <StyledCard>
                       <CardHeader title="Electrolyser duration curve" />
                       <DurationCurve
                         title="Electrolyser Duration Curve"
                         data={hourlyOperations.Electrolyser_CF}
                       />
-                    </Card>
+                    </StyledCard>
                   </Grid>
                 </Grid>
                 <Grid item>
@@ -469,7 +475,7 @@ export default function WorkingData(props: Props) {
 }
 function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title="Hourly capacity factors" />
 
       <HourlyCapacityFactors
@@ -484,7 +490,7 @@ function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
           },
         ]}
       />
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -496,7 +502,7 @@ function KeyInputsPane(
   type ObjectKey = keyof typeof zoneInfo;
   const zone = location as ObjectKey;
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title="Key inputs" />
       <CardContent>
         <Grid container item>
@@ -556,7 +562,7 @@ function KeyInputsPane(
           </Grid>
         </Grid>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -574,7 +580,7 @@ function OperatingCostsPane(
   annualSales: number[]
 ) {
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title="Operating Costs" />
       <CardContent>
         <Grid container item>
@@ -612,7 +618,7 @@ function OperatingCostsPane(
           </Grid>
         </Grid>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -631,13 +637,13 @@ export function DoughnutPane(data: DoughnutPaneData) {
     }
   }
   return (
-    <Card>
+    <StyledCard>
       <CostBreakdownDoughnutChart
         title={data.title}
         labels={labels}
         data={items}
       />
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -701,14 +707,14 @@ export function WaterFallPane(data: WaterfallPaneData) {
     },
   ];
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title={data.title} />
       <CostWaterfallBarChart
         title={data.title}
         labels={labels}
         datapoints={datapoints}
       />
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -756,7 +762,7 @@ function CashFlowAnalysisPane(
   cumulativeCashFlow: number[]
 ) {
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title="Cash Flow Analysis" />
       <CostBarChart
         title="Cash Flow Analysis"
@@ -768,7 +774,7 @@ function CashFlowAnalysisPane(
           },
         ]}
       />
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -810,9 +816,9 @@ export function SummaryOfResultsPane(
     "Return on Investment (%)": returnOnInvestment,
   };
   return (
-    <Card>
+    <StyledCard>
       <CardHeader title="Summary of results" />
       <BasicTable title="Summary of Results" data={summaryDict} />
-    </Card>
+    </StyledCard>
   );
 }
