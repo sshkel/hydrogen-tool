@@ -68,3 +68,7 @@ export function sum(arr: number[]): number {
 export function mean(arr: number[]): number {
   return sum(arr) / arr.length || 0;
 }
+
+export function getUniqueKey(key: string): string {
+  return `${key}-${Math.floor(Math.random() * 1_000)}`;
+}

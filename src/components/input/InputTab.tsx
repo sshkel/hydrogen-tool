@@ -1,4 +1,4 @@
-import { Tab, TabProps } from "@mui/material";
+import Tab, { TabProps } from "@mui/material/Tab";
 import { styled } from "@mui/material/styles";
 
 interface Props {
@@ -8,18 +8,18 @@ interface Props {
 }
 
 interface StyledTabProps extends TabProps {
-  active: boolean;
+  active: string; // avoid console log errors
 }
 
-const StyledTab = styled(Tab)<StyledTabProps>(({ active, theme }) => ({
+const StyledTab = styled(Tab)<StyledTabProps>(({ active }) => ({
   fontWeight: "bold",
   textTransform: "none",
   fontSize: "18px",
   borderRadius: "20px 20px 0px 0px",
-  backgroundColor: active ? "#F2F2F2" : "#A6A6A6",
+  backgroundColor: active === "true" ? "#F2F2F2" : "#A6A6A6",
   marginLeft: 20,
 }));
 
 export default function InputTab(props: Props) {
-  return <StyledTab {...props} />;
+  return <StyledTab {...props} active={String(props.active)} />;
 }

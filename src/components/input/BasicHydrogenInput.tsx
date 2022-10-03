@@ -22,21 +22,34 @@ export default function BasicHydrogenInput() {
         <Grid item>
           <InputCard
             title="Project Scale"
-            children={[<InputSlider inputKey="projectScale" />]}
+            children={[
+              <InputSlider key="projectScale" inputKey="projectScale" />,
+            ]}
           />
         </Grid>
         <Grid item>
           <InputCard
             title="Electrolyser Parameters"
-            children={[<InputSlider inputKey="electrolyserEfficiency" />]}
+            children={[
+              <InputSlider
+                key="electrolyserEfficiency"
+                inputKey="electrolyserEfficiency"
+              />,
+            ]}
           />
         </Grid>
         <Grid item>
           <InputCard
             title="Power Plant Capacity"
             children={[
-              <InputSlider inputKey="powerPlantOversizeRatio" />,
-              <InputSlider inputKey="solarToWindPercentage" />,
+              <InputSlider
+                key="powerPlantOversizeRatio"
+                inputKey="powerPlantOversizeRatio"
+              />,
+              <InputSlider
+                key="solarToWindPercentage"
+                inputKey="solarToWindPercentage"
+              />,
             ]}
           />
         </Grid>
@@ -47,18 +60,35 @@ export default function BasicHydrogenInput() {
           <InputCard
             title="Capital & Operating Cost"
             children={[
-              <InputSlider inputKey="electrolyserPurchaseCost" />,
+              <InputSlider
+                key="electrolyserPurchaseCost"
+                inputKey="electrolyserPurchaseCost"
+              />,
               <InputSelect
+                selectKey="ppaSelect"
+                key="ppaSelect"
                 titles={["Build Power Plant​", "Purchase Electricity via PPA"]}
                 helperTexts={["No PPA Agreement", undefined]}
                 buttonChildren={[
                   [
-                    <InputSlider inputKey="solarFarmBuildCost" />,
-                    <InputSlider inputKey="windFarmBuildCost" />,
+                    <InputSlider
+                      key="solarFarmBuildCost"
+                      inputKey="solarFarmBuildCost"
+                    />,
+                    <InputSlider
+                      key="windFarmBuildCost"
+                      inputKey="windFarmBuildCost"
+                    />,
                   ],
                   [
-                    <InputSlider inputKey="principalPPACost" />,
-                    <InputSlider inputKey="waterSupplyCost" />,
+                    <InputSlider
+                      key="principalPPACost"
+                      inputKey="principalPPACost"
+                    />,
+                    <InputSlider
+                      key="waterSupplyCost"
+                      inputKey="waterSupplyCost"
+                    />,
                   ],
                 ]}
               />,
@@ -73,22 +103,48 @@ export default function BasicHydrogenInput() {
             title="Cost Analysis"
             children={[
               <InputSelect
+                key="costAnalysisSelect"
+                selectKey="costAnalysisSelect"
                 titles={["LCH2​", "Detailed Project Costing"]}
                 helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
-                    <InputSlider inputKey="discountRate" />,
-                    <InputSlider inputKey="projectTimeline" />,
+                    <InputSlider
+                      key="discountRate-lch2"
+                      inputKey="discountRate"
+                    />,
+                    <InputSlider
+                      key="projectTimeline-lch2"
+                      inputKey="projectTimeline"
+                    />,
                   ],
                   [
-                    <InputSlider inputKey="discountRate" />,
-                    <InputSlider inputKey="projectTimeline" />,
-                    <InputSlider inputKey="shareOfTotalInvestmentFinancedViaEquity" />,
-                    <InputSlider inputKey="interestOnLoan" />,
-                    <InputSlider inputKey="loanTerm" />,
-                    <InputSlider inputKey="inflationRate" />,
-                    <InputSlider inputKey="taxRate" />,
-                    <InputSlider inputKey="hydrogenSalesMargin" />,
+                    <InputSlider
+                      key="discountRate-detailed"
+                      inputKey="discountRate"
+                    />,
+                    <InputSlider
+                      key="projectTimeline-detailed"
+                      inputKey="projectTimeline"
+                    />,
+                    <InputSlider
+                      key="shareOfTotalInvestmentFinancedViaEquity"
+                      inputKey="shareOfTotalInvestmentFinancedViaEquity"
+                    />,
+                    <InputSlider
+                      key="interestOnLoan"
+                      inputKey="interestOnLoan"
+                    />,
+                    <InputSlider key="loanTerm" inputKey="loanTerm" />,
+                    <InputSlider
+                      key="inflationRate"
+                      inputKey="inflationRate"
+                    />,
+                    <InputSlider key="taxRate" inputKey="taxRate" />,
+                    <InputSlider
+                      key="hydrogenSalesMargin"
+                      inputKey="hydrogenSalesMargin"
+                    />,
                   ],
                 ]}
               />,

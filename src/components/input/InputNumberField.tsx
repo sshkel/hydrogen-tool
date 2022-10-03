@@ -3,6 +3,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 
+import { getUniqueKey } from "../../utils";
 import InputTitle from "./InputTitle";
 import { BLUE, ORANGE } from "./colors";
 import { advancedDefaultInputs } from "./data";
@@ -55,7 +56,7 @@ export default function InputNumberField({ inputKey }: Props) {
         <StyledInputNumberField
           id={id}
           key={title}
-          name={id}
+          name={getUniqueKey(id)}
           defaultValue={defaultValue}
           value={value}
           helperText={helperText}

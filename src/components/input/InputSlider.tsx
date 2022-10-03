@@ -4,6 +4,7 @@ import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+import { getUniqueKey } from "../../utils";
 import InputTitle from "./InputTitle";
 import { BLUE } from "./colors";
 import { basicDefaultInputs } from "./data";
@@ -41,13 +42,13 @@ const StyledSlider = styled(Slider)({
 });
 
 export default function InputSlider({ inputKey }: Props) {
-  const {
-    title,
-    helperText,
-    min = 0,
-    max = 100,
-    step = 10,
-  } = basicDefaultInputs[inputKey];
+  const data = basicDefaultInputs[inputKey];
+
+  if (!data) {
+    throw new Error(`Could not locate data for key ${inputKey}`);
+  }
+
+  const { title, helperText, min = 0, max = 100, step = 10 } = data;
   const defaultValue = defaultInputs[inputKey];
 
   const [value, setValue] = React.useState<string | number | number[]>(
@@ -90,7 +91,7 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item minWidth="fit-content">
         <TextField
           id={inputKey}
-          key={inputKey}
+          key={getUniqueKey(inputKey)}
           value={value}
           variant="outlined"
           size="small"

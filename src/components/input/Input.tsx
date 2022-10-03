@@ -57,7 +57,7 @@ export default function Input(props: Props) {
     return (
       <InputNumberField
         inputKey="test"
-        // key={id}
+        // inputKey={id}
         // id={id}
         // defaultValue={savedValue !== undefined ? savedValue : defaultValue}
         // adornmentLabel={adornmentLabel}

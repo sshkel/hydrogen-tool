@@ -5,6 +5,7 @@ import InputSelectButton from "./InputSelectButton";
 import InputTitle from "./InputTitle";
 
 interface Props {
+  selectKey?: string;
   titles: string[];
   helperTexts: (string | undefined)[];
   buttonChildren: JSX.Element[][];
@@ -30,6 +31,7 @@ export default function InputSelectField(props: Props) {
   };
 
   const {
+    selectKey: id,
     titles,
     helperTexts,
     buttonChildren,
@@ -41,6 +43,7 @@ export default function InputSelectField(props: Props) {
       <InputTitle title={prompt} />
       {titles.map((text, index) => (
         <InputSelectButton
+          key={id ? `${id}-${index}` : undefined}
           text={text}
           index={index}
           className={selectClass}
