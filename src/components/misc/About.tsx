@@ -10,6 +10,8 @@ import {
   styled,
 } from "@mui/material";
 
+import { SAPPHIRE } from "../input/colors";
+
 const theme = createTheme({
   typography: {
     fontFamily: "Nunito",
@@ -33,15 +35,17 @@ const ItemText = styled(Typography)(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   ...theme.typography.body2,
-  border: "none",
-  boxShadow: "none",
+  height: "90%",
+  margin: "15px",
+  // border: "none",
+  // boxShadow: "none",
 }));
 export function About() {
   return (
     <ThemeProvider theme={theme}>
-      <Grid container sx={{ height: "100vh" }} flexDirection="column">
-        <Grid container item flexWrap={"nowrap"}>
-          <Grid item>
+      <Grid container flexDirection="column" sx={{ backgroundColor: SAPPHIRE }}>
+        <Grid container item alignItems="stretch">
+          <Grid item xs={6}>
             <StyledCard>
               <CardContent>
                 <ItemHeading>Developers</ItemHeading>
@@ -58,7 +62,7 @@ export function About() {
               </CardContent>
             </StyledCard>
           </Grid>
-          <Grid item>
+          <Grid item xs={6}>
             <StyledCard>
               <CardContent>
                 <ItemHeading>Acknowledgements</ItemHeading>
@@ -73,7 +77,7 @@ export function About() {
               </CardContent>
             </StyledCard>
           </Grid>
-          <Grid item>
+          <Grid item xs={6}>
             <StyledCard>
               <CardContent>
                 <ItemHeading>Affiliations</ItemHeading>
@@ -102,7 +106,7 @@ export function About() {
               </CardContent>
             </StyledCard>
           </Grid>
-          <Grid item>
+          <Grid item xs={6}>
             <StyledCard>
               <CardContent>
                 <ItemHeading>Project</ItemHeading>
