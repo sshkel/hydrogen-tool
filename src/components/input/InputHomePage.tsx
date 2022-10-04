@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 import "../../input.css";
 import { InputConfiguration } from "../../types";
-import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import FallbackAdvancedHydrogenInput from "./FallbackAdvancedHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
