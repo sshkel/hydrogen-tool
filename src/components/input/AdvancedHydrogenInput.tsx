@@ -25,55 +25,125 @@ export default function AdvancedHydrogenInput() {
           <InputCard
             title="Electrolyser Parameters"
             children={[
-              <InputNumberField inputKey="electrolyserNominalCapacity" />,
+              <InputNumberField
+                key="electrolyserNominalCapacity"
+                inputKey="electrolyserNominalCapacity"
+              />,
               <InputCard
+                key="electrolyserSystemEfficiency"
                 title="Electrolyser System Efficiency"
                 children={[
-                  <InputNumberField inputKey="secAtNominalLoad" />,
-                  <InputNumberField inputKey="electrolyserEfficiency" />,
-                  <InputNumberField inputKey="waterRequirementOfElectrolyser" />,
+                  <InputNumberField
+                    key="secAtNominalLoad"
+                    inputKey="secAtNominalLoad"
+                  />,
+                  <InputNumberField
+                    key="electrolyserEfficiency"
+                    inputKey="electrolyserEfficiency"
+                  />,
+                  <InputNumberField
+                    key="waterRequirementOfElectrolyser"
+                    inputKey="waterRequirementOfElectrolyser"
+                  />,
                 ]}
               />,
               <InputCard
+                key="electrolyserLoadRange"
                 title="Electrolyser Load Range"
                 children={[
-                  <InputNumberField inputKey="electrolyserMaximumLoad" />,
-                  <InputNumberField inputKey="electrolyserMinimumLoad" />,
-                  <InputNumberField inputKey="maximumLoadWhenOverloading" />,
-                  <InputNumberField inputKey="timeBetweenOverloading" />,
+                  <InputNumberField
+                    key="electrolyserMaximumLoad"
+                    inputKey="electrolyserMaximumLoad"
+                  />,
+                  <InputNumberField
+                    key="electrolyserMinimumLoad"
+                    inputKey="electrolyserMinimumLoad"
+                  />,
+                  <InputNumberField
+                    key="maximumLoadWhenOverloading"
+                    inputKey="maximumLoadWhenOverloading"
+                  />,
+                  <InputNumberField
+                    key="timeBetweenOverloading"
+                    inputKey="timeBetweenOverloading"
+                  />,
                 ]}
               />,
               <InputSelect
+                key="stackReplacementTypeSelect"
+                selectKey="stackReplacementTypeSelect"
                 prompt="Stack Replacement Type"
                 selectClass="stackReplacementType"
                 titles={["Cumulative Hours", "Maximum Degradation Level"]}
                 helperTexts={[
-                  "Replace stack lifetime exceeds an hourly threshold",
-                  "Replace stack after it degrades past a given threshold",
+                  undefined,
+                  undefined,
+                  // "Replace stack lifetime exceeds an hourly threshold",
+                  // "Replace stack after it degrades past a given threshold",
                 ]}
                 buttonChildren={[
                   [
-                    <InputNumberField inputKey="stackLifetime" />,
-                    <InputNumberField inputKey="stackDegradation" />,
+                    <InputNumberField
+                      key="stackLifetime"
+                      inputKey="stackLifetime"
+                    />,
+                    <InputNumberField
+                      key="stackDegradation"
+                      inputKey="stackDegradation"
+                    />,
                   ],
                   [
-                    <InputNumberField inputKey="maximumDegradationBeforeReplacement" />,
-                    <InputNumberField inputKey="stackDegradation" />,
+                    <InputNumberField
+                      key="maximumDegradationBeforeReplacement"
+                      inputKey="maximumDegradationBeforeReplacement"
+                    />,
+                    <InputNumberField
+                      key="stackDegradation"
+                      inputKey="stackDegradation"
+                    />,
                   ],
                 ]}
               />,
               <InputCard
+                key="electrolyserCapitialAndOperatingCosts"
                 title="Electrolyser Capital and Operating Costs"
                 children={[
-                  <InputNumberField inputKey="electrolyserReferenceCapacity" />,
-                  <InputNumberField inputKey="electrolyserPurchaseCost" />,
-                  <InputNumberField inputKey="electrolyserCostReductionWithScale" />,
-                  <InputNumberField inputKey="electrolyserReferenceFoldIncrease" />,
-                  <InputNumberField inputKey="electrolyserEpcCosts" />,
-                  <InputNumberField inputKey="electrolyserLandProcurementCosts" />,
-                  <InputNumberField inputKey="electrolyserOMCost" />,
-                  <InputNumberField inputKey="electrolyserStackReplacement" />,
-                  <InputNumberField inputKey="waterSupplyCost" />,
+                  <InputNumberField
+                    key="electrolyserReferenceCapacity"
+                    inputKey="electrolyserReferenceCapacity"
+                  />,
+                  <InputNumberField
+                    key="electrolyserPurchaseCost"
+                    inputKey="electrolyserPurchaseCost"
+                  />,
+                  <InputNumberField
+                    key="electrolyserCostReductionWithScale"
+                    inputKey="electrolyserCostReductionWithScale"
+                  />,
+                  <InputNumberField
+                    key="electrolyserReferenceFoldIncrease"
+                    inputKey="electrolyserReferenceFoldIncrease"
+                  />,
+                  <InputNumberField
+                    key="electrolyserEpcCosts"
+                    inputKey="electrolyserEpcCosts"
+                  />,
+                  <InputNumberField
+                    key="electrolyserLandProcurementCosts"
+                    inputKey="electrolyserLandProcurementCosts"
+                  />,
+                  <InputNumberField
+                    key="electrolyserOMCost"
+                    inputKey="electrolyserOMCost"
+                  />,
+                  <InputNumberField
+                    key="electrolyserStackReplacement"
+                    inputKey="electrolyserStackReplacement"
+                  />,
+                  <InputNumberField
+                    key="waterSupplyCost"
+                    inputKey="waterSupplyCost"
+                  />,
                 ]}
               />,
             ]}
@@ -87,6 +157,8 @@ export default function AdvancedHydrogenInput() {
             title="Power Plant Parameters"
             children={[
               <InputSelect
+                key="powerPlantType"
+                selectKey="powerPlantType"
                 prompt="Power Plant Type"
                 titles={["Solar", "Wind", "Hybrid"]}
                 selectClass="powerPlantType"
@@ -94,52 +166,92 @@ export default function AdvancedHydrogenInput() {
                 buttonChildren={[
                   [
                     <InputSelect
+                      key="solarPowerPlantCapacitySelect"
+                      selectKey="solarPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
                       helperTexts={[
-                        "Solar farm capacity in MW",
-                        "Solar farm capacity as a ratio of electrolyser capacity",
+                        undefined,
+                        undefined,
+                        // "Solar farm capacity in MW",
+                        // "Solar farm capacity as a ratio of electrolyser capacity",
                       ]}
                       buttonChildren={[
-                        [<InputNumberField inputKey="solarNominalCapacity" />],
                         [
-                          <InputNumberField inputKey="powerPlantOversizeRatio" />,
+                          <InputNumberField
+                            key="solarNominalCapacity"
+                            inputKey="solarNominalCapacity"
+                          />,
+                        ],
+                        [
+                          <InputNumberField
+                            key="powerPlantOversizeRatio"
+                            inputKey="powerPlantOversizeRatio"
+                          />,
                         ],
                       ]}
                     />,
                   ],
                   [
                     <InputSelect
+                      key="windPowerPlantCapacitySelect"
+                      selectKey="windPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
                       helperTexts={[
-                        "Wind farm capacity in MW",
-                        "Wind farm capacity as a ratio of electrolyser capacity",
+                        undefined,
+                        undefined,
+                        // "Wind farm capacity in MW",
+                        // "Wind farm capacity as a ratio of electrolyser capacity",
                       ]}
                       buttonChildren={[
-                        [<InputNumberField inputKey="windNominalCapacity" />],
                         [
-                          <InputNumberField inputKey="powerPlantOversizeRatio" />,
+                          <InputNumberField
+                            key="windNominalCapacity"
+                            inputKey="windNominalCapacity"
+                          />,
+                        ],
+                        [
+                          <InputNumberField
+                            key="powerPlantOversizeRatio"
+                            inputKey="powerPlantOversizeRatio"
+                          />,
                         ],
                       ]}
                     />,
                   ],
                   [
                     <InputSelect
+                      key="hybridPowerPlantCapacitySelect"
+                      selectKey="hybridPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
                       helperTexts={[
-                        "Solar and Wind farm capacity in MW",
-                        "Solar and Wind fam capacity as a ratio of electrolyser capacity",
+                        undefined,
+                        undefined,
+                        // "Solar and Wind farm capacity in MW",
+                        // "Solar and Wind fam capacity as a ratio of electrolyser capacity",
                       ]}
                       buttonChildren={[
                         [
-                          <InputNumberField inputKey="solarNominalCapacity" />,
-                          <InputNumberField inputKey="windNominalCapacity" />,
+                          <InputNumberField
+                            key="solarNominalCapacity"
+                            inputKey="solarNominalCapacity"
+                          />,
+                          <InputNumberField
+                            key="windNominalCapacity"
+                            inputKey="windNominalCapacity"
+                          />,
                         ],
                         [
-                          <InputNumberField inputKey="powerPlantOversizeRatio" />,
-                          <InputNumberField inputKey="solarToWindPercentage" />,
+                          <InputNumberField
+                            key="powerPlantOversizeRatio"
+                            inputKey="powerPlantOversizeRatio"
+                          />,
+                          <InputNumberField
+                            key="solarToWindPercentage"
+                            inputKey="solarToWindPercentage"
+                          />,
                         ],
                       ]}
                     />,
@@ -147,6 +259,8 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputSelect
+                key="powerPlantConfigurationSelect"
+                selectKey="powerPlantConfigurationSelect"
                 prompt="Power Plant Configuration"
                 selectClass="powerPlantConfiguration"
                 titles={["Standalone", "Grid Connected"]}
@@ -154,41 +268,97 @@ export default function AdvancedHydrogenInput() {
                 buttonChildren={[
                   [],
                   [
-                    <InputNumberField inputKey="gridConnectionCost" />,
-                    <InputNumberField inputKey="additionalTransmissionCharges" />,
+                    <InputNumberField
+                      key="gridConnectionCost"
+                      inputKey="gridConnectionCost"
+                    />,
+                    <InputNumberField
+                      key="additionalTransmissionCharges"
+                      inputKey="additionalTransmissionCharges"
+                    />,
                   ],
                 ]}
               />,
               <InputCard
+                key="powerPlantEfficiency"
                 title="Power Plant Efficiency"
                 children={[
-                  <InputNumberField inputKey="solarDegradation" />,
-                  <InputNumberField inputKey="windDegradation" />,
+                  <InputNumberField
+                    key="solarDegradation"
+                    inputKey="solarDegradation"
+                  />,
+                  <InputNumberField
+                    key="windDegradation"
+                    inputKey="windDegradation"
+                  />,
                 ]}
               />,
               <InputSelect
+                key="powerSupplyOptionSelect"
+                selectKey="powerSupplyOptionSelect"
                 prompt="Power Supply Option"
                 selectClass="powerSupplyOption"
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
                 helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
-                    <InputNumberField inputKey="solarFarmBuildCost" />,
-                    <InputNumberField inputKey="solarReferenceCapacity" />,
-                    <InputNumberField inputKey="solarPVCostReductionWithScale" />,
-                    <InputNumberField inputKey="solarReferenceFoldIncrease" />,
-                    <InputNumberField inputKey="windFarmBuildCost" />,
-                    <InputNumberField inputKey="windReferenceCapacity" />,
-                    <InputNumberField inputKey="windCostReductionWithScale" />,
-                    <InputNumberField inputKey="windReferenceFoldIncrease" />,
-                    <InputNumberField inputKey="solarEpcCosts" />,
-                    <InputNumberField inputKey="solarLandProcurementCosts" />,
-                    <InputNumberField inputKey="windEpcCosts" />,
-                    <InputNumberField inputKey="windLandProcurementCosts" />,
-                    <InputNumberField inputKey="solarOpex" />,
-                    <InputNumberField inputKey="windOpex" />,
+                    <InputNumberField
+                      key="solarFarmBuildCost"
+                      inputKey="solarFarmBuildCost"
+                    />,
+                    <InputNumberField
+                      key="solarReferenceCapacity"
+                      inputKey="solarReferenceCapacity"
+                    />,
+                    <InputNumberField
+                      key="solarPVCostReductionWithScale"
+                      inputKey="solarPVCostReductionWithScale"
+                    />,
+                    <InputNumberField
+                      key="solarReferenceFoldIncrease"
+                      inputKey="solarReferenceFoldIncrease"
+                    />,
+                    <InputNumberField
+                      key="windFarmBuildCost"
+                      inputKey="windFarmBuildCost"
+                    />,
+                    <InputNumberField
+                      key="windReferenceCapacity"
+                      inputKey="windReferenceCapacity"
+                    />,
+                    <InputNumberField
+                      key="windCostReductionWithScale"
+                      inputKey="windCostReductionWithScale"
+                    />,
+                    <InputNumberField
+                      key="windReferenceFoldIncrease"
+                      inputKey="windReferenceFoldIncrease"
+                    />,
+                    <InputNumberField
+                      key="solarEpcCosts"
+                      inputKey="solarEpcCosts"
+                    />,
+                    <InputNumberField
+                      key="solarLandProcurementCosts"
+                      inputKey="solarLandProcurementCosts"
+                    />,
+                    <InputNumberField
+                      key="windEpcCosts"
+                      inputKey="windEpcCosts"
+                    />,
+                    <InputNumberField
+                      key="windLandProcurementCosts"
+                      inputKey="windLandProcurementCosts"
+                    />,
+                    <InputNumberField key="solarOpex" inputKey="solarOpex" />,
+                    <InputNumberField key="windOpex" inputKey="windOpex" />,
                   ],
-                  [<InputNumberField inputKey="principalPPACost" />],
+                  [
+                    <InputNumberField
+                      key="principalPPACost"
+                      inputKey="principalPPACost"
+                    />,
+                  ],
                 ]}
               />,
             ]}
@@ -202,28 +372,61 @@ export default function AdvancedHydrogenInput() {
             title="Battery Parameters"
             children={[
               <InputCard
+                key="batteryCapacity"
                 title="Battery Capacity"
                 children={[
-                  <InputNumberField inputKey="batteryRatedPower" />,
-                  <InputNumberField inputKey="batteryStorageDuration" />,
+                  <InputNumberField
+                    key="batteryRatedPower"
+                    inputKey="batteryRatedPower"
+                  />,
+                  <InputNumberField
+                    key="batteryStorageDuration"
+                    inputKey="batteryStorageDuration"
+                  />,
                 ]}
               />,
               <InputCard
+                key="batteryPerformance"
                 title="Battery Performance"
                 children={[
-                  <InputNumberField inputKey="batteryEfficiency" />,
-                  <InputNumberField inputKey="batteryMinCharge" />,
-                  <InputNumberField inputKey="batteryLifetime" />,
+                  <InputNumberField
+                    key="batteryEfficiency"
+                    inputKey="batteryEfficiency"
+                  />,
+                  <InputNumberField
+                    key="batteryMinCharge"
+                    inputKey="batteryMinCharge"
+                  />,
+                  <InputNumberField
+                    key="batteryLifetime"
+                    inputKey="batteryLifetime"
+                  />,
                 ]}
               />,
               <InputCard
+                key="batteryCapitalAndOperatingCosts"
                 title="Battery Capital and Operating Costs"
                 children={[
-                  <InputNumberField inputKey="batteryCosts" />,
-                  <InputNumberField inputKey="batteryEpcCosts" />,
-                  <InputNumberField inputKey="batteryLandProcurementCosts" />,
-                  <InputNumberField inputKey="batteryOMCost" />,
-                  <InputNumberField inputKey="batteryReplacementCost" />,
+                  <InputNumberField
+                    key="batteryCosts"
+                    inputKey="batteryCosts"
+                  />,
+                  <InputNumberField
+                    key="batteryEpcCosts"
+                    inputKey="batteryEpcCosts"
+                  />,
+                  <InputNumberField
+                    key="batteryLandProcurementCosts"
+                    inputKey="batteryLandProcurementCosts"
+                  />,
+                  <InputNumberField
+                    key="batteryOMCost"
+                    inputKey="batteryOMCost"
+                  />,
+                  <InputNumberField
+                    key="batteryReplacementCost"
+                    inputKey="batteryReplacementCost"
+                  />,
                 ]}
               />,
             ]}
@@ -235,39 +438,82 @@ export default function AdvancedHydrogenInput() {
             title="Additional Costs"
             children={[
               <InputCard
+                key="additionalCosts"
                 title="Additional Upfront/Operating Costs"
                 children={[
-                  <InputNumberField inputKey="additionalUpfrontCosts" />,
-                  <InputNumberField inputKey="additionalAnnualCosts" />,
+                  <InputNumberField
+                    key="additionalUpfrontCosts"
+                    inputKey="additionalUpfrontCosts"
+                  />,
+                  <InputNumberField
+                    key="additionalAnnualCosts"
+                    inputKey="additionalAnnualCosts"
+                  />,
                 ]}
               />,
               <InputCard
+                key="additionalRevenueGeneration"
                 title="Additional Revenue Generation"
                 children={[
-                  <InputNumberField inputKey="averageElectricitySpotPrice" />,
-                  <InputNumberField inputKey="oxygenRetailPrice" />,
+                  <InputNumberField
+                    key="averageElectricitySpotPrice"
+                    inputKey="averageElectricitySpotPrice"
+                  />,
+                  <InputNumberField
+                    key="oxygenRetailPrice"
+                    inputKey="oxygenRetailPrice"
+                  />,
                 ]}
               />,
               <InputCard
+                key="financingParameters"
                 title="Financing Parameters"
                 children={[
                   <InputDropdownField
+                    key="capitalDepreciationProfile"
                     id="capitalDepreciationProfile"
                     label="Depreciation Profile"
                     values={capitalDepreciationProfile}
                     defaultValue={capitalDepreciationProfile[0]}
                   />,
-                  <InputNumberField inputKey="projectTimeline" />,
-                  <InputNumberField inputKey="discountRate" />,
-                  <InputNumberField inputKey="shareOfTotalInvestmentFinancedViaEquity" />,
-                  <InputNumberField inputKey="directEquityShare" />,
-                  <InputNumberField inputKey="loanTerm" />,
-                  <InputNumberField inputKey="interestOnLoan" />,
-                  <InputNumberField inputKey="salvageCostShare" />,
-                  <InputNumberField inputKey="decommissioningCostShare" />,
-                  <InputNumberField inputKey="inflationRate" />,
-                  <InputNumberField inputKey="taxRate" />,
-                  <InputNumberField inputKey="hydrogenSalesMargin" />,
+                  <InputNumberField
+                    key="projectTimeline"
+                    inputKey="projectTimeline"
+                  />,
+                  <InputNumberField
+                    key="discountRate"
+                    inputKey="discountRate"
+                  />,
+                  <InputNumberField
+                    key="shareOfTotalInvestmentFinancedViaEquity"
+                    inputKey="shareOfTotalInvestmentFinancedViaEquity"
+                  />,
+                  <InputNumberField
+                    key="directEquityShare"
+                    inputKey="directEquityShare"
+                  />,
+                  <InputNumberField key="loanTerm" inputKey="loanTerm" />,
+                  <InputNumberField
+                    key="interestOnLoan"
+                    inputKey="interestOnLoan"
+                  />,
+                  <InputNumberField
+                    key="salvageCostShare"
+                    inputKey="salvageCostShare"
+                  />,
+                  <InputNumberField
+                    key="decommissioningCostShare"
+                    inputKey="decommissioningCostShare"
+                  />,
+                  <InputNumberField
+                    key="inflationRate"
+                    inputKey="inflationRate"
+                  />,
+                  <InputNumberField key="taxRate" inputKey="taxRate" />,
+                  <InputNumberField
+                    key="hydrogenSalesMargin"
+                    inputKey="hydrogenSalesMargin"
+                  />,
                 ]}
               />,
             ]}

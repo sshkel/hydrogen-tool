@@ -68,7 +68,7 @@ export default function BasicHydrogenInput() {
                 selectKey="ppaSelect"
                 key="ppaSelect"
                 titles={["Build Power Plant​", "Purchase Electricity via PPA"]}
-                helperTexts={["No PPA Agreement", undefined]}
+                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSlider
