@@ -8,7 +8,7 @@ interface Props {
   helperText?: string;
 }
 
-export default function InputHelpButton(props: Props) {
+function InputHelpButton(props: Props) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const { helperText } = props;
@@ -59,3 +59,5 @@ export default function InputHelpButton(props: Props) {
     </div>
   );
 }
+
+export default React.memo(InputHelpButton);

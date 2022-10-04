@@ -11,7 +11,7 @@ import * as React from "react";
 
 import { BLUE, ORANGE } from "./colors";
 
-interface InputCardProps {
+export interface InputCardProps {
   title: string;
   children: JSX.Element[] | null;
   expanded?: boolean;
@@ -61,7 +61,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   },
 }));
 
-export default function InputCard(props: InputCardProps) {
+function InputCard(props: InputCardProps) {
   const { title, children, onExpandChange } = props;
   const [expanded, setExpanded] = React.useState(!!props.expanded);
 
@@ -110,3 +110,5 @@ export default function InputCard(props: InputCardProps) {
     </StyledCard>
   );
 }
+
+export default React.memo(InputCard);

@@ -1,4 +1,4 @@
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import InputHomePage from "../../../components/input/InputHomePage";
@@ -43,7 +43,7 @@ describe("InputHomePage", () => {
     expect(setInputConfiguration).toHaveBeenCalledWith("Advanced");
   });
 
-  it("sends expected input fields for advanced configuration", () => {
+  it("sends expected input fields for advanced configuration", async () => {
     const setState = jest.fn();
     const { getByText } = render(
       <MemoryRouter>
@@ -52,6 +52,10 @@ describe("InputHomePage", () => {
     );
 
     fireEvent.click(getByText(/Advanced Input/i));
+
+    await waitFor(() =>
+      expect(getByText("Electrolyser System Capacity")).toBeDefined()
+    );
 
     fireEvent.click(getByText(/Calculate/i));
 

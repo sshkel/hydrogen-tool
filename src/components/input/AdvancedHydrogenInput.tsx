@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Grid";
 
-import "../../input.css";
 import InputCard from "./InputCard";
 import InputDropdownField from "./InputDropdownField";
 import InputNumberField from "./InputNumberField";

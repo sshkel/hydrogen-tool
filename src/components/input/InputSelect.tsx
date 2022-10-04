@@ -18,12 +18,7 @@ export default function InputSelectField(props: Props) {
   const [selected, setSelected] = React.useState<number>(0);
 
   const onOpenExpand = (index: number) => {
-    // TODO: test empty children
-    if (buttonChildren[index].length > 0) {
-      setExpanded(index);
-    } else {
-      setExpanded(-1);
-    }
+    setExpanded(index);
     setSelected(index);
   };
   const onCloseExpand = () => {
@@ -31,7 +26,7 @@ export default function InputSelectField(props: Props) {
   };
 
   const {
-    selectKey: id,
+    selectKey,
     titles,
     helperTexts,
     buttonChildren,
@@ -43,7 +38,7 @@ export default function InputSelectField(props: Props) {
       <InputTitle title={prompt} />
       {titles.map((text, index) => (
         <InputSelectButton
-          key={id ? `${id}-${index}` : undefined}
+          key={selectKey ? `${selectKey}-${index}` : undefined}
           text={text}
           index={index}
           className={selectClass}

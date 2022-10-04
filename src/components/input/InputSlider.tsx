@@ -4,7 +4,6 @@ import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
-import { getUniqueKey } from "../../utils";
 import InputTitle from "./InputTitle";
 import { BLUE } from "./colors";
 import { basicDefaultInputs } from "./data";
@@ -91,7 +90,6 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item minWidth="fit-content">
         <TextField
           id={inputKey}
-          key={getUniqueKey(inputKey)}
           value={value}
           variant="outlined"
           size="small"

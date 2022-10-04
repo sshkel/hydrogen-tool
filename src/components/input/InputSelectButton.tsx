@@ -26,7 +26,7 @@ const StyledButton = styled(Button)({
   boxShadow: "0px 0px 0px 1.5px rgba(0,0,0,0.2)",
 });
 
-export default function InputSelectButton(props: Props) {
+function InputSelectButton(props: Props) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -45,9 +45,11 @@ export default function InputSelectButton(props: Props) {
   const openExpand = () => props.onOpenExpand(index);
   const closeExpand = () => props.onCloseExpand();
 
+  const canExpand = children != null && children.length > 0;
+
   return (
     <div>
-      {!expanded ? (
+      {!expanded || !canExpand ? (
         <div style={{ display: "flex" }}>
           <StyledButton
             variant={selected ? "contained" : "outlined"}
@@ -81,3 +83,5 @@ export default function InputSelectButton(props: Props) {
     </div>
   );
 }
+
+export default React.memo(InputSelectButton);

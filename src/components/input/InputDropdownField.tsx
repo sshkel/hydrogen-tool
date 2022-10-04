@@ -29,7 +29,7 @@ export default function InputDropdownField(props: Props) {
 
   return (
     <FormControl sx={{ display: "flex", width: "inherit", p: 2 }}>
-      <InputTitle title={label} id={labelId} />
+      <InputTitle title={label} />
       <Select
         id={id}
         color="success"

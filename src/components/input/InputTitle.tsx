@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import * as React from "react";
 
 import InputHelpButton from "./InputHelpButton";
 
 interface Props {
-  id?: string;
   title: string;
   helperText?: string;
 }
 
-export default function InputSlider(props: Props) {
-  const { id = "input-title", title, helperText } = props;
+function InputTitle(props: Props) {
+  const { title, helperText } = props;
 
   return (
     <Box
@@ -20,7 +20,6 @@ export default function InputSlider(props: Props) {
       }}
     >
       <Typography
-        id={id}
         sx={{ lineHeight: "28px", fontWeight: "bold", flexBasis: "99%" }}
       >
         {title}
@@ -29,3 +28,5 @@ export default function InputSlider(props: Props) {
     </Box>
   );
 }
+
+export default React.memo(InputTitle);

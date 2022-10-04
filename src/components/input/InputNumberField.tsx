@@ -2,8 +2,8 @@ import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
+import React from "react";
 
-import { getUniqueKey } from "../../utils";
 import InputTitle from "./InputTitle";
 import { BLUE, ORANGE } from "./colors";
 import { advancedDefaultInputs } from "./data";
@@ -25,17 +25,28 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
         "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
     },
   },
-
   "& .MuiFormHelperText-root": {
     fontStyle: "italic",
   },
 }));
 
+const inputProps = {
+  step: "0.01",
+};
+
+const sx = {
+  display: "flex",
+  flexGrow: "1",
+  flexShrink: "1",
+  flexBasis: "100%",
+  width: "100%",
+};
+
 interface Props {
   inputKey: string;
 }
 
-export default function InputNumberField({ inputKey }: Props) {
+function InputNumberField({ inputKey }: Props) {
   const {
     title,
     id = inputKey,
@@ -56,7 +67,6 @@ export default function InputNumberField({ inputKey }: Props) {
         <StyledInputNumberField
           id={id}
           key={title}
-          name={getUniqueKey(id)}
           defaultValue={defaultValue}
           value={value}
           helperText={helperText}
@@ -68,18 +78,12 @@ export default function InputNumberField({ inputKey }: Props) {
               <InputAdornment position="end">{adornmentLabel}</InputAdornment>
             ),
           }}
-          inputProps={{
-            step: "0.01",
-          }}
-          sx={{
-            display: "flex",
-            flexGrow: "1",
-            flexShrink: "1",
-            flexBasis: "100%",
-            width: "100%",
-          }}
+          inputProps={inputProps}
+          sx={sx}
         />
       </Grid>
     </Grid>
   );
 }
+
+export default React.memo(InputNumberField);
