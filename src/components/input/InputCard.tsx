@@ -3,11 +3,10 @@ import "@fontsource/nunito/800.css";
 import ExpandCircleIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import Box from "@mui/material/Box";
 import Card, { CardProps } from "@mui/material/Card";
-import Collapse from "@mui/material/Collapse";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import React, { Suspense } from "react";
 
 import { BLUE, ORANGE } from "./colors";
 
@@ -73,6 +72,8 @@ function InputCard(props: InputCardProps) {
     }
   };
 
+  const InputCollapse = React.lazy(() => import("./InputCollapse"));
+
   return (
     <StyledCard
       expanded={!!expanded}
@@ -104,9 +105,9 @@ function InputCard(props: InputCardProps) {
           <ExpandCircleIcon />
         </ExpandMore>
       </Box>
-      <Collapse in={expanded} timeout="auto">
-        {children}
-      </Collapse>
+      <Suspense fallback={null}>
+        <InputCollapse expanded={expanded} children={children} />
+      </Suspense>
     </StyledCard>
   );
 }

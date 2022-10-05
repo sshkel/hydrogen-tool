@@ -123,6 +123,11 @@ export default function InputHomePage(props: Props) {
             textColor="inherit"
             onChange={handleChange}
             aria-label="input-workflow-tab"
+            TabIndicatorProps={{
+              sx: {
+                transition: "none",
+              },
+            }}
             sx={{
               boxShadow: "0px -6px 6px 0px rgb(180 180 180 / 75%) inset",
             }}

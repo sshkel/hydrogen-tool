@@ -19,6 +19,8 @@ export type PowerPlantConfiguration =
   | "PPA Agreement"
   | "Grid Connected with Surplus Retailed";
 
+export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
+
 export type ChartData = { label: string; data: number[] };
 
 export type InputConfiguration = "Basic" | "Advanced";
@@ -138,6 +140,7 @@ export interface UserInputFields {
   secAtNominalLoad?: number;
   electrolyserEfficiency?: number;
   powerPlantConfiguration?: PowerPlantConfiguration;
+  powerSupplyOption?: PowerSupplyOption;
 }
 
 export interface Inputs {
@@ -175,6 +178,7 @@ export interface Inputs {
   // Power Plant
   powerPlantConfiguration: PowerPlantConfiguration;
   powerPlantType: PowerPlantType;
+  powerSupplyOption: PowerSupplyOption;
   solarNominalCapacity: number;
   windNominalCapacity: number;
   solarReferenceCapacity: number;

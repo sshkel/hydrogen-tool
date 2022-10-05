@@ -3,6 +3,7 @@ import {
   Inputs,
   PowerPlantConfiguration,
   PowerPlantType,
+  PowerSupplyOption,
   SECType,
   StackReplacementType,
   UserInputFields,
@@ -43,6 +44,7 @@ class DefaultInputs implements Inputs {
   // Power Plant
   powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
   powerPlantType = "Hybrid" as PowerPlantType;
+  powerSupplyOption = "Self Build" as PowerSupplyOption;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
   solarReferenceCapacity = 10;

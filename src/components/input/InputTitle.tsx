@@ -1,5 +1,5 @@
+import { InputLabel } from "@mui/material";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 import InputHelpButton from "./InputHelpButton";
@@ -19,11 +19,16 @@ function InputTitle(props: Props) {
         width: "100%",
       }}
     >
-      <Typography
-        sx={{ lineHeight: "28px", fontWeight: "bold", flexBasis: "99%" }}
+      <InputLabel
+        sx={{
+          lineHeight: "28px",
+          fontWeight: "bold",
+          color: "black",
+          flexBasis: "99%",
+        }}
       >
         {title}
-      </Typography>
+      </InputLabel>
       <InputHelpButton helperText={helperText} />
     </Box>
   );

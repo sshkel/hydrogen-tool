@@ -65,9 +65,11 @@ export default function BasicHydrogenInput() {
                 inputKey="electrolyserPurchaseCost"
               />,
               <InputSelect
-                selectKey="ppaSelect"
-                key="ppaSelect"
-                titles={["Build Power Plant​", "Purchase Electricity via PPA"]}
+                key="powerSupplyOptionSelect"
+                selectKey="powerSupplyOptionSelect"
+                prompt="Power Supply Option"
+                selectClass="powerSupplyOption"
+                titles={["Self Build", "Power Purchase Agreement (PPA)"]}
                 helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [

@@ -1,9 +1,8 @@
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import React, { Suspense } from "react";
 
 import InputCard from "./InputCard";
 import InputHelpButton from "./InputHelpButton";
@@ -47,9 +46,13 @@ function InputSelectButton(props: Props) {
 
   const canExpand = children != null && children.length > 0;
 
+  const showCard = expanded && canExpand;
+
+  const InputCollapse = React.lazy(() => import("./InputCollapse"));
+
   return (
     <div>
-      {!expanded || !canExpand ? (
+      {!showCard ? (
         <div style={{ display: "flex" }}>
           <StyledButton
             variant={selected ? "contained" : "outlined"}
@@ -75,11 +78,22 @@ function InputSelectButton(props: Props) {
           </Popover>
         </div>
       ) : null}
-      <Collapse in={expanded} timeout={0} unmountOnExit={!selected}>
-        <InputCard title={text} onExpandChange={closeExpand} expanded={true}>
-          {children}
-        </InputCard>
-      </Collapse>
+      <Suspense fallback={null}>
+        <InputCollapse
+          expanded={showCard}
+          timeout={0}
+          unmountOnExit={!selected}
+          children={
+            <InputCard
+              title={text}
+              onExpandChange={closeExpand}
+              expanded={true}
+            >
+              {children}
+            </InputCard>
+          }
+        />
+      </Suspense>
     </div>
   );
 }

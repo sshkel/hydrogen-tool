@@ -9,6 +9,7 @@ export const defaultInputData: {
   inputConfiguration: "Basic",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 100,
     additionalUpfrontCosts: 0,
@@ -91,6 +92,7 @@ export const standaloneSolarWithBatteryScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
@@ -175,6 +177,7 @@ export const standaloneSolarScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
@@ -259,6 +262,7 @@ export const standaloneWindScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.2,
     solarToWindPercentage: 0,
@@ -343,6 +347,7 @@ export const windWithPPAScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "PPA Agreement",
+    powerSupplyOption: "Power Purchase Agreement (PPA)",
     powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 0,
@@ -430,6 +435,7 @@ export const hybridBatteryGridSurplusRetailScenario: {
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 66.66666,
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
+    powerSupplyOption: "Self Build",
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 10,
     windNominalCapacity: 5,
@@ -511,6 +517,7 @@ export const windWithBatteryAndPPAScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "PPA Agreement",
+    powerSupplyOption: "Power Purchase Agreement (PPA)",
     powerPlantType: "Wind",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 0,
@@ -595,6 +602,7 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Grid Connected with Surplus Retailed",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
@@ -679,6 +687,7 @@ export const standaloneSolarWithStackDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Solar",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 100,
@@ -763,6 +772,7 @@ export const standaloneHybridWithDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Hybrid",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 57.692307,
@@ -847,6 +857,7 @@ export const standaloneWindWithBatteryAndDegradationScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
+    powerSupplyOption: "Self Build",
     powerPlantType: "Wind",
     electrolyserNominalCapacity: 10,
     solarNominalCapacity: 0,

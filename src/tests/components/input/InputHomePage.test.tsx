@@ -4,12 +4,18 @@ import { MemoryRouter } from "react-router-dom";
 import InputHomePage from "../../../components/input/InputHomePage";
 
 describe("InputHomePage", () => {
-  it("sends expected input fields for basic configuration", () => {
+  it("sends expected input fields for basic configuration", async () => {
     const setState = jest.fn();
-    const { getByText } = render(
+    const { container, getByText } = render(
       <MemoryRouter>
         <InputHomePage setState={setState} setInputConfiguration={jest.fn()} />
       </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('input[type="number"]').length).toEqual(
+        9
+      )
     );
 
     fireEvent.click(getByText(/Calculate/i));
@@ -24,6 +30,7 @@ describe("InputHomePage", () => {
       solarFarmBuildCost: 1200,
       solarToWindPercentage: 50,
       windFarmBuildCost: 1950,
+      powerSupplyOption: "Self Build",
     });
   });
 
@@ -45,7 +52,7 @@ describe("InputHomePage", () => {
 
   it("sends expected input fields for advanced configuration", async () => {
     const setState = jest.fn();
-    const { getByText } = render(
+    const { container, getByText } = render(
       <MemoryRouter>
         <InputHomePage setState={setState} setInputConfiguration={jest.fn()} />
       </MemoryRouter>
@@ -53,10 +60,13 @@ describe("InputHomePage", () => {
 
     fireEvent.click(getByText(/Advanced Input/i));
 
-    await waitFor(() =>
-      expect(getByText("Electrolyser System Capacity")).toBeDefined()
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(61),
+      { timeout: 2000 }
     );
-
     fireEvent.click(getByText(/Calculate/i));
 
     expect(setState).toHaveBeenCalledWith({
