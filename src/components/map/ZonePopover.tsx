@@ -219,7 +219,10 @@ export function ZonePopover(props: Props) {
             <Grid item xs={2}>
               <Card
                 onClick={startDesign}
-                sx={{ "border-radius": "12px", border: "1px solid darkgrey" }}
+                sx={{
+                  "border-radius": "12px",
+                  border: "2px solid darkgrey",
+                }}
               >
                 <CardActionArea>
                   <CardHeader
@@ -233,7 +236,9 @@ export function ZonePopover(props: Props) {
                       fontSize: 12,
                       lineHeight: 1.2,
                     }}
-                    sx={{ padding: "12px" }}
+                    sx={{
+                      padding: "12px",
+                    }}
                   />
                 </CardActionArea>
               </Card>
@@ -241,7 +246,7 @@ export function ZonePopover(props: Props) {
             <Grid item xs={2}>
               <Card
                 onClick={startDesign}
-                sx={{ "border-radius": "12px", border: "1px solid darkgrey" }}
+                sx={{ "border-radius": "12px", border: "2px solid darkgrey" }}
               >
                 <CardActionArea>
                   <CardHeader
@@ -282,7 +287,7 @@ export function ZonePopover(props: Props) {
         horizontal: "left",
       }}
       PaperProps={{
-        style: { borderRadius: "20px", border: "1px solid darkgrey" },
+        style: { borderRadius: "20px", border: "2px solid black" },
       }}
     >
       {component === "location" && summary}
