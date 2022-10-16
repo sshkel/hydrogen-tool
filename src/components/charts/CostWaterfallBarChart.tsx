@@ -2,6 +2,7 @@ import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
+import { TEAL, addAlpha } from "../input/colors";
 
 interface Props {
   title: string;
@@ -22,8 +23,8 @@ export default function CostBarChart(props: Props) {
     labels: labels.concat(["Total"]),
     datasets: transformedPoints.map((point) => ({
       ...point,
-      backgroundColor: "rgba(75,192,192,0.2)",
-      borderColor: "rgba(75,192,192,1)",
+      backgroundColor: addAlpha(TEAL, 0.6),
+      borderColor: addAlpha(TEAL, 1),
     })),
   };
 

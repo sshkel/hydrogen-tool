@@ -4,14 +4,13 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
+import { colors } from "../input/colors";
 
 ChartJS.register(zoomPlugin);
 
 interface Props {
   datapoints: ChartData[];
 }
-
-const colours = ["#3E7DCC", "#00C8C8"];
 
 export default function HourlyCapacityFactors(props: Props) {
   // randomly sample for demo until we fix and have zoom in functionality
@@ -24,8 +23,8 @@ export default function HourlyCapacityFactors(props: Props) {
     datasets: datapoints.map((point, index) => ({
       label: point.label,
       data: point.data.map((x) => x * 100),
-      backgroundColor: colours[index],
-      borderColor: colours[index],
+      backgroundColor: colors[index],
+      borderColor: colors[index],
     })),
   };
 

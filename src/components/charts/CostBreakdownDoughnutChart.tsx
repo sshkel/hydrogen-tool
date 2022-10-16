@@ -1,6 +1,8 @@
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 
+import { colors } from "../input/colors";
+
 interface Props {
   title: string;
   labels: string[];
@@ -13,14 +15,7 @@ export default function CostBreakdownDoughnutChart(props: Props) {
     datasets: [
       {
         label: "Cost",
-        backgroundColor: [
-          "#0D56D9",
-          "#5792CF",
-          "#22C6F0",
-          "#F2E68F",
-          "#FF0000",
-          "#A21A24",
-        ],
+        backgroundColor: colors,
         data: props.data,
       },
     ],
