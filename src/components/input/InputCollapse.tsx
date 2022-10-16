@@ -14,7 +14,7 @@ export default function InputCollapse(props: Props) {
       in={expanded}
       timeout={timeout}
       unmountOnExit={unmountOnExit}
-      sx={{ paddingBottom: expanded ? 2 : 0 }}
+      sx={{ paddingBottom: expanded ? 1 : 0 }}
     >
       {children}
     </Collapse>
