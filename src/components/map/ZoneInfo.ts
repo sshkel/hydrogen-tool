@@ -5,7 +5,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -19,7 +19,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -33,7 +33,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -47,7 +47,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -62,7 +62,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -76,7 +76,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -90,7 +90,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -104,7 +104,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -118,7 +118,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -132,7 +132,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -146,7 +146,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -160,7 +160,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -174,7 +174,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -189,7 +189,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -204,7 +204,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -218,7 +218,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -232,7 +232,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -246,7 +246,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -260,7 +260,7 @@ export const zoneInfo = {
     solarCapFactor: "-%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -274,7 +274,7 @@ export const zoneInfo = {
     solarCapFactor: "-%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -288,7 +288,7 @@ export const zoneInfo = {
     solarCapFactor: "-%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken
@@ -302,7 +302,7 @@ export const zoneInfo = {
     solarCapFactor: "-%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, mining",
-    waterAvailability: "low",
+    waterAvailability: "Low",
     infrastructure: `Includes existing electricity infrastructure e.g., transmission
         lines, existing renewable energy sites, gas pipelines, major
         highways, rail lines, airports Local Energy Generation: • Broken

@@ -2,7 +2,6 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import { Drawer, List, ListItem } from "@mui/material";
-import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { BLUE } from "./input/colors";
 
 export function SideBar() {
-  const drawerWidth = 70;
+  const drawerWidth = 75;
   const navigate = useNavigate();
   return (
     <Drawer
@@ -28,7 +27,7 @@ export function SideBar() {
     >
       <Toolbar />
       <List>
-        <ListItem disablePadding>
+        <ListItem disableGutters>
           <ListItemButton
             onClick={() => navigate("/")}
             sx={{
@@ -38,15 +37,15 @@ export function SideBar() {
             }}
           >
             <LocationOnRoundedIcon
-              fontSize="large"
+              sx={{ fontSize: 30 }}
               style={{
                 color: "white",
               }}
             />
           </ListItemButton>
         </ListItem>
-        <Divider />
-        <ListItem disablePadding>
+
+        <ListItem disableGutters>
           <ListItemButton
             onClick={() => navigate("/tool")}
             sx={{
@@ -56,15 +55,15 @@ export function SideBar() {
             }}
           >
             <MenuBookRoundedIcon
-              fontSize="large"
+              sx={{ fontSize: 30 }}
               style={{
                 color: "white",
               }}
             />
           </ListItemButton>
         </ListItem>
-        <Divider />
-        <ListItem disablePadding>
+
+        <ListItem disableGutters>
           <ListItemButton
             onClick={() => navigate("/about")}
             sx={{
@@ -74,7 +73,7 @@ export function SideBar() {
             }}
           >
             <PeopleAltRoundedIcon
-              fontSize="large"
+              sx={{ fontSize: 30 }}
               style={{
                 color: "white",
               }}

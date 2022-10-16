@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Divider,
   Grid,
   Popover,
   ThemeProvider,
@@ -63,7 +64,13 @@ export function ZonePopover(props: Props) {
   const summary = (
     <SideCard>
       <ThemeProvider theme={theme}>
-        <CardHeader title="Location summary" sx={{ backgroundColor: GREY }} />
+        <CardHeader
+          title="Location summary"
+          sx={{
+            backgroundColor: GREY,
+            "padding-left": "20px",
+          }}
+        />
         <CardContent>
           <Grid
             container
@@ -148,10 +155,8 @@ export function ZonePopover(props: Props) {
               </Grid>
             </Grid>
             <Grid item>
-              <ItemTitle>
-                Infrastructure:
-                <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
-              </ItemTitle>
+              <ItemTitle>Infrastructure:</ItemTitle>
+              <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
             </Grid>
             <Grid item></Grid>
           </Grid>
@@ -160,9 +165,14 @@ export function ZonePopover(props: Props) {
           <Button
             variant="contained"
             onClick={() => setComponent("powerfuel")}
-            style={{ backgroundColor: BLUE }}
+            style={{
+              backgroundColor: BLUE,
+              textTransform: "none",
+              borderRadius: 20,
+              marginBottom: 24,
+            }}
           >
-            Start project design
+            Start Project Design
           </Button>
         </CardActions>
       </ThemeProvider>
@@ -174,7 +184,7 @@ export function ZonePopover(props: Props) {
       <ThemeProvider theme={theme}>
         <CardHeader
           title="Select powerfuel pathway"
-          sx={{ backgroundColor: GREY }}
+          sx={{ backgroundColor: GREY, "padding-left": "20px" }}
         />
         <CardContent>
           <Grid
