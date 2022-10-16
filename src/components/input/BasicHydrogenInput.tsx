@@ -15,7 +15,11 @@ export default function BasicHydrogenInput() {
       height="100%"
       sx={{
         "& .MuiButton-root": { marginY: 0.5 },
-        "& .MuiGrid-container": { padding: 2 },
+        "& .MuiGrid-container": {
+          paddingX: 0.75,
+          paddingTop: 0.25,
+          paddingBottom: 2,
+        },
       }}
     >
       <Grid xs={4} container item rowSpacing={1} flexDirection="column">

@@ -21,6 +21,7 @@ export interface InputCardProps {
 interface StyledCardProps extends CardProps {
   expanded: boolean;
   onExpandChange: boolean;
+  subtitle: number;
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -29,7 +30,7 @@ interface ExpandMoreProps extends IconButtonProps {
 
 const StyledCard = styled(Card, {
   shouldForwardProp: (prop) => prop !== "expanded" && prop !== "onExpandChange",
-})<StyledCardProps>(({ expanded, onExpandChange }) => ({
+})<StyledCardProps>(({ expanded, onExpandChange, subtitle }) => ({
   fontSize: 14,
   padding: 0.5,
   borderRadius: 2,
@@ -43,6 +44,11 @@ const StyledCard = styled(Card, {
     onExpandChange && {
       borderRadius: 8,
       borderWidth: 2,
+    }),
+
+  ...(expanded &&
+    subtitle && {
+      paddingBottom: "12px",
     }),
 }));
 
@@ -79,6 +85,7 @@ function InputCard(props: InputCardProps) {
     <StyledCard
       expanded={!!expanded}
       onExpandChange={!!onExpandChange}
+      subtitle={subtitle ? 1 : 0}
       variant="outlined"
     >
       <Box
