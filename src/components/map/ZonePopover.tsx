@@ -50,6 +50,7 @@ const ItemCaption = styled(Typography)(({ theme }) => ({
 const SideCard = styled(Card)(({ theme }) => ({
   width: "400px",
   minHeight: "60vh",
+  border: "1px solid darkgrey",
 }));
 
 export function ZonePopover(props: Props) {
@@ -70,6 +71,9 @@ export function ZonePopover(props: Props) {
             backgroundColor: GREY,
             "padding-left": "20px",
           }}
+          titleTypographyProps={{
+            fontWeight: "bold",
+          }}
         />
         <CardContent>
           <Grid
@@ -87,9 +91,13 @@ export function ZonePopover(props: Props) {
               <Grid item xs>
                 <ItemTitle>Location:</ItemTitle>
               </Grid>
+
               <Grid item xs>
                 <ItemText>{zoneInfo[zone].location}</ItemText>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider flexItem />
             </Grid>
             <Grid
               container
@@ -104,16 +112,20 @@ export function ZonePopover(props: Props) {
                 <ItemText>{zoneInfo[zone].regionalCenters}</ItemText>
               </Grid>
             </Grid>
+            <Grid item xs={12}>
+              <Divider flexItem />
+            </Grid>
             <Grid
               container
               item
               justifyContent="space-between"
               flexWrap="nowrap"
+              alignItems="center"
             >
               <Grid item xs>
                 <ItemTitle>Solar/Wind capacity factor:</ItemTitle>
               </Grid>
-              <Grid container item xs>
+              <Grid container item xs alignItems="center">
                 <Grid item>
                   <WbSunnyRoundedIcon />
                 </Grid>
@@ -128,6 +140,9 @@ export function ZonePopover(props: Props) {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={12}>
+              <Divider flexItem />
+            </Grid>
             <Grid
               container
               item
@@ -141,6 +156,9 @@ export function ZonePopover(props: Props) {
                 <ItemText>{zoneInfo[zone].mainIndustries}</ItemText>
               </Grid>
             </Grid>
+            <Grid item xs={12}>
+              <Divider flexItem />
+            </Grid>
             <Grid
               container
               item
@@ -153,6 +171,9 @@ export function ZonePopover(props: Props) {
               <Grid item xs>
                 <ItemText>{zoneInfo[zone].waterAvailability}</ItemText>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider flexItem />
             </Grid>
             <Grid item>
               <ItemTitle>Infrastructure:</ItemTitle>
@@ -184,6 +205,9 @@ export function ZonePopover(props: Props) {
       <ThemeProvider theme={theme}>
         <CardHeader
           title="Select powerfuel pathway"
+          titleTypographyProps={{
+            fontWeight: "bold",
+          }}
           sx={{ backgroundColor: GREY, "padding-left": "20px" }}
         />
         <CardContent>
