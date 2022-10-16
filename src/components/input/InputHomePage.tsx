@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 
 import "../../input.css";
 import { InputConfiguration } from "../../types";
+import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
-import FallbackAdvancedHydrogenInput from "./FallbackAdvancedHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
 import { BLUE, ORANGE } from "./colors";
@@ -53,9 +53,6 @@ interface Props {
 export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
   const [tab, setTab] = React.useState("Basic");
-
-  const advancedHydrogenInputPromise = import("./AdvancedHydrogenInput");
-  const AdvancedHydrogenInput = React.lazy(() => advancedHydrogenInputPromise);
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
     if (newTab === "Basic" || newTab === "Advanced") {
@@ -108,7 +105,12 @@ export default function InputHomePage(props: Props) {
           alignItems="center"
         >
           <Grid item>
-            <Typography variant="h5" fontWeight="600" gutterBottom>
+            <Typography
+              variant="h5"
+              fontWeight="600"
+              gutterBottom
+              marginBottom={0}
+            >
               Hydrogen
             </Typography>
             <Typography variant="subtitle1">
@@ -147,9 +149,7 @@ export default function InputHomePage(props: Props) {
             <BasicHydrogenInput />
           </TabPanel>
           <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
-            <React.Suspense fallback={<FallbackAdvancedHydrogenInput />}>
-              <AdvancedHydrogenInput />
-            </React.Suspense>
+            <AdvancedHydrogenInput />
           </TabPanel>
         </TabContext>
       </ThemeProvider>

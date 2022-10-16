@@ -11,10 +11,11 @@ import { defaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
+    height: "40px",
     "& fieldset": {
       borderColor: BLUE,
       borderWidth: "2px",
-      borderRadius: "20px",
+      borderRadius: "16px",
     },
     "&:hover fieldset": {
       borderColor: BLUE,
@@ -27,6 +28,7 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   },
   "& .MuiFormHelperText-root": {
     fontStyle: "italic",
+    lineHeight: "1.2",
   },
 }));
 

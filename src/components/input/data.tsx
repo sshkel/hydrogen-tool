@@ -530,7 +530,7 @@ export const basicDefaultInputs: BasicDefaultInput = {
     max: 1_000_000,
     step: 50_000,
     defaultValue: 100_000,
-    title: "Project Scale (ton/yr)",
+    title: "Project Scale (tonnes/yr)",
     helperText: "A description goes here",
   },
   electrolyserEfficiency: {

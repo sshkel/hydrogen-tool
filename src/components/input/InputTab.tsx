@@ -17,6 +17,7 @@ const StyledTab = styled(Tab)<StyledTabProps>(({ active }) => ({
   fontSize: "18px",
   borderRadius: "20px 20px 0px 0px",
   backgroundColor: active === "true" ? "#F2F2F2" : "#A6A6A6",
+  minWidth: "180px",
   marginLeft: 20,
 }));
 

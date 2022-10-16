@@ -12,6 +12,7 @@ import { BLUE, ORANGE } from "./colors";
 
 export interface InputCardProps {
   title: string;
+  subtitle?: boolean;
   children: JSX.Element[] | null;
   expanded?: boolean;
   onExpandChange?: () => void;
@@ -61,7 +62,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 function InputCard(props: InputCardProps) {
-  const { title, children, onExpandChange } = props;
+  const { title, subtitle = false, children, onExpandChange } = props;
   const [expanded, setExpanded] = React.useState(!!props.expanded);
 
   const handleExpandClick = () => {
@@ -88,10 +89,10 @@ function InputCard(props: InputCardProps) {
       >
         <Typography
           sx={{
-            fontSize: 22,
+            fontSize: subtitle ? 16 : 22,
             fontWeight: "bold",
             color: expanded ? ORANGE : BLUE,
-            padding: 1,
+            padding: "8px 8px 8px 18px",
           }}
         >
           {title}

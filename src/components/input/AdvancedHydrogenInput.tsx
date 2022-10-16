@@ -29,6 +29,7 @@ export default function AdvancedHydrogenInput() {
                 inputKey="electrolyserNominalCapacity"
               />,
               <InputCard
+                subtitle={true}
                 key="electrolyserSystemEfficiency"
                 title="Electrolyser System Efficiency"
                 children={[
@@ -47,6 +48,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="electrolyserLoadRange"
                 title="Electrolyser Load Range"
                 children={[
@@ -104,6 +106,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="electrolyserCapitialAndOperatingCosts"
                 title="Electrolyser Capital and Operating Costs"
                 children={[
@@ -279,6 +282,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="powerPlantEfficiency"
                 title="Power Plant Efficiency"
                 children={[
@@ -371,6 +375,7 @@ export default function AdvancedHydrogenInput() {
             title="Battery Parameters"
             children={[
               <InputCard
+                subtitle={true}
                 key="batteryCapacity"
                 title="Battery Capacity"
                 children={[
@@ -385,6 +390,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="batteryPerformance"
                 title="Battery Performance"
                 children={[
@@ -403,6 +409,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="batteryCapitalAndOperatingCosts"
                 title="Battery Capital and Operating Costs"
                 children={[
@@ -437,6 +444,7 @@ export default function AdvancedHydrogenInput() {
             title="Additional Costs"
             children={[
               <InputCard
+                subtitle={true}
                 key="additionalCosts"
                 title="Additional Upfront/Operating Costs"
                 children={[
@@ -451,6 +459,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="additionalRevenueGeneration"
                 title="Additional Revenue Generation"
                 children={[
@@ -465,6 +474,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
+                subtitle={true}
                 key="financingParameters"
                 title="Financing Parameters"
                 children={[
