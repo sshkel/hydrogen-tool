@@ -2,8 +2,6 @@ import {
   Card,
   CardContent,
   Grid,
-  List,
-  ListItem,
   ThemeProvider,
   Typography,
   createTheme,
@@ -37,8 +35,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
   ...theme.typography.body2,
   height: "90%",
   margin: "15px",
-  // border: "none",
-  // boxShadow: "none",
+  borderRadius: "20px",
+}));
+const StyledListItem = styled(Typography)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(0.5),
+  paddingLeft: "10px",
 }));
 export function About() {
   return (
@@ -49,16 +51,21 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Developers</ItemHeading>
-                <List>
-                  <ListItem>Muhammad Haider Ali Khan (Lead Developer)</ListItem>
-                  <ListItem>Phoebe Heywood (Co Developer)</ListItem>
-                  <ListItem>Aaron Kuswara (Co Developer)</ListItem>
-                  <ListItem>Jack Shepherd (Co Developer)</ListItem>
-                  <ListItem>Iain MacGill (Project Supervisor)</ListItem>
-                  <ListItem>Rahman Daiyan (Project Supervisor)</ListItem>
-                  <ListItem>Tara Tjandra (Team Lead)</ListItem>
-                  <ListItem>Stanis Shkel (Intern)</ListItem>
-                </List>
+
+                <StyledListItem>
+                  Muhammad Haider Ali Khan (Lead Developer)
+                </StyledListItem>
+                <StyledListItem>Phoebe Heywood (Co Developer)</StyledListItem>
+                <StyledListItem>Aaron Kuswara (Co Developer)</StyledListItem>
+                <StyledListItem>Jack Shepherd (Co Developer)</StyledListItem>
+                <StyledListItem>
+                  Iain MacGill (Project Supervisor)
+                </StyledListItem>
+                <StyledListItem>
+                  Rahman Daiyan (Project Supervisor)
+                </StyledListItem>
+                <StyledListItem>Tara Tjandra (Team Lead)</StyledListItem>
+                <StyledListItem>Stanis Shkel (Intern)</StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
@@ -66,14 +73,14 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Acknowledgements</ItemHeading>
-                <List>
-                  <ListItem>Rose Amal (Project Supervisor)</ListItem>
-                  <ListItem>
-                    Charles Johnston (Tool Troubleshooting and Debugging
-                    Support)
-                  </ListItem>
-                  <ListItem>Nicholas Gorman (Tool Licensing Support)</ListItem>
-                </List>
+
+                <StyledListItem>Rose Amal (Project Supervisor)</StyledListItem>
+                <StyledListItem>
+                  Charles Johnston (Tool Troubleshooting and Debugging Support)
+                </StyledListItem>
+                <StyledListItem>
+                  Nicholas Gorman (Tool Licensing Support)
+                </StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
@@ -81,28 +88,27 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Affiliations</ItemHeading>
-                <List>
-                  <ListItem>University of New South Wales (UNSW)</ListItem>
-                  <ListItem>
-                    Particles and Catalysis Research Group (PartCat), UNSW
-                  </ListItem>
-                  <ListItem>
-                    Collaboration on Energy and Environmental Markets (CEEM),
-                    UNSW
-                  </ListItem>
-                  <ListItem>
-                    ARC Training Centre for The Global Hydrogen Economy
-                    (GlobH2E)
-                  </ListItem>
-                  <ListItem>
-                    Australian Government Department of Industry, Science,
-                    Energy and Resources (DISER)
-                  </ListItem>
-                  <ListItem>
-                    Australian Government Department of Foreign Affairs and
-                    Trade (DFAT)
-                  </ListItem>
-                </List>
+
+                <StyledListItem>
+                  University of New South Wales (UNSW)
+                </StyledListItem>
+                <StyledListItem>
+                  Particles and Catalysis Research Group (PartCat), UNSW
+                </StyledListItem>
+                <StyledListItem>
+                  Collaboration on Energy and Environmental Markets (CEEM), UNSW
+                </StyledListItem>
+                <StyledListItem>
+                  ARC Training Centre for The Global Hydrogen Economy (GlobH2E)
+                </StyledListItem>
+                <StyledListItem>
+                  Australian Government Department of Industry, Science, Energy
+                  and Resources (DISER)
+                </StyledListItem>
+                <StyledListItem>
+                  Australian Government Department of Foreign Affairs and Trade
+                  (DFAT)
+                </StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
@@ -110,18 +116,17 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Project</ItemHeading>
-                <List>
-                  <ListItem>
-                    Part of the DFAT - Australia Germany HySupply Analysis
-                  </ListItem>
-                  <ListItem sx={{ fontWeight: "bold" }}>
-                    Contact person:
-                  </ListItem>
-                  <ListItem>
-                    Dr. Rahman Daiyan Chief Investigator - GlobH2e
-                  </ListItem>
-                  <ListItem>r.daiyan@unsw.edu.au</ListItem>
-                </List>
+
+                <StyledListItem>
+                  Part of the DFAT - Australia Germany HySupply Analysis
+                </StyledListItem>
+                <StyledListItem sx={{ fontWeight: "bold" }}>
+                  Contact person:
+                </StyledListItem>
+                <StyledListItem>
+                  Dr. Rahman Daiyan Chief Investigator - GlobH2e
+                </StyledListItem>
+                <StyledListItem>r.daiyan@unsw.edu.au</StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
