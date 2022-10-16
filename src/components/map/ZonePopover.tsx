@@ -42,15 +42,11 @@ const ItemText = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
 }));
-const ItemCaption = styled(Typography)(({ theme }) => ({
-  ...theme.typography.caption,
-  padding: theme.spacing(1),
-}));
 
 const SideCard = styled(Card)(({ theme }) => ({
   width: "400px",
   minHeight: "60vh",
-  border: "1px solid darkgrey",
+  borderRadius: "20px",
 }));
 
 export function ZonePopover(props: Props) {
@@ -218,28 +214,49 @@ export function ZonePopover(props: Props) {
             justifyContent="center"
             alignItems="stretch"
             rowSpacing="30"
+            padding="20px"
           >
             <Grid item xs={2}>
-              <Card onClick={startDesign}>
+              <Card
+                onClick={startDesign}
+                sx={{ "border-radius": "12px", border: "1px solid darkgrey" }}
+              >
                 <CardActionArea>
-                  <CardContent>
-                    <ItemTitle>Hydrogen</ItemTitle>
-                    <ItemCaption>
-                      General hydrogen production cost for region
-                    </ItemCaption>
-                  </CardContent>
+                  <CardHeader
+                    title="Hydrogen"
+                    subheader="General hydrogen production cost for region"
+                    titleTypographyProps={{
+                      fontWeight: "bold",
+                      fontSize: 14,
+                    }}
+                    subheaderTypographyProps={{
+                      fontSize: 12,
+                      lineHeight: 1.2,
+                    }}
+                    sx={{ padding: "12px" }}
+                  />
                 </CardActionArea>
               </Card>
             </Grid>
             <Grid item xs={2}>
-              <Card onClick={startDesign}>
+              <Card
+                onClick={startDesign}
+                sx={{ "border-radius": "12px", border: "1px solid darkgrey" }}
+              >
                 <CardActionArea>
-                  <CardContent>
-                    <ItemTitle>Ammonia</ItemTitle>
-                    <ItemCaption>
-                      Integrated hydrogen production and conversion into Ammonia
-                    </ItemCaption>
-                  </CardContent>
+                  <CardHeader
+                    title="Ammonia"
+                    subheader="Integrated hydrogen production and conversion into Ammonia"
+                    titleTypographyProps={{
+                      fontWeight: "bold",
+                      fontSize: 14,
+                    }}
+                    subheaderTypographyProps={{
+                      fontSize: 12,
+                      lineHeight: 1.2,
+                    }}
+                    sx={{ padding: "12px" }}
+                  />
                 </CardActionArea>
               </Card>
             </Grid>
@@ -250,25 +267,26 @@ export function ZonePopover(props: Props) {
   );
 
   return (
-    <div>
-      <Popover
-        open={props.sideMenuState}
-        TransitionProps={{ onExited: () => setComponent("location") }}
-        onClose={props.closeSideMenu}
-        anchorReference="anchorPosition"
-        anchorPosition={{ top: 20, left: 100 }}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        {component === "location" && summary}
-        {component === "powerfuel" && powerfuel}
-      </Popover>
-    </div>
+    <Popover
+      open={props.sideMenuState}
+      TransitionProps={{ onExited: () => setComponent("location") }}
+      onClose={props.closeSideMenu}
+      anchorReference="anchorPosition"
+      anchorPosition={{ top: 20, left: 100 }}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      PaperProps={{
+        style: { borderRadius: "20px", border: "1px solid darkgrey" },
+      }}
+    >
+      {component === "location" && summary}
+      {component === "powerfuel" && powerfuel}
+    </Popover>
   );
 }
