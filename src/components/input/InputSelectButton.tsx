@@ -85,6 +85,7 @@ function InputSelectButton(props: Props) {
           unmountOnExit={!selected}
           children={
             <InputCard
+              subtitle={true}
               title={text}
               onExpandChange={closeExpand}
               expanded={true}

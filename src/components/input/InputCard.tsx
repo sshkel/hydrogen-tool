@@ -89,10 +89,11 @@ function InputCard(props: InputCardProps) {
       >
         <Typography
           sx={{
-            fontSize: subtitle ? 16 : 22,
+            fontSize: subtitle ? "1rem" : 22,
             fontWeight: "bold",
             color: expanded ? ORANGE : BLUE,
             padding: "8px 8px 8px 18px",
+            marginBottom: expanded ? "-8px" : 0,
           }}
         >
           {title}
