@@ -34,7 +34,7 @@ export default function InputSelectField(props: Props) {
     selectClass,
   } = props;
   return (
-    <Grid sx={{ marginX: 2, marginY: 0.5 }}>
+    <Grid sx={{ marginX: 2, marginY: 0.5, paddingBottom: 2 }}>
       <InputTitle title={prompt} />
       {titles.map((text, index) => (
         <InputSelectButton

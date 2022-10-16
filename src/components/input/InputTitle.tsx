@@ -21,6 +21,7 @@ function InputTitle(props: Props) {
     >
       <InputLabel
         sx={{
+          paddingLeft: "24px",
           fontSize: "0.85rem",
           fontWeight: "bold",
           color: "black",

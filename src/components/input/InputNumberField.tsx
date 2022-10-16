@@ -15,7 +15,7 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
     "& fieldset": {
       borderColor: BLUE,
       borderWidth: "2px",
-      borderRadius: "16px",
+      borderRadius: "8px",
     },
     "&:hover fieldset": {
       borderColor: BLUE,
@@ -29,6 +29,7 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiFormHelperText-root": {
     fontStyle: "italic",
     lineHeight: "1.2",
+    paddingLeft: "10px",
   },
 }));
 
@@ -42,6 +43,7 @@ const sx = {
   flexShrink: "1",
   flexBasis: "100%",
   width: "100%",
+  paddingX: 1,
 };
 
 interface Props {

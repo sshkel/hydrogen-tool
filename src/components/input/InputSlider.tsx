@@ -76,7 +76,7 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item xs={12}>
         <InputTitle title={title} helperText={helperText} />
       </Grid>
-      <Grid item flexGrow={1} flexShrink={1}>
+      <Grid item flexGrow={1} flexShrink={1} marginLeft={1.25}>
         <StyledSlider
           value={typeof value === "number" ? value : 0}
           onChange={handleSliderChange}
@@ -87,7 +87,7 @@ export default function InputSlider({ inputKey }: Props) {
           defaultValue={defaultValue}
         />
       </Grid>
-      <Grid item minWidth="fit-content">
+      <Grid item>
         <TextField
           id={inputKey}
           value={value}
@@ -96,6 +96,7 @@ export default function InputSlider({ inputKey }: Props) {
           type="number"
           onChange={handleInputChange}
           onBlur={handleBlur}
+          sx={{ width: "90px" }}
           inputProps={{
             step: 0.1,
             min: min,
@@ -110,12 +111,12 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item xs={12}>
         <Typography
           sx={{
-            marginLeft: "14px",
+            marginLeft: "24px",
             fontSize: "0.75rem",
             fontStyle: "italic",
             color: "rgba(0, 0, 0, 0.6)",
             lineHeight: "1.2",
-            marginTop: "-10px",
+            marginTop: "-8px",
           }}
         >
           {valueText}
