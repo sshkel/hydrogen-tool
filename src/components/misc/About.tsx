@@ -52,20 +52,15 @@ export function About() {
               <CardContent>
                 <ItemHeading>Developers</ItemHeading>
 
-                <StyledListItem>
-                  Muhammad Haider Ali Khan (Lead Developer)
-                </StyledListItem>
-                <StyledListItem>Phoebe Heywood (Co Developer)</StyledListItem>
-                <StyledListItem>Aaron Kuswara (Co Developer)</StyledListItem>
-                <StyledListItem>Jack Shepherd (Co Developer)</StyledListItem>
-                <StyledListItem>
-                  Iain MacGill (Project Supervisor)
-                </StyledListItem>
-                <StyledListItem>
-                  Rahman Daiyan (Project Supervisor)
-                </StyledListItem>
-                <StyledListItem>Tara Tjandra (Team Lead)</StyledListItem>
-                <StyledListItem>Stanis Shkel (Intern)</StyledListItem>
+                <StyledListItem>Muhammad Haider Ali Khan</StyledListItem>
+                <StyledListItem>Phoebe Heywood</StyledListItem>
+                <StyledListItem>Aaron Kuswara</StyledListItem>
+                <StyledListItem>Jack Shepherd</StyledListItem>
+                <StyledListItem>Iain MacGill</StyledListItem>
+                <StyledListItem>Rahman Daiyan</StyledListItem>
+                <StyledListItem>Rose Amal</StyledListItem>
+                <StyledListItem>Tara Tjandra</StyledListItem>
+                <StyledListItem>Stanis Shkel</StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>

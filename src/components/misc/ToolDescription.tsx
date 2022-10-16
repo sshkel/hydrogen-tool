@@ -39,11 +39,11 @@ export function ToolDescription() {
         <Grid item>
           <StyledCard sx={{ alignItems: "center" }}>
             <CardContent sx={{ width: "40vw" }}>
-              <ItemTitle>HySupply Cost Analysis Tool</ItemTitle>
+              <ItemTitle>NSW Powerfuel Value Chain Tool</ItemTitle>
               <ItemText>
-                The HySupply Cost Analysis Tool has been developed to evaluate
-                the cost of generating hydrogen through exclusively renewable
-                powered electrolysis in Australia through an in-depth
+                The NSW Powerfuel Value Chain Tool has been developed to
+                evaluate the cost of generating hydrogen through exclusively
+                renewable powered electrolysis in Australia through an in-depth
                 technoeconomic analysis.
               </ItemText>
               <ItemText>
