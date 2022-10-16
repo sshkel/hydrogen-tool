@@ -27,10 +27,10 @@ const StyledSlider = styled(Slider)({
     border: "none",
   },
   "& .MuiSlider-thumb": {
-    height: 24,
-    width: 24,
+    height: 20,
+    width: 20,
     backgroundColor: "#5A93FC",
-    border: "9px solid #FFFF",
+    border: "6px solid #FFFF",
     boxShadow:
       "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
 
@@ -114,6 +114,8 @@ export default function InputSlider({ inputKey }: Props) {
             fontSize: "0.75rem",
             fontStyle: "italic",
             color: "rgba(0, 0, 0, 0.6)",
+            lineHeight: "1.2",
+            marginTop: "-10px",
           }}
         >
           {valueText}
