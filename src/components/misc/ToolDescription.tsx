@@ -37,7 +37,7 @@ export function ToolDescription() {
     <ThemeProvider theme={theme}>
       <Grid container direction="column" justifyContent={"space-between"}>
         <Grid item>
-          <StyledCard>
+          <StyledCard sx={{ alignItems: "center" }}>
             <CardContent sx={{ width: "40vw" }}>
               <ItemTitle>HySupply Cost Analysis Tool</ItemTitle>
               <ItemText>
@@ -73,7 +73,9 @@ export function ToolDescription() {
           </StyledCard>
         </Grid>
         <Grid item>
-          <StyledCard sx={{ flexDirection: "row-reverse" }}>
+          <StyledCard
+            sx={{ flexDirection: "row-reverse", alignItems: "center" }}
+          >
             <CardContent sx={{ width: "40vw" }}>
               <ItemTitle>Tool Competencies</ItemTitle>
               <ItemText>
@@ -103,6 +105,7 @@ export function ToolDescription() {
           <StyledCard
             sx={{
               flexDirection: "row-reverse",
+              alignItems: "center",
             }}
           >
             <CardContent sx={{ width: "40vw" }}>
