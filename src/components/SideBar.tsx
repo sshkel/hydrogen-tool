@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { BLUE } from "./input/colors";
 
 export function SideBar() {
-  const drawerWidth = 75;
+  const drawerWidth = 62;
   const navigate = useNavigate();
   return (
     <Drawer
