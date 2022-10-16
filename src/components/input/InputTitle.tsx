@@ -5,12 +5,13 @@ import * as React from "react";
 import InputHelpButton from "./InputHelpButton";
 
 interface Props {
+  id?: string;
   title: string;
   helperText?: string;
 }
 
 function InputTitle(props: Props) {
-  const { title, helperText } = props;
+  const { id, title, helperText } = props;
 
   return (
     <Box
@@ -20,6 +21,7 @@ function InputTitle(props: Props) {
       }}
     >
       <InputLabel
+        id={id}
         sx={{
           paddingLeft: "24px",
           fontSize: "0.85rem",
