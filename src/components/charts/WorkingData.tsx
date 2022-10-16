@@ -63,7 +63,7 @@ interface DownloadedData {
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
-  fontWeight: "bold",
+  color: "darkgrey",
 }));
 const ItemText = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
@@ -72,6 +72,7 @@ const ItemText = styled(Typography)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   ...theme.typography.body2,
   margin: "15px",
+  borderRadius: "20px",
 }));
 
 const theme = createTheme({
@@ -411,21 +412,44 @@ export default function WorkingData(props: Props) {
                 <Grid container item className="duration curves">
                   <Grid item xs={6}>
                     <StyledCard>
-                      <CardHeader title="Powerplant duration curve" />
-
-                      <DurationCurve
-                        title="Generator Duration Curve"
-                        data={hourlyOperations.Generator_CF}
+                      <CardHeader
+                        title="Power Plant Duration Curve"
+                        titleTypographyProps={{
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
                       />
+                      <CardContent
+                        sx={{
+                          paddingTop: 0,
+                        }}
+                      >
+                        <DurationCurve
+                          title="Generator Duration Curve"
+                          data={hourlyOperations.Generator_CF}
+                        />
+                      </CardContent>
                     </StyledCard>
                   </Grid>
                   <Grid item xs={6}>
                     <StyledCard>
-                      <CardHeader title="Electrolyser duration curve" />
-                      <DurationCurve
+                      <CardHeader
                         title="Electrolyser Duration Curve"
-                        data={hourlyOperations.Electrolyser_CF}
+                        titleTypographyProps={{
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
                       />
+                      <CardContent
+                        sx={{
+                          paddingTop: 0,
+                        }}
+                      >
+                        <DurationCurve
+                          title="Electrolyser Duration Curve"
+                          data={hourlyOperations.Electrolyser_CF}
+                        />
+                      </CardContent>
                     </StyledCard>
                   </Grid>
                 </Grid>
@@ -476,20 +500,31 @@ export default function WorkingData(props: Props) {
 function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
   return (
     <StyledCard>
-      <CardHeader title="Hourly capacity factors" />
-
-      <HourlyCapacityFactors
-        datapoints={[
-          {
-            label: "Electrolyser",
-            data: hourlyOperations.Electrolyser_CF,
-          },
-          {
-            label: "Power Plant",
-            data: hourlyOperations.Generator_CF,
-          },
-        ]}
+      <CardHeader
+        title="Hourly Capacity Factors"
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
       />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <HourlyCapacityFactors
+          datapoints={[
+            {
+              label: "Electrolyser",
+              data: hourlyOperations.Electrolyser_CF,
+            },
+            {
+              label: "Power Plant",
+              data: hourlyOperations.Generator_CF,
+            },
+          ]}
+        />
+      </CardContent>
     </StyledCard>
   );
 }
@@ -503,11 +538,21 @@ function KeyInputsPane(
   const zone = location as ObjectKey;
   return (
     <StyledCard>
-      <CardHeader title="Key inputs" />
-      <CardContent>
+      <CardHeader
+        title="Key Inputs"
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
+      />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
         <Grid container item>
           <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"}>
+            <Grid container item flexWrap={"nowrap"} spacing={2}>
               <Grid item>
                 <LocationOnRoundedIcon
                   fontSize="large"
@@ -526,7 +571,7 @@ function KeyInputsPane(
           </Grid>
 
           <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"}>
+            <Grid container item flexWrap={"nowrap"} spacing={2}>
               <Grid item>
                 <SignalCellularAltRoundedIcon
                   fontSize="large"
@@ -546,12 +591,12 @@ function KeyInputsPane(
             </Grid>
           </Grid>
           <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"}>
+            <Grid container item flexWrap={"nowrap"} spacing={2}>
               <Grid item>
                 <FactoryRoundedIcon fontSize="large" style={{ color: BLUE }} />
               </Grid>
               <Grid container item direction={"column"}>
-                <ItemTitle>Powerplant Capacity</ItemTitle>
+                <ItemTitle>Power Plant Capacity</ItemTitle>
                 <Grid item>
                   <ItemText>
                     {powerplantCapacity.toLocaleString("en-US")}
@@ -581,9 +626,19 @@ function OperatingCostsPane(
 ) {
   return (
     <StyledCard>
-      <CardHeader title="Operating Costs" />
-      <CardContent>
-        <Grid container item>
+      <CardHeader
+        title="Operating Costs"
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
+      />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <Grid container item spacing={2}>
           <Grid item xs={6}>
             <CostLineChart
               title="Operating Costs"
@@ -638,11 +693,25 @@ export function DoughnutPane(data: DoughnutPaneData) {
   }
   return (
     <StyledCard>
-      <CostBreakdownDoughnutChart
+      <CardHeader
         title={data.title}
-        labels={labels}
-        data={items}
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
       />
+      <CardContent
+        sx={{
+          height: "55vh",
+          paddingTop: 0,
+        }}
+      >
+        <CostBreakdownDoughnutChart
+          title={data.title}
+          labels={labels}
+          data={items}
+        />
+      </CardContent>
     </StyledCard>
   );
 }
@@ -708,12 +777,24 @@ export function WaterFallPane(data: WaterfallPaneData) {
   ];
   return (
     <StyledCard>
-      <CardHeader title={data.title} />
-      <CostWaterfallBarChart
+      <CardHeader
         title={data.title}
-        labels={labels}
-        datapoints={datapoints}
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
       />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <CostWaterfallBarChart
+          title={data.title}
+          labels={labels}
+          datapoints={datapoints}
+        />
+      </CardContent>
     </StyledCard>
   );
 }
@@ -763,17 +844,29 @@ function CashFlowAnalysisPane(
 ) {
   return (
     <StyledCard>
-      <CardHeader title="Cash Flow Analysis" />
-      <CostBarChart
+      <CardHeader
         title="Cash Flow Analysis"
-        labels={getActiveYearsLabels(projectTimeline)}
-        datapoints={[
-          {
-            label: "Cash Flow Analysis",
-            data: cumulativeCashFlow,
-          },
-        ]}
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
       />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <CostBarChart
+          title="Cash Flow Analysis"
+          labels={getActiveYearsLabels(projectTimeline)}
+          datapoints={[
+            {
+              label: "Cash Flow Analysis",
+              data: cumulativeCashFlow,
+            },
+          ]}
+        />
+      </CardContent>
     </StyledCard>
   );
 }
@@ -817,8 +910,20 @@ export function SummaryOfResultsPane(
   };
   return (
     <StyledCard>
-      <CardHeader title="Summary of results" />
-      <BasicTable title="Summary of Results" data={summaryDict} />
+      <CardHeader
+        title="Summary of Results"
+        titleTypographyProps={{
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
+      />
+      <CardContent
+        sx={{
+          paddingTop: 0,
+        }}
+      >
+        <BasicTable title="Summary of Results" data={summaryDict} />
+      </CardContent>
     </StyledCard>
   );
 }

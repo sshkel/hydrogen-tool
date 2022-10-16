@@ -31,6 +31,14 @@ export default function HourlyCapacityFactors(props: Props) {
 
   const options: any = {
     responsive: true,
+    elements: {
+      line: {
+        borderWidth: 2,
+      },
+      point: {
+        pointRadius: 0,
+      },
+    },
     scales: {
       x: {
         min: 0,

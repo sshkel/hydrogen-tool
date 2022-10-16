@@ -27,29 +27,11 @@ export default function CostBreakdownDoughnutChart(props: Props) {
   };
 
   return (
-    <div
-      style={{
-        height: "60vh",
-        position: "relative",
-        marginBottom: "1%",
-        padding: "1%",
+    <Doughnut
+      data={data}
+      options={{
+        maintainAspectRatio: false,
       }}
-    >
-      <Doughnut
-        data={data}
-        options={{
-          plugins: {
-            title: {
-              display: true,
-              text: props.title,
-              font: {
-                size: 20,
-              },
-            },
-          },
-          maintainAspectRatio: false,
-        }}
-      />
-    </div>
+    />
   );
 }
