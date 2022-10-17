@@ -18,7 +18,8 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { BLUE, GREY } from "../input/colors";
+import { BLUE, GREY, WHITE } from "../input/colors";
+import { PowerfuelPathwayCard } from "./PowerfuelPathwayCard";
 import { zoneInfo } from "./ZoneInfo";
 
 type Props = {
@@ -217,53 +218,18 @@ export function ZonePopover(props: Props) {
             padding="20px"
           >
             <Grid item xs={2}>
-              <Card
+              <PowerfuelPathwayCard
                 onClick={startDesign}
-                sx={{
-                  "border-radius": "12px",
-                  border: "2px solid darkgrey",
-                }}
-              >
-                <CardActionArea>
-                  <CardHeader
-                    title="Hydrogen"
-                    subheader="General hydrogen production cost for region"
-                    titleTypographyProps={{
-                      fontWeight: "bold",
-                      fontSize: 14,
-                    }}
-                    subheaderTypographyProps={{
-                      fontSize: 12,
-                      lineHeight: 1.2,
-                    }}
-                    sx={{
-                      padding: "12px",
-                    }}
-                  />
-                </CardActionArea>
-              </Card>
+                title="Hydrogen"
+                subheader="General hydrogen production cost for region"
+              />
             </Grid>
             <Grid item xs={2}>
-              <Card
+              <PowerfuelPathwayCard
                 onClick={startDesign}
-                sx={{ "border-radius": "12px", border: "2px solid darkgrey" }}
-              >
-                <CardActionArea>
-                  <CardHeader
-                    title="Ammonia"
-                    subheader="Integrated hydrogen production and conversion into Ammonia"
-                    titleTypographyProps={{
-                      fontWeight: "bold",
-                      fontSize: 14,
-                    }}
-                    subheaderTypographyProps={{
-                      fontSize: 12,
-                      lineHeight: 1.2,
-                    }}
-                    sx={{ padding: "12px" }}
-                  />
-                </CardActionArea>
-              </Card>
+                title="Ammonia"
+                subheader="Integrated hydrogen production and conversion into Ammonia"
+              />
             </Grid>
           </Grid>
         </CardContent>
@@ -287,7 +253,7 @@ export function ZonePopover(props: Props) {
         horizontal: "left",
       }}
       PaperProps={{
-        style: { borderRadius: "20px", border: "2px solid black" },
+        style: { borderRadius: "20px", border: "1px solid #C1C0BF" },
       }}
     >
       {component === "location" && summary}

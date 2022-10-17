@@ -74,7 +74,6 @@ export default function BasicHydrogenInput() {
                 prompt="Power Supply Option"
                 selectClass="powerSupplyOption"
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSlider
@@ -112,7 +111,6 @@ export default function BasicHydrogenInput() {
                 key="costAnalysisSelect"
                 selectKey="costAnalysisSelect"
                 titles={["LCH2​", "Detailed Project Costing"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSlider
