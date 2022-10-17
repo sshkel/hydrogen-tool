@@ -305,22 +305,26 @@ export function nh3_sales(
 // MW
 export function generator_actual_power(
   total_nominal_power_plant_capacity: number, // total power plant size
-  generator_capacity_factor: number // generator capacity factor
+  generator_capacity_factor: number[] // generator capacity factor
 ) {
-  return total_nominal_power_plant_capacity * generator_capacity_factor;
+  return generator_capacity_factor.map(
+    (v: number) => total_nominal_power_plant_capacity * v
+  );
 }
 
 // should be repeated for multiple cells
 // MW
 export function electrolyser_actual_power(
   nominal_electrolyser_capacity: number, // electrolyser capacity
-  generator_actual_power: number, // generator actual power
-  asu_nh3_actual_power: number // ASU/NH3 actual power
+  generator_actual_power: number[], // generator actual power
+  asu_nh3_actual_power: number[] // ASU/NH3 actual power
 ) {
-  return generator_actual_power - asu_nh3_actual_power >
+  return generator_actual_power.map((_: number, i: number) =>
+    generator_actual_power[i] - asu_nh3_actual_power[i] >
     nominal_electrolyser_capacity
-    ? nominal_electrolyser_capacity
-    : generator_actual_power - asu_nh3_actual_power;
+      ? nominal_electrolyser_capacity
+      : generator_actual_power[i] - asu_nh3_actual_power[i]
+  );
 }
 // %
 // should be repeated for multiple cells
@@ -336,11 +340,13 @@ export function asu_nh3_capacity_factor(
 export function asu_nh3_actual_power(
   ammonia_power_demand: number, // ammonia power demand
   asu_power_demand: number, // asu power demand
-  generator_actual_power: number // generator actual power
-) {
-  return generator_actual_power > ammonia_power_demand + asu_power_demand
-    ? ammonia_power_demand + asu_power_demand
-    : generator_actual_power;
+  generator_actual_power: number[] // generator actual power
+): number[] {
+  return generator_actual_power.map((v: number) =>
+    v > ammonia_power_demand + asu_power_demand
+      ? ammonia_power_demand + asu_power_demand
+      : v
+  );
 }
 // MWh
 // should be repeated for multiple cells
@@ -526,4 +532,97 @@ export function nh3_unit_capacity_factor(
   ammonia_plant_capacity: number // s1b12
 ) {
   return nh3_unit_out / (ammonia_plant_capacity * (1_000_000 / 8760));
+}
+
+function calculate(
+  generatorCapFactor: number[],
+  sec_at_nominal_load: number, // raw input
+  // system sizing
+  ammonia_plant_capacity: number, // raw input
+  electrolyser_system_oversizing: number, // raw input %
+  solar_hybrid_generator_split: number, // raw input %
+  wind_hybrid_generator_split: number, // raw input %
+  renewable_energy_plant_oversizing: number, // raw input
+  hydrogen_storage_capacity: number, // raw input
+
+  // specific electricity consumption sec
+  ammonia_plant_sec: number, // raw input
+  asu_sec: number, // raw input
+  // ammonia plant load range
+  ammonia_plant_minimum_turndown: number, // raw input %
+  // other operational factors
+  duration_of_ammonia_storage: number, // raw input,
+  // ammonia plant costs
+  // capital costs
+  ammonia_synthesis_unit_cost: number, // raw
+  ammonia_storage_cost: number, // raw
+  air_separation_unit_cost: number,
+  epc_costs: number, // %
+  land_procurement_costs: number, // %
+  // operating costs
+  ammonia_plant_OandM: number, // %
+  ammonia_storage_OandM: number, // %
+  asu_plant_OandM: number // %
+) {
+  const ammonia_plant_power_demand_result = ammonia_plant_power_demand(
+    ammonia_plant_capacity,
+    ammonia_plant_sec
+  );
+
+  const air_separation_unit_capacity_result = air_separation_unit_capacity(
+    ammonia_plant_capacity
+  );
+  const air_separation_unit_power_demand_result =
+    air_separation_unit_power_demand(
+      air_separation_unit_capacity_result,
+      asu_sec
+    );
+  const hydrogen_output_result = hydrogen_output(ammonia_plant_capacity);
+  const nominal_electrolyser_capacity_result = nominal_electrolyser_capacity(
+    hydrogen_output_result,
+    sec_at_nominal_load,
+    electrolyser_system_oversizing / 100
+  );
+
+  const total_nominal_power_plant_capacity =
+    nominal_solar_capacity(
+      ammonia_plant_power_demand_result,
+      air_separation_unit_power_demand_result,
+      nominal_electrolyser_capacity_result,
+      solar_hybrid_generator_split / 100,
+      renewable_energy_plant_oversizing / 100
+    ) +
+    nominal_wind_capacity(
+      ammonia_plant_power_demand_result,
+      air_separation_unit_power_demand_result,
+      nominal_electrolyser_capacity_result,
+      wind_hybrid_generator_split / 100,
+      renewable_energy_plant_oversizing / 100
+    );
+  const generator_actual_power_result: number[] = generator_actual_power(
+    total_nominal_power_plant_capacity,
+    generatorCapFactor
+  );
+  const ammonia_power_demand_result = ammonia_plant_power_demand(
+    ammonia_plant_capacity,
+    ammonia_plant_sec
+  );
+
+  const asu_power_demand_result = air_separation_unit_power_demand(
+    air_separation_unit_capacity_result,
+    asu_sec
+  );
+  const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
+    ammonia_power_demand_result,
+    asu_power_demand_result,
+    generator_actual_power_result
+  );
+
+  const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
+    nominal_electrolyser_capacity_result,
+    generator_actual_power_result,
+    asu_nh3_actual_power_result
+  );
+
+  return electrolyser_actual_power_result;
 }
