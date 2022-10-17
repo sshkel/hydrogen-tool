@@ -17,13 +17,14 @@ function InputTitle(props: Props) {
     <Box
       sx={{
         display: "flex",
+        justifyContent: "space-around",
         width: "100%",
       }}
     >
       <InputLabel
         id={id}
         sx={{
-          paddingLeft: "24px",
+          paddingLeft: "1.5rem",
           fontSize: "0.85rem",
           fontWeight: "bold",
           color: "black",

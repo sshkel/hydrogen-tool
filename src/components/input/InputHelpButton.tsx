@@ -39,7 +39,11 @@ function InputHelpButton(props: Props) {
         aria-owns={popoverId}
         aria-haspopup="true"
         onClick={handlePopoverOpen}
-        style={{ backgroundColor: "transparent" }}
+        disableRipple
+        sx={{
+          backgroundColor: "transparent",
+          padding: "0px 5px",
+        }}
         size="small"
       >
         <HelpIcon fontSize="inherit" />

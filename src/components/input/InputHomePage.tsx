@@ -16,7 +16,7 @@ import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
-import { BLUE, ORANGE } from "./colors";
+import { BLACK, BLUE, ORANGE, WHITE } from "./colors";
 import { configurationTypes } from "./data";
 
 const theme = createTheme({
@@ -26,21 +26,21 @@ const theme = createTheme({
   palette: {
     primary: {
       main: BLUE,
-      contrastText: "#000",
+      contrastText: BLACK,
     },
     secondary: {
       main: "#F2F2F2",
-      contrastText: "#000",
+      contrastText: BLACK,
     },
     info: {
       main: "rgba(0, 0, 0, 0.54)",
-      contrastText: "#000",
+      contrastText: BLACK,
     },
     success: {
       main: ORANGE,
       light: "#f5b58a",
       dark: "#d35f12",
-      contrastText: "#FFF",
+      contrastText: WHITE,
     },
   },
 });

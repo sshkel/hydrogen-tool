@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import InputTitle from "./InputTitle";
-import { BLUE } from "./colors";
+import { BLUE, WHITE } from "./colors";
 import { basicDefaultInputs } from "./data";
 import { defaultInputs } from "./defaults";
 
@@ -16,9 +16,6 @@ interface Props {
 const StyledSlider = styled(Slider)({
   height: 8,
   color: BLUE,
-  flexShrink: 1,
-  flexGrow: 1,
-  flexBasis: "90%",
 
   "& .MuiSlider-rail": {
     background: "linear-gradient(90deg ,#5A6FFA, #BDD7EF)",
@@ -30,7 +27,7 @@ const StyledSlider = styled(Slider)({
     height: 20,
     width: 20,
     backgroundColor: "#5A93FC",
-    border: "6px solid #FFFF",
+    border: `6px solid ${WHITE}`,
     boxShadow:
       "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
 
@@ -59,7 +56,9 @@ export default function InputSlider({ inputKey }: Props) {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value === "" ? "" : Number(event.target.value));
+    setValue(
+      event.target.value === "" ? defaultValue : Number(event.target.value)
+    );
   };
 
   const handleBlur = () => {
@@ -76,7 +75,7 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item xs={12}>
         <InputTitle title={title} helperText={helperText} />
       </Grid>
-      <Grid item flexGrow={1} flexShrink={1} marginLeft={1.25}>
+      <Grid item flexGrow={1} flexShrink={1} marginLeft={3.25}>
         <StyledSlider
           value={typeof value === "number" ? value : 0}
           onChange={handleSliderChange}
@@ -87,7 +86,7 @@ export default function InputSlider({ inputKey }: Props) {
           defaultValue={defaultValue}
         />
       </Grid>
-      <Grid item>
+      <Grid item marginRight={1.5}>
         <TextField
           id={inputKey}
           value={value}
@@ -96,14 +95,17 @@ export default function InputSlider({ inputKey }: Props) {
           type="number"
           onChange={handleInputChange}
           onBlur={handleBlur}
-          sx={{ width: "90px" }}
+          sx={{ width: "5rem" }}
           inputProps={{
+            inputMode: "numeric",
+            pattern: "/^d*.?d*$/",
             step: 0.1,
             min: min,
             max: max,
             "aria-labelledby": "input-slider",
             style: {
               textAlign: "center",
+              fontSize: "0.85rem",
             },
           }}
         />

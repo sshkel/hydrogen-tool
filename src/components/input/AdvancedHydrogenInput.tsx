@@ -80,12 +80,7 @@ export default function AdvancedHydrogenInput() {
                 prompt="Stack Replacement Type"
                 selectClass="stackReplacementType"
                 titles={["Cumulative Hours", "Maximum Degradation Level"]}
-                helperTexts={[
-                  undefined,
-                  undefined,
-                  // "Replace stack lifetime exceeds an hourly threshold",
-                  // "Replace stack after it degrades past a given threshold",
-                ]}
+                helperText="Replace stack lifetime exceeds an hourly threshold or degrades past a given rate"
                 buttonChildren={[
                   [
                     <InputNumberField
@@ -168,7 +163,6 @@ export default function AdvancedHydrogenInput() {
                 prompt="Power Plant Type"
                 titles={["Solar", "Wind", "Hybrid"]}
                 selectClass="powerPlantType"
-                helperTexts={[undefined, undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSelect
@@ -176,12 +170,7 @@ export default function AdvancedHydrogenInput() {
                       selectKey="solarPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperTexts={[
-                        undefined,
-                        undefined,
-                        // "Solar farm capacity in MW",
-                        // "Solar farm capacity as a ratio of electrolyser capacity",
-                      ]}
+                      helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
                       buttonChildren={[
                         [
                           <InputNumberField
@@ -204,12 +193,7 @@ export default function AdvancedHydrogenInput() {
                       selectKey="windPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperTexts={[
-                        undefined,
-                        undefined,
-                        // "Wind farm capacity in MW",
-                        // "Wind farm capacity as a ratio of electrolyser capacity",
-                      ]}
+                      helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
                       buttonChildren={[
                         [
                           <InputNumberField
@@ -232,12 +216,7 @@ export default function AdvancedHydrogenInput() {
                       selectKey="hybridPowerPlantCapacitySelect"
                       prompt="Power Plant Capacity"
                       titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperTexts={[
-                        undefined,
-                        undefined,
-                        // "Solar and Wind farm capacity in MW",
-                        // "Solar and Wind fam capacity as a ratio of electrolyser capacity",
-                      ]}
+                      helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
                       buttonChildren={[
                         [
                           <InputNumberField
@@ -270,7 +249,6 @@ export default function AdvancedHydrogenInput() {
                 prompt="Power Plant Configuration"
                 selectClass="powerPlantConfiguration"
                 titles={["Standalone", "Grid Connected"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [],
                   [
@@ -306,7 +284,6 @@ export default function AdvancedHydrogenInput() {
                 prompt="Power Supply Option"
                 selectClass="powerSupplyOption"
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputNumberField

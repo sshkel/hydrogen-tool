@@ -7,7 +7,7 @@ import InputTitle from "./InputTitle";
 interface Props {
   selectKey?: string;
   titles: string[];
-  helperTexts: (string | undefined)[];
+  helperText?: string;
   buttonChildren: JSX.Element[][];
   prompt?: string;
   selectClass?: string;
@@ -28,21 +28,20 @@ export default function InputSelectField(props: Props) {
   const {
     selectKey,
     titles,
-    helperTexts,
+    helperText,
     buttonChildren,
     prompt = "Select one option from below",
     selectClass,
   } = props;
   return (
-    <Grid sx={{ marginX: 2, marginY: 0.5, paddingBottom: 2 }}>
-      <InputTitle title={prompt} />
+    <Grid container paddingLeft={0.5}>
+      <InputTitle title={prompt} helperText={helperText} />
       {titles.map((text, index) => (
         <InputSelectButton
           key={selectKey ? `${selectKey}-${index}` : undefined}
           text={text}
           index={index}
           className={selectClass}
-          helperText={helperTexts[index]}
           onOpenExpand={onOpenExpand}
           onCloseExpand={onCloseExpand}
           expanded={expanded === index}

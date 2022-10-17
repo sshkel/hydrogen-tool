@@ -5,23 +5,23 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 import InputTitle from "./InputTitle";
-import { BLUE, ORANGE } from "./colors";
+import { BLUE, GREY } from "./colors";
 import { advancedDefaultInputs } from "./data";
 import { defaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
-    height: "40px",
+    height: "2.5rem",
     "& fieldset": {
-      borderColor: BLUE,
+      borderColor: GREY,
       borderWidth: "2px",
       borderRadius: "8px",
     },
     "&:hover fieldset": {
-      borderColor: BLUE,
+      borderColor: GREY,
     },
     "&.Mui-focused fieldset": {
-      borderColor: ORANGE,
+      borderColor: BLUE,
       boxShadow:
         "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)",
     },
@@ -29,7 +29,7 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiFormHelperText-root": {
     fontStyle: "italic",
     lineHeight: "1.2",
-    paddingLeft: "10px",
+    paddingLeft: "0.2rem",
   },
 }));
 
@@ -63,7 +63,7 @@ function InputNumberField({ inputKey }: Props) {
   const defaultValue = defaultInputs[inputKey];
 
   return (
-    <Grid container alignItems="center" columnSpacing={4}>
+    <Grid container alignItems="center" columnSpacing={3.5}>
       <Grid item xs={12}>
         <InputTitle title={title} helperText={helperText} />
       </Grid>

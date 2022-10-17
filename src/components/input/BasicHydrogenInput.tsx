@@ -73,8 +73,8 @@ export default function BasicHydrogenInput() {
                 selectKey="powerSupplyOptionSelect"
                 prompt="Power Supply Option"
                 selectClass="powerSupplyOption"
+                helperText="Add farm build costs or PPA supply costs."
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSlider
@@ -112,7 +112,6 @@ export default function BasicHydrogenInput() {
                 key="costAnalysisSelect"
                 selectKey="costAnalysisSelect"
                 titles={["LCH2​", "Detailed Project Costing"]}
-                helperTexts={[undefined, undefined]}
                 buttonChildren={[
                   [
                     <InputSlider
