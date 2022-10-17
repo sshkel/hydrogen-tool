@@ -75,7 +75,7 @@ export default function InputSlider({ inputKey }: Props) {
       <Grid item xs={12}>
         <InputTitle title={title} helperText={helperText} />
       </Grid>
-      <Grid item flexGrow={1} flexShrink={1} marginLeft={3}>
+      <Grid item flexGrow={1} flexShrink={1} marginLeft={3.25}>
         <StyledSlider
           value={typeof value === "number" ? value : 0}
           onChange={handleSliderChange}
@@ -90,7 +90,6 @@ export default function InputSlider({ inputKey }: Props) {
         <TextField
           id={inputKey}
           value={value}
-          defaultValue={defaultValue}
           variant="outlined"
           size="small"
           type="number"

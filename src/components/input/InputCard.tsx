@@ -92,6 +92,7 @@ function InputCard(props: InputCardProps) {
         sx={{
           display: "flex",
           alignItems: "stretch",
+          marginBottom: expanded ? "-8px" : 0,
         }}
       >
         <Typography
@@ -100,7 +101,6 @@ function InputCard(props: InputCardProps) {
             fontWeight: "bold",
             color: expanded ? ORANGE : BLUE,
             padding: "8px 8px 8px 18px",
-            marginBottom: expanded ? "-8px" : 0,
           }}
         >
           {title}

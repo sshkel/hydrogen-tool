@@ -46,6 +46,7 @@ export default function InputDropdownField(props: Props) {
         value={value}
         onChange={onSelectChange}
         sx={{
+          height: "2.5rem",
           borderRadius: 2,
           boxShadow: "0px 0px 2px 2px rgb(180 180 180 / 75%)",
           marginX: 2,

@@ -17,6 +17,7 @@ function InputTitle(props: Props) {
     <Box
       sx={{
         display: "flex",
+        justifyContent: "space-around",
         width: "100%",
       }}
     >

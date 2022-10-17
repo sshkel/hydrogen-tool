@@ -33,9 +33,8 @@ export default function InputSelectField(props: Props) {
     prompt = "Select one option from below",
     selectClass,
   } = props;
-  // sx={{ marginX: 2, marginY: 0.5, paddingBottom: 2 }}>
   return (
-    <Grid>
+    <Grid container paddingLeft={0.5}>
       <InputTitle title={prompt} helperText={helperText} />
       {titles.map((text, index) => (
         <InputSelectButton

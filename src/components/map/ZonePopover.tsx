@@ -3,7 +3,6 @@ import WindPowerRoundedIcon from "@mui/icons-material/WindPowerRounded";
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
@@ -18,7 +17,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { BLUE, GREY, WHITE } from "../input/colors";
+import { BLUE, GREY } from "../input/colors";
 import { PowerfuelPathwayCard } from "./PowerfuelPathwayCard";
 import { zoneInfo } from "./ZoneInfo";
 

@@ -1,11 +1,9 @@
+import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import React, { Suspense } from "react";
 
 import InputCard from "./InputCard";
-import InputHelpButton from "./InputHelpButton";
 
 interface Props {
   index: number;
@@ -26,20 +24,7 @@ const StyledButton = styled(Button)({
 });
 
 function InputSelectButton(props: Props) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
-
-  const { expanded, selected, index, text, helperText, children, className } =
-    props;
-
-  const handleClose = (event: any) => {
-    event.stopPropagation();
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const popoverId = open ? "help-screen" : undefined;
+  const { expanded, selected, index, text, children, className } = props;
 
   const openExpand = () => props.onOpenExpand(index);
   const closeExpand = () => props.onCloseExpand();
@@ -51,7 +36,7 @@ function InputSelectButton(props: Props) {
   const InputCollapse = React.lazy(() => import("./InputCollapse"));
 
   return (
-    <div>
+    <Grid item xs={12} sx={{ marginX: 3 }}>
       {!showCard ? (
         <div style={{ display: "flex" }}>
           <StyledButton
@@ -59,23 +44,10 @@ function InputSelectButton(props: Props) {
             color={selected ? "success" : "info"}
             className={className}
             fullWidth
-            endIcon={<InputHelpButton helperText={helperText} />}
             onClick={openExpand}
           >
             {text}
           </StyledButton>
-          <Popover
-            id={popoverId}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-          >
-            <Typography sx={{ p: 2 }}>{helperText}</Typography>
-          </Popover>
         </div>
       ) : null}
       <Suspense fallback={null}>
@@ -95,7 +67,7 @@ function InputSelectButton(props: Props) {
           }
         />
       </Suspense>
-    </div>
+    </Grid>
   );
 }
 
