@@ -374,25 +374,27 @@ export function asu_nh3_with_battery_cf(
 // %
 // should be repeated for multiple cells
 export function electrolyser_with_battery_capacity_factor(
-  net_battery_flow: number,
-  electrolyser_actual_power: number,
-  asu_nh3_actual_power: number,
-  electrolyser_capacity_factor: number,
+  net_battery_flow: number[],
+  electrolyser_actual_power: number[],
+  asu_nh3_actual_power: number[],
+  electrolyser_capacity_factor: number[],
   ammonia_power_demand: number,
   asu_power_demand: number,
   electrolyser_capacity: number,
   battery_efficiency: number
 ) {
-  if (net_battery_flow < 0) {
-    return (
-      electrolyser_actual_power +
-      -1 * net_battery_flow * (1 - (1 - battery_efficiency) / 2) -
-      (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power) /
-        electrolyser_capacity
-    );
-  }
+  return net_battery_flow.map((_: number, i: number) => {
+    if (net_battery_flow[i] < 0) {
+      return (
+        electrolyser_actual_power[i] +
+        -1 * net_battery_flow[i] * (1 - (1 - battery_efficiency) / 2) -
+        (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i]) /
+          electrolyser_capacity
+      );
+    }
 
-  return electrolyser_capacity_factor;
+    return electrolyser_capacity_factor;
+  });
 }
 // should be repeated for multiple cells
 export function excess_h2(
@@ -535,7 +537,12 @@ export function nh3_unit_capacity_factor(
 }
 
 function calculate(
-  generatorCapFactor: number[],
+  generatorCapFactor: number[], // calculated in hydrogen
+  net_battery_flow: number[], // calculated in hydrogen
+  electrolyserCapFactor: number[], // calculated in hydrogen
+
+  // round trip efficiency from hydrogen raw input
+  batteryEfficiency: number, // %
   sec_at_nominal_load: number, // raw input
   // system sizing
   ammonia_plant_capacity: number, // raw input
@@ -624,5 +631,16 @@ function calculate(
     asu_nh3_actual_power_result
   );
 
-  return electrolyser_actual_power_result;
+  const electrolyser_with_battery_capacity_factor_result =
+    electrolyser_with_battery_capacity_factor(
+      net_battery_flow,
+      electrolyser_actual_power_result,
+      asu_nh3_actual_power_result,
+      electrolyserCapFactor,
+      ammonia_power_demand_result,
+      asu_power_demand_result,
+      nominal_electrolyser_capacity_result,
+      batteryEfficiency
+    );
+  return electrolyser_with_battery_capacity_factor_result;
 }
