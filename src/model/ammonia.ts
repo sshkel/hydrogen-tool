@@ -398,145 +398,174 @@ export function electrolyser_with_battery_capacity_factor(
 }
 // should be repeated for multiple cells
 export function excess_h2(
-  mass_of_hydrogen: number, // asu/nh3 cap factor // TODO type?
+  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
   hydrogen_output: number
 ) {
-  return mass_of_hydrogen > (hydrogen_output / 24) * 1000
-    ? mass_of_hydrogen - (hydrogen_output / 24) * 1000
-    : 0;
+  return mass_of_hydrogen.map((v: number) =>
+    v > (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
+  );
 }
 
 // should be repeated for multiple cells
 export function deficit_h2(
-  mass_of_hydrogen: number, // asu/nh3 cap factor // TODO type?
+  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
   hydrogen_output: number
 ) {
-  return mass_of_hydrogen < (hydrogen_output / 24) * 1000
-    ? mass_of_hydrogen - (hydrogen_output / 24) * 1000
-    : 0;
-}
-
-export function to_h2_storage_p1(excess_h2: number) {
-  return excess_h2 > 0 ? excess_h2 : 0;
-}
-
-// should be repeated for multiple cells
-export function to_h2_storage_p2(
-  excess_h2: number,
-  h2_store_balance: number,
-  hydrogen_storage_capacity: number
-) {
-  return h2_store_balance + excess_h2 < hydrogen_storage_capacity &&
-    excess_h2 > 0
-    ? excess_h2
-    : 0;
-}
-
-export function from_h2_storage_p1(deficit_h2: number) {
-  return deficit_h2 < 0 ? deficit_h2 : 0;
-}
-
-// should be repeated for multiple cells
-export function from_h2_storage_p2(
-  deficit_h2: number,
-  h2_store_balance: number,
-  hydrogen_storage_capacity: number,
-  minimum_hydrogen_storage_percentage: number
-) {
-  return h2_store_balance + deficit_h2 >
-    hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
-    deficit_h2 < 0
-    ? deficit_h2
-    : 0;
-}
-
-export function h2_stoage_balance_p1(
-  to_h2_storage: number,
-  from_h2_storage: number,
-  hydrogen_storage_capacity: number
-) {
-  return to_h2_storage + from_h2_storage + hydrogen_storage_capacity;
-}
-
-// should be repeated for multiple cells
-export function h2_stoage_balance_p2(
-  to_h2_storage: number,
-  from_h2_storage: number,
-  hydrogen_storage_capacity: number
-) {
-  return to_h2_storage + from_h2_storage + hydrogen_storage_capacity;
+  return mass_of_hydrogen.map((v: number) =>
+    v < (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
+  );
 }
 
 // should be repeated for multiple cells
 export function h2_to_nh3(
-  mass_of_hydrogen: number, // p20
-  from_h2_storage: number, // t20
-  h2_store_balance: number, // u20
+  mass_of_hydrogen: number[], // p20
+  from_h2_storage: number[], // t20
+  h2_store_balance: number[], // u20
   hydrogen_storage_capacity: number, // s1b26
   hydrogen_output: number, // s1b16
   ammonia_plant_minimum_turndown: number // s1b36
-) {
-  if (mass_of_hydrogen >= (hydrogen_output / 24) * 1000) {
-    return (hydrogen_output / 24) * 1000;
-  } else if (
-    mass_of_hydrogen + Math.abs(from_h2_storage) <
-    hydrogen_output * 1000 * ammonia_plant_minimum_turndown
-  ) {
-    return 0;
-  } else if (
-    mass_of_hydrogen < (hydrogen_output / 24) * 1000 &&
-    mass_of_hydrogen > hydrogen_storage_capacity * 0.1
-  ) {
-    return mass_of_hydrogen + Math.abs(from_h2_storage);
-  } else if (
-    h2_store_balance < hydrogen_storage_capacity * 0.1 &&
-    mass_of_hydrogen > hydrogen_output * 1000 * ammonia_plant_minimum_turndown
-  ) {
-    return mass_of_hydrogen;
-  } else if (
-    h2_store_balance < hydrogen_storage_capacity * 0.1 &&
-    mass_of_hydrogen <
-      (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
-  ) {
-    return 0;
-  }
-  throw new Error("Unsupported calculation for h2 to nh3");
+): number[] {
+  return mass_of_hydrogen.map((_: number, i: number) => {
+    if (mass_of_hydrogen[i] >= (hydrogen_output / 24) * 1000) {
+      return (hydrogen_output / 24) * 1000;
+    } else if (
+      mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]) <
+      hydrogen_output * 1000 * ammonia_plant_minimum_turndown
+    ) {
+      return 0;
+    } else if (
+      mass_of_hydrogen[i] < (hydrogen_output / 24) * 1000 &&
+      mass_of_hydrogen[i] > hydrogen_storage_capacity * 0.1
+    ) {
+      return mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]);
+    } else if (
+      h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
+      mass_of_hydrogen[i] >
+        hydrogen_output * 1000 * ammonia_plant_minimum_turndown
+    ) {
+      return mass_of_hydrogen[i];
+    } else if (
+      h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
+      mass_of_hydrogen[i] <
+        (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
+    ) {
+      return 0;
+    }
+    throw new Error("Unsupported calculation for h2 to nh3");
+  });
 }
 
 // should be repeated for multiple cells
 export function asu_out(
-  h2_to_nh3: number, // v20
+  h2_to_nh3: number[], // v20
   hydrogen_output: number, // s1b16
   asu_capacity: number // s1b14
 ) {
-  // the first condition might be a typo
-  if (h2_to_nh3 == (hydrogen_output / 24) * 1000) {
-    return (hydrogen_output / 24) * 1000;
-  } else if (h2_to_nh3 < (hydrogen_output / 24) * 1000) {
-    return (
-      (h2_to_nh3 / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000
-    );
-  }
-  throw new Error("Unsupported calculation for asu out");
+  return h2_to_nh3.map((v: number) => {
+    if (v === (hydrogen_output / 24) * 1000) {
+      return (hydrogen_output / 24) * 1000;
+    } else if (v < (hydrogen_output / 24) * 1000) {
+      return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;
+    }
+    throw new Error("Unsupported calculation for asu out");
+  });
 }
 
 // should be repeated for multiple cells
 export function nh3_unit_out(
-  asu_out: number, // w20
-  h2_to_nh3: number // v20
+  asu_out: number[], // w20
+  h2_to_nh3: number[] // v20
 ) {
-  return asu_out > 0 ? h2_to_nh3 + asu_out : 0;
+  return asu_out.map((_: number, i: number) =>
+    asu_out[i] > 0 ? h2_to_nh3[i] + asu_out[i] : 0
+  );
 }
 
 // should be repeated for multiple cells
 export function nh3_unit_capacity_factor(
-  nh3_unit_out: number, // x20
+  nh3_unit_out: number[], // x20
   ammonia_plant_capacity: number // s1b12
 ) {
-  return nh3_unit_out / (ammonia_plant_capacity * (1_000_000 / 8760));
+  return nh3_unit_out.map(
+    (v: number) => v / (ammonia_plant_capacity * (1_000_000 / 8760))
+  );
 }
 
-function calculate(
+// should be repeated for multiple cells
+export function to_h2_storage(
+  excess_h2: number[],
+  h2_store_balance: number,
+  hydrogen_storage_capacity: number
+) {
+  return excess_h2.map((_: number, i: number) => {
+    if (i === 0) {
+      return excess_h2[i] > 0 ? excess_h2[i] : 0;
+    } else {
+      return h2_store_balance + excess_h2[i] < hydrogen_storage_capacity &&
+        excess_h2[i] > 0
+        ? excess_h2
+        : 0;
+    }
+  });
+}
+
+// should be repeated for multiple cells
+export function from_h2_storage(
+  deficit_h2: number[],
+  h2_store_balance: number,
+  hydrogen_storage_capacity: number,
+  minimum_hydrogen_storage_percentage: number
+) {
+  return deficit_h2.map((_: number, i: number) => {
+    if (i === 0) {
+      return deficit_h2[i] < 0 ? deficit_h2[i] : 0;
+    } else {
+      return h2_store_balance + deficit_h2[i] >
+        hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
+        deficit_h2[i] < 0
+        ? deficit_h2
+        : 0;
+    }
+  });
+}
+
+export function h2_storage_balance(
+  deficit_h2: number[],
+  excess_h2: number[],
+  hydrogen_storage_capacity: number,
+  minimum_hydrogen_storage_percentage: number
+) {
+  const size = deficit_h2.length;
+  const h2_storage_balance_result = Array(size).fill(0);
+  const from_h2_store = Array(size).fill(0);
+  const to_h2_store = Array(size).fill(0);
+
+  for (let i = 0; i < size; i++) {
+    if (i === 0) {
+      from_h2_store[i] = deficit_h2[i] < 0 ? deficit_h2[i] : 0;
+      to_h2_store[i] = excess_h2[i] > 0 ? excess_h2[i] : 0;
+      h2_storage_balance_result[i] =
+        to_h2_store[i] + from_h2_store[i] + hydrogen_storage_capacity;
+    } else {
+      from_h2_store[i] =
+        h2_storage_balance_result[i - 1] + deficit_h2[i] >
+          hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
+        deficit_h2[i] < 0
+          ? deficit_h2[i]
+          : 0;
+      to_h2_store[i] =
+        h2_storage_balance_result[i - 1] + excess_h2[i] <
+          hydrogen_storage_capacity && excess_h2[i] > 0
+          ? excess_h2[i]
+          : 0;
+      h2_storage_balance_result[i] =
+        to_h2_store[i] + from_h2_store[i] + h2_storage_balance_result[i - 1];
+    }
+  }
+  return { from_h2_store, to_h2_store, h2_storage_balance_result };
+}
+// will be used to calculate mass_of_hydrogen
+function calculateGeneratorCapFactors(
   generatorCapFactor: number[], // calculated in hydrogen
   net_battery_flow: number[], // calculated in hydrogen
   electrolyserCapFactor: number[], // calculated in hydrogen
@@ -550,26 +579,10 @@ function calculate(
   solar_hybrid_generator_split: number, // raw input %
   wind_hybrid_generator_split: number, // raw input %
   renewable_energy_plant_oversizing: number, // raw input
-  hydrogen_storage_capacity: number, // raw input
 
   // specific electricity consumption sec
   ammonia_plant_sec: number, // raw input
-  asu_sec: number, // raw input
-  // ammonia plant load range
-  ammonia_plant_minimum_turndown: number, // raw input %
-  // other operational factors
-  duration_of_ammonia_storage: number, // raw input,
-  // ammonia plant costs
-  // capital costs
-  ammonia_synthesis_unit_cost: number, // raw
-  ammonia_storage_cost: number, // raw
-  air_separation_unit_cost: number,
-  epc_costs: number, // %
-  land_procurement_costs: number, // %
-  // operating costs
-  ammonia_plant_OandM: number, // %
-  ammonia_storage_OandM: number, // %
-  asu_plant_OandM: number // %
+  asu_sec: number // raw input
 ) {
   const ammonia_plant_power_demand_result = ammonia_plant_power_demand(
     ammonia_plant_capacity,
@@ -631,16 +644,66 @@ function calculate(
     asu_nh3_actual_power_result
   );
 
-  const electrolyser_with_battery_capacity_factor_result =
-    electrolyser_with_battery_capacity_factor(
-      net_battery_flow,
-      electrolyser_actual_power_result,
-      asu_nh3_actual_power_result,
-      electrolyserCapFactor,
-      ammonia_power_demand_result,
-      asu_power_demand_result,
-      nominal_electrolyser_capacity_result,
-      batteryEfficiency
+  return electrolyser_with_battery_capacity_factor(
+    net_battery_flow,
+    electrolyser_actual_power_result,
+    asu_nh3_actual_power_result,
+    electrolyserCapFactor,
+    ammonia_power_demand_result,
+    asu_power_demand_result,
+    nominal_electrolyser_capacity_result,
+    batteryEfficiency
+  );
+}
+
+function calculateNH3CapFactors(
+  mass_of_hydrogen: number[], // calculated in hydrogen
+
+  // system sizing
+  ammonia_plant_capacity: number, // raw input
+
+  hydrogen_storage_capacity: number, // raw input
+
+  // ammonia plant load range
+  ammonia_plant_minimum_turndown: number, // raw input %
+
+  // electrolyster and hydrogen storage paramteres
+  // other operation factors
+  minimum_hydrogen_storage: number // %
+) {
+  // TODO remove duplication of these 2 functions
+  const hydrogen_output_result = hydrogen_output(ammonia_plant_capacity);
+  const air_separation_unit_capacity_result = air_separation_unit_capacity(
+    ammonia_plant_capacity
+  );
+  const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output_result);
+  const deficit_h2_result = deficit_h2(
+    mass_of_hydrogen,
+    hydrogen_output_result
+  );
+
+  const { from_h2_store, to_h2_store, h2_storage_balance_result } =
+    h2_storage_balance(
+      deficit_h2_result,
+      excess_h2_result,
+      hydrogen_storage_capacity,
+      minimum_hydrogen_storage / 100
     );
-  return electrolyser_with_battery_capacity_factor_result;
+  const h2_to_nh3_result = h2_to_nh3(
+    mass_of_hydrogen,
+    from_h2_store,
+    h2_storage_balance_result,
+    hydrogen_storage_capacity,
+    hydrogen_output_result,
+    ammonia_plant_minimum_turndown
+  );
+
+  const asu_out_result = asu_out(
+    h2_to_nh3_result,
+    hydrogen_output_result,
+    air_separation_unit_capacity_result
+  );
+
+  const nh3_unit_out_result = nh3_unit_out(asu_out_result, h2_to_nh3_result);
+  return nh3_unit_capacity_factor(nh3_unit_out_result, ammonia_plant_capacity);
 }
