@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   Grid,
+  Link,
   ThemeProvider,
   Typography,
   createTheme,
@@ -39,7 +40,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 const StyledListItem = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.1),
   paddingLeft: "10px",
 }));
 export function About() {
@@ -59,6 +60,7 @@ export function About() {
                 <StyledListItem>Iain MacGill</StyledListItem>
                 <StyledListItem>Rahman Daiyan</StyledListItem>
                 <StyledListItem>Rose Amal</StyledListItem>
+                <StyledListItem>Charles Johnston</StyledListItem>
                 <StyledListItem>Tara Tjandra</StyledListItem>
                 <StyledListItem>Stanis Shkel</StyledListItem>
               </CardContent>
@@ -68,13 +70,9 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Acknowledgements</ItemHeading>
-
-                <StyledListItem>Rose Amal (Project Supervisor)</StyledListItem>
                 <StyledListItem>
-                  Charles Johnston (Tool Troubleshooting and Debugging Support)
-                </StyledListItem>
-                <StyledListItem>
-                  Nicholas Gorman (Tool Licensing Support)
+                  The project is funded by the NSW Office of Chief Scientist and
+                  Engineer and NSW Decarbonisation Innovation Hub
                 </StyledListItem>
               </CardContent>
             </StyledCard>
@@ -83,18 +81,20 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Affiliations</ItemHeading>
-
+                <StyledListItem>
+                  ARC Training Centre for The Global Hydrogen Economy (GlobH2E)
+                </StyledListItem>
+                <StyledListItem>
+                  NSW Decarbonisation Innovation Hub
+                </StyledListItem>
+                <StyledListItem>
+                  NSW Powerfuels including Hydrogen Network.
+                </StyledListItem>
                 <StyledListItem>
                   University of New South Wales (UNSW)
                 </StyledListItem>
                 <StyledListItem>
                   Particles and Catalysis Research Group (PartCat), UNSW
-                </StyledListItem>
-                <StyledListItem>
-                  Collaboration on Energy and Environmental Markets (CEEM), UNSW
-                </StyledListItem>
-                <StyledListItem>
-                  ARC Training Centre for The Global Hydrogen Economy (GlobH2E)
                 </StyledListItem>
                 <StyledListItem>
                   Australian Government Department of Industry, Science, Energy
@@ -111,9 +111,8 @@ export function About() {
             <StyledCard>
               <CardContent>
                 <ItemHeading>Project</ItemHeading>
-
                 <StyledListItem>
-                  Part of the DFAT - Australia Germany HySupply Analysis
+                  Part of NSW Power to X Industry Feasibility Study.
                 </StyledListItem>
                 <StyledListItem sx={{ fontWeight: "bold" }}>
                   Contact person:
@@ -121,7 +120,47 @@ export function About() {
                 <StyledListItem>
                   Dr. Rahman Daiyan Chief Investigator - GlobH2e
                 </StyledListItem>
-                <StyledListItem>r.daiyan@unsw.edu.au</StyledListItem>
+                <StyledListItem>
+                  <Link href="mailto:r.daiyan@unsw.edu.au">
+                    r.daiyan@unsw.edu.au
+                  </Link>
+                </StyledListItem>
+                <StyledListItem>Lecturer & ARC DECRA Fellow,</StyledListItem>
+                <StyledListItem>
+                  Particles and Catalysis Research Group
+                </StyledListItem>
+                <StyledListItem>
+                  School of Chemical Engineering Chief Investigator
+                </StyledListItem>
+                <StyledListItem>
+                  ARC Training Centre for The Global Hydrogen Economy
+                </StyledListItem>
+                <StyledListItem>
+                  DFAT Australia-Germany Hydrogen Value Chain Feasibility Study
+                </StyledListItem>
+                <StyledListItem>
+                  Australian Trailblazer for Recycling and Clean Energy
+                  (ATRaCE),
+                </StyledListItem>
+                <StyledListItem>
+                  NSW Power-to-X Feasibility Study,
+                </StyledListItem>
+                <StyledListItem>
+                  Co-ordinator, Powerfuels including Hydrogen Network,
+                </StyledListItem>
+                <StyledListItem>
+                  NSW Decarbonisation Innovation Hub
+                </StyledListItem>
+                <StyledListItem>
+                  Tyree Energy Technology Building (H6)
+                </StyledListItem>
+                <StyledListItem>
+                  The University of New South Wales
+                </StyledListItem>
+                <StyledListItem>Kensington, NSW 2052</StyledListItem>
+                <StyledListItem sx={{ paddingBottom: "10px" }}>
+                  <Link href="www.pcrg.unsw.edu.au">www.pcrg.unsw.edu.au</Link>
+                </StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
@@ -143,11 +182,12 @@ export function About() {
                   <Grid item xs>
                     <ItemText>
                       The analysis tool has been developed primarily for
-                      analysis as part of the DFAT-Germany HySupply analysis.
-                      However, open source use of the tool is encouraged for
-                      independent use or contribute improvements to the design
-                      and functionality of the overall tool under the term of
-                      the distribution license and appropriate acknowledgements.
+                      analysis as part of the NSW Power to X Industry
+                      Feasibility Study analysis. However, open source use of
+                      the tool is encouraged for independent use or contribute
+                      improvements to the design and functionality of the
+                      overall tool under the term of the distribution license
+                      and appropriate acknowledgements.
                     </ItemText>
                   </Grid>
                 </Grid>
@@ -188,27 +228,6 @@ export function About() {
                       OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
                       OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
                       SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                    </ItemText>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  justifyContent="space-between"
-                  direction="column"
-                >
-                  <Grid item xs>
-                    <ItemTitle>Citation</ItemTitle>
-                  </Grid>
-                  <Grid item xs>
-                    <ItemText>
-                      While tool is published under the conditions of the open
-                      source MIT license making sure that the code can be used,
-                      edited, and re-distributed by others, we would appreciate
-                      if the tool developers are acknowledged by using the
-                      following citation: M.H.A. Khan, A. Kuswara, P. Heywood,
-                      R. Daiyan, I. MacGill (2022). HySupply Cost Tool V1.3,
-                      UNSW
                     </ItemText>
                   </Grid>
                 </Grid>
