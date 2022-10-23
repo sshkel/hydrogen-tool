@@ -475,13 +475,10 @@ export class AmmoniaModel {
         batteryNetCharge,
         electrolyserCf,
         batteryEfficiency,
-        this.secAtNominalLoad,
-        this.parameters.ammonia_plant_capacity,
-        this.parameters.electrolyser_system_oversizing,
-        this.parameters.ammonia_plant_sec,
-        this.parameters.asu_sec,
         this.totalNominalPowerPlantCapacity,
-        this.hydrogenOutput
+        this.nominalElectrolyserCapacity,
+        this.air_separation_unit_power_demand,
+        this.ammonia_plant_power_demand
       );
     }
 
@@ -1142,50 +1139,26 @@ function calculateGeneratorCapFactors(
   generatorCapFactor: number[], // calculated in hydrogen
   net_battery_flow: number[], // calculated in hydrogen
   electrolyserCapFactor: number[], // calculated in hydrogen
-
   // round trip efficiency from hydrogen raw input
   batteryEfficiency: number, // %
-  sec_at_nominal_load: number, // raw input
-  // system sizing
-  ammonia_plant_capacity: number, // raw input
-  electrolyser_system_oversizing: number, // raw input %
-  // specific electricity consumption sec
-  ammonia_plant_sec: number, // raw input
-  asu_sec: number, // raw input
   total_nominal_power_plant_capacity: number,
-  hydrogen_output: number
+  nominal_electrolyser_capacity: number,
+  asu_power_demand: number,
+  ammonia_plant_power_demand: number
 ): number[] {
-  const air_separation_unit_capacity_result = air_separation_unit_capacity(
-    ammonia_plant_capacity
-  );
-
-  const nominal_electrolyser_capacity_result = nominal_electrolyser_capacity(
-    hydrogen_output,
-    sec_at_nominal_load,
-    electrolyser_system_oversizing / 100
-  );
-
   const generator_actual_power_result: number[] = generator_actual_power(
     total_nominal_power_plant_capacity,
     generatorCapFactor
   );
-  const ammonia_power_demand_result = ammonia_plant_power_demand(
-    ammonia_plant_capacity,
-    ammonia_plant_sec
-  );
 
-  const asu_power_demand_result = air_separation_unit_power_demand(
-    air_separation_unit_capacity_result,
-    asu_sec
-  );
   const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
-    ammonia_power_demand_result,
-    asu_power_demand_result,
+    ammonia_plant_power_demand,
+    asu_power_demand,
     generator_actual_power_result
   );
 
   const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
-    nominal_electrolyser_capacity_result,
+    nominal_electrolyser_capacity,
     generator_actual_power_result,
     asu_nh3_actual_power_result
   );
@@ -1195,9 +1168,9 @@ function calculateGeneratorCapFactors(
     electrolyser_actual_power_result,
     asu_nh3_actual_power_result,
     electrolyserCapFactor,
-    ammonia_power_demand_result,
-    asu_power_demand_result,
-    nominal_electrolyser_capacity_result,
+    ammonia_plant_power_demand,
+    asu_power_demand,
+    nominal_electrolyser_capacity,
     batteryEfficiency
   );
 }
