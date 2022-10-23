@@ -18,6 +18,7 @@ import {
   calculateGeneratorCf,
   calculateOverloadingModel,
   calculateVariableHydrogenProduction,
+  getTabulatedOutput,
 } from "./ModelUtils";
 import {
   BATTERY_OUTPUT,
@@ -165,7 +166,7 @@ export class HydrogenModel {
     const hourlyOperation =
       this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
-    const operatingOutputs = this.getTabulatedOutput(
+    const operatingOutputs = getTabulatedOutput(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -174,7 +175,9 @@ export class HydrogenModel {
       this.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
-      this.hoursPerYear
+      this.hoursPerYear,
+      this.elecMaxLoad,
+      this.batteryEfficiency
     );
 
     let projectSummary: ProjectModelSummary = {};
@@ -263,7 +266,7 @@ export class HydrogenModel {
       this.elecCapacity
     );
 
-    const operatingOutputs = this.getTabulatedOutput(
+    const operatingOutputs = getTabulatedOutput(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -272,7 +275,9 @@ export class HydrogenModel {
       this.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
-      this.hoursPerYear
+      this.hoursPerYear,
+      this.elecMaxLoad,
+      this.batteryEfficiency
     );
 
     let projectSummary: ProjectModelSummary = {};
@@ -315,7 +320,7 @@ export class HydrogenModel {
   private calculateElectrolyserOutput(
     hourlyOperation: ModelHourlyOperation
   ): ModelSummaryPerYear {
-    const operatingOutputs = this.getTabulatedOutput(
+    const operatingOutputs = getTabulatedOutput(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -324,64 +329,12 @@ export class HydrogenModel {
       this.elecCapacity,
       this.genCapacity,
       this.kgtoTonne,
-      this.hoursPerYear
+      this.hoursPerYear,
+      this.elecMaxLoad,
+      this.batteryEfficiency
     );
 
     return operatingOutputs;
-  }
-
-  private getTabulatedOutput(
-    generatorCapFactor: number[],
-    electrolyserCapFactor: number[],
-    hydrogenProdFixed: number[],
-    hydrogenProdVariable: number[],
-    netBatteryFlow: number[],
-    elecCapacity: number,
-    genCapacity: number,
-    kgtoTonne: number,
-    hoursPerYear: number
-  ): ModelSummaryPerYear {
-    const generatorCapacityFactor = mean(generatorCapFactor);
-    // Time Electrolyser is at its Rated Capacity"
-    const timeElectrolyser =
-      electrolyserCapFactor.filter((e) => e === this.elecMaxLoad).length /
-      hoursPerYear;
-    //Total Time Electrolyser is Operating
-    const totalOpsTime =
-      electrolyserCapFactor.filter((e) => e > 0).length / hoursPerYear;
-
-    // Achieved Electrolyser Capacity Factor
-    const achievedElectrolyserCf = mean(electrolyserCapFactor);
-    // Energy in to Electrolyser [MWh/yr]
-    const energyInElectrolyser = sum(electrolyserCapFactor) * elecCapacity;
-    // Surplus Energy [MWh/yr]
-    const surplus =
-      sum(generatorCapFactor) * genCapacity -
-      sum(electrolyserCapFactor) * elecCapacity;
-    // Hydrogen Output for Fixed Operation [t/yr]
-    const hydrogenFixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
-    // Hydrogen Output for Variable Operation [t/yr]
-    const hydrogenVariable =
-      sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
-    // Total Battery Output (MWh/yr)
-    const totalBatteryOutput =
-      sum(netBatteryFlow.filter((num) => num < 0)) *
-      -1 *
-      (1 - (1 - this.batteryEfficiency) / 2);
-
-    let summary: ModelSummaryPerYear = {};
-    summary[POWER_PLANT_CF] = generatorCapacityFactor;
-    summary[RATED_CAPACITY_TIME] = timeElectrolyser;
-    summary[TOTAL_OPERATING_TIME] = totalOpsTime;
-    summary[ELECTROLYSER_CF] = achievedElectrolyserCf;
-    summary[ENERGY_INPUT] = energyInElectrolyser;
-    summary[ENERGY_OUTPUT] = surplus;
-    summary[BATTERY_OUTPUT] = totalBatteryOutput;
-    // TODO: Return one based on profile
-    summary[HYDROGEN_OUTPUT_FIXED] = hydrogenFixed;
-    summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogenVariable;
-
-    return summary;
   }
 
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,

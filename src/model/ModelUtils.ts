@@ -1,4 +1,16 @@
-import { CsvRow } from "./ModelTypes";
+import { mean, sum } from "../utils";
+import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
+import {
+  BATTERY_OUTPUT,
+  ELECTROLYSER_CF,
+  ENERGY_INPUT,
+  ENERGY_OUTPUT,
+  HYDROGEN_OUTPUT_FIXED,
+  HYDROGEN_OUTPUT_VARIABLE,
+  POWER_PLANT_CF,
+  RATED_CAPACITY_TIME,
+  TOTAL_OPERATING_TIME,
+} from "./consts";
 
 // returns Generator_CF series
 export function calculateGeneratorCf(
@@ -237,4 +249,59 @@ export function calculateOverloadingModel(
   );
 
   return electrolyserCfoverload;
+}
+
+export function getTabulatedOutput(
+  generatorCapFactor: number[],
+  electrolyserCapFactor: number[],
+  hydrogenProdFixed: number[],
+  hydrogenProdVariable: number[],
+  netBatteryFlow: number[],
+  elecCapacity: number,
+  genCapacity: number,
+  kgtoTonne: number,
+  hoursPerYear: number,
+  elecMaxLoad: number,
+  batteryEfficiency: number
+): ModelSummaryPerYear {
+  const generatorCapacityFactor = mean(generatorCapFactor);
+  // Time Electrolyser is at its Rated Capacity"
+  const timeElectrolyser =
+    electrolyserCapFactor.filter((e) => e === elecMaxLoad).length /
+    hoursPerYear;
+  //Total Time Electrolyser is Operating
+  const totalOpsTime =
+    electrolyserCapFactor.filter((e) => e > 0).length / hoursPerYear;
+
+  // Achieved Electrolyser Capacity Factor
+  const achievedElectrolyserCf = mean(electrolyserCapFactor);
+  // Energy in to Electrolyser [MWh/yr]
+  const energyInElectrolyser = sum(electrolyserCapFactor) * elecCapacity;
+  // Surplus Energy [MWh/yr]
+  const surplus =
+    sum(generatorCapFactor) * genCapacity -
+    sum(electrolyserCapFactor) * elecCapacity;
+  // Hydrogen Output for Fixed Operation [t/yr]
+  const hydrogenFixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
+  // Hydrogen Output for Variable Operation [t/yr]
+  const hydrogenVariable = sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
+  // Total Battery Output (MWh/yr)
+  const totalBatteryOutput =
+    sum(netBatteryFlow.filter((num) => num < 0)) *
+    -1 *
+    (1 - (1 - batteryEfficiency) / 2);
+
+  let summary: ModelSummaryPerYear = {};
+  summary[POWER_PLANT_CF] = generatorCapacityFactor;
+  summary[RATED_CAPACITY_TIME] = timeElectrolyser;
+  summary[TOTAL_OPERATING_TIME] = totalOpsTime;
+  summary[ELECTROLYSER_CF] = achievedElectrolyserCf;
+  summary[ENERGY_INPUT] = energyInElectrolyser;
+  summary[ENERGY_OUTPUT] = surplus;
+  summary[BATTERY_OUTPUT] = totalBatteryOutput;
+  // TODO: Return one based on profile
+  summary[HYDROGEN_OUTPUT_FIXED] = hydrogenFixed;
+  summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogenVariable;
+
+  return summary;
 }
