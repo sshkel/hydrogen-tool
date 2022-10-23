@@ -60,7 +60,7 @@ export class HydrogenModel {
   readonly secAtNominalLoad = 33.33; // kWh/kg
 
   // calculated params
-  genCapacity: number;
+  totalNominalPowerPlantCapacity: number;
   elecCapacity: number;
   elecMaxLoad: number;
   elecMinLoad: number;
@@ -104,7 +104,7 @@ export class HydrogenModel {
     this.hourlyOperationsInYearOne = {};
 
     // calculated values
-    this.genCapacity =
+    this.totalNominalPowerPlantCapacity =
       parameters.solarNominalCapacity + parameters.windNominalCapacity;
     this.elecCapacity = parameters.electrolyserNominalCapacity;
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
@@ -161,7 +161,7 @@ export class HydrogenModel {
       hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
-      this.genCapacity,
+      this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
       this.elecMaxLoad,
@@ -249,7 +249,7 @@ export class HydrogenModel {
       this.elecEff,
       mean(hourlyOperation.Electrolyser_CF)
     );
-    this.genCapacity = backCalculatePowerPlantCapacity(
+    this.totalNominalPowerPlantCapacity = backCalculatePowerPlantCapacity(
       this.parameters.powerPlantOversizeRatio,
       this.elecCapacity
     );
@@ -261,7 +261,7 @@ export class HydrogenModel {
       hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
-      this.genCapacity,
+      this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
       this.elecMaxLoad,
@@ -282,10 +282,11 @@ export class HydrogenModel {
     year: number
   ): ModelHourlyOperation {
     return this.calculateHourlyOperation(
-      this.genCapacity / this.elecCapacity,
+      this.totalNominalPowerPlantCapacity / this.elecCapacity,
       this.elecCapacity,
-      this.parameters.solarNominalCapacity / this.genCapacity,
-      this.parameters.windNominalCapacity / this.genCapacity,
+      this.parameters.solarNominalCapacity /
+        this.totalNominalPowerPlantCapacity,
+      this.parameters.windNominalCapacity / this.totalNominalPowerPlantCapacity,
       this.parameters.solarDegradation,
       this.parameters.windDegradation,
       this.parameters.stackDegradation,
@@ -315,7 +316,7 @@ export class HydrogenModel {
       hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
-      this.genCapacity,
+      this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
       this.elecMaxLoad,
