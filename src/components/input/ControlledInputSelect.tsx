@@ -11,35 +11,25 @@ interface Props {
   buttonChildren: JSX.Element[][];
   prompt?: string;
   selectClass?: string;
-  onSelectChange?: (text: string) => void;
+  selectedIndex: number;
+  expanded: boolean;
+  onOpenExpand: (index: number) => void;
+  onCloseExpand: () => void;
 }
 
-export default function InputSelectField(props: Props) {
-  const [expanded, setExpanded] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(0);
-
+export default function ControlledInputSelectField(props: Props) {
   const {
+    expanded,
+    selectedIndex,
     selectKey,
     titles,
     helperText,
     buttonChildren,
     prompt = "Select one option from below",
     selectClass,
-    onSelectChange,
+    onOpenExpand,
+    onCloseExpand,
   } = props;
-
-  const onOpenExpand = (index: number) => {
-    if (onSelectChange) {
-      onSelectChange(titles[index]);
-    }
-
-    setExpanded(true);
-    setSelected(index);
-  };
-
-  const onCloseExpand = () => {
-    setExpanded(false);
-  };
 
   return (
     <Grid container paddingLeft={0.5}>
@@ -52,8 +42,8 @@ export default function InputSelectField(props: Props) {
           className={selectClass}
           onOpenExpand={onOpenExpand}
           onCloseExpand={onCloseExpand}
-          expanded={expanded && selected === index}
-          selected={selected === index}
+          expanded={expanded && selectedIndex === index}
+          selected={selectedIndex === index}
           children={buttonChildren[index]}
         />
       ))}

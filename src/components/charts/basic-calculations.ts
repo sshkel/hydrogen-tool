@@ -1,5 +1,5 @@
 import { HOURS_PER_YEAR } from "../../model/consts";
-import { Inputs } from "../../types";
+import { Inputs, PowerPlantType } from "../../types";
 
 export function backCalculateInputFields(
   synthesisedData: Inputs,
@@ -18,9 +18,7 @@ export function backCalculateInputFields(
     electrolyserEfficiency / 100,
     electrolyserCf
   );
-
-  const powerPlantNominalCapacity =
-    powerPlantOversizeRatio * electrolyserNominalCapacity;
+  recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;
 
   if (solarToWindPercentage === 100) {
     recalculatedInputs.powerPlantType = "Solar";
@@ -30,7 +28,8 @@ export function backCalculateInputFields(
     recalculatedInputs.powerPlantType = "Wind";
   }
 
-  recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;
+  const powerPlantNominalCapacity =
+    powerPlantOversizeRatio * electrolyserNominalCapacity;
   recalculatedInputs.solarNominalCapacity =
     powerPlantNominalCapacity * (solarToWindPercentage / 100);
   recalculatedInputs.windNominalCapacity =
@@ -52,6 +51,39 @@ export function backCalculateElectrolyserCapacity(
     (1 / HOURS_PER_YEAR) *
     (1 / electrolyserCf)
   );
+}
+
+export function backCalculateSolarAndWindCapacity(
+  synthesisedData: Inputs,
+  powerPlantOversizeRatio: number,
+  electrolyserNominalCapacity: number,
+  solarToWindPercentage: number,
+  powerPlantType: PowerPlantType
+): Inputs {
+  const recalculatedInputs = { ...synthesisedData };
+  const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
+    powerPlantOversizeRatio,
+    electrolyserNominalCapacity
+  );
+
+  if (powerPlantType === "Solar") {
+    recalculatedInputs.solarNominalCapacity = powerPlantNominalCapacity;
+    recalculatedInputs.windNominalCapacity = 0;
+  }
+
+  if (powerPlantType === "Wind") {
+    recalculatedInputs.solarNominalCapacity = 0;
+    recalculatedInputs.windNominalCapacity = powerPlantNominalCapacity;
+  }
+
+  if (powerPlantType === "Hybrid") {
+    recalculatedInputs.solarNominalCapacity =
+      powerPlantNominalCapacity * (solarToWindPercentage / 100);
+    recalculatedInputs.windNominalCapacity =
+      powerPlantNominalCapacity * (1 - solarToWindPercentage / 100);
+  }
+
+  return recalculatedInputs;
 }
 
 export function backCalculatePowerPlantCapacity(

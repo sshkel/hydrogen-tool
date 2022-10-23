@@ -1,6 +1,7 @@
 import {
   DepreciationProfile,
   Inputs,
+  PowerCapacityConfiguration,
   PowerPlantConfiguration,
   PowerPlantType,
   PowerSupplyOption,
@@ -12,7 +13,7 @@ import {
 class DefaultInputs implements Inputs {
   // Electrolyser
   electrolyserNominalCapacity = 1;
-  electrolyserEfficiency = 50;
+  electrolyserEfficiency = 100;
   electrolyserReferenceCapacity = 1000;
   electrolyserCostReductionWithScale = 10;
   electrolyserReferenceFoldIncrease = 10;
@@ -45,6 +46,7 @@ class DefaultInputs implements Inputs {
   powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
   powerPlantType = "Hybrid" as PowerPlantType;
   powerSupplyOption = "Self Build" as PowerSupplyOption;
+  powerCapacityConfiguration = "Oversize Ratio" as PowerCapacityConfiguration;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
   solarReferenceCapacity = 10;
@@ -52,7 +54,7 @@ class DefaultInputs implements Inputs {
   solarFarmBuildCost = 1200;
   windFarmBuildCost = 2000;
   powerPlantOversizeRatio = 1;
-  solarToWindPercentage = 50;
+  solarToWindPercentage = 100;
   solarEpcCosts = 30;
   solarLandProcurementCosts = 6;
   solarPVCostReductionWithScale = 10;

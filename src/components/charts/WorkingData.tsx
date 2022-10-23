@@ -41,7 +41,10 @@ import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
-import { backCalculateInputFields } from "./basic-calculations";
+import {
+  backCalculateInputFields,
+  backCalculateSolarAndWindCapacity,
+} from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
 import { cashFlowAnalysis, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
@@ -148,9 +151,24 @@ export default function WorkingData(props: Props) {
     windDegradation,
     secAtNominalLoad = 0,
     electrolyserEfficiency = 0,
-    powerPlantOversizeRatio,
     solarToWindPercentage,
+    powerCapacityConfiguration,
+    powerPlantType,
   } = inputs;
+
+  // These values can change if Oversize Ratio configuration is used
+  let {
+    solarNominalCapacity,
+    windNominalCapacity,
+    electrolyserNominalCapacity,
+  } = inputs;
+
+  const powerPlantOversizeRatio =
+    powerCapacityConfiguration === "Oversize Ratio"
+      ? inputs.powerPlantOversizeRatio
+      : (solarNominalCapacity + windNominalCapacity) /
+        electrolyserNominalCapacity;
+
   const location = props.location;
   const dataModel: HydrogenData = {
     inputConfiguration,
@@ -162,9 +180,9 @@ export default function WorkingData(props: Props) {
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
     projectScale,
-    electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
-    solarNominalCapacity: inputs.solarNominalCapacity,
-    windNominalCapacity: inputs.windNominalCapacity,
+    electrolyserNominalCapacity,
+    solarNominalCapacity,
+    windNominalCapacity,
     powerPlantOversizeRatio,
     solarToWindPercentage,
     solarDegradation,
@@ -191,6 +209,14 @@ export default function WorkingData(props: Props) {
       inputs,
       projectScale,
       mean(summary[ELECTROLYSER_CF])
+    );
+  } else if (powerCapacityConfiguration === "Oversize Ratio") {
+    inputs = backCalculateSolarAndWindCapacity(
+      inputs,
+      powerPlantOversizeRatio,
+      electrolyserNominalCapacity,
+      solarToWindPercentage,
+      powerPlantType
     );
   }
 
@@ -349,8 +375,7 @@ export default function WorkingData(props: Props) {
   const netProfit = cumulativeCashFlow[cumulativeCashFlow.length - 1];
   const totalInvestmentRequired = totalCapexCost + totalIndirectCosts;
   const returnOnInvestment = netProfit / totalInvestmentRequired;
-  const powerplantCapacity =
-    inputs.solarNominalCapacity + inputs.windNominalCapacity;
+  const powerplantCapacity = solarNominalCapacity + windNominalCapacity;
 
   return (
     <ThemeProvider theme={theme}>

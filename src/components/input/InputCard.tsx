@@ -16,6 +16,7 @@ export interface InputCardProps {
   children: JSX.Element[] | null;
   expanded?: boolean;
   onExpandChange?: () => void;
+  mountOnEnter?: boolean;
 }
 
 interface StyledCardProps extends CardProps {
@@ -68,7 +69,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 function InputCard(props: InputCardProps) {
-  const { title, subtitle = false, children, onExpandChange } = props;
+  const {
+    title,
+    subtitle = false,
+    children,
+    mountOnEnter,
+    onExpandChange,
+  } = props;
   const [expanded, setExpanded] = React.useState(!!props.expanded);
 
   const handleExpandClick = () => {
@@ -115,7 +122,11 @@ function InputCard(props: InputCardProps) {
         </ExpandMore>
       </Box>
       <Suspense fallback={null}>
-        <InputCollapse expanded={expanded} children={children} />
+        <InputCollapse
+          expanded={expanded}
+          children={children}
+          mountOnEnter={mountOnEnter}
+        />
       </Suspense>
     </StyledCard>
   );

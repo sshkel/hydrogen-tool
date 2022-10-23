@@ -21,6 +21,8 @@ export type PowerPlantConfiguration =
 
 export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
 
+export type PowerCapacityConfiguration = "Nominal Capacity" | "Oversize Ratio";
+
 export type ChartData = { label: string; data: number[] };
 
 export type InputConfiguration = "Basic" | "Advanced";
@@ -141,6 +143,7 @@ export interface UserInputFields {
   electrolyserEfficiency?: number;
   powerPlantConfiguration?: PowerPlantConfiguration;
   powerSupplyOption?: PowerSupplyOption;
+  powerCapacityConfiguration?: PowerCapacityConfiguration;
 }
 
 export interface Inputs {
@@ -179,6 +182,7 @@ export interface Inputs {
   powerPlantConfiguration: PowerPlantConfiguration;
   powerPlantType: PowerPlantType;
   powerSupplyOption: PowerSupplyOption;
+  powerCapacityConfiguration: PowerCapacityConfiguration;
   solarNominalCapacity: number;
   windNominalCapacity: number;
   solarReferenceCapacity: number;

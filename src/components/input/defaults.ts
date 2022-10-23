@@ -55,7 +55,7 @@ export const defaultInputs: { [k: string]: number } = {
   additionalUpfrontCosts: 0,
   additionalAnnualCosts: 0,
   averageElectricitySpotPrice: 0,
-  oxygenRetailPrice: 50,
+  oxygenRetailPrice: 0,
   projectTimeline: 20,
   discountRate: 7,
   shareOfTotalInvestmentFinancedViaEquity: 70,
@@ -67,6 +67,5 @@ export const defaultInputs: { [k: string]: number } = {
   inflationRate: 2.5,
   taxRate: 30,
   hydrogenSalesMargin: 1,
-
   projectScale: 100_000,
 };

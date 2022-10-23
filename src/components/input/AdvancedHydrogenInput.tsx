@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 
+import ControlledPowerPlantCard from "./ControlledPowerPlantCard";
 import InputCard from "./InputCard";
 import InputDropdownField from "./InputDropdownField";
 import InputNumberField from "./InputNumberField";
@@ -33,7 +34,8 @@ export default function AdvancedHydrogenInput() {
                 inputKey="electrolyserNominalCapacity"
               />,
               <InputCard
-                subtitle={true}
+                subtitle
+                mountOnEnter
                 key="electrolyserSystemEfficiency"
                 title="Electrolyser System Efficiency"
                 children={[
@@ -52,7 +54,8 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
+                mountOnEnter
                 key="electrolyserLoadRange"
                 title="Electrolyser Load Range"
                 children={[
@@ -105,7 +108,8 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
+                mountOnEnter
                 key="electrolyserCapitialAndOperatingCosts"
                 title="Electrolyser Capital and Operating Costs"
                 children={[
@@ -154,199 +158,7 @@ export default function AdvancedHydrogenInput() {
 
       <Grid container item flexDirection="column" rowSpacing={1} xs={4}>
         <Grid item>
-          <InputCard
-            title="Power Plant Parameters"
-            children={[
-              <InputSelect
-                key="powerPlantType"
-                selectKey="powerPlantType"
-                prompt="Power Plant Type"
-                titles={["Solar", "Wind", "Hybrid"]}
-                selectClass="powerPlantType"
-                buttonChildren={[
-                  [
-                    <InputSelect
-                      key="solarPowerPlantCapacitySelect"
-                      selectKey="solarPowerPlantCapacitySelect"
-                      prompt="Power Plant Capacity"
-                      titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
-                      buttonChildren={[
-                        [
-                          <InputNumberField
-                            key="solarNominalCapacity"
-                            inputKey="solarNominalCapacity"
-                          />,
-                        ],
-                        [
-                          <InputNumberField
-                            key="powerPlantOversizeRatio"
-                            inputKey="powerPlantOversizeRatio"
-                          />,
-                        ],
-                      ]}
-                    />,
-                  ],
-                  [
-                    <InputSelect
-                      key="windPowerPlantCapacitySelect"
-                      selectKey="windPowerPlantCapacitySelect"
-                      prompt="Power Plant Capacity"
-                      titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
-                      buttonChildren={[
-                        [
-                          <InputNumberField
-                            key="windNominalCapacity"
-                            inputKey="windNominalCapacity"
-                          />,
-                        ],
-                        [
-                          <InputNumberField
-                            key="powerPlantOversizeRatio"
-                            inputKey="powerPlantOversizeRatio"
-                          />,
-                        ],
-                      ]}
-                    />,
-                  ],
-                  [
-                    <InputSelect
-                      key="hybridPowerPlantCapacitySelect"
-                      selectKey="hybridPowerPlantCapacitySelect"
-                      prompt="Power Plant Capacity"
-                      titles={["Nominal Capacity", "Oversize Ratio"]}
-                      helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
-                      buttonChildren={[
-                        [
-                          <InputNumberField
-                            key="solarNominalCapacity"
-                            inputKey="solarNominalCapacity"
-                          />,
-                          <InputNumberField
-                            key="windNominalCapacity"
-                            inputKey="windNominalCapacity"
-                          />,
-                        ],
-                        [
-                          <InputNumberField
-                            key="powerPlantOversizeRatio"
-                            inputKey="powerPlantOversizeRatio"
-                          />,
-                          <InputNumberField
-                            key="solarToWindPercentage"
-                            inputKey="solarToWindPercentage"
-                          />,
-                        ],
-                      ]}
-                    />,
-                  ],
-                ]}
-              />,
-              <InputSelect
-                key="powerPlantConfigurationSelect"
-                selectKey="powerPlantConfigurationSelect"
-                prompt="Power Plant Configuration"
-                selectClass="powerPlantConfiguration"
-                titles={["Standalone", "Grid Connected"]}
-                buttonChildren={[
-                  [],
-                  [
-                    <InputNumberField
-                      key="gridConnectionCost"
-                      inputKey="gridConnectionCost"
-                    />,
-                    <InputNumberField
-                      key="additionalTransmissionCharges"
-                      inputKey="additionalTransmissionCharges"
-                    />,
-                  ],
-                ]}
-              />,
-              <InputCard
-                subtitle={true}
-                key="powerPlantEfficiency"
-                title="Power Plant Efficiency"
-                children={[
-                  <InputNumberField
-                    key="solarDegradation"
-                    inputKey="solarDegradation"
-                  />,
-                  <InputNumberField
-                    key="windDegradation"
-                    inputKey="windDegradation"
-                  />,
-                ]}
-              />,
-              <InputSelect
-                key="powerSupplyOptionSelect"
-                selectKey="powerSupplyOptionSelect"
-                prompt="Power Supply Option"
-                selectClass="powerSupplyOption"
-                titles={["Self Build", "Power Purchase Agreement (PPA)"]}
-                buttonChildren={[
-                  [
-                    <InputNumberField
-                      key="solarFarmBuildCost"
-                      inputKey="solarFarmBuildCost"
-                    />,
-                    <InputNumberField
-                      key="solarReferenceCapacity"
-                      inputKey="solarReferenceCapacity"
-                    />,
-                    <InputNumberField
-                      key="solarPVCostReductionWithScale"
-                      inputKey="solarPVCostReductionWithScale"
-                    />,
-                    <InputNumberField
-                      key="solarReferenceFoldIncrease"
-                      inputKey="solarReferenceFoldIncrease"
-                    />,
-                    <InputNumberField
-                      key="windFarmBuildCost"
-                      inputKey="windFarmBuildCost"
-                    />,
-                    <InputNumberField
-                      key="windReferenceCapacity"
-                      inputKey="windReferenceCapacity"
-                    />,
-                    <InputNumberField
-                      key="windCostReductionWithScale"
-                      inputKey="windCostReductionWithScale"
-                    />,
-                    <InputNumberField
-                      key="windReferenceFoldIncrease"
-                      inputKey="windReferenceFoldIncrease"
-                    />,
-                    <InputNumberField
-                      key="solarEpcCosts"
-                      inputKey="solarEpcCosts"
-                    />,
-                    <InputNumberField
-                      key="solarLandProcurementCosts"
-                      inputKey="solarLandProcurementCosts"
-                    />,
-                    <InputNumberField
-                      key="windEpcCosts"
-                      inputKey="windEpcCosts"
-                    />,
-                    <InputNumberField
-                      key="windLandProcurementCosts"
-                      inputKey="windLandProcurementCosts"
-                    />,
-                    <InputNumberField key="solarOpex" inputKey="solarOpex" />,
-                    <InputNumberField key="windOpex" inputKey="windOpex" />,
-                  ],
-                  [
-                    <InputNumberField
-                      key="principalPPACost"
-                      inputKey="principalPPACost"
-                    />,
-                  ],
-                ]}
-              />,
-            ]}
-          />
+          <ControlledPowerPlantCard />
         </Grid>
       </Grid>
 
@@ -354,9 +166,10 @@ export default function AdvancedHydrogenInput() {
         <Grid item>
           <InputCard
             title="Battery Parameters"
+            mountOnEnter
             children={[
               <InputCard
-                subtitle={true}
+                subtitle
                 key="batteryCapacity"
                 title="Battery Capacity"
                 children={[
@@ -371,7 +184,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
                 key="batteryPerformance"
                 title="Battery Performance"
                 children={[
@@ -390,7 +203,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
                 key="batteryCapitalAndOperatingCosts"
                 title="Battery Capital and Operating Costs"
                 children={[
@@ -423,9 +236,10 @@ export default function AdvancedHydrogenInput() {
         <Grid item>
           <InputCard
             title="Additional Costs"
+            mountOnEnter
             children={[
               <InputCard
-                subtitle={true}
+                subtitle
                 key="additionalCosts"
                 title="Additional Upfront/Operating Costs"
                 children={[
@@ -440,7 +254,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
                 key="additionalRevenueGeneration"
                 title="Additional Revenue Generation"
                 children={[
@@ -455,7 +269,7 @@ export default function AdvancedHydrogenInput() {
                 ]}
               />,
               <InputCard
-                subtitle={true}
+                subtitle
                 key="financingParameters"
                 title="Financing Parameters"
                 children={[

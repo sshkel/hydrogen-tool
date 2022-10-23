@@ -492,6 +492,7 @@ export const configurationTypes = [
   "powerPlantConfiguration",
   "stackReplacementType",
   "powerSupplyOption",
+  "powerCapacityConfiguration",
 ];
 
 export const powerPlantTypeData: string[] = ["Solar", "Wind", "Hybrid"];
@@ -531,7 +532,6 @@ export const basicDefaultInputs: BasicDefaultInput = {
     step: 50_000,
     defaultValue: 100_000,
     title: "Project Scale (tonnes/yr)",
-    helperText: "A description goes here",
   },
   electrolyserEfficiency: {
     min: 50,
@@ -539,6 +539,7 @@ export const basicDefaultInputs: BasicDefaultInput = {
     step: 2.5,
     defaultValue: 60,
     title: "Electrolyser Efficiency (%)",
+    helperText: "Percentage value relevant to LHV of H2 (33.33 kWh/kg of H2)",
   },
   powerPlantOversizeRatio: {
     min: 1,
@@ -997,7 +998,7 @@ export const advancedDefaultInputs: AdvancedDefaultInput = {
   },
   oxygenRetailPrice: {
     title: "Oxygen Retail Price",
-    defaultValue: 50,
+    defaultValue: 0,
     adornmentLabel: "A$/tonne",
     helperText:
       "Price that oxygen can be sold for, assuming 8 kg oxygen produced per kg of hydrogen.",

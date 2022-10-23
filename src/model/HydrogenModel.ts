@@ -56,7 +56,7 @@ export class HydrogenModel {
   readonly MWtokW = 1000; // kW/MW
   readonly hoursPerYear = HOURS_PER_YEAR;
   readonly kgtoTonne = 1 / 1000;
-  readonly H2VoltoMass = 0.089;
+  readonly H2VoltoMass = 0.089; // kg/m3
   readonly secAtNominalLoad = 33.33; // kWh/kg
 
   // calculated params
