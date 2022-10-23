@@ -4,7 +4,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 
 import InputTitle from "./InputTitle";
-import { ORANGE } from "./colors";
+import { GREY, ORANGE } from "./colors";
 
 interface Props {
   id: string;
@@ -39,7 +39,7 @@ export default function InputDropdownField(props: Props) {
       <Select
         id={id}
         labelId={labelId}
-        color="success"
+        color="primary"
         displayEmpty
         name={id}
         key={id}
@@ -48,14 +48,25 @@ export default function InputDropdownField(props: Props) {
         sx={{
           height: "2.5rem",
           borderRadius: 2,
-          boxShadow: "0px 0px 2px 2px rgb(180 180 180 / 75%)",
-          marginX: 2,
+          borderColor: GREY,
+          boxShadow:
+            "0px 0px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%))",
+          marginX: 3.5,
           marginY: 1,
+
+          "&:hover": {
+            "&& fieldset": {
+              borderColor: GREY,
+            },
+          },
         }}
         MenuProps={{
           MenuListProps: {
             sx: {
               backgroundColor: "#F4F9FA",
+              "&& .Mui-selected": {
+                backgroundColor: ORANGE,
+              },
             },
           },
           sx: {
