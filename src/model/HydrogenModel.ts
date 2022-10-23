@@ -494,7 +494,7 @@ export class HydrogenModel {
 
     return workingDf;
   }
-
+  // TODO refactor Tara's dirty state setting
   private calculateStackDegradation(
     stackDegradation: number,
     electrolyserCf: number[],
