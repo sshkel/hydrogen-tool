@@ -13,7 +13,7 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
-import { DataModel, HydrogenModel } from "../../model/HydrogenModel";
+import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import {
   ModelHourlyOperation,
   ProjectModelSummary,
@@ -152,7 +152,7 @@ export default function WorkingData(props: Props) {
     solarToWindPercentage,
   } = inputs;
   const location = props.location;
-  const dataModel: DataModel = {
+  const dataModel: HydrogenData = {
     inputConfiguration,
     batteryLifetime,
     batteryMinCharge,

@@ -1,4 +1,4 @@
-import { DataModel, HydrogenModel } from "../../model/HydrogenModel";
+import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import { CsvRow, ModelSummaryPerYear } from "../../model/ModelTypes";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf1 from "../resources/example1-workingdf.json";
@@ -20,7 +20,7 @@ describe("Hydrogen Model", () => {
 
   it("works for overload model", () => {
     // overload -> working correctly :tick:
-    const example1: DataModel = {
+    const example1: HydrogenData = {
       //args or defaults
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 10,
@@ -90,7 +90,7 @@ describe("Hydrogen Model", () => {
   });
   it("works for battery model", () => {
     // battery -> working correctly :tick:
-    const example2: DataModel = {
+    const example2: HydrogenData = {
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 15,
       batteryRatedPower: 10,
@@ -157,7 +157,7 @@ describe("Hydrogen Model", () => {
   });
   it("works for normal model", () => {
     // normal -> working correctly :tick:
-    const example3: DataModel = {
+    const example3: HydrogenData = {
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 0,
       windNominalCapacity: 100,

@@ -33,7 +33,7 @@ import {
   TOTAL_OPERATING_TIME,
 } from "./consts";
 
-export type DataModel = {
+export type HydrogenData = {
   inputConfiguration: InputConfiguration;
   batteryLifetime: number;
   batteryMinCharge: number;
@@ -77,7 +77,7 @@ export class HydrogenModel {
   elecMinLoad: number;
   elecEff: number;
   hydOutput: number;
-  parameters: DataModel;
+  parameters: HydrogenData;
   elecOverload: number;
   batteryEnergy: number;
   batteryEfficiency: number;
@@ -94,7 +94,11 @@ export class HydrogenModel {
   // parameters to expose to working data
   hourlyOperationsInYearOne: ModelHourlyOperation;
 
-  constructor(parameters: DataModel, solarData: CsvRow[], windData: CsvRow[]) {
+  constructor(
+    parameters: HydrogenData,
+    solarData: CsvRow[],
+    windData: CsvRow[]
+  ) {
     this.parameters = parameters;
     // Loaded data
     this.solarData = solarData;
@@ -523,7 +527,7 @@ export class HydrogenModel {
   }
 
   private initialiseStackReplacementYears(
-    parameters: DataModel,
+    parameters: HydrogenData,
     projectTimeline: number
   ): number[] {
     if (parameters.stackReplacementType === "Maximum Degradation Level") {
