@@ -61,8 +61,6 @@ export function About() {
                 <StyledListItem>Rahman Daiyan</StyledListItem>
                 <StyledListItem>Rose Amal</StyledListItem>
                 <StyledListItem>Charles Johnston</StyledListItem>
-                <StyledListItem>Tara Tjandra</StyledListItem>
-                <StyledListItem>Stanis Shkel</StyledListItem>
               </CardContent>
             </StyledCard>
           </Grid>
