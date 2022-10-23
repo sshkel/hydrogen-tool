@@ -478,11 +478,10 @@ export class AmmoniaModel {
         this.secAtNominalLoad,
         this.parameters.ammonia_plant_capacity,
         this.parameters.electrolyser_system_oversizing,
-        this.parameters.solar_hybrid_generator_split,
-        this.parameters.wind_hybrid_generator_split,
-        this.parameters.renewable_energy_plant_oversizing,
         this.parameters.ammonia_plant_sec,
-        this.parameters.asu_sec
+        this.parameters.asu_sec,
+        this.totalNominalPowerPlantCapacity,
+        this.hydrogenOutput
       );
     }
 
@@ -1150,49 +1149,22 @@ function calculateGeneratorCapFactors(
   // system sizing
   ammonia_plant_capacity: number, // raw input
   electrolyser_system_oversizing: number, // raw input %
-  solar_hybrid_generator_split: number, // raw input %
-  wind_hybrid_generator_split: number, // raw input %
-  renewable_energy_plant_oversizing: number, // raw input
-
   // specific electricity consumption sec
   ammonia_plant_sec: number, // raw input
-  asu_sec: number // raw input
+  asu_sec: number, // raw input
+  total_nominal_power_plant_capacity: number,
+  hydrogen_output: number
 ): number[] {
-  const ammonia_plant_power_demand_result = ammonia_plant_power_demand(
-    ammonia_plant_capacity,
-    ammonia_plant_sec
-  );
-
   const air_separation_unit_capacity_result = air_separation_unit_capacity(
     ammonia_plant_capacity
   );
-  const air_separation_unit_power_demand_result =
-    air_separation_unit_power_demand(
-      air_separation_unit_capacity_result,
-      asu_sec
-    );
-  const hydrogen_output_result = hydrogen_output(ammonia_plant_capacity);
+
   const nominal_electrolyser_capacity_result = nominal_electrolyser_capacity(
-    hydrogen_output_result,
+    hydrogen_output,
     sec_at_nominal_load,
     electrolyser_system_oversizing / 100
   );
 
-  const total_nominal_power_plant_capacity =
-    nominal_solar_capacity(
-      ammonia_plant_power_demand_result,
-      air_separation_unit_power_demand_result,
-      nominal_electrolyser_capacity_result,
-      solar_hybrid_generator_split / 100,
-      renewable_energy_plant_oversizing / 100
-    ) +
-    nominal_wind_capacity(
-      ammonia_plant_power_demand_result,
-      air_separation_unit_power_demand_result,
-      nominal_electrolyser_capacity_result,
-      wind_hybrid_generator_split / 100,
-      renewable_energy_plant_oversizing / 100
-    );
   const generator_actual_power_result: number[] = generator_actual_power(
     total_nominal_power_plant_capacity,
     generatorCapFactor
