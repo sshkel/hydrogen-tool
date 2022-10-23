@@ -465,24 +465,11 @@ export class HydrogenModel {
     let yearlyDegradationRate: number = 0;
 
     // Stack degradation calculation
-    if (stackDegradation > 0) {
-      // Cumulative hour degradation logic if defined
-      if (this.stackLifetime) {
-        this.currentStackOperatingHours += electrolyserCf.filter(
-          (e) => e > 0
-        ).length;
-        if (this.currentStackOperatingHours >= this.stackLifetime) {
-          this.currentStackOperatingHours -= this.stackLifetime;
-          this.stackReplacementYears.push(year);
-        }
-      }
-      const power = year - 1 - this.lastStackReplacementYear;
-
-      if (this.stackReplacementYears.includes(year)) {
-        this.lastStackReplacementYear = year;
-      }
-      yearlyDegradationRate = 1 - 1 / (1 + stackDegradation / 100) ** power;
-    }
+    yearlyDegradationRate = this.calculateStackDegradation(
+      stackDegradation,
+      electrolyserCf,
+      year
+    );
 
     const hydrogenProdFixed = calculateFixedHydrogenProduction(
       electrolyserCf,
@@ -507,6 +494,32 @@ export class HydrogenModel {
     };
 
     return workingDf;
+  }
+
+  private calculateStackDegradation(
+    stackDegradation: number,
+    electrolyserCf: number[],
+    year: number
+  ) {
+    if (stackDegradation > 0) {
+      // Cumulative hour degradation logic if defined
+      if (this.stackLifetime) {
+        this.currentStackOperatingHours += electrolyserCf.filter(
+          (e) => e > 0
+        ).length;
+        if (this.currentStackOperatingHours >= this.stackLifetime) {
+          this.currentStackOperatingHours -= this.stackLifetime;
+          this.stackReplacementYears.push(year);
+        }
+      }
+      const power = year - 1 - this.lastStackReplacementYear;
+
+      if (this.stackReplacementYears.includes(year)) {
+        this.lastStackReplacementYear = year;
+      }
+      return 1 - 1 / (1 + stackDegradation / 100) ** power;
+    }
+    return 0;
   }
 
   private initialiseStackReplacementYears(
