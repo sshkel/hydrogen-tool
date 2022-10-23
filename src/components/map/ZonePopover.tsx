@@ -171,11 +171,19 @@ export function ZonePopover(props: Props) {
             <Grid item xs={12}>
               <Divider flexItem />
             </Grid>
-            <Grid item>
-              <ItemTitle>Infrastructure:</ItemTitle>
-              <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+            <Grid
+              container
+              item
+              justifyContent="space-between"
+              direction="column"
+            >
+              <Grid item>
+                <ItemTitle> Infrastructure:</ItemTitle>
+              </Grid>
+              <Grid item>
+                <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+              </Grid>
             </Grid>
-            <Grid item></Grid>
           </Grid>
         </CardContent>
         <CardActions style={{ justifyContent: "center" }}>
