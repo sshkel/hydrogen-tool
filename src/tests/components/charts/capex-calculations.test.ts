@@ -41,7 +41,8 @@ describe("Capex calculations", () => {
   it("sets grid connection CAPEX when PPA agreement", () => {
     const data: Inputs = {
       ...defaultInputData.data,
-      powerPlantConfiguration: "PPA Agreement",
+      powerPlantConfiguration: "Grid Connected",
+      powerSupplyOption: "Power Purchase Agreement (PPA)",
       gridConnectionCost: 10,
     };
 

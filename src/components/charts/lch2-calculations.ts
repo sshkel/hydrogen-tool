@@ -1,9 +1,4 @@
-import {
-  Inputs,
-  isGridConnected,
-  isPPAAgreement,
-  isRetailed,
-} from "../../types";
+import { Inputs, isGridConnected, isPPAAgreement } from "../../types";
 import { fillYearsArray } from "../../utils";
 
 export function generateLCValues(
@@ -32,6 +27,7 @@ export function generateLCValues(
 ) {
   const {
     powerPlantConfiguration,
+    powerSupplyOption,
     discountRate,
     projectTimeline,
     additionalUpfrontCosts,
@@ -40,8 +36,7 @@ export function generateLCValues(
     averageElectricitySpotPrice,
   } = data;
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
-  const ppaAgreement: boolean = isPPAAgreement(powerPlantConfiguration);
-  const retailed: boolean = isRetailed(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
 
   const lcPowerPlantCAPEX = powerPlantCAPEX / hydrogenProductionCost;
   const lcElectrolyserCAPEX = electrolyserCAPEX / hydrogenProductionCost;
@@ -92,12 +87,10 @@ export function generateLCValues(
     ? calculateLevelisedCost(ppaCostOfElectricityConsumed)
     : 0;
 
-  const retailElectricitySalePrice = retailed
-    ? fillYearsArray(
-        projectTimeline,
-        (i) => electricityProduced[i] * averageElectricitySpotPrice
-      )
-    : Array(projectTimeline).fill(0);
+  const retailElectricitySalePrice = fillYearsArray(
+    projectTimeline,
+    (i) => electricityProduced[i] * averageElectricitySpotPrice
+  );
   const lcElectricitySale = calculateLevelisedCost(retailElectricitySalePrice);
 
   const lcGridConnection =

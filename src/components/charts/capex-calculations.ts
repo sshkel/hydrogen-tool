@@ -6,6 +6,7 @@ export function generateCapexValues(data: Inputs) {
   const {
     powerPlantType,
     powerPlantConfiguration,
+    powerSupplyOption,
 
     electrolyserNominalCapacity,
     electrolyserReferenceCapacity,
@@ -42,7 +43,7 @@ export function generateCapexValues(data: Inputs) {
   } = data;
 
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
-  const ppaAgreement: boolean = isPPAAgreement(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
 
   const electrolyserCAPEX = calculateCapex(
     electrolyserNominalCapacity,

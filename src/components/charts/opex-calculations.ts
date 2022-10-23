@@ -15,6 +15,7 @@ export function generateOpexValues(
     projectTimeline,
     powerPlantType,
     powerPlantConfiguration,
+    powerSupplyOption,
 
     principalPPACost = 0,
     additionalTransmissionCharges = 0,
@@ -45,7 +46,7 @@ export function generateOpexValues(
   } = data;
 
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
-  const ppaAgreement: boolean = isPPAAgreement(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
 
   // Stack Lifetime needed for opex calculations
   const stackReplacementYears: number[] =

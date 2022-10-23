@@ -13,11 +13,7 @@ export type DepreciationProfile =
   | "MACRs - 15 year Schedule"
   | "MACRs - 20 year Schedule";
 
-export type PowerPlantConfiguration =
-  | "Standalone"
-  | "Grid Connected"
-  | "PPA Agreement"
-  | "Grid Connected with Surplus Retailed";
+export type PowerPlantConfiguration = "Standalone" | "Grid Connected";
 
 export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
 
@@ -27,16 +23,11 @@ export type ChartData = { label: string; data: number[] };
 
 export type InputConfiguration = "Basic" | "Advanced";
 
-export const isPPAAgreement = (
-  powerPlantConfiguration: PowerPlantConfiguration
-) => powerPlantConfiguration === "PPA Agreement";
+export const isPPAAgreement = (powerSupplyOption: PowerSupplyOption) =>
+  powerSupplyOption === "Power Purchase Agreement (PPA)";
 export const isGridConnected = (
   powerPlantConfiguration: PowerPlantConfiguration
-) =>
-  powerPlantConfiguration === "Grid Connected" ||
-  powerPlantConfiguration === "Grid Connected with Surplus Retailed";
-export const isRetailed = (powerPlantConfiguration: PowerPlantConfiguration) =>
-  powerPlantConfiguration === "Grid Connected with Surplus Retailed";
+) => powerPlantConfiguration === "Grid Connected";
 
 export interface BasicDefaultInput {
   [k: string]: SliderProps;

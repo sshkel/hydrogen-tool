@@ -351,7 +351,7 @@ export const windWithPPAScenario: {
   location: "Wagga Wagga, NSW",
   inputConfiguration: "Advanced",
   data: {
-    powerPlantConfiguration: "PPA Agreement",
+    powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Power Purchase Agreement (PPA)",
     powerPlantType: "Wind",
     powerCapacityConfiguration: "Nominal Capacity",
@@ -440,7 +440,7 @@ export const hybridBatteryGridSurplusRetailScenario: {
     powerPlantType: "Hybrid",
     powerPlantOversizeRatio: 1,
     solarToWindPercentage: 100,
-    powerPlantConfiguration: "Grid Connected with Surplus Retailed",
+    powerPlantConfiguration: "Grid Connected",
     powerSupplyOption: "Self Build",
     powerCapacityConfiguration: "Nominal Capacity",
     electrolyserNominalCapacity: 10,
@@ -523,7 +523,7 @@ export const windWithBatteryAndPPAScenario: {
   location: "South West NSW",
   inputConfiguration: "Advanced",
   data: {
-    powerPlantConfiguration: "PPA Agreement",
+    powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Power Purchase Agreement (PPA)",
     powerPlantType: "Wind",
     powerCapacityConfiguration: "Nominal Capacity",
@@ -609,7 +609,7 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
   location: "Fitzroy, QLD",
   inputConfiguration: "Advanced",
   data: {
-    powerPlantConfiguration: "Grid Connected with Surplus Retailed",
+    powerPlantConfiguration: "Grid Connected",
     powerSupplyOption: "Self Build",
     powerPlantType: "Solar",
     powerCapacityConfiguration: "Nominal Capacity",

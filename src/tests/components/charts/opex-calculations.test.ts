@@ -149,7 +149,8 @@ describe("Opex calculations", () => {
   it("does not calculates grid connection opex when PPA agreement", () => {
     const data: Inputs = {
       ...defaultInputData.data,
-      powerPlantConfiguration: "PPA Agreement",
+      powerPlantConfiguration: "Standalone",
+      powerSupplyOption: "Power Purchase Agreement (PPA)",
       projectTimeline: 10,
       additionalTransmissionCharges: 10,
     };

@@ -1,15 +1,13 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { PowerPlantConfiguration } from "../../types";
 import InputDropdownField from "./InputDropdownField";
 import InputExpand from "./InputExpand";
 import InputNumberField from "./InputNumberField";
 import {
   capitalDepreciationProfile,
-  isPowerPlantConfiguration,
   powerPlantConfigurationData,
   powerPlantTypeData,
   profileData,
@@ -21,9 +19,6 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const [powerPlantConfiguration, setPowerPlantConfiguration] =
-    useState<PowerPlantConfiguration>("Standalone");
-
   const navigate = useNavigate();
 
   let pointer: number = 0;
@@ -67,41 +62,6 @@ export default function Input(props: Props) {
     );
   };
 
-  const getDataWithDisabledCheck = (index: number, disabled: boolean) => {
-    ++pointer;
-    const id = "test";
-
-    // let savedValue;
-    // if (savedState) {
-    //   const value = parsedState[id];
-    //   savedValue = isNaN(value) ? value : Number(value);
-    // }
-    return (
-      <InputNumberField
-        inputKey={id}
-        // defaultValue={
-        //   disabled
-        //     ? undefined
-        //     : savedValue !== undefined
-        //     ? savedValue
-        //     : defaultValue
-        // }
-        // value={disabled ? 0 : undefined}
-        // adornmentLabel={adornmentLabel}
-        // disabled={disabled}
-        // helperText={helperText}
-      />
-    );
-  };
-
-  const setStateChange = (setState: (s: PowerPlantConfiguration) => void) => {
-    return (val: string) => {
-      if (isPowerPlantConfiguration(val)) {
-        setState(val);
-      }
-    };
-  };
-
   return (
     <Box
       component="form"
@@ -125,7 +85,6 @@ export default function Input(props: Props) {
               ? parsedState["powerPlantConfiguration"]
               : powerPlantConfigurationData[0]
           }
-          onChange={setStateChange(setPowerPlantConfiguration)}
         />
       </InputExpand>
       <InputExpand title="System Sizing" id="system-sizing">
@@ -200,21 +159,11 @@ export default function Input(props: Props) {
       </InputExpand>
       <InputExpand title="Power Plant Costs" id="power-plant-costs">
         <InputExpand title="Solar Costs" id="solar-costs">
-          {[...Array(7)].map((_) =>
-            getDataWithDisabledCheck(
-              pointer,
-              powerPlantConfiguration === "PPA Agreement"
-            )
-          )}
+          {[...Array(7)].map((_) => getData(pointer))}
         </InputExpand>
 
         <InputExpand title="Wind Costs" id="wind-costs">
-          {[...Array(7)].map((_) =>
-            getDataWithDisabledCheck(
-              pointer,
-              powerPlantConfiguration === "PPA Agreement"
-            )
-          )}
+          {[...Array(7)].map((_) => getData(pointer))}
         </InputExpand>
         <InputExpand
           title="Costs for Grid Connected Systems"

@@ -3,77 +3,7 @@ import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 
 describe("LCH2 calculations", () => {
-  it("calculates LC for electricity sales when in retail mode", () => {
-    const data: Inputs = {
-      ...defaultInputData.data,
-      powerPlantConfiguration: "Grid Connected with Surplus Retailed",
-      gridConnectionCost: 10,
-      projectTimeline: 10,
-      averageElectricitySpotPrice: 1,
-    };
-
-    const valuesForProjectLife = Array(10).fill(1);
-
-    const { lcElectricitySale } = generateLCValues(
-      data,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      1
-    );
-
-    expect(lcElectricitySale).toEqual(10);
-  });
-
-  it("does not calculates LC for electricity sales when standalone", () => {
-    const data: Inputs = {
-      ...defaultInputData.data,
-      powerPlantConfiguration: "Standalone",
-      gridConnectionCost: 10,
-      projectTimeline: 10,
-      averageElectricitySpotPrice: 1,
-    };
-
-    const valuesForProjectLife = Array(10).fill(1);
-
-    const { lcElectricitySale } = generateLCValues(
-      data,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      valuesForProjectLife,
-      1
-    );
-
-    expect(lcElectricitySale).toEqual(0);
-  });
-
-  it("does not calculates LC for electricity sales when grid connected without surplus retail", () => {
+  it("calculates LC for electricity sales when averageElectricitySpotPrice provided", () => {
     const data: Inputs = {
       ...defaultInputData.data,
       powerPlantConfiguration: "Grid Connected",
@@ -105,6 +35,6 @@ describe("LCH2 calculations", () => {
       1
     );
 
-    expect(lcElectricitySale).toEqual(0);
+    expect(lcElectricitySale).toEqual(10);
   });
 });
