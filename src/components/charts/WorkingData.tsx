@@ -13,12 +13,11 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
+import { DataModel, HydrogenModel } from "../../model/HydrogenModel";
 import {
-  DataModel,
-  HydrogenModel,
   ModelHourlyOperation,
   ProjectModelSummary,
-} from "../../model/Model";
+} from "../../model/ModelTypes";
 import {
   BATTERY_OUTPUT,
   ELECTROLYSER_CF,

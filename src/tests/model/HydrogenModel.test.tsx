@@ -1,9 +1,5 @@
-import {
-  CsvRow,
-  DataModel,
-  HydrogenModel,
-  ModelSummaryPerYear,
-} from "../../model/Model";
+import { DataModel, HydrogenModel } from "../../model/HydrogenModel";
+import { CsvRow, ModelSummaryPerYear } from "../../model/ModelTypes";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf1 from "../resources/example1-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
