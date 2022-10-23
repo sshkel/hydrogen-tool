@@ -99,9 +99,7 @@ export class AmmoniaModel {
   solarData: CsvRow[];
   windData: CsvRow[];
   specCons: number;
-
-  // parameters to expose to working data
-  hourlyOperationsInYearOne: ModelHourlyOperation;
+  // ammonia
   ammonia_plant_power_demand: number;
   air_separation_unit_capacity: number;
   air_separation_unit_power_demand: number;
@@ -110,6 +108,9 @@ export class AmmoniaModel {
   nominalSolarCapacity: number;
   nominalWindCapacity: number;
   totalNominalPowerPlantCapacity: number;
+
+  // parameters to expose to working data
+  hourlyOperationsInYearOne: ModelHourlyOperation;
 
   constructor(
     parameters: AmmoniaData,
