@@ -462,13 +462,12 @@ export class HydrogenModel {
       batteryNetCharge = batteryModel.battery_net_charge;
     }
 
-    let yearlyDegradationRate: number = 0;
-
     // Stack degradation calculation
-    yearlyDegradationRate = this.calculateStackDegradation(
+    const yearlyDegradationRate = this.calculateStackDegradation(
       stackDegradation,
       electrolyserCf,
-      year
+      year,
+      this.stackLifetime
     );
 
     const hydrogenProdFixed = calculateFixedHydrogenProduction(
@@ -499,16 +498,17 @@ export class HydrogenModel {
   private calculateStackDegradation(
     stackDegradation: number,
     electrolyserCf: number[],
-    year: number
-  ) {
+    year: number,
+    stackLifetime: number | undefined
+  ): number {
     if (stackDegradation > 0) {
       // Cumulative hour degradation logic if defined
-      if (this.stackLifetime) {
+      if (stackLifetime) {
         this.currentStackOperatingHours += electrolyserCf.filter(
           (e) => e > 0
         ).length;
-        if (this.currentStackOperatingHours >= this.stackLifetime) {
-          this.currentStackOperatingHours -= this.stackLifetime;
+        if (this.currentStackOperatingHours >= stackLifetime) {
+          this.currentStackOperatingHours -= stackLifetime;
           this.stackReplacementYears.push(year);
         }
       }
