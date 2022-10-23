@@ -510,7 +510,9 @@ export class AmmoniaModel {
       this.parameters.ammonia_plant_capacity,
       this.parameters.hydrogen_storage_capacity,
       this.parameters.ammonia_plant_minimum_turndown,
-      this.parameters.minimum_hydrogen_storage
+      this.parameters.minimum_hydrogen_storage,
+      this.hydrogenOutput,
+      this.air_separation_unit_capacity
     );
 
     const workingDf = {
@@ -518,6 +520,7 @@ export class AmmoniaModel {
       Electrolyser_CF: electrolyserCf,
       Hydrogen: hydrogen,
       Net_Battery_Flow: batteryNetCharge,
+      Ammonia: ammoniaCapFactors,
     };
 
     return workingDf;
@@ -1177,29 +1180,19 @@ function calculateGeneratorCapFactors(
 
 function calculateNH3CapFactors(
   mass_of_hydrogen: number[], // calculated in hydrogen
-
   // system sizing
   ammonia_plant_capacity: number, // raw input
-
   hydrogen_storage_capacity: number, // raw input
-
   // ammonia plant load range
   ammonia_plant_minimum_turndown: number, // raw input %
-
   // electrolyster and hydrogen storage paramteres
   // other operation factors
-  minimum_hydrogen_storage: number // %
+  minimum_hydrogen_storage: number, // %
+  hydrogen_output: number,
+  air_separation_unit_capacity: number
 ): number[] {
-  // TODO remove duplication of these 2 functions
-  const hydrogen_output_result = hydrogen_output(ammonia_plant_capacity);
-  const air_separation_unit_capacity_result = air_separation_unit_capacity(
-    ammonia_plant_capacity
-  );
-  const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output_result);
-  const deficit_h2_result = deficit_h2(
-    mass_of_hydrogen,
-    hydrogen_output_result
-  );
+  const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output);
+  const deficit_h2_result = deficit_h2(mass_of_hydrogen, hydrogen_output);
 
   const { from_h2_store, h2_storage_balance_result } = h2_storage_balance(
     deficit_h2_result,
@@ -1212,14 +1205,14 @@ function calculateNH3CapFactors(
     from_h2_store,
     h2_storage_balance_result,
     hydrogen_storage_capacity,
-    hydrogen_output_result,
+    hydrogen_output,
     ammonia_plant_minimum_turndown
   );
 
   const asu_out_result = asu_out(
     h2_to_nh3_result,
-    hydrogen_output_result,
-    air_separation_unit_capacity_result
+    hydrogen_output,
+    air_separation_unit_capacity
   );
 
   const nh3_unit_out_result = nh3_unit_out(asu_out_result, h2_to_nh3_result);
