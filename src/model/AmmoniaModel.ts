@@ -54,10 +54,7 @@ export type AmmoniaData = {
   // system sizing
   ammonia_plant_capacity: number; // raw input
   electrolyser_system_oversizing: number; // raw input %
-  solar_hybrid_generator_split: number; // raw input %
-  wind_hybrid_generator_split: number; // raw input %
   renewable_energy_plant_oversizing: number; // raw input
-
   // specific electricity consumption sec
   ammonia_plant_sec: number; // raw input
   asu_sec: number; // raw input
@@ -170,14 +167,14 @@ export class AmmoniaModel {
       this.ammonia_plant_power_demand,
       this.air_separation_unit_power_demand,
       this.nominalElectrolyserCapacity,
-      this.parameters.solar_hybrid_generator_split / 100,
+      this.parameters.solarToWindPercentage / 100,
       this.parameters.renewable_energy_plant_oversizing / 100
     );
     this.nominalWindCapacity = nominal_wind_capacity(
       this.ammonia_plant_power_demand,
       this.air_separation_unit_power_demand,
       this.nominalElectrolyserCapacity,
-      this.parameters.wind_hybrid_generator_split / 100,
+      1 - this.parameters.solarToWindPercentage / 100,
       this.parameters.renewable_energy_plant_oversizing / 100
     );
     this.totalNominalPowerPlantCapacity =
