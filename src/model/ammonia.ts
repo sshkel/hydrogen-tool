@@ -382,7 +382,7 @@ export function electrolyser_with_battery_capacity_factor(
   asu_power_demand: number,
   electrolyser_capacity: number,
   battery_efficiency: number
-) {
+): number[] {
   return net_battery_flow.map((_: number, i: number) => {
     if (net_battery_flow[i] < 0) {
       return (
@@ -393,7 +393,7 @@ export function electrolyser_with_battery_capacity_factor(
       );
     }
 
-    return electrolyser_capacity_factor;
+    return electrolyser_capacity_factor[i];
   });
 }
 // should be repeated for multiple cells
@@ -562,10 +562,10 @@ export function h2_storage_balance(
         to_h2_store[i] + from_h2_store[i] + h2_storage_balance_result[i - 1];
     }
   }
-  return { from_h2_store, to_h2_store, h2_storage_balance_result };
+  return { from_h2_store, h2_storage_balance_result };
 }
 // will be used to calculate mass_of_hydrogen
-function calculateGeneratorCapFactors(
+export function calculateGeneratorCapFactors(
   generatorCapFactor: number[], // calculated in hydrogen
   net_battery_flow: number[], // calculated in hydrogen
   electrolyserCapFactor: number[], // calculated in hydrogen
@@ -583,7 +583,7 @@ function calculateGeneratorCapFactors(
   // specific electricity consumption sec
   ammonia_plant_sec: number, // raw input
   asu_sec: number // raw input
-) {
+): number[] {
   const ammonia_plant_power_demand_result = ammonia_plant_power_demand(
     ammonia_plant_capacity,
     ammonia_plant_sec
@@ -656,7 +656,7 @@ function calculateGeneratorCapFactors(
   );
 }
 
-function calculateNH3CapFactors(
+export function calculateNH3CapFactors(
   mass_of_hydrogen: number[], // calculated in hydrogen
 
   // system sizing
@@ -670,7 +670,7 @@ function calculateNH3CapFactors(
   // electrolyster and hydrogen storage paramteres
   // other operation factors
   minimum_hydrogen_storage: number // %
-) {
+): number[] {
   // TODO remove duplication of these 2 functions
   const hydrogen_output_result = hydrogen_output(ammonia_plant_capacity);
   const air_separation_unit_capacity_result = air_separation_unit_capacity(
@@ -682,13 +682,12 @@ function calculateNH3CapFactors(
     hydrogen_output_result
   );
 
-  const { from_h2_store, to_h2_store, h2_storage_balance_result } =
-    h2_storage_balance(
-      deficit_h2_result,
-      excess_h2_result,
-      hydrogen_storage_capacity,
-      minimum_hydrogen_storage / 100
-    );
+  const { from_h2_store, h2_storage_balance_result } = h2_storage_balance(
+    deficit_h2_result,
+    excess_h2_result,
+    hydrogen_storage_capacity,
+    minimum_hydrogen_storage / 100
+  );
   const h2_to_nh3_result = h2_to_nh3(
     mass_of_hydrogen,
     from_h2_store,

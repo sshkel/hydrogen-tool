@@ -31,7 +31,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Map setLocation={setLocation} />} />
             <Route
-              path="/design"
+              path="/design/:powerfuel"
               element={
                 <InputHomePage
                   setState={setState}

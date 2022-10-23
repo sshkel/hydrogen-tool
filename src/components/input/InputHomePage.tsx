@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import { createTheme } from "@mui/material/styles";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "../../input.css";
 import { InputConfiguration } from "../../types";
@@ -52,6 +52,7 @@ interface Props {
 
 export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
+  const { powerfuel } = useParams();
   const [tab, setTab] = React.useState("Basic");
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
@@ -65,6 +66,7 @@ export default function InputHomePage(props: Props) {
     e.preventDefault();
     let form: any = {};
 
+    form["powerfuel"] = powerfuel;
     for (let input of e.target.getElementsByTagName("input")) {
       const { id, name, value } = input;
       const key = id || name;

@@ -52,8 +52,8 @@ const SideCard = styled(Card)(({ theme }) => ({
 export function ZonePopover(props: Props) {
   const [component, setComponent] = useState("location");
   const navigate = useNavigate();
-  const startDesign = () => {
-    navigate("/design");
+  const startDesign = (powerfuel: string) => {
+    navigate(`/design/${powerfuel}`);
   };
   type ObjectKey = keyof typeof zoneInfo;
   const zone = props.zone as ObjectKey;
@@ -226,14 +226,14 @@ export function ZonePopover(props: Props) {
           >
             <Grid item xs={2}>
               <PowerfuelPathwayCard
-                onClick={startDesign}
+                onClick={() => startDesign("hydrogen")}
                 title="Hydrogen"
                 subheader="General hydrogen production cost for region"
               />
             </Grid>
             <Grid item xs={2}>
               <PowerfuelPathwayCard
-                onClick={startDesign}
+                onClick={() => startDesign("ammonia")}
                 title="Ammonia"
                 subheader="Integrated hydrogen production and conversion into Ammonia"
               />
