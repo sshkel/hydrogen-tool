@@ -4,7 +4,7 @@ import {
 } from "../components/charts/basic-calculations";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import { InputConfiguration, StackReplacementType } from "../types";
-import { mean, sum } from "../utils";
+import { mean } from "../utils";
 import {
   CsvRow,
   ModelHourlyOperation,
@@ -20,19 +20,7 @@ import {
   calculateVariableHydrogenProduction,
   getTabulatedOutput,
 } from "./ModelUtils";
-import {
-  BATTERY_OUTPUT,
-  ELECTROLYSER_CF,
-  ENERGY_INPUT,
-  ENERGY_OUTPUT,
-  HOURS_PER_YEAR,
-  HYDROGEN_OUTPUT_FIXED,
-  HYDROGEN_OUTPUT_VARIABLE,
-  POWER_PLANT_CF,
-  RATED_CAPACITY_TIME,
-  SUMMARY_KEYS,
-  TOTAL_OPERATING_TIME,
-} from "./consts";
+import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
 
 export type HydrogenData = {
   inputConfiguration: InputConfiguration;
