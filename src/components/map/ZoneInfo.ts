@@ -202,7 +202,7 @@ export const zoneInfo = {
     location: "Offshore Central Coast Region",
     regionalCenters: "Coffs Harbor and Port Macquarie",
     solarCapFactor: "-%",
-    windCapFactor: "55.16",
+    windCapFactor: "55%",
     mainIndustries: "Health Care, Retail, Education",
     waterAvailability: "Fresh Water, Recycled Water",
     infrastructure:
