@@ -29,7 +29,7 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiFormHelperText-root": {
     fontStyle: "italic",
     lineHeight: "1.2",
-    paddingLeft: "0.2rem",
+    marginLeft: 0,
   },
 }));
 
@@ -43,7 +43,7 @@ const sx = {
   flexShrink: "1",
   flexBasis: "100%",
   width: "100%",
-  paddingX: 1,
+  paddingX: 2.5,
 };
 
 interface Props {
