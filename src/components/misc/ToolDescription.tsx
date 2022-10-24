@@ -68,7 +68,7 @@ export function ToolDescription() {
             <CardMedia
               component="img"
               sx={{ width: "40vw", height: "50vh" }}
-              image="https://hysupply.s3.ap-southeast-2.amazonaws.com/assets/images/desc1.svg"
+              image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc1.svg"
             />
           </StyledCard>
         </Grid>
@@ -97,7 +97,7 @@ export function ToolDescription() {
             <CardMedia
               component="img"
               sx={{ width: "30vw", height: "40vh" }}
-              image="https://hysupply.s3.ap-southeast-2.amazonaws.com/assets/images/desc2.svg"
+              image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc2.svg"
             />
           </StyledCard>
         </Grid>
@@ -138,7 +138,7 @@ export function ToolDescription() {
             <CardMedia
               component="img"
               sx={{ width: "30vw", height: "40vh" }}
-              image="https://hysupply.s3.ap-southeast-2.amazonaws.com/assets/images/desc3.svg"
+              image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc3.svg"
             />
           </StyledCard>
         </Grid>

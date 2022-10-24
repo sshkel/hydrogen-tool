@@ -2,12 +2,12 @@ import Papa from "papaparse";
 
 export async function loadSolar() {
   return await read_csv(
-    "https://hysupply.s3.ap-southeast-2.amazonaws.com/assets/solar.csv"
+    "https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/solar.csv"
   );
 }
 export async function loadWind() {
   return await read_csv(
-    "https://hysupply.s3.ap-southeast-2.amazonaws.com/assets/wind.csv"
+    "https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/wind.csv"
   );
 }
 // to use these run
