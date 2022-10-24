@@ -36,6 +36,7 @@ export default function Map(props: Props) {
   const polygons = geoJson.features.map((feature: any) => {
     return (
       <Polygon
+        key={feature.properties.zone}
         color="#4472C4"
         weight={1}
         eventHandlers={{

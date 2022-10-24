@@ -65,7 +65,7 @@ export function ZonePopover(props: Props) {
           title="Location summary"
           sx={{
             backgroundColor: GREY,
-            "padding-left": "20px",
+            paddingLeft: "20px",
           }}
           titleTypographyProps={{
             fontWeight: "bold",
@@ -212,7 +212,7 @@ export function ZonePopover(props: Props) {
           titleTypographyProps={{
             fontWeight: "bold",
           }}
-          sx={{ backgroundColor: GREY, "padding-left": "20px" }}
+          sx={{ backgroundColor: GREY, paddingLeft: "20px" }}
         />
         <CardContent>
           <Grid

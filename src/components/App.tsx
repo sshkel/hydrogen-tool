@@ -3,24 +3,26 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { SideBar } from "./components/SideBar";
-import WorkingData from "./components/charts/WorkingData";
-import Input from "./components/input/Input";
-import InputHomePage from "./components/input/InputHomePage";
-import Map from "./components/map/Map";
-import { About } from "./components/misc/About";
-import { ToolDescription } from "./components/misc/ToolDescription";
-import { loadSolar, loadWind } from "./model/DataLoader";
-import { InputConfiguration, UserInputFields } from "./types";
+import { DEFAULT_LOCATION, loadSolar, loadWind } from "../model/DataLoader";
+import { InputConfiguration, UserInputFields } from "../types";
+import { SideBar } from "./SideBar";
+import WorkingData from "./charts/WorkingData";
+import Input from "./input/Input";
+import InputHomePage from "./input/InputHomePage";
+import Map from "./map/Map";
+import { About } from "./misc/About";
+import { ToolDescription } from "./misc/ToolDescription";
 
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
-  const [location, setLocation] = useState<string | undefined>("Z1");
+  const [location, setLocation] = useState<string | undefined>(
+    DEFAULT_LOCATION
+  );
   const [inputConfiguration, setInputConfiguration] =
     useState<InputConfiguration>("Basic");
 
   return (
-    <div className="App2">
+    <div className="NSW-P2X-Study">
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <SideBar />

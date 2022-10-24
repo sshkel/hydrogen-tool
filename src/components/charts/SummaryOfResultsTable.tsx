@@ -14,20 +14,29 @@ interface Props {
   title?: string;
   data: { [key: string]: number };
 }
-export default function BasicTable(props: Props) {
+
+function generateId(i: number, suffix: string) {
+  return `summary-of-results-${i}-${suffix}`;
+}
+
+export default function SummaryOfResultsTable(props: Props) {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="summary-of-results">
         <TableBody>
-          {Object.keys(props.data).map((k: string) => (
+          {Object.keys(props.data).map((k: string, i: number) => (
             <TableRow key={k}>
               <TableCell>
-                <Typography fontWeight="bold" color={BLUE}>
+                <Typography
+                  id={generateId(i, "key")}
+                  fontWeight="bold"
+                  color={BLUE}
+                >
                   {k}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography fontWeight="bold">
+                <Typography id={generateId(i, "value")} fontWeight="bold">
                   {props.data[k].toLocaleString("en-US")}
                 </Typography>
               </TableCell>

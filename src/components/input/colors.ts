@@ -1,7 +1,7 @@
 export const ORANGE = "#ED7D31";
 export const BLUE = "#396AFF";
 export const GREY = "#EBE9E9";
-export const SAPPHIRE = "#25579A";
+export const SAPPHIRE = "#475C85";
 export const LIGHT_BLUE = "#2397F1";
 export const TEAL = "#0DD4C7";
 export const WHITE = "#FFFFFF";

@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 
-import BasicTable from "../../../components/charts/BasicTable";
+import SummaryOfResultsTable from "../../../components/charts/SummaryOfResultsTable";
 import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
@@ -44,7 +44,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -86,7 +86,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -128,7 +128,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -170,7 +170,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -212,7 +212,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -254,7 +254,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -298,7 +298,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -340,7 +340,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -382,7 +382,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
@@ -424,7 +424,7 @@ describe("Model summary", () => {
       setTimeout(() => {
         wrapper.update();
         const summaryTable = wrapper
-          .find(BasicTable)
+          .find(SummaryOfResultsTable)
           .filterWhere((e) => e.prop("title") === "Summary of Results");
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");

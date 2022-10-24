@@ -34,13 +34,13 @@ import { InputConfiguration, Inputs, UserInputFields } from "../../types";
 import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
 import { BLUE, SAPPHIRE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
-import BasicTable from "./BasicTable";
 import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
+import SummaryOfResultsTable from "./SummaryOfResultsTable";
 import {
   backCalculateInputFields,
   backCalculateSolarAndWindCapacity,
@@ -96,12 +96,12 @@ export default function WorkingData(props: Props) {
   useEffect(() => {
     const { loadSolar, loadWind } = props;
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
-      if (solar.length !== 8784) {
-        console.error("Solar data is not 8784 rows in length");
+      if (solar.length !== 8784 && solar.length !== 8760) {
+        console.error("Solar data is of unexpected length", solar.length);
       }
 
-      if (wind.length !== 8784) {
-        console.error("Wind data is not 8784 rows in length");
+      if (wind.length !== 8784 && wind.length !== 8760) {
+        console.error("Wind data is not 8784 rows in length", wind.length);
       }
       setState({ solarData: solar, windData: wind });
     });
@@ -153,21 +153,14 @@ export default function WorkingData(props: Props) {
     electrolyserEfficiency = 0,
     solarToWindPercentage,
     powerCapacityConfiguration,
-    powerPlantType,
   } = inputs;
 
   // These values can change if Oversize Ratio configuration is used
-  let {
-    solarNominalCapacity,
-    windNominalCapacity,
-    electrolyserNominalCapacity,
-  } = inputs;
-
   const powerPlantOversizeRatio =
     powerCapacityConfiguration === "Oversize Ratio"
       ? inputs.powerPlantOversizeRatio
-      : (solarNominalCapacity + windNominalCapacity) /
-        electrolyserNominalCapacity;
+      : (inputs.solarNominalCapacity + inputs.windNominalCapacity) /
+        inputs.electrolyserNominalCapacity;
 
   const location = props.location;
   const dataModel: HydrogenData = {
@@ -180,9 +173,9 @@ export default function WorkingData(props: Props) {
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
     projectScale,
-    electrolyserNominalCapacity,
-    solarNominalCapacity,
-    windNominalCapacity,
+    electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
+    solarNominalCapacity: inputs.solarNominalCapacity,
+    windNominalCapacity: inputs.windNominalCapacity,
     powerPlantOversizeRatio,
     solarToWindPercentage,
     solarDegradation,
@@ -214,11 +207,13 @@ export default function WorkingData(props: Props) {
     inputs = backCalculateSolarAndWindCapacity(
       inputs,
       powerPlantOversizeRatio,
-      electrolyserNominalCapacity,
+      inputs.electrolyserNominalCapacity,
       solarToWindPercentage,
-      powerPlantType
+      inputs.powerPlantType
     );
   }
+
+  const { solarNominalCapacity, windNominalCapacity } = inputs;
 
   // CAPEX values
   const {
@@ -563,6 +558,7 @@ function KeyInputsPane(
   return (
     <StyledCard>
       <CardHeader
+        id="key-inputs"
         title="Key Inputs"
         titleTypographyProps={{
           fontWeight: "bold",
@@ -583,7 +579,12 @@ function KeyInputsPane(
                   style={{ color: BLUE }}
                 />
               </Grid>
-              <Grid container item direction={"column"}>
+              <Grid
+                id="key-inputs-location"
+                container
+                item
+                direction={"column"}
+              >
                 <Grid>
                   <ItemTitle>Location</ItemTitle>
                 </Grid>
@@ -602,7 +603,12 @@ function KeyInputsPane(
                   style={{ color: BLUE }}
                 />
               </Grid>
-              <Grid container item direction={"column"}>
+              <Grid
+                id="key-inputs-electrolyser-capacity"
+                container
+                item
+                direction={"column"}
+              >
                 <Grid item>
                   <ItemTitle>Electrolyster Capacity</ItemTitle>
                 </Grid>
@@ -619,7 +625,12 @@ function KeyInputsPane(
               <Grid item>
                 <FactoryRoundedIcon fontSize="large" style={{ color: BLUE }} />
               </Grid>
-              <Grid container item direction={"column"}>
+              <Grid
+                id="key-inputs-power-plant-capacity"
+                container
+                item
+                direction={"column"}
+              >
                 <ItemTitle>Power Plant Capacity</ItemTitle>
                 <Grid item>
                   <ItemText>
@@ -935,6 +946,7 @@ export function SummaryOfResultsPane(
   return (
     <StyledCard>
       <CardHeader
+        id="summary-of-results"
         title="Summary of Results"
         titleTypographyProps={{
           fontWeight: "bold",
@@ -946,7 +958,7 @@ export function SummaryOfResultsPane(
           paddingTop: 0,
         }}
       >
-        <BasicTable title="Summary of Results" data={summaryDict} />
+        <SummaryOfResultsTable title="Summary of Results" data={summaryDict} />
       </CardContent>
     </StyledCard>
   );

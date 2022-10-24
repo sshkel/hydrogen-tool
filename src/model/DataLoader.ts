@@ -1,5 +1,7 @@
 import Papa from "papaparse";
 
+export const DEFAULT_LOCATION = "Z1";
+
 export async function loadSolar() {
   return await read_csv(
     "https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/solar.csv"
