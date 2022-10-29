@@ -7,7 +7,6 @@ import { DEFAULT_LOCATION, loadSolar, loadWind } from "../model/DataLoader";
 import { InputConfiguration, UserInputFields } from "../types";
 import { SideBar } from "./SideBar";
 import WorkingData from "./charts/WorkingData";
-import Input from "./input/Input";
 import InputHomePage from "./input/InputHomePage";
 import Map from "./map/Map";
 import { About } from "./misc/About";
@@ -41,7 +40,6 @@ function App() {
                 />
               }
             />
-            <Route path="/input" element={<Input setState={setState} />} />
             <Route
               path="/result"
               element={

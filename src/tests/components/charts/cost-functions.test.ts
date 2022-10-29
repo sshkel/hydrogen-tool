@@ -1,7 +1,6 @@
 import {
   calculateLoanBalance,
   getBaseLog,
-  getConversionFactors,
   getInflationFn,
   roundToNearestThousand,
 } from "../../../components/charts/cost-functions";
@@ -44,40 +43,5 @@ describe("Cost function calculations", () => {
     ];
     expect(result.length).toEqual(projectTimeline + 2);
     expect(result).toEqual(expected);
-  });
-
-  it("handles when project life exceeds requested conversion factors", () => {
-    const projectTimeline = 10;
-    const conversionFactors = getConversionFactors(
-      "MACRs - 3 year Schedule",
-      projectTimeline
-    );
-    const expected = [0, 0.3333, 0.4445, 0.1481, 0.0741, 0, 0, 0, 0, 0, 0, 0];
-    expect(conversionFactors.length).toEqual(projectTimeline + 2);
-    expect(conversionFactors).toEqual(expected);
-  });
-
-  it("handles when project life equals requested conversion factors", () => {
-    const projectTimeline = 6;
-    const conversionFactors = getConversionFactors(
-      "MACRs - 5 year Schedule",
-      projectTimeline
-    );
-    const expected = [0, 0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576, 0];
-    expect(conversionFactors.length).toEqual(projectTimeline + 2);
-    expect(conversionFactors).toEqual(expected);
-  });
-
-  it("handles when project life is less than requested conversion factors", () => {
-    const projectTimeline = 8;
-    const conversionFactors = getConversionFactors(
-      "MACRs - 10 year Schedule",
-      projectTimeline
-    );
-    const expected = [
-      0, 0.1, 0.18, 0.144, 0.1152, 0.0922, 0.0737, 0.0655, 0.0655, 0,
-    ];
-    expect(conversionFactors.length).toEqual(projectTimeline + 2);
-    expect(conversionFactors).toEqual(expected);
   });
 });

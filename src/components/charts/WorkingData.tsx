@@ -243,17 +243,13 @@ export default function WorkingData(props: Props) {
     electrolyserOpexPerYear,
     powerPlantOpexCost,
     powerPlantOpexPerYear,
-
     batteryOpexCost,
     batteryOpexPerYear,
     waterOpexCost,
     waterOpexPerYear,
-
     electricityPurchaseOpexPerYear,
-
     stackReplacementCostsOverProjectLife,
     batteryReplacementCostsOverProjectLife,
-
     additionalOpexPerYear,
     gridConnectionOpexPerYear,
     totalOpex,

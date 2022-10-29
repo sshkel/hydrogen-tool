@@ -1,5 +1,4 @@
 import {
-  DepreciationProfile,
   Inputs,
   PowerCapacityConfiguration,
   PowerPlantConfiguration,
@@ -96,7 +95,6 @@ class DefaultInputs implements Inputs {
   decommissioningCostShare = 0;
   loanTerm = 10;
   interestOnLoan = 3;
-  capitalDepreciationProfile = "Straight Line" as DepreciationProfile;
   taxRate = 30;
   inflationRate = 2.5;
 }

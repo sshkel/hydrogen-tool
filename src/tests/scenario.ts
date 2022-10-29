@@ -79,7 +79,6 @@ export const defaultInputData: {
     decommissioningCostShare: 0,
     loanTerm: 0,
     interestOnLoan: 0,
-    capitalDepreciationProfile: "Straight Line",
     taxRate: 0,
     inflationRate: 0,
   },
@@ -167,7 +166,6 @@ export const standaloneSolarWithBatteryScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -253,7 +251,6 @@ export const standaloneSolarScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -339,7 +336,6 @@ export const standaloneWindScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -425,7 +421,6 @@ export const windWithPPAScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -511,7 +506,6 @@ export const hybridBatteryGridSurplusRetailScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -597,7 +591,6 @@ export const windWithBatteryAndPPAScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -683,7 +676,6 @@ export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -769,7 +761,6 @@ export const standaloneSolarWithStackDegradationScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -855,7 +846,6 @@ export const standaloneHybridWithDegradationScenario: {
     decommissioningCostShare: 0,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "Straight Line",
   },
 };
 
@@ -939,6 +929,5 @@ export const standaloneWindWithBatteryAndDegradationScenario: {
     decommissioningCostShare: 10,
     inflationRate: 2.5,
     taxRate: 30,
-    capitalDepreciationProfile: "MACRs - 3 year Schedule",
   },
 };

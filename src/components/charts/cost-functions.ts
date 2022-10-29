@@ -1,4 +1,3 @@
-import { DepreciationProfile } from "../../types";
 import { fillYearsArray, padArray, startup, sum } from "../../utils";
 
 export const getBaseLog = (n: number, base: number): number =>
@@ -108,66 +107,4 @@ export function getDiscountFn(rate: number, years: number) {
       }
     );
   };
-}
-
-export function getConversionFactors(
-  capitalDepreciationProfile: DepreciationProfile,
-  projectTimeline: number
-) {
-  let selectedModel = null;
-  // come from conversion factors tab
-  // can probs use the formula instead of hardcoded table
-  switch (capitalDepreciationProfile) {
-    // TODO when default to straight line it breaks with undefined
-    case "Straight Line": {
-      selectedModel = Array(projectTimeline).fill(1 / projectTimeline);
-      break;
-    }
-    case "MACRs - 3 year Schedule": {
-      selectedModel = [0.3333, 0.4445, 0.1481, 0.0741];
-      break;
-    }
-    case "MACRs - 5 year Schedule": {
-      selectedModel = [0.2, 0.32, 0.192, 0.1152, 0.1152, 0.0576];
-      break;
-    }
-    case "MACRs - 7 year Schedule": {
-      selectedModel = [0.1429, 0.1749, 0.1249, 0.0893, 0.892, 0.893, 0.0446];
-      break;
-    }
-    case "MACRs - 10 year Schedule": {
-      selectedModel = [
-        0.1, 0.18, 0.144, 0.1152, 0.0922, 0.0737, 0.0655, 0.0655, 0.0656,
-        0.0655, 0.0328,
-      ];
-      break;
-    }
-    case "MACRs - 15 year Schedule": {
-      selectedModel = [
-        0.05, 0.095, 0.0855, 0.077, 0.0693, 0.0623, 0.059, 0.059, 0.0591, 0.059,
-        0.0591, 0.059, 0.0591, 0.059, 0.0591, 0.0295,
-      ];
-      break;
-    }
-    case "MACRs - 20 year Schedule": {
-      selectedModel = [
-        0.0375, 0.0722, 0.0668, 0.0618, 0.0571, 0.0529, 0.0489, 0.0452, 0.0446,
-        0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446, 0.0446,
-        0.0446, 0.0446, 0.0223,
-      ];
-      break;
-    }
-    default: {
-      throw new Error("Unknown depreciation profile");
-    }
-  }
-  const padding = projectTimeline - selectedModel.length;
-
-  if (padding > 0) {
-    selectedModel.push(...Array(padding).fill(0));
-  } else {
-    selectedModel = selectedModel.slice(0, projectTimeline);
-  }
-
-  return padArray(selectedModel);
 }

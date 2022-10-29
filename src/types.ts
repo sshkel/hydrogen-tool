@@ -4,15 +4,6 @@ export type StackReplacementType =
   | "Cumulative Hours"
   | "Maximum Degradation Level";
 
-export type DepreciationProfile =
-  | "Straight Line"
-  | "MACRs - 3 year Schedule"
-  | "MACRs - 5 year Schedule"
-  | "MACRs - 7 year Schedule"
-  | "MACRs - 10 year Schedule"
-  | "MACRs - 15 year Schedule"
-  | "MACRs - 20 year Schedule";
-
 export type PowerPlantConfiguration = "Standalone" | "Grid Connected";
 
 export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
@@ -113,7 +104,6 @@ export interface UserInputFields {
   decommissioningCostShare?: number;
   loanTerm?: number;
   interestOnLoan?: number;
-  capitalDepreciationProfile?: DepreciationProfile;
   taxRate?: number;
   inflationRate?: number;
   secAtNominalLoad?: number;
@@ -209,7 +199,6 @@ export interface Inputs {
   decommissioningCostShare: number;
   loanTerm: number;
   interestOnLoan: number;
-  capitalDepreciationProfile: DepreciationProfile;
   taxRate: number;
   inflationRate: number;
 }

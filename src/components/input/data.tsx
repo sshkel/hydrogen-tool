@@ -1,8 +1,4 @@
-import {
-  DefaultInput,
-  DepreciationProfile,
-  PowerPlantConfiguration,
-} from "../../types";
+import { DefaultInput, PowerPlantConfiguration } from "../../types";
 
 export const configurationTypes = [
   "powerPlantType",
@@ -17,16 +13,6 @@ export const profileData: string[] = ["Fixed", "Variable"];
 export const replacementTypeData: string[] = [
   "Cumulative Hours",
   "Maximum Degradation Level",
-];
-
-export const capitalDepreciationProfile: DepreciationProfile[] = [
-  "Straight Line",
-  "MACRs - 3 year Schedule",
-  "MACRs - 5 year Schedule",
-  "MACRs - 7 year Schedule",
-  "MACRs - 10 year Schedule",
-  "MACRs - 15 year Schedule",
-  "MACRs - 20 year Schedule",
 ];
 
 export const powerPlantConfigurationData: string[] = [
