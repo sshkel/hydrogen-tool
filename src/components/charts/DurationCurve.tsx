@@ -21,16 +21,19 @@ export default function DurationCurve(props: Props) {
         borderColor: addAlpha(TEAL, 1),
       },
     ],
-    options: {
-      ticks: {
-        stepSize: 100,
+  };
+
+  const options = {
+    plugins: {
+      legend: {
+        display: false,
       },
     },
   };
 
   return (
     <div>
-      <Line data={data} />
+      <Line data={data} options={options} />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
-import { TEAL, addAlpha } from "../input/colors";
+import { ORANGE, TEAL, addAlpha } from "../input/colors";
 
 interface Props {
   title: string;
@@ -19,12 +19,18 @@ export default function CostBarChart(props: Props) {
     };
   });
 
+  const dataLength = datapoints[0].data.length;
+  const backgroundColor = new Array(dataLength).fill(addAlpha(TEAL, 0.6));
+  backgroundColor.push(addAlpha(ORANGE, 0.6));
+  const borderColor = new Array(dataLength).fill(addAlpha(TEAL, 0.6));
+  borderColor.push(addAlpha(ORANGE, 1.0));
+
   const graphData = {
     labels: labels.concat(["Total"]),
     datasets: transformedPoints.map((point) => ({
       ...point,
-      backgroundColor: addAlpha(TEAL, 0.6),
-      borderColor: addAlpha(TEAL, 1),
+      backgroundColor: backgroundColor,
+      borderColor: borderColor,
     })),
   };
 
@@ -36,6 +42,17 @@ export default function CostBarChart(props: Props) {
           label: function (context: any) {
             return (context.raw[1] - context.raw[0]).toLocaleString("en-US");
           },
+        },
+      },
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "$/yr",
         },
       },
     },
