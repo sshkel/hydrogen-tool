@@ -25,6 +25,7 @@ describe("InputHomePage", () => {
       electrolyserEfficiency: 50,
       electrolyserPurchaseCost: 1000,
       powerPlantOversizeRatio: 2,
+      powerfuel: "hydrogen",
       projectScale: 100_000,
       projectTimeline: 20,
       solarFarmBuildCost: 1200,
@@ -73,6 +74,7 @@ describe("InputHomePage", () => {
     expect(setState).toHaveBeenCalledWith({
       electrolyserNominalCapacity: 10,
       powerPlantConfiguration: "Standalone",
+      powerfuel: "hydrogen",
       powerPlantType: "Solar",
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Nominal Capacity",
@@ -118,6 +120,7 @@ describe("InputHomePage", () => {
     expect(setState).toHaveBeenCalledWith({
       electrolyserNominalCapacity: 10,
       powerPlantConfiguration: "Standalone",
+      powerfuel: "hydrogen",
       // powerPlantType: "Solar",
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Nominal Capacity",
