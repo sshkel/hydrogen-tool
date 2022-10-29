@@ -1,6 +1,5 @@
 import {
-  AdvancedDefaultInput,
-  BasicDefaultInput,
+  DefaultInput,
   DepreciationProfile,
   PowerPlantConfiguration,
 } from "../../types";
@@ -43,7 +42,7 @@ export function isPowerPlantConfiguration(
   return powerPlantConfigurationData.includes(value);
 }
 
-export const basicDefaultInputs: BasicDefaultInput = {
+export const sliderFieldDefaultInputs: DefaultInput = {
   projectScale: {
     min: 100,
     max: 1_000_000,
@@ -79,7 +78,7 @@ export const basicDefaultInputs: BasicDefaultInput = {
     min: 100,
     max: 5000,
     step: 100,
-    title: "Solar Farm Build Cost ($/kw)",
+    title: "Solar Farm Build Cost ($/kW)",
   },
   windFarmBuildCost: {
     min: 100,
@@ -153,7 +152,15 @@ export const basicDefaultInputs: BasicDefaultInput = {
   },
 };
 
-export const advancedDefaultInputs: AdvancedDefaultInput = {
+export const numberFieldDefaultInputs: DefaultInput = {
+  /******* Project Scale *******/
+  projectScale: {
+    min: 100,
+    max: 1_000_000,
+    step: 50_000,
+    title: "Project Scale",
+    adornmentLabel: "tonnes/yr",
+  },
   /******* Electrolyser Parameters *******/
   // Electrolyer System Capacity
   electrolyserNominalCapacity: {

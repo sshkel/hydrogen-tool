@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid";
 
 import "../../input.css";
 import InputCard from "./InputCard";
+import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 import InputSlider from "./InputSlider";
 
@@ -27,7 +28,7 @@ export default function BasicHydrogenInput() {
           <InputCard
             title="Project Scale"
             children={[
-              <InputSlider key="projectScale" inputKey="projectScale" />,
+              <InputNumberField key="projectScale" inputKey="projectScale" />,
             ]}
           />
         </Grid>
@@ -91,13 +92,10 @@ export default function BasicHydrogenInput() {
                       key="principalPPACost"
                       inputKey="principalPPACost"
                     />,
-                    <InputSlider
-                      key="waterSupplyCost"
-                      inputKey="waterSupplyCost"
-                    />,
                   ],
                 ]}
               />,
+              <InputSlider key="waterSupplyCost" inputKey="waterSupplyCost" />,
             ]}
           />
         </Grid>
@@ -108,51 +106,8 @@ export default function BasicHydrogenInput() {
           <InputCard
             title="Cost Analysis"
             children={[
-              <InputSelect
-                key="costAnalysisSelect"
-                selectKey="costAnalysisSelect"
-                titles={["LCH2​", "Detailed Project Costing"]}
-                buttonChildren={[
-                  [
-                    <InputSlider
-                      key="discountRate-lch2"
-                      inputKey="discountRate"
-                    />,
-                    <InputSlider
-                      key="projectTimeline-lch2"
-                      inputKey="projectTimeline"
-                    />,
-                  ],
-                  [
-                    <InputSlider
-                      key="discountRate-detailed"
-                      inputKey="discountRate"
-                    />,
-                    <InputSlider
-                      key="projectTimeline-detailed"
-                      inputKey="projectTimeline"
-                    />,
-                    <InputSlider
-                      key="shareOfTotalInvestmentFinancedViaEquity"
-                      inputKey="shareOfTotalInvestmentFinancedViaEquity"
-                    />,
-                    <InputSlider
-                      key="interestOnLoan"
-                      inputKey="interestOnLoan"
-                    />,
-                    <InputSlider key="loanTerm" inputKey="loanTerm" />,
-                    <InputSlider
-                      key="inflationRate"
-                      inputKey="inflationRate"
-                    />,
-                    <InputSlider key="taxRate" inputKey="taxRate" />,
-                    <InputSlider
-                      key="hydrogenSalesMargin"
-                      inputKey="hydrogenSalesMargin"
-                    />,
-                  ],
-                ]}
-              />,
+              <InputSlider key="discountRate" inputKey="discountRate" />,
+              <InputSlider key="projectTimeline" inputKey="projectTimeline" />,
             ]}
           />
         </Grid>

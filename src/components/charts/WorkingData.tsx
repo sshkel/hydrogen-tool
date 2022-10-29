@@ -162,6 +162,19 @@ export default function WorkingData(props: Props) {
       : (inputs.solarNominalCapacity + inputs.windNominalCapacity) /
         inputs.electrolyserNominalCapacity;
 
+  if (
+    props.inputConfiguration === "Advanced" &&
+    powerCapacityConfiguration === "Oversize Ratio"
+  ) {
+    inputs = backCalculateSolarAndWindCapacity(
+      inputs,
+      powerPlantOversizeRatio,
+      inputs.electrolyserNominalCapacity,
+      solarToWindPercentage,
+      inputs.powerPlantType
+    );
+  }
+
   const location = props.location;
   const dataModel: HydrogenData = {
     inputConfiguration,
@@ -202,14 +215,6 @@ export default function WorkingData(props: Props) {
       inputs,
       projectScale,
       mean(summary[ELECTROLYSER_CF])
-    );
-  } else if (powerCapacityConfiguration === "Oversize Ratio") {
-    inputs = backCalculateSolarAndWindCapacity(
-      inputs,
-      powerPlantOversizeRatio,
-      inputs.electrolyserNominalCapacity,
-      solarToWindPercentage,
-      inputs.powerPlantType
     );
   }
 

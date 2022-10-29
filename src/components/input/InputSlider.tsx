@@ -6,7 +6,7 @@ import * as React from "react";
 
 import InputTitle from "./InputTitle";
 import { BLUE, WHITE } from "./colors";
-import { basicDefaultInputs } from "./data";
+import { sliderFieldDefaultInputs } from "./data";
 import { defaultInputs } from "./defaults";
 
 interface Props {
@@ -38,7 +38,7 @@ const StyledSlider = styled(Slider)({
 });
 
 export default function InputSlider({ inputKey }: Props) {
-  const data = basicDefaultInputs[inputKey];
+  const data = sliderFieldDefaultInputs[inputKey];
 
   if (!data) {
     throw new Error(`Could not locate data for key ${inputKey}`);
@@ -95,11 +95,12 @@ export default function InputSlider({ inputKey }: Props) {
           type="number"
           onChange={handleInputChange}
           onBlur={handleBlur}
+          required
           sx={{ width: "5rem" }}
           inputProps={{
             inputMode: "numeric",
             pattern: "/^d*.?d*$/",
-            step: 0.1,
+            step: step,
             min: min,
             max: max,
             "aria-labelledby": "input-slider",
