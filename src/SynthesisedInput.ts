@@ -4,7 +4,6 @@ import {
   PowerPlantConfiguration,
   PowerPlantType,
   PowerSupplyOption,
-  SECType,
   StackReplacementType,
   UserInputFields,
 } from "./types";
@@ -27,7 +26,6 @@ class DefaultInputs implements Inputs {
   maximumLoadWhenOverloading = 0;
   waterRequirementOfElectrolyser = 15;
   secAtNominalLoad = 33.33;
-  profile = "Fixed" as SECType;
 
   // Battery
   batteryEpcCosts = 0;

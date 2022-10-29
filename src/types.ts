@@ -1,5 +1,4 @@
 export type PowerPlantType = "Solar" | "Wind" | "Hybrid";
-export type SECType = "Fixed" | "Variable";
 export type StackReplacementType =
   | "Cumulative Hours"
   | "Maximum Degradation Level";
@@ -89,7 +88,6 @@ export interface UserInputFields {
   projectTimeline?: number;
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
-  profile?: SECType;
   electrolyserMaximumLoad?: number;
   electrolyserMinimumLoad?: number;
   timeBetweenOverloading?: number;
@@ -131,7 +129,6 @@ export interface Inputs {
   maximumLoadWhenOverloading: number;
   waterRequirementOfElectrolyser: number;
   secAtNominalLoad?: number;
-  profile: SECType;
 
   // Battery
   batteryEpcCosts?: number;

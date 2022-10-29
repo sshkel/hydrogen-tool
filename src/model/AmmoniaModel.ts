@@ -3,7 +3,7 @@ import {
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
-import { InputConfiguration, SECType, StackReplacementType } from "../types";
+import { InputConfiguration, StackReplacementType } from "../types";
 import { mean } from "../utils";
 import {
   CsvRow,
@@ -47,7 +47,6 @@ export type AmmoniaData = {
   solarDegradation: number;
   windDegradation: number;
   stackDegradation: number;
-  secType: SECType;
 
   // NEW AMMONIA STUFF
   // system sizing
