@@ -477,18 +477,6 @@ export const numberFieldDefaultInputs: DefaultInput = {
     helperText:
       "Any other additional costs to include as an annual cost in the LCH2 calculation",
   },
-  // Additional Revenue Generation
-  averageElectricitySpotPrice: {
-    title: "Excess Electricity Retail Price",
-    adornmentLabel: "A$/MWh",
-    helperText: "Fixed price for excess electricity sold to the grid",
-  },
-  oxygenRetailPrice: {
-    title: "Oxygen Retail Price",
-    adornmentLabel: "A$/tonne",
-    helperText:
-      "Price that oxygen can be sold for, assuming 8 kg oxygen produced per kg of hydrogen.",
-  },
   // Financing Parameters
   projectTimeline: {
     title: "Project Timeline",
@@ -501,47 +489,9 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "% p.a.",
     helperText: "Discount rate for NPV analysis and LCH2.",
   },
-  // Capital Cost Financing
-  // Equity Based Financing
-  shareOfTotalInvestmentFinancedViaEquity: {
-    title: "Share of Total Investment Financed via Equity.",
-    adornmentLabel: "% of Total Investment",
-  },
-  directEquityShare: {
-    title: "Share of Direct Equity",
-    adornmentLabel: "% of Equity",
-    helperText: "Share of equity directly supported by project proponent.",
-  },
-  // Loan Based Financing
-  loanTerm: {
-    title: "Loan Term",
-    adornmentLabel: "yrs",
-    helperText: "Loan repayment duration",
-  },
-  interestOnLoan: {
-    title: "Interest on Loan",
-    adornmentLabel: "% p.a.",
-  },
-  // Post Project Financing
-  salvageCostShare: {
-    title: "Salvage Cost",
-    adornmentLabel: "% of Total Investment",
-  },
-  decommissioningCostShare: {
-    title: "Decommissioning Cost",
-    adornmentLabel: "% of Total Investment",
-  },
   // Additional liabilities
   inflationRate: {
     title: "Inflation Rate",
     adornmentLabel: "% p.a.",
-  },
-  taxRate: {
-    title: "Tax Rate",
-    adornmentLabel: "% p.a.",
-  },
-  hydrogenSalesMargin: {
-    title: "Hydrogen Sales Margin",
-    adornmentLabel: "A$/kg",
   },
 };

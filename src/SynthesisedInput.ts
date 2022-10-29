@@ -75,7 +75,6 @@ class DefaultInputs implements Inputs {
   additionalTransmissionCharges = 0;
   principalPPACost = 0;
   gridConnectionCost = 0;
-  averageElectricitySpotPrice = 0;
   waterSupplyCost = 5;
 
   // Additional costs
@@ -84,16 +83,7 @@ class DefaultInputs implements Inputs {
 
   // Cost analysis
   projectTimeline = 20;
-  hydrogenSalesMargin = 1;
-  oxygenRetailPrice = 0;
   discountRate = 7;
-  shareOfTotalInvestmentFinancedViaEquity = 70;
-  directEquityShare = 100;
-  salvageCostShare = 0;
-  decommissioningCostShare = 0;
-  loanTerm = 10;
-  interestOnLoan = 3;
-  taxRate = 30;
   inflationRate = 2.5;
 }
 

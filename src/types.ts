@@ -93,16 +93,6 @@ export interface UserInputFields {
   timeBetweenOverloading?: number;
   maximumLoadWhenOverloading?: number;
   waterRequirementOfElectrolyser?: number;
-  hydrogenSalesMargin?: number;
-  oxygenRetailPrice?: number;
-  averageElectricitySpotPrice?: number;
-  shareOfTotalInvestmentFinancedViaEquity?: number;
-  directEquityShare?: number;
-  salvageCostShare?: number;
-  decommissioningCostShare?: number;
-  loanTerm?: number;
-  interestOnLoan?: number;
-  taxRate?: number;
   inflationRate?: number;
   secAtNominalLoad?: number;
   electrolyserEfficiency?: number;
@@ -178,7 +168,6 @@ export interface Inputs {
   additionalTransmissionCharges?: number;
   principalPPACost?: number;
   gridConnectionCost: number;
-  averageElectricitySpotPrice: number;
   waterSupplyCost: number;
 
   // Additional costs
@@ -187,15 +176,6 @@ export interface Inputs {
 
   // Cost analysis
   projectTimeline: number;
-  hydrogenSalesMargin: number;
-  oxygenRetailPrice: number;
   discountRate: number;
-  shareOfTotalInvestmentFinancedViaEquity: number;
-  directEquityShare: number;
-  salvageCostShare: number;
-  decommissioningCostShare: number;
-  loanTerm: number;
-  interestOnLoan: number;
-  taxRate: number;
   inflationRate: number;
 }
