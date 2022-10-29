@@ -30,7 +30,7 @@ describe("InputHomePage", () => {
       projectTimeline: 20,
       solarFarmBuildCost: 1200,
       solarToWindPercentage: 50,
-      windFarmBuildCost: 1950,
+      windFarmBuildCost: 2000,
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
     });
@@ -136,7 +136,7 @@ describe("InputHomePage", () => {
       solarDegradation: 0,
       windCostReductionWithScale: 10,
       windEpcCosts: 30,
-      windFarmBuildCost: 1950,
+      windFarmBuildCost: 2000,
       windLandProcurementCosts: 6,
       windNominalCapacity: 10,
       windOpex: 25000,

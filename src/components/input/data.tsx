@@ -63,13 +63,13 @@ export const sliderFieldDefaultInputs: DefaultInput = {
   solarFarmBuildCost: {
     min: 100,
     max: 5000,
-    step: 50,
+    step: 100,
     title: "Solar Farm Build Cost ($/kW)",
   },
   windFarmBuildCost: {
     min: 100,
     max: 5000,
-    step: 50,
+    step: 100,
     title: "Wind Farm Build Cost ($/kW)",
   },
   principalPPACost: {

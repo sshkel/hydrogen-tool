@@ -44,7 +44,7 @@ import {
   backCalculateSolarAndWindCapacity,
 } from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
-import { sales } from "./cost-functions";
+import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
 
@@ -542,7 +542,9 @@ function KeyInputsPane(
                 </Grid>
                 <Grid item>
                   <ItemText>
-                    {inputs.electrolyserNominalCapacity.toLocaleString("en-US")}
+                    {roundToNearestInteger(
+                      inputs.electrolyserNominalCapacity
+                    ).toLocaleString("en-US") + " MW"}
                   </ItemText>
                 </Grid>
               </Grid>
@@ -562,7 +564,9 @@ function KeyInputsPane(
                 <ItemTitle>Power Plant Capacity</ItemTitle>
                 <Grid item>
                   <ItemText>
-                    {powerplantCapacity.toLocaleString("en-US")}
+                    {roundToNearestInteger(powerplantCapacity).toLocaleString(
+                      "en-US"
+                    ) + " MW"}
                   </ItemText>
                 </Grid>
               </Grid>
@@ -785,28 +789,29 @@ export function SummaryOfResultsPane(
   lch2: number
 ) {
   const summaryDict: { [key: string]: number } = {
-    "Power Plant Capacity Factor": mean(
-      summary[`${POWER_PLANT_CF}`].map((x) => x * 100)
+    "Power Plant Capacity Factor": roundToTwoDP(
+      mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
     ),
 
-    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)": mean(
-      summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100)
-    ),
-    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": mean(
-      summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100)
-    ),
-
-    "Electrolyser Capacity Factor": mean(
-      summary[`${ELECTROLYSER_CF}`].map((x) => x * 100)
+    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
+      roundToTwoDP(mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))),
+    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": roundToTwoDP(
+      mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
     ),
 
-    "Energy Consumed by Electrolyser (MWh/yr)": mean(electricityConsumed),
+    "Electrolyser Capacity Factor": roundToTwoDP(
+      mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
+    ),
+
+    "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      mean(electricityConsumed)
+    ),
 
     "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-      mean(electricityProduced),
+      roundToNearestInteger(mean(electricityProduced)),
 
-    "Hydrogen Output [t/yr]": mean(h2Produced),
-    LCH2: lch2,
+    "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
+    "LCH2 ($/kg)": roundToTwoDP(lch2),
   };
   return (
     <StyledCard>

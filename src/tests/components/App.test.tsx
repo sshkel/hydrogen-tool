@@ -44,11 +44,11 @@ describe("App", () => {
 
     expect(
       container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("1,220,465.683");
+    ).toContain("1,220,466 MW");
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("2,440,931.365");
+    ).toContain("2,440,931 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
@@ -57,19 +57,19 @@ describe("App", () => {
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output [t/yr]",
-      "LCH2",
+      "Hydrogen Output (t/yr)",
+      "LCH2 ($/kg)",
     ];
 
     const expectedValues: string[] = [
-      "33.793",
-      "18.059",
-      "91.187",
+      "33.79",
+      "18.06",
+      "91.19",
       "62.35",
       "6,666,000,000",
-      "559,746,755.67",
+      "559,746,756",
       "100,000,000",
-      "3.794",
+      "3.83",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -112,11 +112,11 @@ describe("App", () => {
 
     expect(
       container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("10");
+    ).toContain("10 MW");
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("10");
+    ).toContain("10 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
@@ -125,19 +125,19 @@ describe("App", () => {
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output [t/yr]",
-      "LCH2",
+      "Hydrogen Output (t/yr)",
+      "LCH2 ($/kg)",
     ];
 
     const expectedValues: string[] = [
-      "28.909",
-      "0.217",
-      "45.468",
-      "28.751",
-      "25,185.968",
-      "138.64",
-      "755.655",
-      "4.875",
+      "28.91",
+      "0.22",
+      "45.47",
+      "28.75",
+      "25,186",
+      "139",
+      "756",
+      "4.88",
     ];
 
     const EXPECTED_RESULTS = 11;

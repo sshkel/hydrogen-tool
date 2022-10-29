@@ -49,22 +49,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(31.389);
+        expect(data["Power Plant Capacity Factor"]).toEqual(31.39);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(26.975);
+        ).toEqual(26.97);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(46.313);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(38.888);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          34_066.072
+        ).toEqual(46.31);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(38.89);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          34_066
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(7_179.6);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(681.321);
-        expect(data["LCH2"]).toBeCloseTo(4.456);
+        ).toEqual(7_180);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(681);
+        expect(data["LCH2 ($/kg)"]).toEqual(4.46);
 
         done();
       }, TIMEOUT);
@@ -90,22 +90,20 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(29.66);
+        expect(data["Power Plant Capacity Factor"]).toEqual(29.66);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(29.486);
+        ).toEqual(29.49);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(54.989);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(42.759);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          37457.06
-        );
+        ).toEqual(54.99);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(42.76);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(37457);
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(1516.739);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(696.228);
-        expect(data["LCH2"]).toBeCloseTo(5.602);
+        ).toEqual(1517);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(696);
+        expect(data["LCH2 ($/kg)"]).toEqual(5.6);
 
         done();
       }, TIMEOUT);
@@ -131,22 +129,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(38.676);
+        expect(data["Power Plant Capacity Factor"]).toEqual(38.68);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(15.114);
+        ).toEqual(15.11);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(76.872);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(44.632);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          39_097.684
+        ).toEqual(76.87);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(44.63);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          39_098
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(1558.586);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(781.954);
-        expect(data["LCH2"]).toBeCloseTo(3.815);
+        ).toEqual(1559);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(782);
+        expect(data["LCH2 ($/kg)"]).toEqual(3.81);
 
         done();
       }, TIMEOUT);
@@ -172,22 +170,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(28.533);
+        expect(data["Power Plant Capacity Factor"]).toEqual(28.53);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(14.703);
+        ).toEqual(14.7);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(69.703);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(38.668);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          33_873.405
+        ).toEqual(69.7);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(38.67);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          33_873
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(3619.361);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(677.468);
-        expect(data["LCH2"]).toBeCloseTo(2.31);
+        ).toEqual(3619);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(677);
+        expect(data["LCH2 ($/kg)"]).toEqual(2.31);
 
         done();
       }, TIMEOUT);
@@ -213,22 +211,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(32.516);
+        expect(data["Power Plant Capacity Factor"]).toEqual(32.52);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(17.523);
+        ).toEqual(17.52);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(83.596);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(48.221);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          42_241.618
+        ).toEqual(83.6);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(48.22);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          42_242
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(484.237);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(844.832);
-        expect(data["LCH2"]).toBeCloseTo(5.554);
+        ).toEqual(484);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(845);
+        expect(data["LCH2 ($/kg)"]).toEqual(5.55);
         done();
       }, TIMEOUT);
     });
@@ -253,22 +251,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(32.109);
+        expect(data["Power Plant Capacity Factor"]).toEqual(32.11);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(17.489);
+        ).toEqual(17.49);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(78.071);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(45.739);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          40_067.358
+        ).toEqual(78.07);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(45.74);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          40_067
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(2124.017);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(801.347);
-        expect(data["LCH2"]).toBeCloseTo(2.669);
+        ).toEqual(2124);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(801);
+        expect(data["LCH2 ($/kg)"]).toEqual(2.67);
 
         done();
       }, TIMEOUT);
@@ -296,22 +294,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(31.389);
+        expect(data["Power Plant Capacity Factor"]).toEqual(31.39);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(26.975);
+        ).toEqual(26.97);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(46.313);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(38.888);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          34_066.072
+        ).toEqual(46.31);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(38.89);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          34_066
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(7179.6);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(681.321);
-        expect(data["LCH2"]).toBeCloseTo(4.46);
+        ).toEqual(7180);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(681);
+        expect(data["LCH2 ($/kg)"]).toEqual(4.46);
 
         done();
       }, TIMEOUT);
@@ -337,22 +335,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(25.794);
+        expect(data["Power Plant Capacity Factor"]).toEqual(25.79);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(0.936);
+        ).toEqual(0.94);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(42.123);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(25.508);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          22_344.641
+        ).toEqual(42.12);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(25.51);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          22_345
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(250.61);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(417.583);
-        expect(data["LCH2"]).toBeCloseTo(5.808);
+        ).toEqual(251);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(418);
+        expect(data["LCH2 ($/kg)"]).toEqual(5.81);
 
         done();
       }, TIMEOUT);
@@ -378,22 +376,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(27.738);
+        expect(data["Power Plant Capacity Factor"]).toEqual(27.74);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(30.739);
+        ).toEqual(30.74);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(85.198);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(61.06);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          53_488.536
+        ).toEqual(85.2);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(61.06);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          53_489
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(12_117.619);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(1037.638);
-        expect(data["LCH2"]).toBeCloseTo(4.429);
+        ).toEqual(12_118);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(1038);
+        expect(data["LCH2 ($/kg)"]).toEqual(4.43);
 
         done();
       }, TIMEOUT);
@@ -419,22 +417,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toBeCloseTo(36.763);
+        expect(data["Power Plant Capacity Factor"]).toEqual(36.76);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toBeCloseTo(23.758);
+        ).toEqual(23.76);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toBeCloseTo(85.883);
-        expect(data["Electrolyser Capacity Factor"]).toBeCloseTo(51.699);
-        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toBeCloseTo(
-          45_288.612
+        ).toEqual(85.88);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(51.7);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          45_289
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toBeCloseTo(3_017.854);
-        expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(866.564);
-        expect(data["LCH2"]).toBeCloseTo(3.836);
+        ).toEqual(3_018);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(867);
+        expect(data["LCH2 ($/kg)"]).toEqual(3.84);
 
         done();
       }, TIMEOUT);
