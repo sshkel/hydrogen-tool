@@ -6,6 +6,8 @@ export const getBaseLog = (n: number, base: number): number =>
 export const roundToNearestThousand = (n: number) =>
   Math.round(n / 1000) * 1000 || 0;
 
+export const roundToNearestInteger = (n: number) => Math.round(n) || 0;
+
 export const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
 
 export function calculateLoanBalance(
