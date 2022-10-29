@@ -83,6 +83,10 @@ export default function ControlledPowerPlantCard() {
                   ],
                 ]}
               />,
+              <InputNumberField
+                key="solarDegradation"
+                inputKey="solarDegradation"
+              />,
             ],
             [
               <InputSelect
@@ -106,6 +110,10 @@ export default function ControlledPowerPlantCard() {
                     />,
                   ],
                 ]}
+              />,
+              <InputNumberField
+                key="windDegradation"
+                inputKey="windDegradation"
               />,
             ],
             [
@@ -139,6 +147,14 @@ export default function ControlledPowerPlantCard() {
                   ],
                 ]}
               />,
+              <InputNumberField
+                key="solarDegradation"
+                inputKey="solarDegradation"
+              />,
+              <InputNumberField
+                key="windDegradation"
+                inputKey="windDegradation"
+              />,
             ],
           ]}
         />,
@@ -160,24 +176,6 @@ export default function ControlledPowerPlantCard() {
                 inputKey="additionalTransmissionCharges"
               />,
             ],
-          ]}
-        />,
-        <InputCard
-          subtitle
-          mountOnEnter
-          key="powerPlantEfficiency"
-          title="Power Plant Efficiency"
-          children={[
-            <HideableInputNumberField
-              key="solarDegradation"
-              inputKey="solarDegradation"
-              hide={isNotSolar()}
-            />,
-            <HideableInputNumberField
-              key="windDegradation"
-              inputKey="windDegradation"
-              hide={isNotWind()}
-            />,
           ]}
         />,
         <InputSelect

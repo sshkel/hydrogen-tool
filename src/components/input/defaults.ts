@@ -1,6 +1,6 @@
 export const defaultInputs: { [k: string]: number } = {
   electrolyserNominalCapacity: 10,
-  secAtNominalLoad: 33.33,
+  secAtNominalLoad: 50,
   electrolyserEfficiency: 50,
   waterRequirementOfElectrolyser: 15,
   electrolyserMaximumLoad: 100,

@@ -2,10 +2,8 @@ import Grid from "@mui/material/Grid";
 
 import ControlledPowerPlantCard from "./ControlledPowerPlantCard";
 import InputCard from "./InputCard";
-import InputDropdownField from "./InputDropdownField";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
-import { capitalDepreciationProfile } from "./data";
 
 export default function AdvancedHydrogenInput() {
   return (
@@ -42,10 +40,6 @@ export default function AdvancedHydrogenInput() {
                   <InputNumberField
                     key="secAtNominalLoad"
                     inputKey="secAtNominalLoad"
-                  />,
-                  <InputNumberField
-                    key="electrolyserEfficiency"
-                    inputKey="electrolyserEfficiency"
                   />,
                   <InputNumberField
                     key="waterRequirementOfElectrolyser"
@@ -255,31 +249,9 @@ export default function AdvancedHydrogenInput() {
               />,
               <InputCard
                 subtitle
-                key="additionalRevenueGeneration"
-                title="Additional Revenue Generation"
-                children={[
-                  <InputNumberField
-                    key="averageElectricitySpotPrice"
-                    inputKey="averageElectricitySpotPrice"
-                  />,
-                  <InputNumberField
-                    key="oxygenRetailPrice"
-                    inputKey="oxygenRetailPrice"
-                  />,
-                ]}
-              />,
-              <InputCard
-                subtitle
                 key="financingParameters"
                 title="Financing Parameters"
                 children={[
-                  <InputDropdownField
-                    key="capitalDepreciationProfile"
-                    id="capitalDepreciationProfile"
-                    label="Depreciation Profile"
-                    values={capitalDepreciationProfile}
-                    defaultValue={capitalDepreciationProfile[0]}
-                  />,
                   <InputNumberField
                     key="projectTimeline"
                     inputKey="projectTimeline"
@@ -287,36 +259,6 @@ export default function AdvancedHydrogenInput() {
                   <InputNumberField
                     key="discountRate"
                     inputKey="discountRate"
-                  />,
-                  <InputNumberField
-                    key="shareOfTotalInvestmentFinancedViaEquity"
-                    inputKey="shareOfTotalInvestmentFinancedViaEquity"
-                  />,
-                  <InputNumberField
-                    key="directEquityShare"
-                    inputKey="directEquityShare"
-                  />,
-                  <InputNumberField key="loanTerm" inputKey="loanTerm" />,
-                  <InputNumberField
-                    key="interestOnLoan"
-                    inputKey="interestOnLoan"
-                  />,
-                  <InputNumberField
-                    key="salvageCostShare"
-                    inputKey="salvageCostShare"
-                  />,
-                  <InputNumberField
-                    key="decommissioningCostShare"
-                    inputKey="decommissioningCostShare"
-                  />,
-                  <InputNumberField
-                    key="inflationRate"
-                    inputKey="inflationRate"
-                  />,
-                  <InputNumberField key="taxRate" inputKey="taxRate" />,
-                  <InputNumberField
-                    key="hydrogenSalesMargin"
-                    inputKey="hydrogenSalesMargin"
                   />,
                 ]}
               />,
