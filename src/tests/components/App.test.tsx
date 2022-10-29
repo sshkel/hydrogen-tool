@@ -30,7 +30,7 @@ describe("App", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(9),
+        ).toEqual(10),
       { timeout: 2000 }
     );
     fireEvent.click(getByText(/Calculate/i));
