@@ -17,7 +17,6 @@ import {
   calculateFixedHydrogenProduction,
   calculateGeneratorCf,
   calculateOverloadingModel,
-  calculateVariableHydrogenProduction,
   getTabulatedOutput,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
@@ -158,7 +157,6 @@ export class HydrogenModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -258,7 +256,6 @@ export class HydrogenModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -313,7 +310,6 @@ export class HydrogenModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -423,18 +419,10 @@ export class HydrogenModel {
       specCons
     );
 
-    const hydrogenProdVariable = calculateVariableHydrogenProduction(
-      specCons,
-      electrolyserCf,
-      hydOutput,
-      yearlyDegradationRate
-    );
-
     const workingDf = {
       Generator_CF: generatorCf,
       Electrolyser_CF: electrolyserCf,
       Hydrogen_prod_fixed: hydrogenProdFixed,
-      Hydrogen_prod_variable: hydrogenProdVariable,
       Net_Battery_Flow: batteryNetCharge,
     };
 

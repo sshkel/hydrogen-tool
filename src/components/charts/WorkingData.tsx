@@ -24,8 +24,7 @@ import {
   ENERGY_INPUT,
   ENERGY_OUTPUT,
   HOURS_PER_YEAR,
-  HYDROGEN_OUTPUT_FIXED,
-  HYDROGEN_OUTPUT_VARIABLE,
+  HYDROGEN_OUTPUT,
   POWER_PLANT_CF,
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
@@ -250,10 +249,7 @@ export default function WorkingData(props: Props) {
     (hours) => hours * HOURS_PER_YEAR
   );
 
-  const h2Produced =
-    inputs.profile === "Fixed"
-      ? summary[`${HYDROGEN_OUTPUT_FIXED}`]
-      : summary[`${HYDROGEN_OUTPUT_VARIABLE}`];
+  const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
 
   const {
     electrolyserOpexCost,

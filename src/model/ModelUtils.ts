@@ -5,8 +5,7 @@ import {
   ELECTROLYSER_CF,
   ENERGY_INPUT,
   ENERGY_OUTPUT,
-  HYDROGEN_OUTPUT_FIXED,
-  HYDROGEN_OUTPUT_VARIABLE,
+  HYDROGEN_OUTPUT,
   POWER_PLANT_CF,
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
@@ -183,26 +182,6 @@ export function calculateBatteryModel(
     battery_net_charge: batteryNetCharge,
   };
 }
-export function calculateVariableHydrogenProduction(
-  specCons: number,
-  electrolyserCf: number[],
-  hydOutput: number,
-  yearlyDegradationRate: number
-) {
-  const electrolyser_output_polynomial = (x: number) => {
-    // """Calculates the specific energy consumption as a function of the electrolyser operating
-    //     capacity factor
-    //     """
-    return 1.25 * x ** 2 - 0.4286 * x + specCons - 0.85;
-  };
-
-  const hydrogenProdVariable = electrolyserCf.map(
-    (x: number) =>
-      ((x * hydOutput) / electrolyser_output_polynomial(x)) *
-      (1 - yearlyDegradationRate)
-  );
-  return hydrogenProdVariable;
-}
 export function calculateFixedHydrogenProduction(
   electrolyserCf: number[],
   hydOutput: number,
@@ -255,7 +234,6 @@ export function getTabulatedOutput(
   generatorCapFactor: number[],
   electrolyserCapFactor: number[],
   hydrogenProdFixed: number[],
-  hydrogenProdVariable: number[],
   netBatteryFlow: number[],
   elecCapacity: number,
   genCapacity: number,
@@ -281,10 +259,8 @@ export function getTabulatedOutput(
   const surplus =
     sum(generatorCapFactor) * genCapacity -
     sum(electrolyserCapFactor) * elecCapacity;
-  // Hydrogen Output for Fixed Operation [t/yr]
+  // Hydrogen Output [t/yr]
   const hydrogenFixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
-  // Hydrogen Output for Variable Operation [t/yr]
-  const hydrogenVariable = sum(hydrogenProdVariable) * elecCapacity * kgtoTonne;
   // Total Battery Output (MWh/yr)
   const totalBatteryOutput =
     sum(netBatteryFlow.filter((num) => num < 0)) *
@@ -299,9 +275,7 @@ export function getTabulatedOutput(
   summary[ENERGY_INPUT] = energyInElectrolyser;
   summary[ENERGY_OUTPUT] = surplus;
   summary[BATTERY_OUTPUT] = totalBatteryOutput;
-  // TODO: Return one based on profile
-  summary[HYDROGEN_OUTPUT_FIXED] = hydrogenFixed;
-  summary[HYDROGEN_OUTPUT_VARIABLE] = hydrogenVariable;
+  summary[HYDROGEN_OUTPUT] = hydrogenFixed;
 
   return summary;
 }

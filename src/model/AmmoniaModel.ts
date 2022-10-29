@@ -17,7 +17,6 @@ import {
   calculateFixedHydrogenProduction,
   calculateGeneratorCf,
   calculateOverloadingModel,
-  calculateVariableHydrogenProduction,
   getTabulatedOutput,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
@@ -220,7 +219,6 @@ export class AmmoniaModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -320,7 +318,6 @@ export class AmmoniaModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -374,7 +371,6 @@ export class AmmoniaModel {
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Hydrogen_prod_variable,
       hourlyOperation.Net_Battery_Flow,
       this.elecCapacity,
       this.totalNominalPowerPlantCapacity,
@@ -488,20 +484,12 @@ export class AmmoniaModel {
       this.stackLifetime
     );
 
-    const hydrogen =
-      this.parameters.secType == "Fixed"
-        ? calculateFixedHydrogenProduction(
-            electrolyserCf,
-            hydOutput,
-            yearlyDegradationRate,
-            specCons
-          )
-        : calculateVariableHydrogenProduction(
-            specCons,
-            electrolyserCf,
-            hydOutput,
-            yearlyDegradationRate
-          );
+    const hydrogen = calculateFixedHydrogenProduction(
+      electrolyserCf,
+      hydOutput,
+      yearlyDegradationRate,
+      specCons
+    );
 
     const ammoniaCapFactors = calculateNH3CapFactors(
       hydrogen,
