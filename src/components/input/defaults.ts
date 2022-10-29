@@ -29,7 +29,7 @@ export const defaultInputs: { [k: string]: number } = {
   solarReferenceCapacity: 1000,
   solarPVCostReductionWithScale: 10,
   solarReferenceFoldIncrease: 10,
-  windFarmBuildCost: 1950,
+  windFarmBuildCost: 2000,
   windReferenceCapacity: 1000,
   windCostReductionWithScale: 10,
   windReferenceFoldIncrease: 10,
