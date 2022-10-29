@@ -66,7 +66,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(11),
+        ).toEqual(12),
       { timeout: 2000 }
     );
     fireEvent.click(getByText(/Calculate/i));
@@ -86,6 +86,7 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 10,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
+      solarDegradation: 0,
       stackDegradation: 0,
       stackLifetime: 80000,
       stackReplacementType: "Cumulative Hours",
@@ -112,7 +113,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(19),
+        ).toEqual(21),
       { timeout: 2000 }
     );
     fireEvent.click(getByText(/Calculate/i));
@@ -132,6 +133,7 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 10,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
+      solarDegradation: 0,
       windCostReductionWithScale: 10,
       windEpcCosts: 30,
       windFarmBuildCost: 1950,
@@ -140,6 +142,7 @@ describe("InputHomePage", () => {
       windOpex: 25000,
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
+      windDegradation: 0,
       stackDegradation: 0,
       stackLifetime: 80000,
       stackReplacementType: "Cumulative Hours",

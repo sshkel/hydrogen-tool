@@ -77,13 +77,13 @@ export const sliderFieldDefaultInputs: DefaultInput = {
   solarFarmBuildCost: {
     min: 100,
     max: 5000,
-    step: 100,
+    step: 50,
     title: "Solar Farm Build Cost ($/kW)",
   },
   windFarmBuildCost: {
     min: 100,
     max: 5000,
-    step: 100,
+    step: 50,
     title: "Wind Farm Build Cost ($/kW)",
   },
   principalPPACost: {
@@ -204,7 +204,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   projectScale: {
     min: 100,
     max: 1_000_000,
-    step: 50_000,
+    step: 100,
     title: "Project Scale",
     adornmentLabel: "tonnes/yr",
   },
@@ -218,12 +218,8 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Electrolyser Efficiency
   secAtNominalLoad: {
     id: "secAtNominalLoad",
-    title: "SEC At Nominal Load",
+    title: "Specific Energy Consumption at Nominal Load",
     adornmentLabel: "kWh/kg",
-  },
-  electrolyserEfficiency: {
-    title: "Electrolyser System SEC vs Load Profile",
-    adornmentLabel: "%",
   },
   waterRequirementOfElectrolyser: {
     title: "Water Requirement of Electrolyser",
