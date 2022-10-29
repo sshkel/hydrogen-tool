@@ -81,6 +81,8 @@ export class HydrogenModel {
 
   // parameters to expose to working data
   hourlyOperationsInYearOne: ModelHourlyOperation;
+  solarNominalCapacity: number;
+  windNominalCapacity: number;
 
   constructor(
     parameters: HydrogenData,
@@ -103,8 +105,10 @@ export class HydrogenModel {
     this.hourlyOperationsInYearOne = {};
 
     // calculated values
+    this.solarNominalCapacity = parameters.solarNominalCapacity;
+    this.windNominalCapacity = parameters.windNominalCapacity;
     this.totalNominalPowerPlantCapacity =
-      parameters.solarNominalCapacity + parameters.windNominalCapacity;
+      this.solarNominalCapacity + this.windNominalCapacity;
     this.elecCapacity = parameters.electrolyserNominalCapacity;
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
@@ -281,9 +285,8 @@ export class HydrogenModel {
     return this.calculateHourlyOperation(
       this.totalNominalPowerPlantCapacity / this.elecCapacity,
       this.elecCapacity,
-      this.parameters.solarNominalCapacity /
-        this.totalNominalPowerPlantCapacity,
-      this.parameters.windNominalCapacity / this.totalNominalPowerPlantCapacity,
+      this.solarNominalCapacity / this.totalNominalPowerPlantCapacity,
+      this.windNominalCapacity / this.totalNominalPowerPlantCapacity,
       this.parameters.solarDegradation,
       this.parameters.windDegradation,
       this.parameters.stackDegradation,
