@@ -32,7 +32,7 @@ export default function AdvancedHydrogenInput() {
               <InputCard
                 subtitle
                 mountOnEnter
-                key="ammoniaPlantSec"
+                key="ammoniaPlantCapacity"
                 title="Ammonia Plant Capacity"
                 children={[
                   <InputNumberField
