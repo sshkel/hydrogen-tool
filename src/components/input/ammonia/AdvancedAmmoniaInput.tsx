@@ -1,10 +1,8 @@
 import Grid from "@mui/material/Grid";
 
 import InputCard from "../InputCard";
-import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
-import { capitalDepreciationProfile } from "../data";
 import AmmoniaControlledPowerPlantCard from "./AmmoniaControlledPowerPlantCard";
 
 export default function AdvancedHydrogenInput() {
