@@ -154,6 +154,54 @@ export const basicDefaultInputs: BasicDefaultInput = {
 };
 
 export const advancedDefaultInputs: AdvancedDefaultInput = {
+  /******* Ammonia Parameters *******/
+  ammoniaPlantCapacity: {
+    // done
+    title: "Ammonia Plant Capacity",
+    adornmentLabel: "kTPA",
+  },
+
+  electrolyserSystemOversizing: {
+    // done
+    title: "Electrolyser System Oversizing",
+    adornmentLabel: "%",
+  },
+  renewableEnergyPlantOversizing: {
+    //done
+    title: "Renewable Energy Plant Oversizing",
+    adornmentLabel: "%",
+  },
+  ammoniaPlantSec: {
+    // done
+    title: "Ammonia Plant SEC",
+    adornmentLabel: "kWhe/kgNH3",
+  },
+  asuSec: {
+    // done
+    title: "ASU SEC",
+    adornmentLabel: "kWhe/kgN2",
+  },
+  hydrogenStorageCapacity: {
+    //done
+    title: "Hydrogen Storage Capacity",
+    adornmentLabel: "kg",
+  },
+  ammoniaPlantMinTurndown: {
+    title: "Ammonia Plant Minimum Turndow",
+    adornmentLabel: "%",
+  },
+  minimumHydrogenStorage: {
+    //done
+    title: "Minimum Hydrogen Storage",
+    adornmentLabel: "%",
+  },
+
+  powerPlantDegradationRate: {
+    //done
+    title: "Power Plant Degradation Rate",
+    adornmentLabel: "%",
+  },
+
   /******* Electrolyser Parameters *******/
   // Electrolyer System Capacity
   electrolyserNominalCapacity: {

@@ -16,6 +16,7 @@ import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
+import AdvancedAmmoniaInput from "./ammonia/AdvancedAmmoniaInput";
 import { BLACK, BLUE, ORANGE, WHITE } from "./colors";
 import { configurationTypes } from "./data";
 
@@ -52,7 +53,7 @@ interface Props {
 
 export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
-  const { powerfuel } = useParams();
+  const { powerfuel = "hydrogen" } = useParams();
   const [tab, setTab] = React.useState("Basic");
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
@@ -113,10 +114,10 @@ export default function InputHomePage(props: Props) {
               gutterBottom
               marginBottom={0}
             >
-              Hydrogen
+              {powerfuel}
             </Typography>
             <Typography variant="subtitle1">
-              General hydrogen production cost for region.​
+              General {powerfuel} production cost for region.​
             </Typography>
           </Grid>
           <InputCalculateButton />
@@ -146,7 +147,11 @@ export default function InputHomePage(props: Props) {
             <BasicHydrogenInput />
           </TabPanel>
           <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
-            <AdvancedHydrogenInput />
+            {powerfuel === "hydrogen" ? (
+              <AdvancedHydrogenInput />
+            ) : (
+              <AdvancedAmmoniaInput />
+            )}
           </TabPanel>
         </TabContext>
       </ThemeProvider>
