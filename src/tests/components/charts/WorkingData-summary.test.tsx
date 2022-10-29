@@ -65,7 +65,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(7_179.6);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(681.321);
         expect(data["LCH2"]).toBeCloseTo(4.456);
-        expect(data["H2 Retail Price"]).toBeCloseTo(5.456);
 
         done();
       }, TIMEOUT);
@@ -107,7 +106,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(1516.739);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(696.228);
         expect(data["LCH2"]).toBeCloseTo(5.602);
-        expect(data["H2 Retail Price"]).toBeCloseTo(6.602);
 
         done();
       }, TIMEOUT);
@@ -149,7 +147,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(1558.586);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(781.954);
         expect(data["LCH2"]).toBeCloseTo(3.815);
-        expect(data["H2 Retail Price"]).toBeCloseTo(4.815);
 
         done();
       }, TIMEOUT);
@@ -191,7 +188,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(3619.361);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(677.468);
         expect(data["LCH2"]).toBeCloseTo(2.31);
-        expect(data["H2 Retail Price"]).toBeCloseTo(3.31);
 
         done();
       }, TIMEOUT);
@@ -233,8 +229,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(484.237);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(844.832);
         expect(data["LCH2"]).toBeCloseTo(5.554);
-        expect(data["H2 Retail Price"]).toBeCloseTo(6.554);
-
         done();
       }, TIMEOUT);
     });
@@ -275,13 +269,12 @@ describe("Model summary", () => {
         ).toBeCloseTo(2124.017);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(801.347);
         expect(data["LCH2"]).toBeCloseTo(2.669);
-        expect(data["H2 Retail Price"]).toBeCloseTo(3.669);
 
         done();
       }, TIMEOUT);
     });
 
-    it("calculates summary of results for solar with oxygen and electricity sales", (done) => {
+    it("calculates summary of results for solar with oxygen and electricity sales but not really", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -318,8 +311,7 @@ describe("Model summary", () => {
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
         ).toBeCloseTo(7179.6);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(681.321);
-        expect(data["LCH2"]).toBeCloseTo(4.27);
-        expect(data["H2 Retail Price"]).toBeCloseTo(5.27);
+        expect(data["LCH2"]).toBeCloseTo(4.46);
 
         done();
       }, TIMEOUT);
@@ -360,8 +352,7 @@ describe("Model summary", () => {
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
         ).toBeCloseTo(250.61);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(417.583);
-        expect(data["LCH2"]).toBeCloseTo(5.728);
-        expect(data["H2 Retail Price"]).toBeCloseTo(8.728);
+        expect(data["LCH2"]).toBeCloseTo(5.808);
 
         done();
       }, TIMEOUT);
@@ -403,7 +394,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(12_117.619);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(1037.638);
         expect(data["LCH2"]).toBeCloseTo(4.429);
-        expect(data["H2 Retail Price"]).toBeCloseTo(5.429);
 
         done();
       }, TIMEOUT);
@@ -445,7 +435,6 @@ describe("Model summary", () => {
         ).toBeCloseTo(3_017.854);
         expect(data["Hydrogen Output [t/yr]"]).toBeCloseTo(866.564);
         expect(data["LCH2"]).toBeCloseTo(3.836);
-        expect(data["H2 Retail Price"]).toBeCloseTo(4.836);
 
         done();
       }, TIMEOUT);

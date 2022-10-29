@@ -31,10 +31,9 @@ import {
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
 import { InputConfiguration, Inputs, UserInputFields } from "../../types";
-import { fillYearsArray, getActiveYearsLabels, mean } from "../../utils";
+import { mean } from "../../utils";
 import { BLUE, SAPPHIRE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
-import CostBarChart from "./CostBarChart";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
@@ -46,7 +45,7 @@ import {
   backCalculateSolarAndWindCapacity,
 } from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
-import { cashFlowAnalysis, sales } from "./cost-functions";
+import { sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
 
@@ -135,18 +134,6 @@ export default function WorkingData(props: Props) {
     stackDegradation,
     maximumDegradationBeforeReplacement,
     discountRate,
-    hydrogenSalesMargin,
-    oxygenRetailPrice,
-    averageElectricitySpotPrice,
-    shareOfTotalInvestmentFinancedViaEquity,
-    directEquityShare,
-    salvageCostShare,
-    decommissioningCostShare,
-    loanTerm,
-    interestOnLoan,
-    capitalDepreciationProfile,
-    taxRate,
-    inflationRate,
     solarDegradation,
     windDegradation,
     secAtNominalLoad = 0,
@@ -289,51 +276,14 @@ export default function WorkingData(props: Props) {
   const totalLandCost =
     electrolyserLandCost + powerPlantLandCost + batteryLandCost;
 
-  const oxygenSalePrice: number[] = fillYearsArray(
-    projectTimeline,
-    (i) => 8 * h2Produced[i] * oxygenRetailPrice
-  );
-
-  const {
-    lch2,
-    h2RetailPrice,
-    h2Sales,
-    electricitySales,
-    oxygenSales,
-    annualSales,
-    hydrogenProductionCost,
-  } = sales(
+  const { lch2, hydrogenProductionCost } = sales(
     totalCapexCost,
     totalEpcCost,
     totalLandCost,
     projectTimeline,
     discountRate / 100,
-    hydrogenSalesMargin,
-    averageElectricitySpotPrice,
-    inflationRate / 100,
-    oxygenSalePrice,
     totalOpex,
-    h2Produced,
-    electricityProduced
-  );
-
-  // Cash flow analysis calculations
-  const { cumulativeCashFlow } = cashFlowAnalysis(
-    annualSales,
-    totalOpex,
-    totalCapexCost,
-    totalEpcCost,
-    totalLandCost,
-    shareOfTotalInvestmentFinancedViaEquity / 100,
-    directEquityShare / 100,
-    salvageCostShare / 100,
-    decommissioningCostShare / 100,
-    loanTerm,
-    interestOnLoan / 100,
-    capitalDepreciationProfile,
-    taxRate / 100,
-    projectTimeline,
-    inflationRate / 100
+    h2Produced
   );
 
   // LCH2 calculations
@@ -344,13 +294,11 @@ export default function WorkingData(props: Props) {
     lcPowerPlantOPEX,
     lcElectrolyserOPEX,
     lcElectricityPurchase,
-    lcElectricitySale,
     lcStackReplacement,
     lcWater,
     lcBattery,
     lcGridConnection,
     lcAdditionalCosts,
-    lcOxygenSale,
   } = generateLCValues(
     inputs,
     powerPlantCAPEX,
@@ -365,16 +313,11 @@ export default function WorkingData(props: Props) {
     gridConnectionOpexPerYear,
     batteryReplacementCostsOverProjectLife,
     stackReplacementCostsOverProjectLife,
-    oxygenSalePrice,
-    electricityProduced,
     electricityConsumed,
     electricityConsumedByBattery,
     hydrogenProductionCost
   );
 
-  const netProfit = cumulativeCashFlow[cumulativeCashFlow.length - 1];
-  const totalInvestmentRequired = totalCapexCost + totalIndirectCosts;
-  const returnOnInvestment = netProfit / totalInvestmentRequired;
   const powerplantCapacity = solarNominalCapacity + windNominalCapacity;
 
   return (
@@ -396,10 +339,7 @@ export default function WorkingData(props: Props) {
                   electricityConsumed,
                   electricityProduced,
                   h2Produced,
-                  lch2,
-                  netProfit,
-                  returnOnInvestment,
-                  h2RetailPrice
+                  lch2
                 )}
               </Grid>
               <Grid container item>
@@ -478,9 +418,6 @@ export default function WorkingData(props: Props) {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  {CashFlowAnalysisPane(projectTimeline, cumulativeCashFlow)}
-                </Grid>
-                <Grid item>
                   {Lch2BreakdownPane(
                     lcPowerPlantCAPEX,
                     lcElectrolyserCAPEX,
@@ -488,13 +425,11 @@ export default function WorkingData(props: Props) {
                     lcPowerPlantOPEX,
                     lcElectrolyserOPEX,
                     lcElectricityPurchase,
-                    lcElectricitySale,
                     lcStackReplacement,
                     lcWater,
                     lcBattery,
                     lcGridConnection,
-                    lcAdditionalCosts,
-                    lcOxygenSale
+                    lcAdditionalCosts
                   )}
                 </Grid>
               </Grid>
@@ -509,11 +444,7 @@ export default function WorkingData(props: Props) {
             batteryOpexPerYear,
             additionalOpexPerYear,
             waterOpexPerYear,
-            electricityPurchaseOpexPerYear,
-            h2Sales,
-            electricitySales,
-            oxygenSales,
-            annualSales
+            electricityPurchaseOpexPerYear
           )}
         </Grid>
         <Grid item>{HourlyCapacityFactorsPane(hourlyOperations)}</Grid>
@@ -658,11 +589,7 @@ function OperatingCostsPane(
   batteryOpexPerYear: any[],
   additionalOpexPerYear: number[],
   waterOpexPerYear: number[],
-  electricityPurchaseOpexPerYear: number[],
-  h2Sales: number[],
-  electricitySales: number[],
-  oxygenSales: number[],
-  annualSales: number[]
+  electricityPurchaseOpexPerYear: number[]
 ) {
   return (
     <StyledCard>
@@ -678,40 +605,24 @@ function OperatingCostsPane(
           paddingTop: 0,
         }}
       >
-        <Grid container item spacing={2}>
-          <Grid item xs={6}>
-            <CostLineChart
-              title="Operating Costs"
-              projectTimeline={projectTimeline}
-              datapoints={[
-                { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
-                { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
-                { label: "Battery OPEX", data: batteryOpexPerYear },
-                {
-                  label: "Additional Annual Costs",
-                  data: additionalOpexPerYear,
-                },
-                { label: "Water Costs", data: waterOpexPerYear },
-                {
-                  label: "Electricity Purchase",
-                  data: electricityPurchaseOpexPerYear,
-                },
-              ]}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <CostLineChart
-              title="Sales"
-              projectTimeline={projectTimeline}
-              datapoints={[
-                { label: "Hydrogen Sales", data: h2Sales },
-                { label: "Electricity Sales", data: electricitySales },
-                { label: "Oxygen Sales", data: oxygenSales },
-                { label: "Total Sales", data: annualSales },
-              ]}
-            />
-          </Grid>
-        </Grid>
+        <CostLineChart
+          title="Operating Costs"
+          projectTimeline={projectTimeline}
+          datapoints={[
+            { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
+            { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
+            { label: "Battery OPEX", data: batteryOpexPerYear },
+            {
+              label: "Additional Annual Costs",
+              data: additionalOpexPerYear,
+            },
+            { label: "Water Costs", data: waterOpexPerYear },
+            {
+              label: "Electricity Purchase",
+              data: electricityPurchaseOpexPerYear,
+            },
+          ]}
+        />
       </CardContent>
     </StyledCard>
   );
@@ -846,13 +757,11 @@ function Lch2BreakdownPane(
   lcPowerPlantOPEX: number,
   lcElectrolyserOPEX: number,
   lcElectricityPurchase: number,
-  lcElectricitySale: number,
   lcStackReplacement: number,
   lcWater: number,
   lcBattery: number,
   lcGridConnection: number,
-  lcAdditionalCosts: number,
-  lcOxygenSale: number
+  lcAdditionalCosts: number
 ) {
   const data = {
     "Power Plant CAPEX": lcPowerPlantCAPEX,
@@ -861,13 +770,11 @@ function Lch2BreakdownPane(
     "Power Plant OPEX": lcPowerPlantOPEX,
     "Electrolyser O&M": lcElectrolyserOPEX,
     "Electricity Purchase": lcElectricityPurchase,
-    "Electricity Sale": -1 * lcElectricitySale,
     "Stack Replacement": lcStackReplacement,
     "Water Cost": lcWater,
     "Battery Cost": lcBattery,
     "Grid Connection Cost": lcGridConnection,
     "Additional Costs": lcAdditionalCosts,
-    "Oxygen Sale": -1 * lcOxygenSale,
   };
   return (
     <WaterFallPane
@@ -878,48 +785,12 @@ function Lch2BreakdownPane(
   );
 }
 
-function CashFlowAnalysisPane(
-  projectTimeline: number,
-  cumulativeCashFlow: number[]
-) {
-  return (
-    <StyledCard>
-      <CardHeader
-        title="Cash Flow Analysis"
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <CostBarChart
-          title="Cash Flow Analysis"
-          labels={getActiveYearsLabels(projectTimeline)}
-          datapoints={[
-            {
-              label: "Cash Flow Analysis",
-              data: cumulativeCashFlow,
-            },
-          ]}
-        />
-      </CardContent>
-    </StyledCard>
-  );
-}
-
 export function SummaryOfResultsPane(
   summary: ProjectModelSummary,
   electricityConsumed: number[],
   electricityProduced: number[],
   h2Produced: number[],
-  lch2: number,
-  netProfit: number,
-  returnOnInvestment: number,
-  h2RetailPrice: number
+  lch2: number
 ) {
   const summaryDict: { [key: string]: number } = {
     "Power Plant Capacity Factor": mean(
@@ -944,9 +815,6 @@ export function SummaryOfResultsPane(
 
     "Hydrogen Output [t/yr]": mean(h2Produced),
     LCH2: lch2,
-    "H2 Retail Price": h2RetailPrice,
-    "Net Profit (A$)": netProfit,
-    "Return on Investment (%)": returnOnInvestment,
   };
   return (
     <StyledCard>

@@ -17,9 +17,6 @@ export function generateLCValues(
 
   batteryReplacementCostsOverProjectLife: number[],
   stackReplacementCostsOverProjectLife: number[],
-
-  oxygenSalePrice: number[],
-  electricityProduced: number[],
   electricityConsumed: number[],
   electricityConsumedByBattery: number[],
 
@@ -33,7 +30,6 @@ export function generateLCValues(
     additionalUpfrontCosts,
     additionalAnnualCosts,
     principalPPACost = 0,
-    averageElectricitySpotPrice,
   } = data;
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
   const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
@@ -71,8 +67,6 @@ export function generateLCValues(
     additionalUpfrontCosts
   );
 
-  const lcOxygenSale = calculateLevelisedCost(oxygenSalePrice);
-
   const lcStackReplacement = calculateLevelisedCost(
     stackReplacementCostsOverProjectLife
   );
@@ -87,12 +81,6 @@ export function generateLCValues(
     ? calculateLevelisedCost(ppaCostOfElectricityConsumed)
     : 0;
 
-  const retailElectricitySalePrice = fillYearsArray(
-    projectTimeline,
-    (i) => electricityProduced[i] * averageElectricitySpotPrice
-  );
-  const lcElectricitySale = calculateLevelisedCost(retailElectricitySalePrice);
-
   const lcGridConnection =
     gridConnected || ppaAgreement
       ? calculateLevelisedCost(gridConnectionOpexPerYear, gridConnectionCAPEX)
@@ -105,13 +93,11 @@ export function generateLCValues(
     lcPowerPlantOPEX,
     lcElectrolyserOPEX,
     lcElectricityPurchase,
-    lcElectricitySale,
     lcStackReplacement,
     lcWater,
     lcBattery,
     lcGridConnection,
     lcAdditionalCosts,
-    lcOxygenSale,
   };
 }
 

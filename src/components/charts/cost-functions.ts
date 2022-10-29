@@ -1,12 +1,5 @@
 import { DepreciationProfile } from "../../types";
-import {
-  decomissioning,
-  dropPadding,
-  fillYearsArray,
-  padArray,
-  startup,
-  sum,
-} from "../../utils";
+import { fillYearsArray, padArray, startup, sum } from "../../utils";
 
 export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);
@@ -15,145 +8,6 @@ export const roundToNearestThousand = (n: number) =>
   Math.round(n / 1000) * 1000 || 0;
 
 export const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
-
-export function cashFlowAnalysis(
-  annualSales: number[],
-  totalOpex: number[],
-  totalCapexCost: number,
-  totalEpcCost: number,
-  totalLandCost: number,
-  shareOfTotalInvestmentFinancedViaEquity: number,
-  directEquityShare: number,
-  salvageCostShare: number,
-  decommissioningCostShare: number,
-  loanTerm: number,
-  interestOnLoan: number,
-  capitalDepreciationProfile: DepreciationProfile,
-  taxRate: number,
-  projectTimeline: number,
-  inflationRate: number
-) {
-  const activeLife = projectTimeline + 2;
-  const applyInflation = getInflationFn(inflationRate, activeLife);
-  const paddedAnnualSales = padArray(annualSales);
-
-  // net investments
-  // direct equity payment
-
-  const totalInvestmentRequired = totalCapexCost + totalEpcCost + totalLandCost;
-  const totalEquity = roundToNearestThousand(
-    totalInvestmentRequired * shareOfTotalInvestmentFinancedViaEquity
-  );
-
-  const directEquityCost = roundToNearestThousand(
-    totalEquity * directEquityShare
-  );
-  const directEquityPayment = startup(directEquityCost, projectTimeline);
-  // indirect equity
-  const indirectEquityShare = 1 - directEquityShare;
-  // Equity supported externally (grants etc) - Indirect equity is considered as a positive cash flow
-  const indrectEquityCost = roundToNearestThousand(
-    totalEquity * indirectEquityShare
-  );
-  const indirectEquity = startup(indrectEquityCost, projectTimeline);
-  const shareOfTotalInvestmentFinancedViaLoan =
-    1 - shareOfTotalInvestmentFinancedViaEquity;
-  // cost financed via loan
-  const totalLoan =
-    totalInvestmentRequired * shareOfTotalInvestmentFinancedViaLoan;
-
-  // salvage cost
-  const totalSalvageCost = totalInvestmentRequired * salvageCostShare;
-  const salvageCost = decomissioning(totalSalvageCost, projectTimeline);
-
-  // decomissioning cost
-  const decomissioningCost = decomissioning(
-    totalInvestmentRequired * decommissioningCostShare,
-    projectTimeline
-  );
-
-  // cost of setting up or decommissioning the project
-  const netInvestment = fillYearsArray(
-    activeLife,
-    (i: number) =>
-      directEquityPayment[i] +
-      indirectEquity[i] +
-      decomissioningCost[i] -
-      salvageCost[i]
-  );
-
-  // loan repayment
-  const loanRepayment = totalLoan / loanTerm;
-  const totalLoanRepayment = fillYearsArray(activeLife, (year: number) => {
-    if (year === 0 || year === activeLife - 1 || year > loanTerm) {
-      return 0;
-    }
-    return loanRepayment;
-  });
-
-  const loanBalance = calculateLoanBalance(
-    totalLoan,
-    projectTimeline,
-    loanRepayment
-  );
-
-  const interestPaidOnLoan = loanBalance.map(
-    (balance: number) => balance * interestOnLoan
-  );
-
-  // fixed opex
-  const totalOpexWithInflation = applyInflation(padArray(totalOpex));
-  // depreciation
-  const incomePreDepreciation = fillYearsArray(
-    activeLife,
-    (i: number) =>
-      paddedAnnualSales[i] -
-      netInvestment[i] -
-      totalLoanRepayment[i] -
-      interestPaidOnLoan[i] -
-      totalOpexWithInflation[i]
-  );
-  const totalDepreciableCapex = totalCapexCost + totalEpcCost;
-  const conversionFactors = getConversionFactors(
-    capitalDepreciationProfile,
-    projectTimeline
-  );
-  const depreciation = fillYearsArray(
-    activeLife,
-    (i: number) => totalDepreciableCapex * conversionFactors[i]
-  );
-
-  // tax liabilities
-  const taxableIncome = fillYearsArray(
-    activeLife,
-    (i: number) =>
-      incomePreDepreciation[i] - depreciation[i] + interestPaidOnLoan[i]
-  );
-
-  const tax = fillYearsArray(activeLife, (i: number) => {
-    if (taxableIncome[i] < 0) {
-      return 0;
-    }
-    return taxableIncome[i] * taxRate;
-  });
-
-  // net cash flows
-  // after tax and depreciation
-  const incomeAfterTaxAndDepreciation = fillYearsArray(
-    activeLife,
-    (i: number) => incomePreDepreciation[i] - tax[i]
-  );
-
-  const cumulativeSum = (
-    (sum: number) => (value: number) =>
-      (sum += value)
-  )(0);
-  const cumulativeCashFlow = incomeAfterTaxAndDepreciation.map(cumulativeSum);
-
-  return {
-    cumulativeCashFlow,
-  };
-}
 
 export function calculateLoanBalance(
   totalLoan: number,
@@ -181,26 +35,13 @@ export function sales(
   // Inputs
   projectTimeline: number,
   discountRate: number,
-  hydrogenSalesMargin: number,
-  averageElectricitySpotPrice: number,
-  inflationRate: number,
-  // Values per year of project life
-  oxygenSales: number[],
   totalOpex: number[],
-  h2Produced: number[],
-  electricityProduced: number[]
+  h2Produced: number[]
 ) {
   const activeLife = projectTimeline + 2;
 
   const paddedH2Produced = padArray(h2Produced);
-  const paddedElectricityProduced = padArray(electricityProduced);
   const paddedTotalOpex = padArray(totalOpex);
-  const paddedOxygenSales = padArray(oxygenSales);
-
-  const electricitySales = fillYearsArray(
-    activeLife,
-    (i: number) => paddedElectricityProduced[i] * averageElectricitySpotPrice
-  );
 
   const totalInvestmentRequired = startup(
     totalCapexCost + totalEpcCost + totalLandCost,
@@ -209,14 +50,9 @@ export function sales(
 
   const totalCost = fillYearsArray(
     activeLife,
-    (i: number) =>
-      totalInvestmentRequired[i] +
-      paddedTotalOpex[i] -
-      paddedOxygenSales[i] -
-      electricitySales[i]
+    (i: number) => totalInvestmentRequired[i] + paddedTotalOpex[i]
   );
 
-  const applyInflation = getInflationFn(inflationRate, activeLife);
   const applyDiscount = getDiscountFn(discountRate, activeLife);
 
   const totalCostWithDiscount = applyDiscount(totalCost);
@@ -226,30 +62,10 @@ export function sales(
 
   const hydrogenProductionCost = sum(h2ProducedKgLCA);
   const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
-  const h2RetailPrice = lch2 + hydrogenSalesMargin;
-
-  // The values can be used to create sales graphs.
-  const inflatedElectricitySales = applyInflation(electricitySales);
-  const inflatedOxygenSales = applyInflation(paddedOxygenSales);
-  const inflatedh2Sales = applyInflation(
-    paddedH2Produced.map((x) => x * 1000 * h2RetailPrice)
-  );
-  const paddedAnnualSales = inflatedh2Sales.map(
-    (_: number, i: number) =>
-      inflatedh2Sales[i] + inflatedElectricitySales[i] + inflatedOxygenSales[i]
-  );
 
   return {
     lch2,
-    h2RetailPrice,
-    totalCost,
-    totalCostWithDiscount,
     hydrogenProductionCost,
-    // Drop padding to account for sales graphs tracking project years
-    h2Sales: dropPadding(inflatedh2Sales),
-    electricitySales: dropPadding(inflatedElectricitySales),
-    oxygenSales: dropPadding(inflatedOxygenSales),
-    annualSales: dropPadding(paddedAnnualSales),
   };
 }
 
