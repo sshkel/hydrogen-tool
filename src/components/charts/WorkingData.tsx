@@ -39,10 +39,7 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import {
-  backCalculateInputFields,
-  backCalculateSolarAndWindCapacity,
-} from "./basic-calculations";
+import { backCalculateInputFields } from "./basic-calculations";
 import { generateCapexValues } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
@@ -141,29 +138,11 @@ export default function WorkingData(props: Props) {
     powerCapacityConfiguration,
   } = inputs;
 
-  // These values can change if Oversize Ratio configuration is used
-  const powerPlantOversizeRatio =
-    powerCapacityConfiguration === "Oversize Ratio"
-      ? inputs.powerPlantOversizeRatio
-      : (inputs.solarNominalCapacity + inputs.windNominalCapacity) /
-        inputs.electrolyserNominalCapacity;
-
-  if (
-    props.inputConfiguration === "Advanced" &&
-    powerCapacityConfiguration === "Oversize Ratio"
-  ) {
-    inputs = backCalculateSolarAndWindCapacity(
-      inputs,
-      powerPlantOversizeRatio,
-      inputs.electrolyserNominalCapacity,
-      solarToWindPercentage,
-      inputs.powerPlantType
-    );
-  }
-
   const location = props.location;
   const dataModel: HydrogenData = {
     inputConfiguration,
+    powerCapacityConfiguration,
+    powerPlantType: inputs.powerPlantType,
     batteryLifetime,
     batteryMinCharge,
     batteryEfficiency,
@@ -175,7 +154,7 @@ export default function WorkingData(props: Props) {
     electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
     solarNominalCapacity: inputs.solarNominalCapacity,
     windNominalCapacity: inputs.windNominalCapacity,
-    powerPlantOversizeRatio,
+    powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
     solarToWindPercentage,
     solarDegradation,
     windDegradation,
@@ -203,8 +182,6 @@ export default function WorkingData(props: Props) {
       mean(summary[ELECTROLYSER_CF])
     );
   }
-
-  const { solarNominalCapacity, windNominalCapacity } = inputs;
 
   // CAPEX values
   const {
@@ -310,13 +287,17 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
-  const powerplantCapacity = solarNominalCapacity + windNominalCapacity;
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
-        <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
+        <Grid item>
+          {KeyInputsPane(
+            location,
+            inputs,
+            model.totalNominalPowerPlantCapacity
+          )}
+        </Grid>
         <Grid item>
           <Grid container className="outside results box" wrap="nowrap">
             <Grid
