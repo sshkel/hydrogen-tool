@@ -6,7 +6,7 @@ import React from "react";
 
 import InputTitle from "./InputTitle";
 import { BLUE, GREY } from "./colors";
-import { advancedDefaultInputs } from "./data";
+import { numberFieldDefaultInputs } from "./data";
 import { defaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
@@ -33,10 +33,6 @@ const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   },
 }));
 
-const inputProps = {
-  step: "0.01",
-};
-
 const sx = {
   display: "flex",
   flexGrow: "1",
@@ -55,12 +51,34 @@ function InputNumberField({ inputKey }: Props) {
     title,
     id = inputKey,
     helperText,
-    required,
-    onChange,
     adornmentLabel,
-    value,
-  } = advancedDefaultInputs[inputKey];
+    step = 0.01,
+    min,
+    max,
+  } = numberFieldDefaultInputs[inputKey];
+
   const defaultValue = defaultInputs[inputKey];
+
+  const [value, setValue] = React.useState<string | number | number[]>(
+    defaultValue
+  );
+
+  const valueText: string | undefined =
+    min && max ? "Value: " + min + " - " + max : undefined;
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(
+      event.target.value === "" ? defaultValue : Number(event.target.value)
+    );
+  };
+
+  const handleBlur = () => {
+    if (min && value < min) {
+      setValue(min);
+    } else if (max && value > max) {
+      setValue(max);
+    }
+  };
 
   return (
     <Grid container alignItems="center" columnSpacing={3.5}>
@@ -71,19 +89,25 @@ function InputNumberField({ inputKey }: Props) {
         <StyledInputNumberField
           id={id}
           key={title}
-          defaultValue={defaultValue}
+          // defaultValue={defaultValue}
           value={value}
-          helperText={helperText}
-          required={required}
+          helperText={valueText}
+          required
           type="number"
-          onChange={onChange}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">{adornmentLabel}</InputAdornment>
             ),
           }}
-          inputProps={inputProps}
+          inputProps={{
+            step: step,
+            min: min,
+            max: max,
+            pattern: "/^d*.?d*$/",
+          }}
           sx={sx}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
         />
       </Grid>
     </Grid>

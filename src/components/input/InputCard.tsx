@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import React, { Suspense } from "react";
 
+import { nameToId } from "../../utils";
 import { BLUE, ORANGE } from "./colors";
 
 export interface InputCardProps {
@@ -116,7 +117,7 @@ function InputCard(props: InputCardProps) {
           expanded={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
-          aria-label="show more"
+          aria-label={`${nameToId(title)}-show-more`}
         >
           <ExpandCircleIcon />
         </ExpandMore>

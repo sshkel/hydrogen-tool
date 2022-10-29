@@ -1,5 +1,7 @@
 import { ChartData } from "./types";
 
+export const nameToId = (key: string) => key.replace(/\s+/g, "-").toLowerCase();
+
 export const isSolar = (tech: string): boolean => tech !== "Wind";
 export const isWind = (tech: string): boolean => tech !== "Solar";
 

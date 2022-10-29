@@ -29,33 +29,19 @@ export const isGridConnected = (
   powerPlantConfiguration: PowerPlantConfiguration
 ) => powerPlantConfiguration === "Grid Connected";
 
-export interface BasicDefaultInput {
-  [k: string]: SliderProps;
+export interface DefaultInput {
+  [k: string]: InputProps;
 }
 
-export interface AdvancedDefaultInput {
-  [k: string]: InputNumberFieldProps;
-}
-
-export interface SliderProps {
+export interface InputProps {
+  id?: string;
   title: string;
   helperText?: string;
   defaultValue?: number;
   min?: number;
   max?: number;
   step?: number;
-}
-
-export interface InputNumberFieldProps {
-  title: string;
-  id?: string;
-  defaultValue?: string | number;
-  value?: number;
-  helperText?: string;
-  disabled?: boolean;
-  required?: boolean;
   adornmentLabel?: string | JSX.Element;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export interface UserInputFields {
