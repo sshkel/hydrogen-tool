@@ -52,7 +52,6 @@ export type AmmoniaData = {
   // system sizing
   ammonia_plant_capacity: number; // raw input
   electrolyser_system_oversizing: number; // raw input %
-  renewable_energy_plant_oversizing: number; // raw input
   // specific electricity consumption sec
   ammonia_plant_sec: number; // raw input
   asu_sec: number; // raw input
@@ -141,7 +140,6 @@ export class AmmoniaModel {
     this.battMin = parameters.batteryMinCharge / 100;
     this.specCons = this.parameters.secAtNominalLoad * this.H2VoltoMass;
 
-    // TODO implement
     this.ammonia_plant_power_demand = ammonia_plant_power_demand(
       this.parameters.ammonia_plant_capacity,
       this.parameters.ammonia_plant_sec
@@ -166,14 +164,14 @@ export class AmmoniaModel {
       this.air_separation_unit_power_demand,
       this.nominalElectrolyserCapacity,
       this.parameters.solarToWindPercentage / 100,
-      this.parameters.renewable_energy_plant_oversizing / 100
+      this.parameters.powerPlantOversizeRatio
     );
     this.nominalWindCapacity = nominal_wind_capacity(
       this.ammonia_plant_power_demand,
       this.air_separation_unit_power_demand,
       this.nominalElectrolyserCapacity,
       1 - this.parameters.solarToWindPercentage / 100,
-      this.parameters.renewable_energy_plant_oversizing / 100
+      this.parameters.powerPlantOversizeRatio
     );
     this.totalNominalPowerPlantCapacity =
       this.nominalSolarCapacity + this.nominalWindCapacity;
