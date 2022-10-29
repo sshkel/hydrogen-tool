@@ -43,7 +43,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        2.078, 1.385, 0, 0.374, 0.367, 0, 0, 0.201, 0.05, 0, 0, 0, 0,
+        2.078, 1.385, 0, 0.374, 0.367, 0, 0.201, 0.05, 0, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -76,7 +76,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        1.62, 1.41, 0.03, 0.37, 0.37, 0, 0, 0.23, 0.05, 1.44, 0, 0.03, 0,
+        1.62, 1.41, 0.03, 0.37, 0.37, 0, 0.23, 0.05, 1.44, 0, 0.03,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -108,9 +108,7 @@ describe("Working Data calculations", () => {
         />
       );
 
-      const costBreakdown = [
-        1.45, 1.21, 0, 0.38, 0.32, 0, 0, 0.41, 0.05, 0, 0, 0, 0,
-      ];
+      const costBreakdown = [1.45, 1.21, 0, 0.38, 0.32, 0, 0.41, 0.05, 0, 0, 0];
 
       // Sleep to wait for CSV to load and set state
       setTimeout(() => {
@@ -142,7 +140,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        0, 1.393, 0, 0, 0.369, 0.15, 0, 0.283, 0.05, 0, 0.014, 0, 0,
+        0, 1.393, 0, 0, 0.369, 0.15, 0.283, 0.05, 0, 0.014, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -176,7 +174,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        1.676, 1.117, 0, 0.349, 0.296, 0, 0, 0.385, 0.05, 1.617, 0.064, 0, 0,
+        1.676, 1.117, 0, 0.349, 0.296, 0, 0.385, 0.05, 1.617, 0.064, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -210,7 +208,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        0, 1.178, 0, 0, 0.312, 0, 0, 0.396, 0.05, 0.681, 0, 0, 0,
+        0, 1.178, 0, 0, 0.312, 0, 0.396, 0.05, 0.681, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -245,9 +243,7 @@ describe("Working Data calculations", () => {
         />
       );
 
-      const costBreakdown = [
-        2.08, 1.39, 0, 0.37, 0.37, 0, -0.105, 0.2, 0.05, 0, 0, 0, -0.079,
-      ];
+      const costBreakdown = [2.08, 1.39, 0, 0.37, 0.37, 0, 0.2, 0.05, 0, 0, 0];
 
       // Sleep to wait for CSV to load and set state
       setTimeout(() => {
@@ -279,9 +275,7 @@ describe("Working Data calculations", () => {
         />
       );
 
-      const costBreakdown = [
-        2.24, 2.24, 0, 0.4, 0.59, 0, 0, 0.28, 0.05, 0, 0, 0, -0.08,
-      ];
+      const costBreakdown = [2.24, 2.24, 0, 0.4, 0.59, 0, 0.28, 0.05, 0, 0, 0];
 
       // Sleep to wait for CSV to load and set state
       setTimeout(() => {
@@ -314,7 +308,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        2.402, 0.89, 0, 0.523, 0.236, 0, 0, 0.328, 0.05, 0, 0, 0, 0,
+        2.402, 0.89, 0, 0.523, 0.236, 0, 0.328, 0.05, 0, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -347,7 +341,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        1.451, 0.967, 0, 0.423, 0.282, 0, 0, 0.271, 0.05, 0.392, 0, 0, 0,
+        1.451, 0.967, 0, 0.423, 0.282, 0, 0.271, 0.05, 0.392, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state

@@ -59,9 +59,6 @@ describe("App", () => {
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
       "Hydrogen Output [t/yr]",
       "LCH2",
-      "H2 Retail Price",
-      "Net Profit (A$)",
-      "Return on Investment (%)",
     ];
 
     const expectedValues: string[] = [
@@ -73,9 +70,6 @@ describe("App", () => {
       "559,746,755.67",
       "100,000,000",
       "3.794",
-      "4.794",
-      "5,090,335,336,144.024",
-      "1.64",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -133,9 +127,6 @@ describe("App", () => {
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
       "Hydrogen Output [t/yr]",
       "LCH2",
-      "H2 Retail Price",
-      "Net Profit (A$)",
-      "Return on Investment (%)",
     ];
 
     const expectedValues: string[] = [
@@ -147,9 +138,6 @@ describe("App", () => {
       "138.64",
       "755.655",
       "4.875",
-      "5.875",
-      "48,791,960.932",
-      "1.476",
     ];
 
     const EXPECTED_RESULTS = 11;
