@@ -316,7 +316,13 @@ export default function WorkingData(props: Props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
-        <Grid item>{KeyInputsPane(location, inputs, powerplantCapacity)}</Grid>
+        <Grid item>
+          {KeyInputsPane(
+            location,
+            inputs.electrolyserNominalCapacity,
+            powerplantCapacity
+          )}
+        </Grid>
         <Grid item>
           <Grid container className="outside results box" wrap="nowrap">
             <Grid
@@ -478,7 +484,7 @@ function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
 
 function KeyInputsPane(
   location: string,
-  inputs: Inputs,
+  electrolyserNominalCapacity: number,
   powerplantCapacity: number
 ) {
   type ObjectKey = keyof typeof zoneInfo;
@@ -543,7 +549,7 @@ function KeyInputsPane(
                 <Grid item>
                   <ItemText>
                     {roundToNearestInteger(
-                      inputs.electrolyserNominalCapacity
+                      electrolyserNominalCapacity
                     ).toLocaleString("en-US") + " MW"}
                   </ItemText>
                 </Grid>
