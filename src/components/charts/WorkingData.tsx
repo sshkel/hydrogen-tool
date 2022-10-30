@@ -348,6 +348,11 @@ export default function WorkingData(props: Props) {
     "Additional Costs": lcAdditionalCosts,
   };
 
+  const durationCurves = {
+    "Power Plant Duration Curve": hourlyOperations.Generator_CF,
+    "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -402,48 +407,7 @@ export default function WorkingData(props: Props) {
                 justifyContent={"space-between"}
               >
                 <Grid container item className="duration curves">
-                  <Grid item xs={6}>
-                    <StyledCard>
-                      <CardHeader
-                        title="Power Plant Duration Curve"
-                        titleTypographyProps={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-                        }}
-                      />
-                      <CardContent
-                        sx={{
-                          paddingTop: 0,
-                        }}
-                      >
-                        <DurationCurve
-                          title="Generator Duration Curve"
-                          data={hourlyOperations.Generator_CF}
-                        />
-                      </CardContent>
-                    </StyledCard>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StyledCard>
-                      <CardHeader
-                        title="Electrolyser Duration Curve"
-                        titleTypographyProps={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-                        }}
-                      />
-                      <CardContent
-                        sx={{
-                          paddingTop: 0,
-                        }}
-                      >
-                        <DurationCurve
-                          title="Electrolyser Duration Curve"
-                          data={hourlyOperations.Electrolyser_CF}
-                        />
-                      </CardContent>
-                    </StyledCard>
-                  </Grid>
+                  {DurationCurves(durationCurves)}
                 </Grid>
                 <Grid item>{Lch2BreakdownPane(lch2BreakdownData)}</Grid>
               </Grid>
@@ -465,6 +429,31 @@ export default function WorkingData(props: Props) {
       </Grid>
     </ThemeProvider>
   );
+}
+
+function DurationCurves(durationCurves: { [key: string]: number[] }) {
+  return Object.keys(durationCurves).map((key: string) => {
+    return (
+      <Grid item xs={6}>
+        <StyledCard>
+          <CardHeader
+            title={key}
+            titleTypographyProps={{
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          />
+          <CardContent
+            sx={{
+              paddingTop: 0,
+            }}
+          >
+            <DurationCurve title={key} data={durationCurves[key]} />
+          </CardContent>
+        </StyledCard>
+      </Grid>
+    );
+  });
 }
 function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
   return (
