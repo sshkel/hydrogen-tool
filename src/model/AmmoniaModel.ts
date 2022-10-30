@@ -144,7 +144,8 @@ export class AmmoniaModel {
 
     this.ammonia_plant_power_demand = ammonia_plant_power_demand(
       this.parameters.ammonia_plant_capacity,
-      this.parameters.ammonia_plant_sec
+      this.parameters.ammonia_plant_sec,
+      this.hoursPerYear
     );
     this.air_separation_unit_capacity = air_separation_unit_capacity(
       this.parameters.ammonia_plant_capacity
@@ -498,7 +499,8 @@ export class AmmoniaModel {
       this.parameters.ammonia_plant_minimum_turndown,
       this.parameters.minimum_hydrogen_storage,
       this.hydrogenOutput,
-      this.air_separation_unit_capacity
+      this.air_separation_unit_capacity,
+      this.hoursPerYear
     );
 
     const workingDf = {
@@ -559,10 +561,13 @@ export class AmmoniaModel {
 
 function ammonia_plant_power_demand(
   ammonia_plant_capacity: number, // size of ammonia plant
-  ammonia_plant_sec: number // electricity required to produce 1 kg of ammonia
+  ammonia_plant_sec: number, // electricity required to produce 1 kg of ammonia
+  hoursPerYear: number
 ) {
   return (
-    (ammonia_plant_capacity / 8760) * 1_000_000 * (ammonia_plant_sec / 1000)
+    (ammonia_plant_capacity / hoursPerYear) *
+    1_000_000 *
+    (ammonia_plant_sec / 1000)
   );
 }
 
@@ -1043,10 +1048,11 @@ function nh3_unit_out(
 // should be repeated for multiple cells
 function nh3_unit_capacity_factor(
   nh3_unit_out: number[], // x20
-  ammonia_plant_capacity: number // s1b12
+  ammonia_plant_capacity: number, // s1b12
+  hoursPerYear: number
 ) {
   return nh3_unit_out.map(
-    (v: number) => v / (ammonia_plant_capacity * (1_000_000 / 8760))
+    (v: number) => v / (ammonia_plant_capacity * (1_000_000 / hoursPerYear))
   );
 }
 
@@ -1175,7 +1181,8 @@ function calculateNH3CapFactors(
   // other operation factors
   minimum_hydrogen_storage: number, // %
   hydrogen_output: number,
-  air_separation_unit_capacity: number
+  air_separation_unit_capacity: number,
+  hoursPerYear: number
 ): number[] {
   const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output);
   const deficit_h2_result = deficit_h2(mass_of_hydrogen, hydrogen_output);
@@ -1202,5 +1209,9 @@ function calculateNH3CapFactors(
   );
 
   const nh3_unit_out_result = nh3_unit_out(asu_out_result, h2_to_nh3_result);
-  return nh3_unit_capacity_factor(nh3_unit_out_result, ammonia_plant_capacity);
+  return nh3_unit_capacity_factor(
+    nh3_unit_out_result,
+    ammonia_plant_capacity,
+    hoursPerYear
+  );
 }
