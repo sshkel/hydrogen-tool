@@ -308,7 +308,7 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
-  const summaryTable: { [key: string]: number } = {
+  const summaryTableData: { [key: string]: number } = {
     "Power Plant Capacity Factor": roundToTwoDP(
       mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
     ),
@@ -334,6 +334,20 @@ export default function WorkingData(props: Props) {
     "LCH2 ($/kg)": roundToTwoDP(lch2),
   };
 
+  const lch2BreakdownData: { [key: string]: number } = {
+    "Power Plant CAPEX": lcPowerPlantCAPEX,
+    "Electrolyser CAPEX": lcElectrolyserCAPEX,
+    "Indirect Costs": lcIndirectCosts,
+    "Power Plant OPEX": lcPowerPlantOPEX,
+    "Electrolyser O&M": lcElectrolyserOPEX,
+    "Electricity Purchase": lcElectricityPurchase,
+    "Stack Replacement": lcStackReplacement,
+    "Water Cost": lcWater,
+    "Battery Cost": lcBattery,
+    "Grid Connection Cost": lcGridConnection,
+    "Additional Costs": lcAdditionalCosts,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -354,7 +368,7 @@ export default function WorkingData(props: Props) {
               className="summary and cost breakdown"
             >
               <Grid item xs>
-                {SummaryOfResultsPane(summaryTable)}
+                {SummaryOfResultsPane(summaryTableData)}
               </Grid>
               <Grid container item>
                 <Grid item xs={6}>
@@ -431,21 +445,7 @@ export default function WorkingData(props: Props) {
                     </StyledCard>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  {Lch2BreakdownPane(
-                    lcPowerPlantCAPEX,
-                    lcElectrolyserCAPEX,
-                    lcIndirectCosts,
-                    lcPowerPlantOPEX,
-                    lcElectrolyserOPEX,
-                    lcElectricityPurchase,
-                    lcStackReplacement,
-                    lcWater,
-                    lcBattery,
-                    lcGridConnection,
-                    lcAdditionalCosts
-                  )}
-                </Grid>
+                <Grid item>{Lch2BreakdownPane(lch2BreakdownData)}</Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -768,37 +768,12 @@ export function WaterFallPane(data: WaterfallPaneData) {
   );
 }
 
-function Lch2BreakdownPane(
-  lcPowerPlantCAPEX: number,
-  lcElectrolyserCAPEX: number,
-  lcIndirectCosts: number,
-  lcPowerPlantOPEX: number,
-  lcElectrolyserOPEX: number,
-  lcElectricityPurchase: number,
-  lcStackReplacement: number,
-  lcWater: number,
-  lcBattery: number,
-  lcGridConnection: number,
-  lcAdditionalCosts: number
-) {
-  const data = {
-    "Power Plant CAPEX": lcPowerPlantCAPEX,
-    "Electrolyser CAPEX": lcElectrolyserCAPEX,
-    "Indirect Costs": lcIndirectCosts,
-    "Power Plant OPEX": lcPowerPlantOPEX,
-    "Electrolyser O&M": lcElectrolyserOPEX,
-    "Electricity Purchase": lcElectricityPurchase,
-    "Stack Replacement": lcStackReplacement,
-    "Water Cost": lcWater,
-    "Battery Cost": lcBattery,
-    "Grid Connection Cost": lcGridConnection,
-    "Additional Costs": lcAdditionalCosts,
-  };
+function Lch2BreakdownPane(lch2BreakdownData: { [key: string]: number }) {
   return (
     <WaterFallPane
       title="Breakdown of Cost Components in LCH2"
       label="Breakdown of Cost Components in Levelised Cost of Hydrogen"
-      items={data}
+      items={lch2BreakdownData}
     />
   );
 }
