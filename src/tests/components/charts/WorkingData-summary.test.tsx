@@ -6,7 +6,7 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
-  hybridBatteryGridSurplusRetailScenario,
+  hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -191,12 +191,12 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates summary of results for hybrid with battery, grid and surplus retail", (done) => {
+    it("calculates summary of results for hybrid with battery, grid and oversize ratio", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
-          data={hybridBatteryGridSurplusRetailScenario.data}
-          location={hybridBatteryGridSurplusRetailScenario.location}
+          data={hybridBatteryGridOversizeRatioScenario.data}
+          location={hybridBatteryGridOversizeRatioScenario.location}
           loadSolar={loadSolar}
           loadWind={loadWind}
         />
@@ -214,7 +214,7 @@ describe("Model summary", () => {
         expect(data["Power Plant Capacity Factor"]).toEqual(32.52);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toEqual(17.52);
+        ).toEqual(17.51);
         expect(
           data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
         ).toEqual(83.6);

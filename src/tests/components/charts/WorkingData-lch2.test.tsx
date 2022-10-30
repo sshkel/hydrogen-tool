@@ -8,7 +8,7 @@ import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
   gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
-  hybridBatteryGridSurplusRetailScenario,
+  hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -162,14 +162,14 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for hybrid with battery, grid and surplus retail", (done) => {
+    it("calculates lch2 for hybrid with battery, grid and oversize ratio", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
-          data={hybridBatteryGridSurplusRetailScenario.data}
+          data={hybridBatteryGridOversizeRatioScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
-          location={hybridBatteryGridSurplusRetailScenario.location}
+          location={hybridBatteryGridOversizeRatioScenario.location}
         />
       );
 
