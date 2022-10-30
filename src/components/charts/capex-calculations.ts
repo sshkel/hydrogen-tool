@@ -1,132 +1,11 @@
-import { Inputs, isGridConnected, isPPAAgreement } from "../../types";
+import {
+  PowerPlantConfiguration,
+  PowerSupplyOption,
+  isGridConnected,
+  isPPAAgreement,
+} from "../../types";
 import { isSolar, isWind } from "../../utils";
 import { getBaseLog, roundToNearestThousand } from "./cost-functions";
-
-export function generateCapexValues(data: Inputs) {
-  const {
-    powerPlantType,
-    powerPlantConfiguration,
-    powerSupplyOption,
-
-    electrolyserNominalCapacity,
-    electrolyserReferenceCapacity,
-    electrolyserPurchaseCost,
-    electrolyserCostReductionWithScale,
-    electrolyserReferenceFoldIncrease,
-
-    solarNominalCapacity,
-    solarReferenceCapacity,
-    solarFarmBuildCost,
-    solarPVCostReductionWithScale,
-    solarReferenceFoldIncrease,
-
-    windNominalCapacity,
-    windReferenceCapacity,
-    windFarmBuildCost,
-    windCostReductionWithScale,
-    windReferenceFoldIncrease,
-
-    batteryRatedPower = 0,
-    batteryStorageDuration = 0,
-    batteryCosts = 0,
-
-    gridConnectionCost = 0,
-
-    electrolyserEpcCosts,
-    electrolyserLandProcurementCosts,
-    solarEpcCosts,
-    solarLandProcurementCosts,
-    windEpcCosts,
-    windLandProcurementCosts,
-    batteryEpcCosts,
-    batteryLandProcurementCosts,
-  } = data;
-
-  const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
-  const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
-
-  const electrolyserCAPEX = calculateCapex(
-    electrolyserNominalCapacity,
-    electrolyserReferenceCapacity,
-    electrolyserPurchaseCost,
-    electrolyserCostReductionWithScale,
-    electrolyserReferenceFoldIncrease
-  );
-
-  const solarCAPEX = isSolar(powerPlantType)
-    ? calculateCapex(
-        solarNominalCapacity,
-        solarReferenceCapacity,
-        solarFarmBuildCost,
-        solarPVCostReductionWithScale,
-        solarReferenceFoldIncrease
-      )
-    : 0;
-  const windCAPEX = isWind(powerPlantType)
-    ? calculateCapex(
-        windNominalCapacity,
-        windReferenceCapacity,
-        windFarmBuildCost,
-        windCostReductionWithScale,
-        windReferenceFoldIncrease
-      )
-    : 0;
-  const powerPlantCAPEX = solarCAPEX + windCAPEX;
-
-  const batteryNominalCapacity = batteryRatedPower * batteryStorageDuration;
-  const batteryCAPEX = calculateBatteryCapex(
-    batteryRatedPower,
-    batteryNominalCapacity,
-    batteryCosts
-  );
-
-  const electrolyserEpcCost = getIndirectCost(
-    electrolyserCAPEX,
-    electrolyserEpcCosts
-  );
-  const electrolyserLandCost = getIndirectCost(
-    electrolyserCAPEX,
-    electrolyserLandProcurementCosts
-  );
-
-  const solarEpcCost = getIndirectCost(solarCAPEX, solarEpcCosts);
-  const solarLandCost = getIndirectCost(solarCAPEX, solarLandProcurementCosts);
-
-  const windEpcCost = getIndirectCost(windCAPEX, windEpcCosts);
-  const windLandCost = getIndirectCost(windCAPEX, windLandProcurementCosts);
-
-  const powerPlantEpcCost = solarEpcCost + windEpcCost;
-  const powerPlantLandCost = solarLandCost + windLandCost;
-
-  const batteryEpcCost = getIndirectCost(batteryCAPEX, batteryEpcCosts);
-  const batteryLandCost = getIndirectCost(
-    batteryCAPEX,
-    batteryLandProcurementCosts
-  );
-
-  const gridConnectionCAPEX =
-    gridConnected || ppaAgreement ? gridConnectionCost : 0;
-
-  const totalIndirectCosts =
-    electrolyserEpcCost +
-    electrolyserLandCost +
-    powerPlantEpcCost +
-    powerPlantLandCost;
-
-  return {
-    electrolyserCAPEX,
-    powerPlantCAPEX,
-    batteryCAPEX,
-    gridConnectionCAPEX,
-    electrolyserEpcCost,
-    electrolyserLandCost,
-    powerPlantEpcCost,
-    powerPlantLandCost,
-    batteryEpcCost,
-    batteryLandCost,
-    totalIndirectCosts,
-  };
-}
 
 export const calculateCapex = (
   nominalCapacity: number,
@@ -167,3 +46,124 @@ export const getIndirectCost = (
   capex: number,
   costAsPercentageOfCapex: number = 0
 ) => roundToNearestThousand(capex * (costAsPercentageOfCapex / 100));
+
+export function getCapex(
+  powerPlantConfiguration: PowerPlantConfiguration,
+  powerSupplyOption: PowerSupplyOption,
+  electrolyserNominalCapacity: number,
+  electrolyserReferenceCapacity: number,
+  electrolyserPurchaseCost: number,
+  electrolyserCostReductionWithScale: number,
+  electrolyserReferenceFoldIncrease: number,
+  powerPlantType: string,
+  solarNominalCapacity: number,
+  solarReferenceCapacity: number,
+  solarFarmBuildCost: number,
+  solarPVCostReductionWithScale: number,
+  solarReferenceFoldIncrease: number,
+  windNominalCapacity: number,
+  windReferenceCapacity: number,
+  windFarmBuildCost: number,
+  windCostReductionWithScale: number,
+  windReferenceFoldIncrease: number,
+  batteryRatedPower: number,
+  batteryStorageDuration: number,
+  batteryCosts: number,
+  gridConnectionCost: number
+) {
+  const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
+  const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
+
+  const electrolyserCAPEX = calculateCapex(
+    electrolyserNominalCapacity,
+    electrolyserReferenceCapacity,
+    electrolyserPurchaseCost,
+    electrolyserCostReductionWithScale,
+    electrolyserReferenceFoldIncrease
+  );
+
+  const solarCAPEX = isSolar(powerPlantType)
+    ? calculateCapex(
+        solarNominalCapacity,
+        solarReferenceCapacity,
+        solarFarmBuildCost,
+        solarPVCostReductionWithScale,
+        solarReferenceFoldIncrease
+      )
+    : 0;
+  const windCAPEX = isWind(powerPlantType)
+    ? calculateCapex(
+        windNominalCapacity,
+        windReferenceCapacity,
+        windFarmBuildCost,
+        windCostReductionWithScale,
+        windReferenceFoldIncrease
+      )
+    : 0;
+
+  const powerPlantCAPEX = solarCAPEX + windCAPEX;
+
+  const batteryNominalCapacity = batteryRatedPower * batteryStorageDuration;
+  const batteryCAPEX = calculateBatteryCapex(
+    batteryRatedPower,
+    batteryNominalCapacity,
+    batteryCosts
+  );
+  const gridConnectionCAPEX =
+    gridConnected || ppaAgreement ? gridConnectionCost : 0;
+  return {
+    electrolyserCAPEX,
+    solarCAPEX,
+    windCAPEX,
+    batteryCAPEX,
+    powerPlantCAPEX,
+    gridConnectionCAPEX,
+  };
+}
+
+export function getEpcCosts(
+  electrolyserCAPEX: number,
+  electrolyserEpcCosts: number,
+  electrolyserLandProcurementCosts: number,
+  solarCAPEX: number,
+  solarEpcCosts: number,
+  solarLandProcurementCosts: number,
+  windCAPEX: number,
+  windEpcCosts: number,
+  windLandProcurementCosts: number,
+  batteryCAPEX: number,
+  batteryEpcCosts: number | undefined,
+  batteryLandProcurementCosts: number | undefined
+) {
+  const electrolyserEpcCost = getIndirectCost(
+    electrolyserCAPEX,
+    electrolyserEpcCosts
+  );
+  const electrolyserLandCost = getIndirectCost(
+    electrolyserCAPEX,
+    electrolyserLandProcurementCosts
+  );
+
+  const solarEpcCost = getIndirectCost(solarCAPEX, solarEpcCosts);
+  const solarLandCost = getIndirectCost(solarCAPEX, solarLandProcurementCosts);
+
+  const windEpcCost = getIndirectCost(windCAPEX, windEpcCosts);
+  const windLandCost = getIndirectCost(windCAPEX, windLandProcurementCosts);
+
+  const powerPlantEpcCost = solarEpcCost + windEpcCost;
+  const powerPlantLandCost = solarLandCost + windLandCost;
+
+  const batteryEpcCost = getIndirectCost(batteryCAPEX, batteryEpcCosts);
+  const batteryLandCost = getIndirectCost(
+    batteryCAPEX,
+    batteryLandProcurementCosts
+  );
+  return {
+    electrolyserEpcCost,
+    electrolyserLandCost,
+    powerPlantEpcCost,
+    powerPlantLandCost,
+    batteryEpcCost,
+    batteryLandCost,
+  };
+}

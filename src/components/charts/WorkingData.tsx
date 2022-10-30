@@ -40,7 +40,7 @@ import {
   backCalculateInputFields,
   backCalculateSolarAndWindCapacity,
 } from "./basic-calculations";
-import { generateCapexValues } from "./capex-calculations";
+import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
@@ -136,6 +136,8 @@ export default function WorkingData(props: Props) {
     electrolyserEfficiency = 0,
     solarToWindPercentage,
     powerCapacityConfiguration,
+    batteryCosts = 0,
+    gridConnectionCost = 0,
   } = inputs;
 
   // These values can change if Oversize Ratio configuration is used
@@ -221,20 +223,74 @@ export default function WorkingData(props: Props) {
     );
   }
 
-  // CAPEX values
   const {
     electrolyserCAPEX,
-    powerPlantCAPEX,
+    solarCAPEX,
+    windCAPEX,
     batteryCAPEX,
+    powerPlantCAPEX,
     gridConnectionCAPEX,
+  } = getCapex(
+    inputs.powerPlantConfiguration,
+    inputs.powerSupplyOption,
+    inputs.electrolyserNominalCapacity,
+    inputs.electrolyserReferenceCapacity,
+    inputs.electrolyserPurchaseCost,
+    inputs.electrolyserCostReductionWithScale,
+    inputs.electrolyserReferenceFoldIncrease,
+    inputs.powerPlantType,
+    inputs.solarNominalCapacity,
+    inputs.solarReferenceCapacity,
+    inputs.solarFarmBuildCost,
+    inputs.solarPVCostReductionWithScale,
+    inputs.solarReferenceFoldIncrease,
+    inputs.windNominalCapacity,
+    inputs.windReferenceCapacity,
+    inputs.windFarmBuildCost,
+    inputs.windCostReductionWithScale,
+    inputs.windReferenceFoldIncrease,
+    batteryRatedPower,
+    batteryStorageDuration,
+    batteryCosts,
+    gridConnectionCost
+  );
+
+  const {
     electrolyserEpcCost,
     electrolyserLandCost,
     powerPlantEpcCost,
     powerPlantLandCost,
     batteryEpcCost,
     batteryLandCost,
-    totalIndirectCosts,
-  } = generateCapexValues(inputs);
+  } = getEpcCosts(
+    electrolyserCAPEX,
+    inputs.electrolyserEpcCosts,
+    inputs.electrolyserLandProcurementCosts,
+    solarCAPEX,
+    inputs.solarEpcCosts,
+    inputs.solarLandProcurementCosts,
+    windCAPEX,
+    inputs.windEpcCosts,
+    inputs.windLandProcurementCosts,
+    batteryCAPEX,
+    inputs.batteryEpcCosts,
+    inputs.batteryLandProcurementCosts
+  );
+
+  const totalCapexCost =
+    electrolyserCAPEX +
+    powerPlantCAPEX +
+    batteryCAPEX +
+    additionalUpfrontCosts +
+    gridConnectionCAPEX; // Cost values for sales calculation
+  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+  const totalLandCost =
+    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+  const totalIndirectCosts =
+    electrolyserEpcCost +
+    electrolyserLandCost +
+    powerPlantEpcCost +
+    powerPlantLandCost;
 
   const capitalCostBreakdown = {
     "Electrolyser System": electrolyserCAPEX,
@@ -252,13 +308,6 @@ export default function WorkingData(props: Props) {
     "Battery EPC": batteryEpcCost,
     "Battery Land": batteryLandCost,
   };
-
-  const totalCapexCost =
-    electrolyserCAPEX +
-    powerPlantCAPEX +
-    batteryCAPEX +
-    additionalUpfrontCosts +
-    gridConnectionCAPEX;
 
   const {
     electrolyserOpexCost,
@@ -299,11 +348,6 @@ export default function WorkingData(props: Props) {
       "Electricity Purchase": electricityPurchaseOpexPerYear,
     },
   };
-
-  // Cost values for sales calculation
-  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
-  const totalLandCost =
-    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
 
   const { lch2, hydrogenProductionCost } = sales(
     totalCapexCost,
