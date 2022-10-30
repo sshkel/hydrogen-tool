@@ -5,7 +5,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
-  gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
+  basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
@@ -18,14 +18,21 @@ import {
 } from "../../scenario";
 
 describe("Model summary", () => {
-  let loadSolar: () => Promise<any[]>;
-  let loadWind: () => Promise<any[]>;
+  let loadNationalSolar: () => Promise<any[]>;
+  let loadNationalWind: () => Promise<any[]>;
+  let loadNSWSolar: () => Promise<any[]>;
+  let loadNSWWind: () => Promise<any[]>;
   beforeAll(() => {
     console.error = function () {};
-    loadSolar = async () =>
+    loadNationalSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
-    loadWind = async () =>
+    loadNationalWind = async () =>
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
+
+    loadNSWSolar = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
+    loadNSWWind = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
   });
 
   describe("Summary of Results", () => {
@@ -35,8 +42,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneSolarScenario.data}
           location={standaloneSolarScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -51,10 +58,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(31.39);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(26.97);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(46.31);
         expect(data["Electrolyser Capacity Factor"]).toEqual(38.89);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -76,8 +83,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneSolarWithBatteryScenario.data}
           location={standaloneSolarWithBatteryScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -92,10 +99,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(29.66);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(29.49);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(54.99);
         expect(data["Electrolyser Capacity Factor"]).toEqual(42.76);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(37457);
@@ -115,8 +122,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneWindScenario.data}
           location={standaloneWindScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -131,10 +138,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(38.68);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(15.11);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(76.87);
         expect(data["Electrolyser Capacity Factor"]).toEqual(44.63);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -156,8 +163,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={windWithPPAScenario.data}
           location={windWithPPAScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -172,10 +179,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(28.53);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(14.7);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(69.7);
         expect(data["Electrolyser Capacity Factor"]).toEqual(38.67);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -197,8 +204,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={hybridBatteryGridOversizeRatioScenario.data}
           location={hybridBatteryGridOversizeRatioScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -213,10 +220,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(32.52);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(17.51);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(83.6);
         expect(data["Electrolyser Capacity Factor"]).toEqual(48.22);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -237,8 +244,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={windWithBatteryAndPPAScenario.data}
           location={windWithBatteryAndPPAScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -253,10 +260,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(32.11);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(17.49);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(78.07);
         expect(data["Electrolyser Capacity Factor"]).toEqual(45.74);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -272,16 +279,14 @@ describe("Model summary", () => {
       }, TIMEOUT);
     });
 
-    it("calculates summary of results for solar with oxygen and electricity sales but not really", (done) => {
+    it("calculates summary of results for solar with basic configuration", (done) => {
       const wrapper = mount(
         <WorkingData
-          inputConfiguration="Advanced"
-          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
-          location={
-            gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
-          }
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          inputConfiguration={basicSolarScenario.inputConfiguration}
+          data={basicSolarScenario.data}
+          location={basicSolarScenario.location}
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
         />
       );
 
@@ -294,22 +299,22 @@ describe("Model summary", () => {
         expect(summaryTable).toHaveLength(1);
         const data = summaryTable.at(0).prop("data");
 
-        expect(data["Power Plant Capacity Factor"]).toEqual(31.39);
+        expect(data["Power Plant Capacity Factor"]).toEqual(22.23);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
-        ).toEqual(26.97);
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(14.86);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
-        ).toEqual(46.31);
-        expect(data["Electrolyser Capacity Factor"]).toEqual(38.89);
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
+        ).toEqual(42.67);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(29.29);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
-          34_066
+          3_333_000
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toEqual(7180);
-        expect(data["Hydrogen Output (t/yr)"]).toEqual(681);
-        expect(data["LCH2 ($/kg)"]).toEqual(4.46);
+        ).toEqual(462_102);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(100_000);
+        expect(data["LCH2 ($/kg)"]).toEqual(3.27);
 
         done();
       }, TIMEOUT);
@@ -321,8 +326,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneSolarWithStackDegradationScenario.data}
           location={standaloneSolarWithStackDegradationScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -337,10 +342,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(25.79);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(0.94);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(42.12);
         expect(data["Electrolyser Capacity Factor"]).toEqual(25.51);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -362,8 +367,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneHybridWithDegradationScenario.data}
           location={standaloneHybridWithDegradationScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -378,10 +383,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(27.74);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(30.74);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(85.2);
         expect(data["Electrolyser Capacity Factor"]).toEqual(61.06);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
@@ -403,8 +408,8 @@ describe("Model summary", () => {
           inputConfiguration="Advanced"
           data={standaloneWindWithBatteryAndDegradationScenario.data}
           location={standaloneWindWithBatteryAndDegradationScenario.location}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -419,10 +424,10 @@ describe("Model summary", () => {
 
         expect(data["Power Plant Capacity Factor"]).toEqual(36.76);
         expect(
-          data["Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)"]
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
         ).toEqual(23.76);
         expect(
-          data["Total Time Electrolyser is Operating (% of 8760 hrs/yr)"]
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(85.88);
         expect(data["Electrolyser Capacity Factor"]).toEqual(51.7);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(

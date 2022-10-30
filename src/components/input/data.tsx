@@ -255,7 +255,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   electrolyserPurchaseCost: {
     title: "Electrolyser System Purchase Cost",
-    adornmentLabel: "A$/kW",
+    adornmentLabel: "$/kW",
   },
   electrolyserCostReductionWithScale: {
     title: "Electrolyser Cost Reduction with Scale",
@@ -289,7 +289,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   waterSupplyCost: {
     title: "Water Consumption Cost",
-    adornmentLabel: "A$/kL",
+    adornmentLabel: "$/kL",
   },
   /******* Power Plant Parameters *******/
   // Power Plant Capacity
@@ -325,7 +325,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Power Plant Equipment Costs
   solarFarmBuildCost: {
     title: "Solar Farm Build Cost",
-    adornmentLabel: "A$/kW",
+    adornmentLabel: "$/kW",
   },
   solarReferenceCapacity: {
     title: "Reference Capacity of Solar Farm",
@@ -343,7 +343,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   windFarmBuildCost: {
     title: "Wind Farm Build Cost",
-    adornmentLabel: "A$/kW",
+    adornmentLabel: "$/kW",
   },
   windReferenceCapacity: {
     title: "Reference Capacity of Wind Farm",
@@ -382,27 +382,27 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Power Plant Operating Costs
   solarOpex: {
     title: "Solar Farm O&M Cost",
-    adornmentLabel: "A$/MW/yr",
+    adornmentLabel: "$/MW/yr",
   },
   windOpex: {
     title: "Wind Farm O&M Cost",
-    adornmentLabel: "A$/MW/yr",
+    adornmentLabel: "$/MW/yr",
   },
   // PPA Costs
   principalPPACost: {
     title: "Principal PPA Cost",
-    adornmentLabel: "A$/MWh",
+    adornmentLabel: "$/MWh",
     helperText: "Fixed price for electricity bought from the grid.",
   },
   // Grid Connection Costs
   gridConnectionCost: {
     title: "Grid Connection Costs",
-    adornmentLabel: "A$",
+    adornmentLabel: "$",
     helperText: "Capital cost for transmission connection",
   },
   additionalTransmissionCharges: {
     title: "Grid Usage Charges",
-    adornmentLabel: "A$/MWh",
+    adornmentLabel: "$/MWh",
     helperText:
       "Any additional charges for using grid services, e.g. Transmission Use of System (TUOS) Charges.",
   },
@@ -437,7 +437,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Battery System Equipment Costs
   batteryCosts: {
     title: "Cost of Battery",
-    adornmentLabel: "A$/kWh",
+    adornmentLabel: "$/kWh",
   },
   // Battery System Installation Costs
   batteryEpcCosts: {
@@ -454,7 +454,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Battery Operating Costs
   batteryOMCost: {
     title: "Battery O&M Costs",
-    adornmentLabel: "A$/MW/yr",
+    adornmentLabel: "$/MW/yr",
     helperText: "Fixed & Variable O&M",
   },
   batteryReplacementCost: {
@@ -467,13 +467,13 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // Additional Upfront/Operating Costs
   additionalUpfrontCosts: {
     title: "Additional Upfront Costs",
-    adornmentLabel: "A$",
+    adornmentLabel: "$",
     helperText:
       "Any other additional costs to include as a once off in the LCH2 calculation",
   },
   additionalAnnualCosts: {
     title: "Additional Annual Costs",
-    adornmentLabel: "A$/yr",
+    adornmentLabel: "$/yr",
     helperText:
       "Any other additional costs to include as an annual cost in the LCH2 calculation",
   },

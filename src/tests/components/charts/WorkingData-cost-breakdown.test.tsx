@@ -28,7 +28,7 @@ describe("Working Data calculations", () => {
         ...defaultInputData.data,
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10000, // kW
-        electrolyserPurchaseCost: 1000, // A$/kw
+        electrolyserPurchaseCost: 1000, // $/kw
         electrolyserCostReductionWithScale: 20, // %
         electrolyserReferenceFoldIncrease: 10,
       };
@@ -59,7 +59,7 @@ describe("Working Data calculations", () => {
         powerPlantType: "Solar",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
-        solarFarmBuildCost: 1200, // A$/kw
+        solarFarmBuildCost: 1200, // $/kw
         solarPVCostReductionWithScale: 20, // %
         solarReferenceFoldIncrease: 10,
       };
@@ -90,7 +90,7 @@ describe("Working Data calculations", () => {
         powerPlantType: "Wind",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
-        windFarmBuildCost: 1950, // A$/kw
+        windFarmBuildCost: 1950, // $/kw
         windCostReductionWithScale: 20, // %
         windReferenceFoldIncrease: 10,
       };
@@ -121,7 +121,7 @@ describe("Working Data calculations", () => {
         powerPlantType: "Wind",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
-        solarFarmBuildCost: 1200, // A$/kw
+        solarFarmBuildCost: 1200, // $/kw
         solarPVCostReductionWithScale: 20, // %
         solarReferenceFoldIncrease: 10,
       };
@@ -150,7 +150,7 @@ describe("Working Data calculations", () => {
         powerPlantType: "Solar",
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
-        windFarmBuildCost: 1950, // A$/kw
+        windFarmBuildCost: 1950, // $/kw
         windCostReductionWithScale: 20, // %
         windReferenceFoldIncrease: 10,
       };
@@ -179,12 +179,12 @@ describe("Working Data calculations", () => {
         powerPlantType: "Hybrid",
         solarNominalCapacity: 15, // MW
         solarReferenceCapacity: 1000, // kW
-        solarFarmBuildCost: 1200, // A$/kw
+        solarFarmBuildCost: 1200, // $/kw
         solarPVCostReductionWithScale: 20, // %
         solarReferenceFoldIncrease: 10,
         windNominalCapacity: 15, // MW
         windReferenceCapacity: 1000, // kW
-        windFarmBuildCost: 1950, // A$/kw
+        windFarmBuildCost: 1950, // $/kw
         windCostReductionWithScale: 20, // %
         windReferenceFoldIncrease: 10,
       };
@@ -214,7 +214,7 @@ describe("Working Data calculations", () => {
         ...defaultInputData.data,
         batteryRatedPower: 2, // MW
         batteryStorageDuration: 2, // hr
-        batteryCosts: 542, // A$/kWh
+        batteryCosts: 542, // $/kWh
       };
 
       const wrapper = shallow(
@@ -297,21 +297,21 @@ describe("Working Data calculations", () => {
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
-        electrolyserPurchaseCost: 10, // A$/kw
+        electrolyserPurchaseCost: 10, // $/kw
         electrolyserCostReductionWithScale: 10, // %
         electrolyserReferenceFoldIncrease: 0,
 
         // Solar CAPEX = 51000
         solarNominalCapacity: 10, // MW
         solarReferenceCapacity: 10, // kW
-        solarFarmBuildCost: 10, // A$/kw
+        solarFarmBuildCost: 10, // $/kw
         solarPVCostReductionWithScale: 20, // %
         solarReferenceFoldIncrease: 10,
 
         // Wind CAPEX = 60000
         windNominalCapacity: 10, // MW
         windReferenceCapacity: 10, // kW
-        windFarmBuildCost: 10, // A$/kw
+        windFarmBuildCost: 10, // $/kw
         windCostReductionWithScale: 5, // %
         windReferenceFoldIncrease: 2,
 
@@ -383,7 +383,7 @@ describe("Working Data calculations", () => {
         // Electrolyser CAPEX = 100000
         electrolyserNominalCapacity: 10, // MW
         electrolyserReferenceCapacity: 10, // kW
-        electrolyserPurchaseCost: 10, // A$/kw
+        electrolyserPurchaseCost: 10, // $/kw
         electrolyserCostReductionWithScale: 10, // %
         electrolyserReferenceFoldIncrease: 0,
 
@@ -420,14 +420,14 @@ describe("Working Data calculations", () => {
         // Solar CAPEX = 100000
         solarNominalCapacity: 10, // MW
         solarReferenceCapacity: 10, // kW
-        solarFarmBuildCost: 10, // A$/kw
+        solarFarmBuildCost: 10, // $/kw
         solarPVCostReductionWithScale: 10, // %
         solarReferenceFoldIncrease: 0,
 
         // Wind CAPEX = ignored
         windNominalCapacity: 20, // MW
         windReferenceCapacity: 10, // kW
-        windFarmBuildCost: 10, // A$/kw
+        windFarmBuildCost: 10, // $/kw
         windCostReductionWithScale: 10, // %
         windReferenceFoldIncrease: 0,
 
@@ -466,14 +466,14 @@ describe("Working Data calculations", () => {
         // Solar CAPEX = ignored
         solarNominalCapacity: 10, // MW
         solarReferenceCapacity: 10, // kW
-        solarFarmBuildCost: 10, // A$/kw
+        solarFarmBuildCost: 10, // $/kw
         solarPVCostReductionWithScale: 10, // %
         solarReferenceFoldIncrease: 0,
 
         // Wind CAPEX = 200000
         windNominalCapacity: 20, // MW
         windReferenceCapacity: 10, // kW
-        windFarmBuildCost: 10, // A$/kw
+        windFarmBuildCost: 10, // $/kw
         windCostReductionWithScale: 10, // %
         windReferenceFoldIncrease: 0,
 
@@ -512,14 +512,14 @@ describe("Working Data calculations", () => {
         // Solar CAPEX = ignored
         solarNominalCapacity: 10, // MW
         solarReferenceCapacity: 10, // kW
-        solarFarmBuildCost: 10, // A$/kw
+        solarFarmBuildCost: 10, // $/kw
         solarPVCostReductionWithScale: 10, // %
         solarReferenceFoldIncrease: 0,
 
         // Wind CAPEX = 200000
         windNominalCapacity: 20, // MW
         windReferenceCapacity: 10, // kW
-        windFarmBuildCost: 10, // A$/kw
+        windFarmBuildCost: 10, // $/kw
         windCostReductionWithScale: 10, // %
         windReferenceFoldIncrease: 0,
 
@@ -556,7 +556,7 @@ describe("Working Data calculations", () => {
         // Battery CAPEX = 100000
         batteryRatedPower: 5, // MW
         batteryStorageDuration: 2, // hr
-        batteryCosts: 10, // A$/kWh
+        batteryCosts: 10, // $/kWh
 
         batteryEpcCosts: 10,
         batteryLandProcurementCosts: 10,

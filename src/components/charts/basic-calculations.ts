@@ -1,10 +1,10 @@
-import { HOURS_PER_YEAR } from "../../model/consts";
 import { Inputs, PowerPlantType } from "../../types";
 
 export function backCalculateInputFields(
   synthesisedData: Inputs,
   projectScale: number,
-  electrolyserCf: number
+  electrolyserCf: number,
+  hoursPerYear: number
 ): Inputs {
   const recalculatedInputs = { ...synthesisedData };
   const {
@@ -16,7 +16,8 @@ export function backCalculateInputFields(
   const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
     projectScale,
     electrolyserEfficiency / 100,
-    electrolyserCf
+    electrolyserCf,
+    hoursPerYear
   );
   recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;
 
@@ -41,14 +42,15 @@ export function backCalculateInputFields(
 export function backCalculateElectrolyserCapacity(
   projectScale: number,
   electrolyserEfficiency: number, // value should be a decimal
-  electrolyserCf: number
+  electrolyserCf: number,
+  hoursPerYear: number // in theory should always be 8760, but we have leap years
 ): number {
   return (
     projectScale *
     1000 *
     33.33 *
     (1 / electrolyserEfficiency) *
-    (1 / HOURS_PER_YEAR) *
+    (1 / hoursPerYear) *
     (1 / electrolyserCf)
   );
 }

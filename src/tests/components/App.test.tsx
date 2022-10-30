@@ -52,8 +52,8 @@ describe("App", () => {
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
-      "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)",
-      "Total Time Electrolyser is Operating (% of 8760 hrs/yr)",
+      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)",
+      "Total Time Electrolyser is Operating (% of hrs/yr)",
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
@@ -120,8 +120,8 @@ describe("App", () => {
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
-      "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)",
-      "Total Time Electrolyser is Operating (% of 8760 hrs/yr)",
+      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)",
+      "Total Time Electrolyser is Operating (% of hrs/yr)",
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",

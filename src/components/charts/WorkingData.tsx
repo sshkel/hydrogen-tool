@@ -20,6 +20,7 @@ import {
   ELECTROLYSER_CF,
   ENERGY_INPUT,
   ENERGY_OUTPUT,
+  HOURS_PER_LEAR_YEAR,
   HOURS_PER_YEAR,
   HYDROGEN_OUTPUT,
   POWER_PLANT_CF,
@@ -56,6 +57,7 @@ export interface Props {
 interface DownloadedData {
   solarData: any[];
   windData: any[];
+  hoursPerYear: number;
 }
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
@@ -84,6 +86,7 @@ export default function WorkingData(props: Props) {
   const [state, setState] = useState<DownloadedData>({
     solarData: [],
     windData: [],
+    hoursPerYear: HOURS_PER_YEAR,
   });
 
   // TODO: Error handling if we can't load solar and wind data
@@ -91,14 +94,24 @@ export default function WorkingData(props: Props) {
   useEffect(() => {
     const { loadSolar, loadWind } = props;
     Promise.all([loadSolar(), loadWind()]).then(([solar, wind]) => {
-      if (solar.length !== 8784 && solar.length !== 8760) {
+      if (
+        solar.length !== HOURS_PER_LEAR_YEAR &&
+        solar.length !== HOURS_PER_YEAR
+      ) {
         console.error("Solar data is of unexpected length", solar.length);
       }
 
-      if (wind.length !== 8784 && wind.length !== 8760) {
-        console.error("Wind data is not 8784 rows in length", wind.length);
+      if (
+        wind.length !== HOURS_PER_LEAR_YEAR &&
+        wind.length !== HOURS_PER_YEAR
+      ) {
+        console.error("Wind data is of unexpected length", wind.length);
       }
-      setState({ solarData: solar, windData: wind });
+      setState({
+        solarData: solar,
+        windData: wind,
+        hoursPerYear: solar.length,
+      });
     });
   }, [props]);
 
@@ -225,7 +238,8 @@ export default function WorkingData(props: Props) {
     inputs = backCalculateInputFields(
       inputs,
       projectScale,
-      mean(summary[ELECTROLYSER_CF])
+      mean(summary[ELECTROLYSER_CF]),
+      state.hoursPerYear
     );
   }
 
@@ -453,9 +467,10 @@ export default function WorkingData(props: Props) {
       mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
     ),
 
-    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
-      roundToTwoDP(mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))),
-    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": roundToTwoDP(
+    "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
+      mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))
+    ),
+    "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
       mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
     ),
 

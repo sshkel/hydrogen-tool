@@ -8,9 +8,10 @@ interface Props {
   data: number[];
 }
 export default function DurationCurve(props: Props) {
+  const hoursPerYear = props.data.length;
   const data = {
-    labels: Array.from(Array(props.data.length).keys()).map((num) =>
-      ((num / 8760) * 100).toFixed(0)
+    labels: Array.from(Array(hoursPerYear).keys()).map((num) =>
+      ((num / hoursPerYear) * 100).toFixed(0)
     ),
     datasets: [
       {
