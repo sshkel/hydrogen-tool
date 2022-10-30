@@ -191,7 +191,27 @@ export default function WorkingData(props: Props) {
 
   let summary: ProjectModelSummary =
     model.calculateHydrogenModel(projectTimeline);
+
+  // OPEX values
+  const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
+  const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
+  const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
+  const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
+    (hours) => hours * HOURS_PER_YEAR
+  );
+
+  const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
+
   let hourlyOperations = model.getHourlyOperations();
+
+  const durationCurves = {
+    "Power Plant Duration Curve": hourlyOperations.Generator_CF,
+    "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
+  };
+  const hourlyCapFactors = {
+    Electrolyser: hourlyOperations.Electrolyser_CF,
+    "Power Plant": hourlyOperations.Generator_CF,
+  };
 
   if (props.inputConfiguration === "Basic") {
     inputs = backCalculateInputFields(
@@ -216,22 +236,29 @@ export default function WorkingData(props: Props) {
     totalIndirectCosts,
   } = generateCapexValues(inputs);
 
+  const capitalCostBreakdown = {
+    "Electrolyser System": electrolyserCAPEX,
+    "Power Plant": powerPlantCAPEX,
+    Battery: batteryCAPEX,
+    "Grid Connection": gridConnectionCAPEX,
+    "Additional Upfront Costs": additionalUpfrontCosts,
+    "Indirect Costs": totalIndirectCosts,
+  };
+  const indirectCostBreakdown = {
+    "Electrolyser EPC": electrolyserEpcCost,
+    "Electrolyser Land": electrolyserLandCost,
+    "Power Plant EPC": powerPlantEpcCost,
+    "Power Plant Land": powerPlantLandCost,
+    "Battery EPC": batteryEpcCost,
+    "Battery Land": batteryLandCost,
+  };
+
   const totalCapexCost =
     electrolyserCAPEX +
     powerPlantCAPEX +
     batteryCAPEX +
     additionalUpfrontCosts +
     gridConnectionCAPEX;
-
-  // OPEX values
-  const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
-  const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
-  const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
-  const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
-    (hours) => hours * HOURS_PER_YEAR
-  );
-
-  const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
 
   const {
     electrolyserOpexCost,
@@ -257,6 +284,21 @@ export default function WorkingData(props: Props) {
     electricityConsumedByBattery,
     h2Produced
   );
+
+  const operatingCosts: {
+    projectTimeline: number;
+    costs: { [key: string]: number[] };
+  } = {
+    projectTimeline: projectTimeline,
+    costs: {
+      "Electrolyser OPEX": electrolyserOpexPerYear,
+      "Power Plant OPEX": powerPlantOpexPerYear,
+      "Battery OPEX": batteryOpexPerYear,
+      "Additional Annual Costs": additionalOpexPerYear,
+      "Water Costs": waterOpexPerYear,
+      "Electricity Purchase": electricityPurchaseOpexPerYear,
+    },
+  };
 
   // Cost values for sales calculation
   const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
@@ -305,6 +347,20 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
+  const lch2BreakdownData: { [key: string]: number } = {
+    "Power Plant CAPEX": lcPowerPlantCAPEX,
+    "Electrolyser CAPEX": lcElectrolyserCAPEX,
+    "Indirect Costs": lcIndirectCosts,
+    "Power Plant OPEX": lcPowerPlantOPEX,
+    "Electrolyser O&M": lcElectrolyserOPEX,
+    "Electricity Purchase": lcElectricityPurchase,
+    "Stack Replacement": lcStackReplacement,
+    "Water Cost": lcWater,
+    "Battery Cost": lcBattery,
+    "Grid Connection Cost": lcGridConnection,
+    "Additional Costs": lcAdditionalCosts,
+  };
+
   const summaryTableData: { [key: string]: number } = {
     "Power Plant Capacity Factor": roundToTwoDP(
       mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
@@ -329,63 +385,6 @@ export default function WorkingData(props: Props) {
 
     "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
     "LCH2 ($/kg)": roundToTwoDP(lch2),
-  };
-
-  const lch2BreakdownData: { [key: string]: number } = {
-    "Power Plant CAPEX": lcPowerPlantCAPEX,
-    "Electrolyser CAPEX": lcElectrolyserCAPEX,
-    "Indirect Costs": lcIndirectCosts,
-    "Power Plant OPEX": lcPowerPlantOPEX,
-    "Electrolyser O&M": lcElectrolyserOPEX,
-    "Electricity Purchase": lcElectricityPurchase,
-    "Stack Replacement": lcStackReplacement,
-    "Water Cost": lcWater,
-    "Battery Cost": lcBattery,
-    "Grid Connection Cost": lcGridConnection,
-    "Additional Costs": lcAdditionalCosts,
-  };
-
-  const durationCurves = {
-    "Power Plant Duration Curve": hourlyOperations.Generator_CF,
-    "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
-  };
-
-  const capitalCostBreakdown = {
-    "Electrolyser System": electrolyserCAPEX,
-    "Power Plant": powerPlantCAPEX,
-    Battery: batteryCAPEX,
-    "Grid Connection": gridConnectionCAPEX,
-    "Additional Upfront Costs": additionalUpfrontCosts,
-    "Indirect Costs": totalIndirectCosts,
-  };
-
-  const indirectCostBreakdown = {
-    "Electrolyser EPC": electrolyserEpcCost,
-    "Electrolyser Land": electrolyserLandCost,
-    "Power Plant EPC": powerPlantEpcCost,
-    "Power Plant Land": powerPlantLandCost,
-    "Battery EPC": batteryEpcCost,
-    "Battery Land": batteryLandCost,
-  };
-
-  const operatingCosts: {
-    projectTimeline: number;
-    costs: { [key: string]: number[] };
-  } = {
-    projectTimeline: projectTimeline,
-    costs: {
-      "Electrolyser OPEX": electrolyserOpexPerYear,
-      "Power Plant OPEX": powerPlantOpexPerYear,
-      "Battery OPEX": batteryOpexPerYear,
-      "Additional Annual Costs": additionalOpexPerYear,
-      "Water Costs": waterOpexPerYear,
-      "Electricity Purchase": electricityPurchaseOpexPerYear,
-    },
-  };
-
-  const hourlyCapFactors = {
-    Electrolyser: hourlyOperations.Electrolyser_CF,
-    "Power Plant": hourlyOperations.Generator_CF,
   };
 
   return (
