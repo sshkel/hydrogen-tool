@@ -19,7 +19,7 @@ import {
   calculateOverloadingModel,
   getTabulatedOutput,
 } from "./ModelUtils";
-import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
+import { SUMMARY_KEYS } from "./consts";
 
 export type AmmoniaData = {
   // HYDROGEN COPY PASTA
@@ -68,7 +68,6 @@ export type AmmoniaData = {
 export class AmmoniaModel {
   // consts
   readonly MWtokW = 1000; // kW/MW
-  readonly hoursPerYear = HOURS_PER_YEAR;
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089;
   readonly secAtNominalLoad = 33.33; // kWh/kg
@@ -93,6 +92,8 @@ export class AmmoniaModel {
   solarData: CsvRow[];
   windData: CsvRow[];
   specCons: number;
+  // calculated based on number of CSV rows
+  hoursPerYear: number;
   // ammonia
   ammonia_plant_power_demand: number;
   air_separation_unit_capacity: number;
@@ -115,6 +116,7 @@ export class AmmoniaModel {
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
+    this.hoursPerYear = solarData.length;
 
     // Stack replacement logic for degradation
     this.stackReplacementYears = [];
@@ -304,7 +306,8 @@ export class AmmoniaModel {
     this.elecCapacity = backCalculateElectrolyserCapacity(
       this.parameters.projectScale,
       this.elecEff,
-      mean(hourlyOperation.Electrolyser_CF)
+      mean(hourlyOperation.Electrolyser_CF),
+      this.hoursPerYear
     );
     this.totalNominalPowerPlantCapacity = backCalculatePowerPlantCapacity(
       this.parameters.powerPlantOversizeRatio,

@@ -300,7 +300,7 @@ export const windWithPPAScenario: {
   inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
-  location: "Wagga Wagga, NSW",
+  location: "East Riverina Murray Region",
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",
@@ -515,77 +515,26 @@ export const windWithBatteryAndPPAScenario: {
   },
 };
 
-export const gridSolarWithRetailAndAdditionalRevenueStreamsScenario: {
+export const basicSolarScenario: {
   location: string;
   inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
-  location: "Fitzroy, QLD",
-  inputConfiguration: "Advanced",
+  location: "Z11",
+  inputConfiguration: "Basic",
   data: {
-    powerPlantConfiguration: "Grid Connected",
+    powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
-    powerPlantType: "Solar",
-    powerCapacityConfiguration: "Nominal Capacity",
-    powerPlantOversizeRatio: 1,
+    powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
-    electrolyserNominalCapacity: 10,
-    solarNominalCapacity: 15,
-    windNominalCapacity: 0,
-    batteryRatedPower: 0,
-    batteryStorageDuration: 0,
-    secAtNominalLoad: 50,
-    electrolyserEfficiency: 100,
-    electrolyserMaximumLoad: 100,
-    electrolyserMinimumLoad: 10,
-    maximumLoadWhenOverloading: 0,
-    timeBetweenOverloading: 0,
-    stackReplacementType: "Cumulative Hours",
-    stackLifetime: 60000,
-    stackDegradation: 0,
-    maximumDegradationBeforeReplacement: 0,
-    waterRequirementOfElectrolyser: 10,
-    electrolyserReferenceCapacity: 1000,
     electrolyserPurchaseCost: 1000,
-    electrolyserCostReductionWithScale: 0,
-    electrolyserReferenceFoldIncrease: 0,
-    electrolyserEpcCosts: 0,
-    electrolyserLandProcurementCosts: 0,
-    electrolyserOMCost: 2.5,
-    electrolyserStackReplacement: 40,
+    projectScale: 100,
+    electrolyserEfficiency: 100,
     waterSupplyCost: 5,
-    solarDegradation: 0,
-    windDegradation: 0,
-    solarReferenceCapacity: 1000,
     solarFarmBuildCost: 1000,
-    solarPVCostReductionWithScale: 0,
-    solarReferenceFoldIncrease: 0,
-    solarEpcCosts: 0,
-    solarLandProcurementCosts: 0,
-    solarOpex: 17000,
-    windReferenceCapacity: 1000,
-    windFarmBuildCost: 1000,
-    windCostReductionWithScale: 0,
-    windReferenceFoldIncrease: 0,
-    windEpcCosts: 0,
-    windLandProcurementCosts: 0,
-    windOpex: 25000,
-    gridConnectionCost: 0,
-    additionalTransmissionCharges: 0,
-    principalPPACost: 0,
-    batteryEfficiency: 90,
-    batteryMinCharge: 0,
-    batteryLifetime: 0,
-    batteryCosts: 0,
-    batteryEpcCosts: 0,
-    batteryLandProcurementCosts: 0,
-    batteryOMCost: 0,
-    batteryReplacementCost: 100,
-    additionalUpfrontCosts: 0,
-    additionalAnnualCosts: 0,
+    windFarmBuildCost: 2000,
     projectTimeline: 20,
     discountRate: 7,
-    inflationRate: 2.5,
   },
 };
 
@@ -668,7 +617,7 @@ export const standaloneHybridWithDegradationScenario: {
   inputConfiguration: InputConfiguration;
   data: UserInputFields;
 } = {
-  location: "Cooma Monaro, NSW",
+  location: "South East NSW",
   inputConfiguration: "Advanced",
   data: {
     powerPlantConfiguration: "Standalone",

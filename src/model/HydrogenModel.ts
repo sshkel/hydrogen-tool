@@ -19,7 +19,7 @@ import {
   calculateOverloadingModel,
   getTabulatedOutput,
 } from "./ModelUtils";
-import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
+import { SUMMARY_KEYS } from "./consts";
 
 export type HydrogenData = {
   inputConfiguration: InputConfiguration;
@@ -53,7 +53,6 @@ export type HydrogenData = {
 export class HydrogenModel {
   // consts
   readonly MWtokW = 1000; // kW/MW
-  readonly hoursPerYear = HOURS_PER_YEAR;
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089; // kg/m3
   readonly secAtNominalLoad = 33.33; // kWh/kg
@@ -77,6 +76,8 @@ export class HydrogenModel {
   // data from renewables
   solarData: CsvRow[];
   windData: CsvRow[];
+  // calculated based on number of CSV rows
+  hoursPerYear: number;
   specCons: number;
 
   // parameters to expose to working data
@@ -93,6 +94,7 @@ export class HydrogenModel {
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
+    this.hoursPerYear = solarData.length;
 
     // Stack replacement logic for degradation
     this.stackReplacementYears = [];
@@ -249,7 +251,8 @@ export class HydrogenModel {
     this.elecCapacity = backCalculateElectrolyserCapacity(
       this.parameters.projectScale,
       this.elecEff,
-      mean(hourlyOperation.Electrolyser_CF)
+      mean(hourlyOperation.Electrolyser_CF),
+      this.hoursPerYear
     );
     this.totalNominalPowerPlantCapacity = backCalculatePowerPlantCapacity(
       this.parameters.powerPlantOversizeRatio,

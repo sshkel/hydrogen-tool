@@ -5,7 +5,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
-  gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
+  basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
@@ -18,14 +18,21 @@ import {
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
-  let loadSolar: () => Promise<any[]>;
-  let loadWind: () => Promise<any[]>;
+  let loadNationalSolar: () => Promise<any[]>;
+  let loadNationalWind: () => Promise<any[]>;
+  let loadNSWSolar: () => Promise<any[]>;
+  let loadNSWWind: () => Promise<any[]>;
   beforeAll(() => {
     console.error = function () {};
-    loadSolar = async () =>
+    loadNationalSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
-    loadWind = async () =>
+    loadNationalWind = async () =>
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
+
+    loadNSWSolar = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
+    loadNSWWind = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
   });
 
   describe("Operating Costs", () => {
@@ -35,8 +42,8 @@ describe("Working Data calculations", () => {
           data={standaloneSolarScenario.data}
           location={standaloneSolarScenario.location}
           inputConfiguration={standaloneSolarScenario.inputConfiguration}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
         />
       );
 
@@ -118,8 +125,8 @@ describe("Working Data calculations", () => {
         inputConfiguration={
           standaloneSolarWithBatteryScenario.inputConfiguration
         }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -207,8 +214,8 @@ describe("Working Data calculations", () => {
         data={standaloneWindScenario.data}
         location={standaloneWindScenario.location}
         inputConfiguration={standaloneWindScenario.inputConfiguration}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -287,8 +294,8 @@ describe("Working Data calculations", () => {
         data={windWithPPAScenario.data}
         location={windWithPPAScenario.location}
         inputConfiguration={windWithPPAScenario.inputConfiguration}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -369,8 +376,8 @@ describe("Working Data calculations", () => {
         inputConfiguration={
           hybridBatteryGridOversizeRatioScenario.inputConfiguration
         }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -454,8 +461,8 @@ describe("Working Data calculations", () => {
         data={windWithBatteryAndPPAScenario.data}
         location={windWithBatteryAndPPAScenario.location}
         inputConfiguration={windWithBatteryAndPPAScenario.inputConfiguration}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -531,33 +538,29 @@ describe("Working Data calculations", () => {
     }, TIMEOUT);
   });
 
-  it("calculates opex for solar with oxygen and electricity sales", (done) => {
+  it("calculates opex for solar with basic configuration", (done) => {
     const wrapper = mount(
       <WorkingData
-        data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
-        location={
-          gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
-        }
-        inputConfiguration={
-          gridSolarWithRetailAndAdditionalRevenueStreamsScenario.inputConfiguration
-        }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        data={basicSolarScenario.data}
+        location={basicSolarScenario.location}
+        inputConfiguration={basicSolarScenario.inputConfiguration}
+        loadSolar={loadNSWSolar}
+        loadWind={loadNSWWind}
       />
     );
 
     const electrolyserOpex = [
-      256_250.0, 262_656.25, 269_222.66, 275_953.22, 282_852.05, 289_923.35,
-      297_171.44, 304_600.72, 312_215.74, 320_021.14, 328_021.66, 336_222.21,
-      344_627.76, 353_243.46, 6_155_267.21, 371_126.41, 380_404.57, 389_914.68,
-      399_662.55, 409_654.11,
+      23914275, 24512131.87, 25124935.17, 25753058.55, 26396885.01, 27056807.14,
+      27733227.32, 28426558, 29137221.95, 29865652.5, 30612293.81, 31377601.16,
+      32162041.19, 32966092.22, 33790244.52, 34635000.64, 35500875.65,
+      36388397.54, 37298107.48, 38230560.17,
     ];
 
     const powerPlantOpex = [
-      261_375.0, 267_909.38, 274_607.11, 281_472.29, 288_509.09, 295_721.82,
-      303_114.87, 310_692.74, 318_460.06, 326_421.56, 334_582.1, 342_946.65,
-      351_520.32, 360_308.32, 369_316.03, 378_548.93, 388_012.66, 397_712.97,
-      407_655.8, 417_847.19,
+      33859850, 34706346.25, 35574004.91, 36463355.03, 37374938.9, 38309312.38,
+      39267045.19, 40248721.32, 41254939.35, 42286312.83, 43343470.65,
+      44427057.42, 45537733.86, 46676177.2, 47843081.63, 49039158.67,
+      50265137.64, 51521766.08, 52809810.23, 54130055.49,
     ];
 
     const batteryOpex = new Array(20).fill(0);
@@ -565,10 +568,10 @@ describe("Working Data calculations", () => {
     const additionalAnnualCosts = new Array(20).fill(0);
 
     const waterCosts = [
-      34_917.72, 35_790.67, 36_685.43, 37_602.57, 38_542.63, 39_506.2,
-      40_493.85, 41_506.2, 42_543.86, 43_607.45, 44_697.64, 45_815.08,
-      46_960.46, 48_134.47, 49_337.83, 50_571.27, 51_835.56, 53_131.45,
-      54_459.73, 55_821.23,
+      7687500, 7879687.5, 8076679.69, 8278596.68, 8485561.6, 8697700.64,
+      8915143.15, 9138021.73, 9366472.27, 9600634.08, 9840649.93, 10086666.18,
+      10338832.84, 10597303.66, 10862236.25, 11133792.15, 11412136.96,
+      11697440.38, 11989876.39, 12289623.3,
     ];
 
     const electricityPurchase = new Array(20).fill(0);
@@ -623,8 +626,8 @@ describe("Working Data calculations", () => {
         inputConfiguration={
           standaloneSolarWithStackDegradationScenario.inputConfiguration
         }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -705,8 +708,8 @@ describe("Working Data calculations", () => {
         inputConfiguration={
           standaloneHybridWithDegradationScenario.inputConfiguration
         }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 
@@ -787,8 +790,8 @@ describe("Working Data calculations", () => {
         inputConfiguration={
           standaloneWindWithBatteryAndDegradationScenario.inputConfiguration
         }
-        loadSolar={loadSolar}
-        loadWind={loadWind}
+        loadSolar={loadNationalSolar}
+        loadWind={loadNationalWind}
       />
     );
 

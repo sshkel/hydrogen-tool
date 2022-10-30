@@ -7,7 +7,7 @@ import WorkingData, {
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
-  gridSolarWithRetailAndAdditionalRevenueStreamsScenario,
+  basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
@@ -20,14 +20,21 @@ import {
 } from "../../scenario";
 
 describe("Working Data calculations", () => {
-  let loadSolar: () => Promise<any[]>;
-  let loadWind: () => Promise<any[]>;
+  let loadNationalSolar: () => Promise<any[]>;
+  let loadNationalWind: () => Promise<any[]>;
+  let loadNSWSolar: () => Promise<any[]>;
+  let loadNSWWind: () => Promise<any[]>;
   beforeAll(() => {
     console.error = function () {};
-    loadSolar = async () =>
+    loadNationalSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
-    loadWind = async () =>
+    loadNationalWind = async () =>
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
+
+    loadNSWSolar = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
+    loadNSWWind = async () =>
+      await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
   });
 
   describe("LCH2", () => {
@@ -36,8 +43,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneSolarScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneSolarScenario.location}
         />
       );
@@ -69,8 +76,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneSolarWithBatteryScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneSolarWithBatteryScenario.location}
         />
       );
@@ -102,8 +109,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneWindScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneWindScenario.location}
         />
       );
@@ -133,8 +140,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={windWithPPAScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={windWithPPAScenario.location}
         />
       );
@@ -167,8 +174,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={hybridBatteryGridOversizeRatioScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={hybridBatteryGridOversizeRatioScenario.location}
         />
       );
@@ -201,8 +208,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={windWithBatteryAndPPAScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={windWithBatteryAndPPAScenario.location}
         />
       );
@@ -230,20 +237,20 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for solar with oxygen and electricity sales", (done) => {
+    it("calculates lch2 for solar with basic configuration", (done) => {
       const wrapper = mount(
         <WorkingData
-          inputConfiguration="Advanced"
-          data={gridSolarWithRetailAndAdditionalRevenueStreamsScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={
-            gridSolarWithRetailAndAdditionalRevenueStreamsScenario.location
-          }
+          inputConfiguration={basicSolarScenario.inputConfiguration}
+          data={basicSolarScenario.data}
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+          location={basicSolarScenario.location}
         />
       );
 
-      const costBreakdown = [2.08, 1.39, 0, 0.37, 0.37, 0, 0.2, 0.05, 0, 0, 0];
+      const costBreakdown = [
+        1.051, 0.881, 0.695, 0.33, 0.233, 0, 0, 0.075, 0, 0, 0, 0,
+      ];
 
       // Sleep to wait for CSV to load and set state
       setTimeout(() => {
@@ -269,8 +276,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneSolarWithStackDegradationScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneSolarWithStackDegradationScenario.location}
         />
       );
@@ -301,8 +308,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneHybridWithDegradationScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneHybridWithDegradationScenario.location}
         />
       );
@@ -334,8 +341,8 @@ describe("Working Data calculations", () => {
         <WorkingData
           inputConfiguration="Advanced"
           data={standaloneWindWithBatteryAndDegradationScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
+          loadSolar={loadNationalSolar}
+          loadWind={loadNationalWind}
           location={standaloneWindWithBatteryAndDegradationScenario.location}
         />
       );

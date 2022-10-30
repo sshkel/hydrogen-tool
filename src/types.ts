@@ -41,7 +41,7 @@ export interface UserInputFields {
   additionalUpfrontCosts?: number;
   additionalAnnualCosts?: number;
   batteryEpcCosts?: number;
-  batteryEfficiency: number;
+  batteryEfficiency?: number;
   batteryMinCharge?: number;
   batteryLandProcurementCosts?: number;
   batteryRatedPower?: number;
@@ -64,7 +64,7 @@ export interface UserInputFields {
   solarReferenceCapacity?: number;
   windReferenceCapacity?: number;
   electrolyserReferenceCapacity?: number;
-  electrolyserPurchaseCost?: number;
+  electrolyserPurchaseCost: number;
   solarFarmBuildCost?: number;
   windFarmBuildCost?: number;
   solarEpcCosts?: number;
