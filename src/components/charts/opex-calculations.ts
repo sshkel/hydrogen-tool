@@ -1,50 +1,44 @@
-import { Inputs, isGridConnected, isPPAAgreement } from "../../types";
+import {
+  PowerPlantConfiguration,
+  PowerSupplyOption,
+  StackReplacementType,
+  isGridConnected,
+  isPPAAgreement,
+} from "../../types";
 import { fillYearsArray, isSolar, isWind, projectYears } from "../../utils";
 import { roundToNearestThousand, roundToTwoDP } from "./cost-functions";
 
-export function generateOpexValues(
-  data: Inputs,
-  electrolyserCAPEX: number,
-  batteryCAPEX: number,
+export function getOpex(
+  powerPlantConfiguration: PowerPlantConfiguration,
+  powerSupplyOption: PowerSupplyOption,
+  stackReplacementType: StackReplacementType,
+  stackDegradation: number,
+  maximumDegradationBeforeReplacement: number,
+  projectTimeline: number,
   totalOperatingHoursPerYear: number[],
+  stackLifetime: number,
+  electrolyserStackReplacement: number,
+  electrolyserCAPEX: number,
+  electrolyserOMCost: number,
+  powerPlantType: string,
+  solarOpex: number,
+  solarNominalCapacity: number,
+  windOpex: number,
+  windNominalCapacity: number,
+  batteryOMCost: number,
+  batteryRatedPower: number,
+  batteryReplacementCost: number,
+  batteryCAPEX: number,
+  batteryLifetime: number,
+  additionalTransmissionCharges: number,
   electricityConsumed: number[],
   electricityConsumedByBattery: number[],
-  h2Produced: number[]
+  principalPPACost: number,
+  waterSupplyCost: number,
+  waterRequirementOfElectrolyser: number,
+  h2Produced: number[],
+  additionalAnnualCosts: number
 ) {
-  const {
-    projectTimeline,
-    powerPlantType,
-    powerPlantConfiguration,
-    powerSupplyOption,
-
-    principalPPACost = 0,
-    additionalTransmissionCharges = 0,
-
-    electrolyserOMCost,
-    electrolyserStackReplacement,
-    waterSupplyCost,
-    waterRequirementOfElectrolyser,
-
-    solarOpex = 0,
-    solarNominalCapacity,
-    windOpex = 0,
-    windNominalCapacity,
-
-    additionalAnnualCosts,
-
-    batteryOMCost = 0,
-    batteryRatedPower = 0,
-    batteryLifetime = 0,
-    batteryReplacementCost = 0,
-
-    stackReplacementType,
-    stackDegradation,
-    maximumDegradationBeforeReplacement,
-    stackLifetime,
-
-    inflationRate,
-  } = data;
-
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
   const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
 
@@ -76,13 +70,6 @@ export function generateOpexValues(
       projectTimeline
     );
 
-  const electrolyserOpexPerYear = getOpexPerYearInflationWithAdditionalCost(
-    electrolyserOpexCost,
-    inflationRate,
-    projectTimeline,
-    stackReplacementCostsOverProjectLife
-  );
-
   const solarOpexCost = isSolar(powerPlantType)
     ? roundToNearestThousand(solarOpex * solarNominalCapacity)
     : 0;
@@ -91,17 +78,6 @@ export function generateOpexValues(
     : 0;
 
   const powerPlantOpexCost = solarOpexCost + windOpexCost;
-  const powerPlantOpexPerYear = getOpexPerYearInflationConstant(
-    powerPlantOpexCost,
-    inflationRate,
-    projectTimeline
-  );
-
-  const additionalOpexPerYear = getOpexPerYearInflationConstant(
-    additionalAnnualCosts,
-    inflationRate,
-    projectTimeline
-  );
 
   // Battery costs
   const batteryOpexCost: number = roundToNearestThousand(
@@ -119,16 +95,6 @@ export function generateOpexValues(
       shouldAddBatteryReplacementCost,
       projectTimeline
     );
-
-  const batteryOpexPerYear =
-    batteryRatedPower > 0
-      ? getOpexPerYearInflationWithAdditionalCost(
-          batteryOpexCost,
-          inflationRate,
-          projectTimeline,
-          batteryReplacementCostsOverProjectLife
-        )
-      : Array(projectTimeline).fill(0);
 
   const gridConnectionOpexPerYear: number[] = gridConnected
     ? fillYearsArray(
@@ -148,20 +114,10 @@ export function generateOpexValues(
     (i) =>
       totalPPACost * (electricityConsumed[i] + electricityConsumedByBattery[i])
   );
-  const electricityPurchaseOpexPerYear = getOpexPerYearInflation(
-    electricityOpexCost,
-    inflationRate,
-    projectTimeline
-  );
 
   const waterOpexCost: number[] = fillYearsArray(
     projectTimeline,
     (i) => waterSupplyCost * waterRequirementOfElectrolyser * h2Produced[i]
-  );
-  const waterOpexPerYear = getOpexPerYearInflation(
-    waterOpexCost,
-    inflationRate,
-    projectTimeline
   );
 
   const totalOpex = fillYearsArray(
@@ -177,26 +133,78 @@ export function generateOpexValues(
       stackReplacementCostsOverProjectLife[i] +
       batteryReplacementCostsOverProjectLife[i]
   );
-
   return {
+    electricityOpexCost,
     electrolyserOpexCost,
-    electrolyserOpexPerYear,
     powerPlantOpexCost,
-    powerPlantOpexPerYear,
-
     batteryOpexCost,
-    batteryOpexPerYear,
     waterOpexCost,
-    waterOpexPerYear,
-
-    electricityPurchaseOpexPerYear,
-
     stackReplacementCostsOverProjectLife,
     batteryReplacementCostsOverProjectLife,
-
-    additionalOpexPerYear,
     gridConnectionOpexPerYear,
     totalOpex,
+  };
+}
+
+export function calculatePerYearOpex(
+  electrolyserOpexCost: number,
+  inflationRate: number,
+  projectTimeline: number,
+  stackReplacementCostsOverProjectLife: number[],
+  electricityOpexCost: number[],
+  powerPlantOpexCost: number,
+  additionalAnnualCosts: number,
+  batteryRatedPower: number,
+  batteryOpexCost: number,
+  batteryReplacementCostsOverProjectLife: number[],
+  waterOpexCost: number[]
+) {
+  const electrolyserOpexPerYear = getOpexPerYearInflationWithAdditionalCost(
+    electrolyserOpexCost,
+    inflationRate,
+    projectTimeline,
+    stackReplacementCostsOverProjectLife
+  );
+
+  const electricityPurchaseOpexPerYear = getOpexPerYearInflation(
+    electricityOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+
+  const powerPlantOpexPerYear = getOpexPerYearInflationConstant(
+    powerPlantOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+
+  const additionalOpexPerYear = getOpexPerYearInflationConstant(
+    additionalAnnualCosts,
+    inflationRate,
+    projectTimeline
+  );
+  const batteryOpexPerYear =
+    batteryRatedPower > 0
+      ? getOpexPerYearInflationWithAdditionalCost(
+          batteryOpexCost,
+          inflationRate,
+          projectTimeline,
+          batteryReplacementCostsOverProjectLife
+        )
+      : Array(projectTimeline).fill(0);
+
+  const waterOpexPerYear = getOpexPerYearInflation(
+    waterOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+  return {
+    electrolyserOpexPerYear,
+    powerPlantOpexPerYear,
+    batteryOpexPerYear,
+    waterOpexPerYear,
+    electricityPurchaseOpexPerYear,
+    additionalOpexPerYear,
   };
 }
 

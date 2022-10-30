@@ -1,6 +1,6 @@
 import {
   cumulativeStackReplacementYears,
-  generateOpexValues,
+  getOpex,
   getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
@@ -134,14 +134,67 @@ describe("Opex calculations", () => {
     };
 
     const valuesForProjectLife = Array(10).fill(1);
-    const { gridConnectionOpexPerYear } = generateOpexValues(
-      data,
+    const {
+      projectTimeline,
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      principalPPACost = 0,
+      additionalTransmissionCharges = 0,
+
+      electrolyserOMCost,
+      electrolyserStackReplacement,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
+
+      solarOpex = 0,
+      solarNominalCapacity,
+      windOpex = 0,
+      windNominalCapacity,
+
+      additionalAnnualCosts,
+
+      batteryOMCost = 0,
+      batteryRatedPower = 0,
+      batteryLifetime = 0,
+      batteryReplacementCost = 0,
+
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      stackLifetime,
+    } = data;
+    const { gridConnectionOpexPerYear } = getOpex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      projectTimeline,
+      valuesForProjectLife,
+      stackLifetime,
+      electrolyserStackReplacement,
       0,
+      electrolyserOMCost,
+      powerPlantType,
+      solarOpex,
+      solarNominalCapacity,
+      windOpex,
+      windNominalCapacity,
+      batteryOMCost,
+      batteryRatedPower,
+      batteryReplacementCost,
       0,
+      batteryLifetime,
+      additionalTransmissionCharges,
       valuesForProjectLife,
       valuesForProjectLife,
+      principalPPACost,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
       valuesForProjectLife,
-      valuesForProjectLife
+      additionalAnnualCosts
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(20));
   });
@@ -156,14 +209,67 @@ describe("Opex calculations", () => {
     };
 
     const valuesForProjectLife = Array(10).fill(1);
-    const { gridConnectionOpexPerYear } = generateOpexValues(
-      data,
+    const {
+      projectTimeline,
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      principalPPACost = 0,
+      additionalTransmissionCharges = 0,
+
+      electrolyserOMCost,
+      electrolyserStackReplacement,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
+
+      solarOpex = 0,
+      solarNominalCapacity,
+      windOpex = 0,
+      windNominalCapacity,
+
+      additionalAnnualCosts,
+
+      batteryOMCost = 0,
+      batteryRatedPower = 0,
+      batteryLifetime = 0,
+      batteryReplacementCost = 0,
+
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      stackLifetime,
+    } = data;
+    const { gridConnectionOpexPerYear } = getOpex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      projectTimeline,
+      valuesForProjectLife,
+      stackLifetime,
+      electrolyserStackReplacement,
       0,
+      electrolyserOMCost,
+      powerPlantType,
+      solarOpex,
+      solarNominalCapacity,
+      windOpex,
+      windNominalCapacity,
+      batteryOMCost,
+      batteryRatedPower,
+      batteryReplacementCost,
       0,
+      batteryLifetime,
+      additionalTransmissionCharges,
       valuesForProjectLife,
       valuesForProjectLife,
+      principalPPACost,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
       valuesForProjectLife,
-      valuesForProjectLife
+      additionalAnnualCosts
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
   });
@@ -177,14 +283,67 @@ describe("Opex calculations", () => {
     };
 
     const valuesForProjectLife = Array(10).fill(1);
-    const { gridConnectionOpexPerYear } = generateOpexValues(
-      data,
+    const {
+      projectTimeline,
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      principalPPACost = 0,
+      additionalTransmissionCharges = 0,
+
+      electrolyserOMCost,
+      electrolyserStackReplacement,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
+
+      solarOpex = 0,
+      solarNominalCapacity,
+      windOpex = 0,
+      windNominalCapacity,
+
+      additionalAnnualCosts,
+
+      batteryOMCost = 0,
+      batteryRatedPower = 0,
+      batteryLifetime = 0,
+      batteryReplacementCost = 0,
+
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      stackLifetime,
+    } = data;
+    const { gridConnectionOpexPerYear } = getOpex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      projectTimeline,
+      valuesForProjectLife,
+      stackLifetime,
+      electrolyserStackReplacement,
       0,
+      electrolyserOMCost,
+      powerPlantType,
+      solarOpex,
+      solarNominalCapacity,
+      windOpex,
+      windNominalCapacity,
+      batteryOMCost,
+      batteryRatedPower,
+      batteryReplacementCost,
       0,
+      batteryLifetime,
+      additionalTransmissionCharges,
       valuesForProjectLife,
       valuesForProjectLife,
+      principalPPACost,
+      waterSupplyCost,
+      waterRequirementOfElectrolyser,
       valuesForProjectLife,
-      valuesForProjectLife
+      additionalAnnualCosts
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
   });

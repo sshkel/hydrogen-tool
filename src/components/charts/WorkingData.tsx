@@ -43,7 +43,7 @@ import {
 import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
-import { generateOpexValues } from "./opex-calculations";
+import { calculatePerYearOpex, getOpex } from "./opex-calculations";
 
 export interface Props {
   location?: string;
@@ -138,6 +138,12 @@ export default function WorkingData(props: Props) {
     powerCapacityConfiguration,
     batteryCosts = 0,
     gridConnectionCost = 0,
+    principalPPACost = 0,
+    additionalTransmissionCharges = 0,
+    solarOpex = 0,
+    windOpex = 0,
+    batteryOMCost = 0,
+    batteryReplacementCost = 0,
   } = inputs;
 
   // These values can change if Oversize Ratio configuration is used
@@ -276,7 +282,14 @@ export default function WorkingData(props: Props) {
     inputs.batteryEpcCosts,
     inputs.batteryLandProcurementCosts
   );
-
+  const indirectCostBreakdown = {
+    "Electrolyser EPC": electrolyserEpcCost,
+    "Electrolyser Land": electrolyserLandCost,
+    "Power Plant EPC": powerPlantEpcCost,
+    "Power Plant Land": powerPlantLandCost,
+    "Battery EPC": batteryEpcCost,
+    "Battery Land": batteryLandCost,
+  };
   const totalCapexCost =
     electrolyserCAPEX +
     powerPlantCAPEX +
@@ -300,38 +313,68 @@ export default function WorkingData(props: Props) {
     "Additional Upfront Costs": additionalUpfrontCosts,
     "Indirect Costs": totalIndirectCosts,
   };
-  const indirectCostBreakdown = {
-    "Electrolyser EPC": electrolyserEpcCost,
-    "Electrolyser Land": electrolyserLandCost,
-    "Power Plant EPC": powerPlantEpcCost,
-    "Power Plant Land": powerPlantLandCost,
-    "Battery EPC": batteryEpcCost,
-    "Battery Land": batteryLandCost,
-  };
 
   const {
+    electricityOpexCost,
     electrolyserOpexCost,
-    electrolyserOpexPerYear,
     powerPlantOpexCost,
-    powerPlantOpexPerYear,
     batteryOpexCost,
-    batteryOpexPerYear,
     waterOpexCost,
-    waterOpexPerYear,
-    electricityPurchaseOpexPerYear,
     stackReplacementCostsOverProjectLife,
     batteryReplacementCostsOverProjectLife,
-    additionalOpexPerYear,
     gridConnectionOpexPerYear,
     totalOpex,
-  } = generateOpexValues(
-    inputs,
-    electrolyserCAPEX,
-    batteryCAPEX,
+  } = getOpex(
+    inputs.powerPlantConfiguration,
+    inputs.powerSupplyOption,
+    stackReplacementType,
+    stackDegradation,
+    maximumDegradationBeforeReplacement,
+    projectTimeline,
     totalOperatingHours,
+    stackLifetime,
+    inputs.electrolyserStackReplacement,
+    electrolyserCAPEX,
+    inputs.electrolyserOMCost,
+    inputs.powerPlantType,
+    solarOpex,
+    inputs.solarNominalCapacity,
+    windOpex,
+    inputs.windNominalCapacity,
+    batteryOMCost,
+    batteryRatedPower,
+    batteryReplacementCost,
+    batteryCAPEX,
+    batteryLifetime,
+    additionalTransmissionCharges,
     electricityConsumed,
     electricityConsumedByBattery,
-    h2Produced
+    principalPPACost,
+    inputs.waterSupplyCost,
+    inputs.waterRequirementOfElectrolyser,
+    h2Produced,
+    inputs.additionalAnnualCosts
+  );
+
+  const {
+    electrolyserOpexPerYear,
+    powerPlantOpexPerYear,
+    batteryOpexPerYear,
+    waterOpexPerYear,
+    electricityPurchaseOpexPerYear,
+    additionalOpexPerYear,
+  } = calculatePerYearOpex(
+    electrolyserOpexCost,
+    inputs.inflationRate,
+    projectTimeline,
+    stackReplacementCostsOverProjectLife,
+    electricityOpexCost,
+    powerPlantOpexCost,
+    inputs.additionalAnnualCosts,
+    batteryRatedPower,
+    batteryOpexCost,
+    batteryReplacementCostsOverProjectLife,
+    waterOpexCost
   );
 
   const operatingCosts: {
