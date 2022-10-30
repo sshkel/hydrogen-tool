@@ -204,8 +204,6 @@ export default function WorkingData(props: Props) {
     );
   }
 
-  const { solarNominalCapacity, windNominalCapacity } = inputs;
-
   // CAPEX values
   const {
     electrolyserCAPEX,
@@ -310,8 +308,6 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
-  const powerplantCapacity = solarNominalCapacity + windNominalCapacity;
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -320,7 +316,7 @@ export default function WorkingData(props: Props) {
           {KeyInputsPane(
             location,
             inputs.electrolyserNominalCapacity,
-            powerplantCapacity
+            model.totalNominalPowerPlantCapacity
           )}
         </Grid>
         <Grid item>
