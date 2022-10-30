@@ -1,36 +1,35 @@
-import { Inputs, isGridConnected, isPPAAgreement } from "../../types";
+import {
+  PowerPlantConfiguration,
+  PowerSupplyOption,
+  isGridConnected,
+  isPPAAgreement,
+} from "../../types";
 import { fillYearsArray } from "../../utils";
 
-export function generateLCValues(
-  data: Inputs,
+export function generateLCBreakdown(
+  powerPlantConfiguration: PowerPlantConfiguration,
+  powerSupplyOption: PowerSupplyOption,
   powerPlantCAPEX: number,
+  hydrogenProductionCost: number,
   electrolyserCAPEX: number,
-  batteryCAPEX: number,
-  gridConnectionCAPEX: number,
   totalIndirectCosts: number,
-
+  projectTimeline: number,
   powerPlantOpexCost: number,
   electrolyserOpexCost: number,
+  additionalAnnualCosts: number,
+  discountRate: number,
   batteryOpexCost: number,
-  waterOpexCost: number[],
-  gridConnectionOpexPerYear: number[],
-
   batteryReplacementCostsOverProjectLife: number[],
+  batteryCAPEX: number,
+  waterOpexCost: number[],
+  additionalUpfrontCosts: number,
   stackReplacementCostsOverProjectLife: number[],
   electricityConsumed: number[],
   electricityConsumedByBattery: number[],
-
-  hydrogenProductionCost: number
+  principalPPACost: number,
+  gridConnectionOpexPerYear: number[],
+  gridConnectionCAPEX: number
 ) {
-  const {
-    powerPlantConfiguration,
-    powerSupplyOption,
-    discountRate,
-    projectTimeline,
-    additionalUpfrontCosts,
-    additionalAnnualCosts,
-    principalPPACost = 0,
-  } = data;
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
   const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
 
@@ -85,7 +84,6 @@ export function generateLCValues(
     gridConnected || ppaAgreement
       ? calculateLevelisedCost(gridConnectionOpexPerYear, gridConnectionCAPEX)
       : 0;
-
   return {
     lcPowerPlantCAPEX,
     lcElectrolyserCAPEX,

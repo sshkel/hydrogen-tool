@@ -43,7 +43,7 @@ import {
 } from "./basic-calculations";
 import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
-import { generateLCValues } from "./lch2-calculations";
+import { generateLCBreakdown } from "./lch2-calculations";
 import { calculatePerYearOpex, getOpex } from "./opex-calculations";
 
 export interface Props {
@@ -429,23 +429,29 @@ export default function WorkingData(props: Props) {
     lcBattery,
     lcGridConnection,
     lcAdditionalCosts,
-  } = generateLCValues(
-    inputs,
+  } = generateLCBreakdown(
+    inputs.powerPlantConfiguration,
+    inputs.powerSupplyOption,
     powerPlantCAPEX,
+    hydrogenProductionCost,
     electrolyserCAPEX,
-    batteryCAPEX,
-    gridConnectionCAPEX,
     totalIndirectCosts,
+    projectTimeline,
     powerPlantOpexCost,
     electrolyserOpexCost,
+    inputs.additionalAnnualCosts,
+    discountRate,
     batteryOpexCost,
-    waterOpexCost,
-    gridConnectionOpexPerYear,
     batteryReplacementCostsOverProjectLife,
+    batteryCAPEX,
+    waterOpexCost,
+    additionalUpfrontCosts,
     stackReplacementCostsOverProjectLife,
     electricityConsumed,
     electricityConsumedByBattery,
-    hydrogenProductionCost
+    principalPPACost,
+    gridConnectionOpexPerYear,
+    gridConnectionCAPEX
   );
 
   const lch2BreakdownData: { [key: string]: number } = {
