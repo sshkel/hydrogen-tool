@@ -362,6 +362,15 @@ export default function WorkingData(props: Props) {
     "Indirect Costs": totalIndirectCosts,
   };
 
+  const indirectCostBreakdown = {
+    "Electrolyser EPC": electrolyserEpcCost,
+    "Electrolyser Land": electrolyserLandCost,
+    "Power Plant EPC": powerPlantEpcCost,
+    "Power Plant Land": powerPlantLandCost,
+    "Battery EPC": batteryEpcCost,
+    "Battery Land": batteryLandCost,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -386,17 +395,16 @@ export default function WorkingData(props: Props) {
               </Grid>
               <Grid container item>
                 <Grid item xs={6}>
-                  {CaptitalCostBreakdownPane(capitalCostBreakdown)}
+                  <DoughnutPane
+                    title="Capital Cost Breakdown"
+                    items={capitalCostBreakdown}
+                  />
                 </Grid>
                 <Grid item xs={6}>
-                  {IndirectCostPane(
-                    electrolyserEpcCost,
-                    electrolyserLandCost,
-                    powerPlantEpcCost,
-                    powerPlantLandCost,
-                    batteryEpcCost,
-                    batteryLandCost
-                  )}
+                  <DoughnutPane
+                    title="Indirect Cost Breakdown"
+                    items={indirectCostBreakdown}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -436,7 +444,7 @@ export default function WorkingData(props: Props) {
 function DurationCurves(durationCurves: { [key: string]: number[] }) {
   return Object.keys(durationCurves).map((key: string) => {
     return (
-      <Grid item xs={6}>
+      <Grid item xs={6} key={key}>
         <StyledCard>
           <CardHeader
             title={key}
@@ -673,33 +681,6 @@ export function DoughnutPane(data: DoughnutPaneData) {
         />
       </CardContent>
     </StyledCard>
-  );
-}
-
-function IndirectCostPane(
-  electrolyserEpcCost: number,
-  electrolyserLandCost: number,
-  powerPlantEpcCost: number,
-  powerPlantLandCost: number,
-  batteryEpcCost: number,
-  batteryLandCost: number
-) {
-  const data = {
-    "Electrolyser EPC": electrolyserEpcCost,
-    "Electrolyser Land": electrolyserLandCost,
-    "Power Plant EPC": powerPlantEpcCost,
-    "Power Plant Land": powerPlantLandCost,
-    "Battery EPC": batteryEpcCost,
-    "Battery Land": batteryLandCost,
-  };
-  return <DoughnutPane title="Indirect Cost Breakdown" items={data} />;
-}
-
-function CaptitalCostBreakdownPane(capitalCostBreakdown: {
-  [key: string]: number;
-}) {
-  return (
-    <DoughnutPane title="Capital Cost Breakdown" items={capitalCostBreakdown} />
   );
 }
 
