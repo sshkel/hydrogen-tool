@@ -308,6 +308,32 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
+  const summaryTable: { [key: string]: number } = {
+    "Power Plant Capacity Factor": roundToTwoDP(
+      mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
+    ),
+
+    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
+      roundToTwoDP(mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))),
+    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": roundToTwoDP(
+      mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
+    ),
+
+    "Electrolyser Capacity Factor": roundToTwoDP(
+      mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
+    ),
+
+    "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      mean(electricityConsumed)
+    ),
+
+    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      roundToNearestInteger(mean(electricityProduced)),
+
+    "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
+    "LCH2 ($/kg)": roundToTwoDP(lch2),
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -328,13 +354,7 @@ export default function WorkingData(props: Props) {
               className="summary and cost breakdown"
             >
               <Grid item xs>
-                {SummaryOfResultsPane(
-                  summary,
-                  electricityConsumed,
-                  electricityProduced,
-                  h2Produced,
-                  lch2
-                )}
+                {SummaryOfResultsPane(summaryTable)}
               </Grid>
               <Grid container item>
                 <Grid item xs={6}>
@@ -783,38 +803,7 @@ function Lch2BreakdownPane(
   );
 }
 
-export function SummaryOfResultsPane(
-  summary: ProjectModelSummary,
-  electricityConsumed: number[],
-  electricityProduced: number[],
-  h2Produced: number[],
-  lch2: number
-) {
-  const summaryDict: { [key: string]: number } = {
-    "Power Plant Capacity Factor": roundToTwoDP(
-      mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
-    ),
-
-    "Time Electrolyser is at its Maximum Capacity (% of 8760/hrs)":
-      roundToTwoDP(mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))),
-    "Total Time Electrolyser is Operating (% of 8760 hrs/yr)": roundToTwoDP(
-      mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
-    ),
-
-    "Electrolyser Capacity Factor": roundToTwoDP(
-      mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
-    ),
-
-    "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
-      mean(electricityConsumed)
-    ),
-
-    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-      roundToNearestInteger(mean(electricityProduced)),
-
-    "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
-    "LCH2 ($/kg)": roundToTwoDP(lch2),
-  };
+export function SummaryOfResultsPane(summaryTable: { [key: string]: number }) {
   return (
     <StyledCard>
       <CardHeader
@@ -830,7 +819,7 @@ export function SummaryOfResultsPane(
           paddingTop: 0,
         }}
       >
-        <SummaryOfResultsTable title="Summary of Results" data={summaryDict} />
+        <SummaryOfResultsTable title="Summary of Results" data={summaryTable} />
       </CardContent>
     </StyledCard>
   );
