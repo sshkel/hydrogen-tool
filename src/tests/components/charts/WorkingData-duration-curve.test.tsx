@@ -3,8 +3,8 @@ import { mount } from "enzyme";
 import DurationCurve from "../../../components/charts/DurationCurve";
 import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
-import hybridBatteryRetailElectrolyserDurationCurve from "../../resources/hybrid-battery-retail-electrolyser-duration-curve.json";
-import hybridBatteryRetailGeneratorDurationCurve from "../../resources/hybrid-battery-retail-generator-duration-curve.json";
+import hybridBatteryOversizeRatioElectrolyserDurationCurve from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
+import hybridBatteryOversizeRatioGeneratorDurationCurve from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
 import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
 import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
 import { readLocalCsv } from "../../resources/loader";
@@ -19,7 +19,7 @@ import windGeneratorDurationCurve from "../../resources/wind-generator-duration-
 import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electrolyser-duration-curve.json";
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
-  hybridBatteryGridSurplusRetailScenario,
+  hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -214,10 +214,10 @@ describe("Working Data calculations", () => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
-          data={hybridBatteryGridSurplusRetailScenario.data}
+          data={hybridBatteryGridOversizeRatioScenario.data}
           loadSolar={loadSolar}
           loadWind={loadWind}
-          location={hybridBatteryGridSurplusRetailScenario.location}
+          location={hybridBatteryGridOversizeRatioScenario.location}
         />
       );
 
@@ -233,7 +233,7 @@ describe("Working Data calculations", () => {
         (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
             expect(val).toEqual(
-              hybridBatteryRetailGeneratorDurationCurve[index]
+              hybridBatteryOversizeRatioGeneratorDurationCurve[index]
             );
           }
         );
@@ -243,12 +243,13 @@ describe("Working Data calculations", () => {
           .filterWhere(
             (e) => e.prop("title") === "Electrolyser Duration Curve"
           );
+
         expect(electrolyserDurationCurve).toHaveLength(1);
         expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
             expect(val).toEqual(
-              hybridBatteryRetailElectrolyserDurationCurve[index]
+              hybridBatteryOversizeRatioElectrolyserDurationCurve[index]
             );
           }
         );
@@ -347,12 +348,12 @@ describe("Working Data calculations", () => {
 
 //
 // writeLocalFile(
-//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/solar-generator-duration-curve.json",
+//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/hybrid-battery-oversize-ratio-generator-duration-curve.json",
 //   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
 // );
 
 //
 // writeLocalFile(
-//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/solar-electrolyser-duration-curve.json",
+//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json",
 //   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
 // );

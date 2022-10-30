@@ -369,7 +369,7 @@ export const windWithPPAScenario: {
   },
 };
 
-export const hybridBatteryGridSurplusRetailScenario: {
+export const hybridBatteryGridOversizeRatioScenario: {
   location: string;
   inputConfiguration: InputConfiguration;
   data: UserInputFields;
@@ -378,14 +378,12 @@ export const hybridBatteryGridSurplusRetailScenario: {
   inputConfiguration: "Advanced",
   data: {
     powerPlantType: "Hybrid",
-    powerPlantOversizeRatio: 1,
-    solarToWindPercentage: 100,
+    powerPlantOversizeRatio: 1.5,
+    solarToWindPercentage: 200 / 3,
     powerPlantConfiguration: "Grid Connected",
     powerSupplyOption: "Self Build",
-    powerCapacityConfiguration: "Nominal Capacity",
+    powerCapacityConfiguration: "Oversize Ratio",
     electrolyserNominalCapacity: 10,
-    solarNominalCapacity: 10,
-    windNominalCapacity: 5,
     batteryRatedPower: 5,
     batteryStorageDuration: 4,
     secAtNominalLoad: 50,
