@@ -353,6 +353,15 @@ export default function WorkingData(props: Props) {
     "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
   };
 
+  const capitalCostBreakdown = {
+    "Electrolyser System": electrolyserCAPEX,
+    "Power Plant": powerPlantCAPEX,
+    Battery: batteryCAPEX,
+    "Grid Connection": gridConnectionCAPEX,
+    "Additional Upfront Costs": additionalUpfrontCosts,
+    "Indirect Costs": totalIndirectCosts,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -377,14 +386,7 @@ export default function WorkingData(props: Props) {
               </Grid>
               <Grid container item>
                 <Grid item xs={6}>
-                  {CaptitalCostBreakdownPane(
-                    electrolyserCAPEX,
-                    powerPlantCAPEX,
-                    batteryCAPEX,
-                    gridConnectionCAPEX,
-                    additionalUpfrontCosts,
-                    totalIndirectCosts
-                  )}
+                  {CaptitalCostBreakdownPane(capitalCostBreakdown)}
                 </Grid>
                 <Grid item xs={6}>
                   {IndirectCostPane(
@@ -693,23 +695,12 @@ function IndirectCostPane(
   return <DoughnutPane title="Indirect Cost Breakdown" items={data} />;
 }
 
-function CaptitalCostBreakdownPane(
-  electrolyserCAPEX: number,
-  powerPlantCAPEX: number,
-  batteryCAPEX: number,
-  gridConnectionCAPEX: number,
-  additionalUpfrontCosts: number,
-  totalIndirectCosts: number
-) {
-  const data = {
-    "Electrolyser System": electrolyserCAPEX,
-    "Power Plant": powerPlantCAPEX,
-    Battery: batteryCAPEX,
-    "Grid Connection": gridConnectionCAPEX,
-    "Additional Upfront Costs": additionalUpfrontCosts,
-    "Indirect Costs": totalIndirectCosts,
-  };
-  return <DoughnutPane title="Capital Cost Breakdown" items={data} />;
+function CaptitalCostBreakdownPane(capitalCostBreakdown: {
+  [key: string]: number;
+}) {
+  return (
+    <DoughnutPane title="Capital Cost Breakdown" items={capitalCostBreakdown} />
+  );
 }
 
 type WaterfallPaneData = {
