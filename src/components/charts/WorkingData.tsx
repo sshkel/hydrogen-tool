@@ -14,10 +14,7 @@ import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
-import {
-  ModelHourlyOperation,
-  ProjectModelSummary,
-} from "../../model/ModelTypes";
+import { ProjectModelSummary } from "../../model/ModelTypes";
 import {
   BATTERY_OUTPUT,
   ELECTROLYSER_CF,
@@ -44,7 +41,7 @@ import {
   backCalculateInputFields,
   backCalculateSolarAndWindCapacity,
 } from "./basic-calculations";
-import { generateCapexValues } from "./capex-calculations";
+import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCValues } from "./lch2-calculations";
 import { generateOpexValues } from "./opex-calculations";
@@ -152,6 +149,8 @@ export default function WorkingData(props: Props) {
     electrolyserEfficiency = 0,
     solarToWindPercentage,
     powerCapacityConfiguration,
+    batteryCosts = 0,
+    gridConnectionCost = 0,
   } = inputs;
 
   // These values can change if Oversize Ratio configuration is used
@@ -207,7 +206,27 @@ export default function WorkingData(props: Props) {
 
   let summary: ProjectModelSummary =
     model.calculateHydrogenModel(projectTimeline);
+
+  // OPEX values
+  const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
+  const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
+  const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
+  const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
+    (hours) => hours * HOURS_PER_YEAR
+  );
+
+  const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
+
   let hourlyOperations = model.getHourlyOperations();
+
+  const durationCurves = {
+    "Power Plant Duration Curve": hourlyOperations.Generator_CF,
+    "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
+  };
+  const hourlyCapFactors = {
+    Electrolyser: hourlyOperations.Electrolyser_CF,
+    "Power Plant": hourlyOperations.Generator_CF,
+  };
 
   if (props.inputConfiguration === "Basic") {
     inputs = backCalculateInputFields(
@@ -218,37 +237,91 @@ export default function WorkingData(props: Props) {
     );
   }
 
-  // CAPEX values
   const {
     electrolyserCAPEX,
-    powerPlantCAPEX,
+    solarCAPEX,
+    windCAPEX,
     batteryCAPEX,
+    powerPlantCAPEX,
     gridConnectionCAPEX,
+  } = getCapex(
+    inputs.powerPlantConfiguration,
+    inputs.powerSupplyOption,
+    inputs.electrolyserNominalCapacity,
+    inputs.electrolyserReferenceCapacity,
+    inputs.electrolyserPurchaseCost,
+    inputs.electrolyserCostReductionWithScale,
+    inputs.electrolyserReferenceFoldIncrease,
+    inputs.powerPlantType,
+    inputs.solarNominalCapacity,
+    inputs.solarReferenceCapacity,
+    inputs.solarFarmBuildCost,
+    inputs.solarPVCostReductionWithScale,
+    inputs.solarReferenceFoldIncrease,
+    inputs.windNominalCapacity,
+    inputs.windReferenceCapacity,
+    inputs.windFarmBuildCost,
+    inputs.windCostReductionWithScale,
+    inputs.windReferenceFoldIncrease,
+    batteryRatedPower,
+    batteryStorageDuration,
+    batteryCosts,
+    gridConnectionCost
+  );
+
+  const {
     electrolyserEpcCost,
     electrolyserLandCost,
     powerPlantEpcCost,
     powerPlantLandCost,
     batteryEpcCost,
     batteryLandCost,
-    totalIndirectCosts,
-  } = generateCapexValues(inputs);
+  } = getEpcCosts(
+    electrolyserCAPEX,
+    inputs.electrolyserEpcCosts,
+    inputs.electrolyserLandProcurementCosts,
+    solarCAPEX,
+    inputs.solarEpcCosts,
+    inputs.solarLandProcurementCosts,
+    windCAPEX,
+    inputs.windEpcCosts,
+    inputs.windLandProcurementCosts,
+    batteryCAPEX,
+    inputs.batteryEpcCosts,
+    inputs.batteryLandProcurementCosts
+  );
 
   const totalCapexCost =
     electrolyserCAPEX +
     powerPlantCAPEX +
     batteryCAPEX +
     additionalUpfrontCosts +
-    gridConnectionCAPEX;
+    gridConnectionCAPEX; // Cost values for sales calculation
+  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+  const totalLandCost =
+    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+  const totalIndirectCosts =
+    electrolyserEpcCost +
+    electrolyserLandCost +
+    powerPlantEpcCost +
+    powerPlantLandCost;
 
-  // OPEX values
-  const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
-  const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
-  const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
-  const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
-    (hours) => hours * state.hoursPerYear
-  );
-
-  const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
+  const capitalCostBreakdown = {
+    "Electrolyser System": electrolyserCAPEX,
+    "Power Plant": powerPlantCAPEX,
+    Battery: batteryCAPEX,
+    "Grid Connection": gridConnectionCAPEX,
+    "Additional Upfront Costs": additionalUpfrontCosts,
+    "Indirect Costs": totalIndirectCosts,
+  };
+  const indirectCostBreakdown = {
+    "Electrolyser EPC": electrolyserEpcCost,
+    "Electrolyser Land": electrolyserLandCost,
+    "Power Plant EPC": powerPlantEpcCost,
+    "Power Plant Land": powerPlantLandCost,
+    "Battery EPC": batteryEpcCost,
+    "Battery Land": batteryLandCost,
+  };
 
   const {
     electrolyserOpexCost,
@@ -275,10 +348,20 @@ export default function WorkingData(props: Props) {
     h2Produced
   );
 
-  // Cost values for sales calculation
-  const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
-  const totalLandCost =
-    electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+  const operatingCosts: {
+    projectTimeline: number;
+    costs: { [key: string]: number[] };
+  } = {
+    projectTimeline: projectTimeline,
+    costs: {
+      "Electrolyser OPEX": electrolyserOpexPerYear,
+      "Power Plant OPEX": powerPlantOpexPerYear,
+      "Battery OPEX": batteryOpexPerYear,
+      "Additional Annual Costs": additionalOpexPerYear,
+      "Water Costs": waterOpexPerYear,
+      "Electricity Purchase": electricityPurchaseOpexPerYear,
+    },
+  };
 
   const { lch2, hydrogenProductionCost } = sales(
     totalCapexCost,
@@ -322,6 +405,47 @@ export default function WorkingData(props: Props) {
     hydrogenProductionCost
   );
 
+  const lch2BreakdownData: { [key: string]: number } = {
+    "Power Plant CAPEX": lcPowerPlantCAPEX,
+    "Electrolyser CAPEX": lcElectrolyserCAPEX,
+    "Indirect Costs": lcIndirectCosts,
+    "Power Plant OPEX": lcPowerPlantOPEX,
+    "Electrolyser O&M": lcElectrolyserOPEX,
+    "Electricity Purchase": lcElectricityPurchase,
+    "Stack Replacement": lcStackReplacement,
+    "Water Cost": lcWater,
+    "Battery Cost": lcBattery,
+    "Grid Connection Cost": lcGridConnection,
+    "Additional Costs": lcAdditionalCosts,
+  };
+
+  const summaryTableData: { [key: string]: number } = {
+    "Power Plant Capacity Factor": roundToTwoDP(
+      mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
+    ),
+
+    "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
+      mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))
+    ),
+    "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
+      mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
+    ),
+
+    "Electrolyser Capacity Factor": roundToTwoDP(
+      mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
+    ),
+
+    "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      mean(electricityConsumed)
+    ),
+
+    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      roundToNearestInteger(mean(electricityProduced)),
+
+    "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
+    "LCH2 ($/kg)": roundToTwoDP(lch2),
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -342,34 +466,20 @@ export default function WorkingData(props: Props) {
               className="summary and cost breakdown"
             >
               <Grid item xs>
-                {SummaryOfResultsPane(
-                  summary,
-                  electricityConsumed,
-                  electricityProduced,
-                  h2Produced,
-                  lch2
-                )}
+                {SummaryOfResultsPane(summaryTableData)}
               </Grid>
               <Grid container item>
                 <Grid item xs={6}>
-                  {CaptitalCostBreakdownPane(
-                    electrolyserCAPEX,
-                    powerPlantCAPEX,
-                    batteryCAPEX,
-                    gridConnectionCAPEX,
-                    additionalUpfrontCosts,
-                    totalIndirectCosts
-                  )}
+                  <DoughnutPane
+                    title="Capital Cost Breakdown"
+                    items={capitalCostBreakdown}
+                  />
                 </Grid>
                 <Grid item xs={6}>
-                  {IndirectCostPane(
-                    electrolyserEpcCost,
-                    electrolyserLandCost,
-                    powerPlantEpcCost,
-                    powerPlantLandCost,
-                    batteryEpcCost,
-                    batteryLandCost
-                  )}
+                  <DoughnutPane
+                    title="Indirect Cost Breakdown"
+                    items={indirectCostBreakdown}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -382,85 +492,47 @@ export default function WorkingData(props: Props) {
                 justifyContent={"space-between"}
               >
                 <Grid container item className="duration curves">
-                  <Grid item xs={6}>
-                    <StyledCard>
-                      <CardHeader
-                        title="Power Plant Duration Curve"
-                        titleTypographyProps={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-                        }}
-                      />
-                      <CardContent
-                        sx={{
-                          paddingTop: 0,
-                        }}
-                      >
-                        <DurationCurve
-                          title="Generator Duration Curve"
-                          data={hourlyOperations.Generator_CF}
-                        />
-                      </CardContent>
-                    </StyledCard>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StyledCard>
-                      <CardHeader
-                        title="Electrolyser Duration Curve"
-                        titleTypographyProps={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-                        }}
-                      />
-                      <CardContent
-                        sx={{
-                          paddingTop: 0,
-                        }}
-                      >
-                        <DurationCurve
-                          title="Electrolyser Duration Curve"
-                          data={hourlyOperations.Electrolyser_CF}
-                        />
-                      </CardContent>
-                    </StyledCard>
-                  </Grid>
+                  {DurationCurves(durationCurves)}
                 </Grid>
-                <Grid item>
-                  {Lch2BreakdownPane(
-                    lcPowerPlantCAPEX,
-                    lcElectrolyserCAPEX,
-                    lcIndirectCosts,
-                    lcPowerPlantOPEX,
-                    lcElectrolyserOPEX,
-                    lcElectricityPurchase,
-                    lcStackReplacement,
-                    lcWater,
-                    lcBattery,
-                    lcGridConnection,
-                    lcAdditionalCosts
-                  )}
-                </Grid>
+                <Grid item>{Lch2BreakdownPane(lch2BreakdownData)}</Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
-          {OperatingCostsPane(
-            projectTimeline,
-            electrolyserOpexPerYear,
-            powerPlantOpexPerYear,
-            batteryOpexPerYear,
-            additionalOpexPerYear,
-            waterOpexPerYear,
-            electricityPurchaseOpexPerYear
-          )}
-        </Grid>
-        <Grid item>{HourlyCapacityFactorsPane(hourlyOperations)}</Grid>
+        <Grid item>{OperatingCostsPane(operatingCosts)}</Grid>
+        <Grid item>{HourlyCapacityFactorsPane(hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
   );
 }
-function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
+
+function DurationCurves(durationCurves: { [key: string]: number[] }) {
+  return Object.keys(durationCurves).map((key: string) => {
+    return (
+      <Grid item xs={6} key={key}>
+        <StyledCard>
+          <CardHeader
+            title={key}
+            titleTypographyProps={{
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          />
+          <CardContent
+            sx={{
+              paddingTop: 0,
+            }}
+          >
+            <DurationCurve title={key} data={durationCurves[key]} />
+          </CardContent>
+        </StyledCard>
+      </Grid>
+    );
+  });
+}
+function HourlyCapacityFactorsPane(hourlyCapFactors: {
+  [key: string]: number[];
+}) {
   return (
     <StyledCard>
       <CardHeader
@@ -476,16 +548,12 @@ function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
         }}
       >
         <HourlyCapacityFactors
-          datapoints={[
-            {
-              label: "Electrolyser",
-              data: hourlyOperations.Electrolyser_CF,
-            },
-            {
-              label: "Power Plant",
-              data: hourlyOperations.Generator_CF,
-            },
-          ]}
+          datapoints={Object.keys(hourlyCapFactors).map((key: string) => {
+            return {
+              label: key,
+              data: hourlyCapFactors[key],
+            };
+          })}
         />
       </CardContent>
     </StyledCard>
@@ -594,15 +662,10 @@ function KeyInputsPane(
   );
 }
 
-function OperatingCostsPane(
-  projectTimeline: number,
-  electrolyserOpexPerYear: number[],
-  powerPlantOpexPerYear: number[],
-  batteryOpexPerYear: any[],
-  additionalOpexPerYear: number[],
-  waterOpexPerYear: number[],
-  electricityPurchaseOpexPerYear: number[]
-) {
+function OperatingCostsPane(operatingCosts: {
+  projectTimeline: number;
+  costs: { [key: string]: number[] };
+}) {
   return (
     <StyledCard>
       <CardHeader
@@ -619,21 +682,10 @@ function OperatingCostsPane(
       >
         <CostLineChart
           title="Operating Costs"
-          projectTimeline={projectTimeline}
-          datapoints={[
-            { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
-            { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
-            { label: "Battery OPEX", data: batteryOpexPerYear },
-            {
-              label: "Additional Annual Costs",
-              data: additionalOpexPerYear,
-            },
-            { label: "Water Costs", data: waterOpexPerYear },
-            {
-              label: "Electricity Purchase",
-              data: electricityPurchaseOpexPerYear,
-            },
-          ]}
+          projectTimeline={operatingCosts.projectTimeline}
+          datapoints={Object.keys(operatingCosts.costs).map((key: string) => {
+            return { label: key, data: operatingCosts.costs[key] };
+          })}
         />
       </CardContent>
     </StyledCard>
@@ -677,44 +729,6 @@ export function DoughnutPane(data: DoughnutPaneData) {
       </CardContent>
     </StyledCard>
   );
-}
-
-function IndirectCostPane(
-  electrolyserEpcCost: number,
-  electrolyserLandCost: number,
-  powerPlantEpcCost: number,
-  powerPlantLandCost: number,
-  batteryEpcCost: number,
-  batteryLandCost: number
-) {
-  const data = {
-    "Electrolyser EPC": electrolyserEpcCost,
-    "Electrolyser Land": electrolyserLandCost,
-    "Power Plant EPC": powerPlantEpcCost,
-    "Power Plant Land": powerPlantLandCost,
-    "Battery EPC": batteryEpcCost,
-    "Battery Land": batteryLandCost,
-  };
-  return <DoughnutPane title="Indirect Cost Breakdown" items={data} />;
-}
-
-function CaptitalCostBreakdownPane(
-  electrolyserCAPEX: number,
-  powerPlantCAPEX: number,
-  batteryCAPEX: number,
-  gridConnectionCAPEX: number,
-  additionalUpfrontCosts: number,
-  totalIndirectCosts: number
-) {
-  const data = {
-    "Electrolyser System": electrolyserCAPEX,
-    "Power Plant": powerPlantCAPEX,
-    Battery: batteryCAPEX,
-    "Grid Connection": gridConnectionCAPEX,
-    "Additional Upfront Costs": additionalUpfrontCosts,
-    "Indirect Costs": totalIndirectCosts,
-  };
-  return <DoughnutPane title="Capital Cost Breakdown" items={data} />;
 }
 
 type WaterfallPaneData = {
@@ -762,75 +776,17 @@ export function WaterFallPane(data: WaterfallPaneData) {
   );
 }
 
-function Lch2BreakdownPane(
-  lcPowerPlantCAPEX: number,
-  lcElectrolyserCAPEX: number,
-  lcIndirectCosts: number,
-  lcPowerPlantOPEX: number,
-  lcElectrolyserOPEX: number,
-  lcElectricityPurchase: number,
-  lcStackReplacement: number,
-  lcWater: number,
-  lcBattery: number,
-  lcGridConnection: number,
-  lcAdditionalCosts: number
-) {
-  const data = {
-    "Power Plant CAPEX": lcPowerPlantCAPEX,
-    "Electrolyser CAPEX": lcElectrolyserCAPEX,
-    "Indirect Costs": lcIndirectCosts,
-    "Power Plant OPEX": lcPowerPlantOPEX,
-    "Electrolyser O&M": lcElectrolyserOPEX,
-    "Electricity Purchase": lcElectricityPurchase,
-    "Stack Replacement": lcStackReplacement,
-    "Water Cost": lcWater,
-    "Battery Cost": lcBattery,
-    "Grid Connection Cost": lcGridConnection,
-    "Additional Costs": lcAdditionalCosts,
-  };
+function Lch2BreakdownPane(lch2BreakdownData: { [key: string]: number }) {
   return (
     <WaterFallPane
       title="Breakdown of Cost Components in LCH2"
       label="Breakdown of Cost Components in Levelised Cost of Hydrogen"
-      items={data}
+      items={lch2BreakdownData}
     />
   );
 }
 
-export function SummaryOfResultsPane(
-  summary: ProjectModelSummary,
-  electricityConsumed: number[],
-  electricityProduced: number[],
-  h2Produced: number[],
-  lch2: number
-) {
-  const summaryDict: { [key: string]: number } = {
-    "Power Plant Capacity Factor": roundToTwoDP(
-      mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
-    ),
-
-    "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
-      mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))
-    ),
-
-    "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
-      mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
-    ),
-
-    "Electrolyser Capacity Factor": roundToTwoDP(
-      mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
-    ),
-
-    "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
-      mean(electricityConsumed)
-    ),
-
-    "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-      roundToNearestInteger(mean(electricityProduced)),
-
-    "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
-    "LCH2 ($/kg)": roundToTwoDP(lch2),
-  };
+export function SummaryOfResultsPane(summaryTable: { [key: string]: number }) {
   return (
     <StyledCard>
       <CardHeader
@@ -846,7 +802,7 @@ export function SummaryOfResultsPane(
           paddingTop: 0,
         }}
       >
-        <SummaryOfResultsTable title="Summary of Results" data={summaryDict} />
+        <SummaryOfResultsTable title="Summary of Results" data={summaryTable} />
       </CardContent>
     </StyledCard>
   );

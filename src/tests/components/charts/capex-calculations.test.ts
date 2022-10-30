@@ -1,7 +1,7 @@
 import {
   calculateBatteryCapex,
   calculateCapex,
-  generateCapexValues,
+  getCapex,
   getIndirectCost,
 } from "../../../components/charts/capex-calculations";
 import { Inputs } from "../../../types";
@@ -33,7 +33,60 @@ describe("Capex calculations", () => {
       gridConnectionCost: 10,
     };
 
-    const { gridConnectionCAPEX } = generateCapexValues(data);
+    const {
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+
+      batteryRatedPower = 0,
+      batteryStorageDuration = 0,
+      batteryCosts = 0,
+
+      gridConnectionCost = 0,
+    } = data;
+
+    const { gridConnectionCAPEX } = getCapex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+      powerPlantType,
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+      batteryRatedPower,
+      batteryStorageDuration,
+      batteryCosts,
+      gridConnectionCost
+    );
 
     expect(gridConnectionCAPEX).toEqual(10);
   });
@@ -46,7 +99,60 @@ describe("Capex calculations", () => {
       gridConnectionCost: 10,
     };
 
-    const { gridConnectionCAPEX } = generateCapexValues(data);
+    const {
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+
+      batteryRatedPower = 0,
+      batteryStorageDuration = 0,
+      batteryCosts = 0,
+
+      gridConnectionCost = 0,
+    } = data;
+
+    const { gridConnectionCAPEX } = getCapex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+      powerPlantType,
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+      batteryRatedPower,
+      batteryStorageDuration,
+      batteryCosts,
+      gridConnectionCost
+    );
 
     expect(gridConnectionCAPEX).toEqual(10);
   });
@@ -58,7 +164,59 @@ describe("Capex calculations", () => {
       gridConnectionCost: 10,
     };
 
-    const { gridConnectionCAPEX } = generateCapexValues(data);
+    const {
+      powerPlantType,
+      powerPlantConfiguration,
+      powerSupplyOption,
+
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+
+      batteryRatedPower = 0,
+      batteryStorageDuration = 0,
+      batteryCosts = 0,
+
+      gridConnectionCost = 0,
+    } = data;
+    const { gridConnectionCAPEX } = getCapex(
+      powerPlantConfiguration,
+      powerSupplyOption,
+      electrolyserNominalCapacity,
+      electrolyserReferenceCapacity,
+      electrolyserPurchaseCost,
+      electrolyserCostReductionWithScale,
+      electrolyserReferenceFoldIncrease,
+      powerPlantType,
+      solarNominalCapacity,
+      solarReferenceCapacity,
+      solarFarmBuildCost,
+      solarPVCostReductionWithScale,
+      solarReferenceFoldIncrease,
+      windNominalCapacity,
+      windReferenceCapacity,
+      windFarmBuildCost,
+      windCostReductionWithScale,
+      windReferenceFoldIncrease,
+      batteryRatedPower,
+      batteryStorageDuration,
+      batteryCosts,
+      gridConnectionCost
+    );
 
     expect(gridConnectionCAPEX).toEqual(0);
   });
