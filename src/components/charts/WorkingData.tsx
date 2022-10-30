@@ -14,10 +14,7 @@ import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
-import {
-  ModelHourlyOperation,
-  ProjectModelSummary,
-} from "../../model/ModelTypes";
+import { ProjectModelSummary } from "../../model/ModelTypes";
 import {
   BATTERY_OUTPUT,
   ELECTROLYSER_CF,
@@ -371,6 +368,26 @@ export default function WorkingData(props: Props) {
     "Battery Land": batteryLandCost,
   };
 
+  const operatingCosts: {
+    projectTimeline: number;
+    costs: { [key: string]: number[] };
+  } = {
+    projectTimeline: projectTimeline,
+    costs: {
+      "Electrolyser OPEX": electrolyserOpexPerYear,
+      "Power Plant OPEX": powerPlantOpexPerYear,
+      "Battery OPEX": batteryOpexPerYear,
+      "Additional Annual Costs": additionalOpexPerYear,
+      "Water Costs": waterOpexPerYear,
+      "Electricity Purchase": electricityPurchaseOpexPerYear,
+    },
+  };
+
+  const hourlyCapFactors = {
+    Electrolyser: hourlyOperations.Electrolyser_CF,
+    "Power Plant": hourlyOperations.Generator_CF,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -424,18 +441,8 @@ export default function WorkingData(props: Props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
-          {OperatingCostsPane(
-            projectTimeline,
-            electrolyserOpexPerYear,
-            powerPlantOpexPerYear,
-            batteryOpexPerYear,
-            additionalOpexPerYear,
-            waterOpexPerYear,
-            electricityPurchaseOpexPerYear
-          )}
-        </Grid>
-        <Grid item>{HourlyCapacityFactorsPane(hourlyOperations)}</Grid>
+        <Grid item>{OperatingCostsPane(operatingCosts)}</Grid>
+        <Grid item>{HourlyCapacityFactorsPane(hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
   );
@@ -465,7 +472,9 @@ function DurationCurves(durationCurves: { [key: string]: number[] }) {
     );
   });
 }
-function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
+function HourlyCapacityFactorsPane(hourlyCapFactors: {
+  [key: string]: number[];
+}) {
   return (
     <StyledCard>
       <CardHeader
@@ -481,16 +490,12 @@ function HourlyCapacityFactorsPane(hourlyOperations: ModelHourlyOperation) {
         }}
       >
         <HourlyCapacityFactors
-          datapoints={[
-            {
-              label: "Electrolyser",
-              data: hourlyOperations.Electrolyser_CF,
-            },
-            {
-              label: "Power Plant",
-              data: hourlyOperations.Generator_CF,
-            },
-          ]}
+          datapoints={Object.keys(hourlyCapFactors).map((key: string) => {
+            return {
+              label: key,
+              data: hourlyCapFactors[key],
+            };
+          })}
         />
       </CardContent>
     </StyledCard>
@@ -599,15 +604,10 @@ function KeyInputsPane(
   );
 }
 
-function OperatingCostsPane(
-  projectTimeline: number,
-  electrolyserOpexPerYear: number[],
-  powerPlantOpexPerYear: number[],
-  batteryOpexPerYear: any[],
-  additionalOpexPerYear: number[],
-  waterOpexPerYear: number[],
-  electricityPurchaseOpexPerYear: number[]
-) {
+function OperatingCostsPane(operatingCosts: {
+  projectTimeline: number;
+  costs: { [key: string]: number[] };
+}) {
   return (
     <StyledCard>
       <CardHeader
@@ -624,21 +624,10 @@ function OperatingCostsPane(
       >
         <CostLineChart
           title="Operating Costs"
-          projectTimeline={projectTimeline}
-          datapoints={[
-            { label: "Electrolyser OPEX", data: electrolyserOpexPerYear },
-            { label: "Power Plant OPEX", data: powerPlantOpexPerYear },
-            { label: "Battery OPEX", data: batteryOpexPerYear },
-            {
-              label: "Additional Annual Costs",
-              data: additionalOpexPerYear,
-            },
-            { label: "Water Costs", data: waterOpexPerYear },
-            {
-              label: "Electricity Purchase",
-              data: electricityPurchaseOpexPerYear,
-            },
-          ]}
+          projectTimeline={operatingCosts.projectTimeline}
+          datapoints={Object.keys(operatingCosts.costs).map((key: string) => {
+            return { label: key, data: operatingCosts.costs[key] };
+          })}
         />
       </CardContent>
     </StyledCard>
