@@ -56,7 +56,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
@@ -99,7 +99,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
@@ -141,7 +141,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
@@ -183,7 +183,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
@@ -226,7 +226,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
@@ -273,7 +273,7 @@ describe("Working Data calculations", () => {
         wrapper.update();
         const generatorDurationCurve = wrapper
           .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
         expect(generatorDurationCurve).toHaveLength(1);
         expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
@@ -317,7 +317,7 @@ describe("Working Data calculations", () => {
       wrapper.update();
       const generatorDurationCurve = wrapper
         .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Generator Duration Curve");
+        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
       expect(generatorDurationCurve).toHaveLength(1);
       expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
