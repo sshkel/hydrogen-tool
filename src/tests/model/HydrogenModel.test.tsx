@@ -21,8 +21,6 @@ describe("Hydrogen Model", () => {
   it("works for overload model", () => {
     // overload -> working correctly :tick:
     const example1: HydrogenData = {
-      powerCapacityConfiguration: "Nominal Capacity",
-      powerPlantType: "Hybrid",
       //args or defaults
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 10,
@@ -93,8 +91,6 @@ describe("Hydrogen Model", () => {
   it("works for battery model", () => {
     // battery -> working correctly :tick:
     const example2: HydrogenData = {
-      powerCapacityConfiguration: "Nominal Capacity",
-      powerPlantType: "Hybrid",
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 15,
       batteryRatedPower: 10,
@@ -162,8 +158,6 @@ describe("Hydrogen Model", () => {
   it("works for normal model", () => {
     // normal -> working correctly :tick:
     const example3: HydrogenData = {
-      powerCapacityConfiguration: "Nominal Capacity",
-      powerPlantType: "Hybrid",
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 0,
       windNominalCapacity: 100,

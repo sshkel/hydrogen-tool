@@ -3,12 +3,7 @@ import {
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
-import {
-  InputConfiguration,
-  PowerCapacityConfiguration,
-  PowerPlantType,
-  StackReplacementType,
-} from "../types";
+import { InputConfiguration, StackReplacementType } from "../types";
 import { mean } from "../utils";
 import {
   CsvRow,
@@ -27,9 +22,7 @@ import {
 import { HOURS_PER_YEAR, SUMMARY_KEYS } from "./consts";
 
 export type HydrogenData = {
-  powerPlantType: PowerPlantType;
   inputConfiguration: InputConfiguration;
-  powerCapacityConfiguration: PowerCapacityConfiguration;
   batteryLifetime: number;
   batteryMinCharge: number;
   batteryEfficiency: number;
@@ -97,7 +90,6 @@ export class HydrogenModel {
     windData: CsvRow[]
   ) {
     this.parameters = parameters;
-
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
@@ -115,41 +107,6 @@ export class HydrogenModel {
     // calculated values
     this.solarNominalCapacity = parameters.solarNominalCapacity;
     this.windNominalCapacity = parameters.windNominalCapacity;
-
-    // These values can change if Oversize Ratio configuration is used
-    const powerPlantOversizeRatio =
-      parameters.powerCapacityConfiguration === "Oversize Ratio"
-        ? parameters.powerPlantOversizeRatio
-        : (parameters.solarNominalCapacity + parameters.windNominalCapacity) /
-          parameters.electrolyserNominalCapacity;
-
-    if (
-      parameters.inputConfiguration === "Advanced" &&
-      parameters.powerCapacityConfiguration === "Oversize Ratio"
-    ) {
-      const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-        powerPlantOversizeRatio,
-        parameters.electrolyserNominalCapacity
-      );
-
-      if (parameters.powerPlantType === "Solar") {
-        this.solarNominalCapacity = powerPlantNominalCapacity;
-        this.windNominalCapacity = 0;
-      }
-
-      if (parameters.powerPlantType === "Wind") {
-        this.solarNominalCapacity = 0;
-        this.windNominalCapacity = powerPlantNominalCapacity;
-      }
-
-      if (parameters.powerPlantType === "Hybrid") {
-        this.solarNominalCapacity =
-          powerPlantNominalCapacity * (parameters.solarToWindPercentage / 100);
-        this.windNominalCapacity =
-          powerPlantNominalCapacity *
-          (1 - parameters.solarToWindPercentage / 100);
-      }
-    }
     this.totalNominalPowerPlantCapacity =
       this.solarNominalCapacity + this.windNominalCapacity;
     this.elecCapacity = parameters.electrolyserNominalCapacity;
