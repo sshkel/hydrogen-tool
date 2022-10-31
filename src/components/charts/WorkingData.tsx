@@ -27,7 +27,12 @@ import {
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "../../model/consts";
-import { InputConfiguration, Inputs, UserInputFields } from "../../types";
+import {
+  InputConfiguration,
+  Inputs,
+  PowerPlantType,
+  UserInputFields,
+} from "../../types";
 import { mean } from "../../utils";
 import { BLUE, SAPPHIRE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
@@ -214,9 +219,14 @@ export default function WorkingData(props: Props) {
     Electrolyser: hourlyOperations.Electrolyser_CF,
     "Power Plant": hourlyOperations.Generator_CF,
   };
-
+  let result: {
+    powerPlantType: PowerPlantType;
+    windNominalCapacity: number;
+    solarNominalCapacity: number;
+    electrolyserNominalCapacity: number;
+  };
   if (props.inputConfiguration === "Basic") {
-    inputs = backCalculateInputFields(
+    result = backCalculateInputFields(
       inputs,
       projectScale,
       mean(summary[ELECTROLYSER_CF]),
@@ -235,7 +245,7 @@ export default function WorkingData(props: Props) {
     inputs.powerPlantConfiguration,
     inputs.powerSupplyOption,
     props.inputConfiguration === "Basic"
-      ? inputs.electrolyserNominalCapacity
+      ? result!.electrolyserNominalCapacity
       : model.electrolyserNominalCapacity,
     inputs.electrolyserReferenceCapacity,
     inputs.electrolyserPurchaseCost,
@@ -243,14 +253,14 @@ export default function WorkingData(props: Props) {
     inputs.electrolyserReferenceFoldIncrease,
     inputs.powerPlantType,
     props.inputConfiguration === "Basic"
-      ? inputs.solarNominalCapacity
+      ? result!.solarNominalCapacity
       : model.solarNominalCapacity,
     inputs.solarReferenceCapacity,
     inputs.solarFarmBuildCost,
     inputs.solarPVCostReductionWithScale,
     inputs.solarReferenceFoldIncrease,
     props.inputConfiguration === "Basic"
-      ? inputs.windNominalCapacity
+      ? result!.windNominalCapacity
       : model.windNominalCapacity,
     inputs.windReferenceCapacity,
     inputs.windFarmBuildCost,
@@ -340,11 +350,11 @@ export default function WorkingData(props: Props) {
     inputs.powerPlantType,
     solarOpex,
     props.inputConfiguration === "Basic"
-      ? inputs.solarNominalCapacity
+      ? result!.solarNominalCapacity
       : model.solarNominalCapacity,
     windOpex,
     props.inputConfiguration === "Basic"
-      ? inputs.windNominalCapacity
+      ? result!.windNominalCapacity
       : model.windNominalCapacity,
     batteryOMCost,
     batteryRatedPower,
@@ -493,7 +503,9 @@ export default function WorkingData(props: Props) {
         <Grid item>
           {KeyInputsPane(
             location,
-            inputs.electrolyserNominalCapacity,
+            props.inputConfiguration === "Basic"
+              ? result!.electrolyserNominalCapacity
+              : inputs.electrolyserNominalCapacity,
             model.totalNominalPowerPlantCapacity
           )}
         </Grid>
