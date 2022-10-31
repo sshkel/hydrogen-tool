@@ -26,6 +26,8 @@ describe("Hydrogen Model", () => {
       solarNominalCapacity: 10,
       windNominalCapacity: 10,
       location: "North West NSW",
+      powerPlantType: "Hybrid",
+      powerCapacityConfiguration: "Nominal Capacity",
 
       // spot_price: 30,
 
@@ -101,7 +103,8 @@ describe("Hydrogen Model", () => {
       windNominalCapacity: 0,
       // spotPrice: 0,
       // ppaPrice: 0,
-
+      powerPlantType: "Solar",
+      powerCapacityConfiguration: "Nominal Capacity",
       // config
       electrolyserMaximumLoad: 100,
       // elecReferenceCapacity: 10,
@@ -161,6 +164,8 @@ describe("Hydrogen Model", () => {
       electrolyserNominalCapacity: 10,
       solarNominalCapacity: 0,
       windNominalCapacity: 100,
+      powerPlantType: "Wind",
+      powerCapacityConfiguration: "Nominal Capacity",
 
       // defaults
       location: "North West NSW",
