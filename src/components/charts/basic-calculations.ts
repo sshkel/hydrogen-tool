@@ -55,39 +55,6 @@ export function backCalculateElectrolyserCapacity(
   );
 }
 
-export function backCalculateSolarAndWindCapacity(
-  synthesisedData: Inputs,
-  powerPlantOversizeRatio: number,
-  electrolyserNominalCapacity: number,
-  solarToWindPercentage: number,
-  powerPlantType: PowerPlantType
-): Inputs {
-  const recalculatedInputs = { ...synthesisedData };
-  const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-    powerPlantOversizeRatio,
-    electrolyserNominalCapacity
-  );
-
-  if (powerPlantType === "Solar") {
-    recalculatedInputs.solarNominalCapacity = powerPlantNominalCapacity;
-    recalculatedInputs.windNominalCapacity = 0;
-  }
-
-  if (powerPlantType === "Wind") {
-    recalculatedInputs.solarNominalCapacity = 0;
-    recalculatedInputs.windNominalCapacity = powerPlantNominalCapacity;
-  }
-
-  if (powerPlantType === "Hybrid") {
-    recalculatedInputs.solarNominalCapacity =
-      powerPlantNominalCapacity * (solarToWindPercentage / 100);
-    recalculatedInputs.windNominalCapacity =
-      powerPlantNominalCapacity * (1 - solarToWindPercentage / 100);
-  }
-
-  return recalculatedInputs;
-}
-
 export function backCalculatePowerPlantCapacity(
   powerPlantOversizeRatio: number,
   electrolyserNominalCapacity: number

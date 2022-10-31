@@ -148,7 +148,9 @@ export default function WorkingData(props: Props) {
     secAtNominalLoad = 0,
     electrolyserEfficiency = 0,
     solarToWindPercentage,
+    powerPlantType,
     powerCapacityConfiguration,
+    powerPlantOversizeRatio,
     batteryCosts = 0,
     gridConnectionCost = 0,
     principalPPACost = 0,
@@ -158,26 +160,6 @@ export default function WorkingData(props: Props) {
     batteryOMCost = 0,
     batteryReplacementCost = 0,
   } = inputs;
-
-  // These values can change if Oversize Ratio configuration is used
-  const powerPlantOversizeRatio =
-    powerCapacityConfiguration === "Oversize Ratio"
-      ? inputs.powerPlantOversizeRatio
-      : (inputs.solarNominalCapacity + inputs.windNominalCapacity) /
-        inputs.electrolyserNominalCapacity;
-
-  if (
-    props.inputConfiguration === "Advanced" &&
-    powerCapacityConfiguration === "Oversize Ratio"
-  ) {
-    inputs = backCalculateSolarAndWindCapacity(
-      inputs,
-      powerPlantOversizeRatio,
-      inputs.electrolyserNominalCapacity,
-      solarToWindPercentage,
-      inputs.powerPlantType
-    );
-  }
 
   const location = props.location;
   const dataModel: HydrogenData = {
@@ -189,6 +171,8 @@ export default function WorkingData(props: Props) {
     batteryRatedPower,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
+    powerPlantType,
+    powerCapacityConfiguration,
     projectScale,
     electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
     solarNominalCapacity: inputs.solarNominalCapacity,
@@ -253,18 +237,18 @@ export default function WorkingData(props: Props) {
   } = getCapex(
     inputs.powerPlantConfiguration,
     inputs.powerSupplyOption,
-    inputs.electrolyserNominalCapacity,
+    model.electrolyserNominalCapacity,
     inputs.electrolyserReferenceCapacity,
     inputs.electrolyserPurchaseCost,
     inputs.electrolyserCostReductionWithScale,
     inputs.electrolyserReferenceFoldIncrease,
     inputs.powerPlantType,
-    inputs.solarNominalCapacity,
+    model.solarNominalCapacity,
     inputs.solarReferenceCapacity,
     inputs.solarFarmBuildCost,
     inputs.solarPVCostReductionWithScale,
     inputs.solarReferenceFoldIncrease,
-    inputs.windNominalCapacity,
+    model.windNominalCapacity,
     inputs.windReferenceCapacity,
     inputs.windFarmBuildCost,
     inputs.windCostReductionWithScale,
@@ -352,9 +336,9 @@ export default function WorkingData(props: Props) {
     inputs.electrolyserOMCost,
     inputs.powerPlantType,
     solarOpex,
-    inputs.solarNominalCapacity,
+    model.solarNominalCapacity,
     windOpex,
-    inputs.windNominalCapacity,
+    model.windNominalCapacity,
     batteryOMCost,
     batteryRatedPower,
     batteryReplacementCost,

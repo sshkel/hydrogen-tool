@@ -3,7 +3,12 @@ import {
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
-import { InputConfiguration, StackReplacementType } from "../types";
+import {
+  InputConfiguration,
+  PowerCapacityConfiguration,
+  PowerPlantType,
+  StackReplacementType,
+} from "../types";
 import { mean } from "../utils";
 import {
   CsvRow,
@@ -22,6 +27,8 @@ import {
 import { SUMMARY_KEYS } from "./consts";
 
 export type HydrogenData = {
+  powerPlantType: PowerPlantType;
+  powerCapacityConfiguration: PowerCapacityConfiguration;
   inputConfiguration: InputConfiguration;
   batteryLifetime: number;
   batteryMinCharge: number;
@@ -59,7 +66,7 @@ export class HydrogenModel {
 
   // calculated params
   totalNominalPowerPlantCapacity: number;
-  elecCapacity: number;
+  electrolyserNominalCapacity: number;
   elecMaxLoad: number;
   elecMinLoad: number;
   elecEff: number;
@@ -84,6 +91,7 @@ export class HydrogenModel {
   hourlyOperationsInYearOne: ModelHourlyOperation;
   solarNominalCapacity: number;
   windNominalCapacity: number;
+  powerPlantOversizeRatio: any;
 
   constructor(
     parameters: HydrogenData,
@@ -91,6 +99,7 @@ export class HydrogenModel {
     windData: CsvRow[]
   ) {
     this.parameters = parameters;
+
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
@@ -106,12 +115,49 @@ export class HydrogenModel {
     this.lastStackReplacementYear = 0;
     this.hourlyOperationsInYearOne = {};
 
-    // calculated values
     this.solarNominalCapacity = parameters.solarNominalCapacity;
     this.windNominalCapacity = parameters.windNominalCapacity;
+    this.electrolyserNominalCapacity = parameters.electrolyserNominalCapacity;
+
+    this.powerPlantOversizeRatio =
+      parameters.powerCapacityConfiguration === "Oversize Ratio"
+        ? parameters.powerPlantOversizeRatio
+        : (this.solarNominalCapacity + this.windNominalCapacity) /
+          this.electrolyserNominalCapacity;
+
+    // calculated values
+    if (
+      parameters.inputConfiguration === "Advanced" &&
+      parameters.powerCapacityConfiguration === "Oversize Ratio"
+    ) {
+      const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
+        this.powerPlantOversizeRatio,
+        this.parameters.electrolyserNominalCapacity
+      );
+
+      if (this.parameters.powerPlantType === "Solar") {
+        this.solarNominalCapacity = powerPlantNominalCapacity;
+        this.windNominalCapacity = 0;
+      }
+
+      if (this.parameters.powerPlantType === "Wind") {
+        this.solarNominalCapacity = 0;
+        this.windNominalCapacity = powerPlantNominalCapacity;
+      }
+
+      if (this.parameters.powerPlantType === "Hybrid") {
+        this.solarNominalCapacity =
+          powerPlantNominalCapacity *
+          (this.parameters.solarToWindPercentage / 100);
+        this.windNominalCapacity =
+          powerPlantNominalCapacity *
+          (1 - this.parameters.solarToWindPercentage / 100);
+      }
+    }
+
     this.totalNominalPowerPlantCapacity =
       this.solarNominalCapacity + this.windNominalCapacity;
-    this.elecCapacity = parameters.electrolyserNominalCapacity;
+
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = parameters.electrolyserEfficiency / 100;
@@ -164,7 +210,7 @@ export class HydrogenModel {
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
       hourlyOperation.Net_Battery_Flow,
-      this.elecCapacity,
+      this.electrolyserNominalCapacity,
       this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
@@ -224,8 +270,8 @@ export class HydrogenModel {
     projectTimeline: number
   ): ProjectModelSummary {
     const hourlyOperation = this.calculateHourlyOperation(
-      this.parameters.powerPlantOversizeRatio,
-      this.elecCapacity,
+      this.powerPlantOversizeRatio,
+      this.electrolyserNominalCapacity,
       this.parameters.solarToWindPercentage / 100,
       1 - this.parameters.solarToWindPercentage / 100,
       this.parameters.solarDegradation,
@@ -248,15 +294,15 @@ export class HydrogenModel {
 
     this.hourlyOperationsInYearOne = hourlyOperation;
 
-    this.elecCapacity = backCalculateElectrolyserCapacity(
+    this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
       this.parameters.projectScale,
       this.elecEff,
       mean(hourlyOperation.Electrolyser_CF),
       this.hoursPerYear
     );
     this.totalNominalPowerPlantCapacity = backCalculatePowerPlantCapacity(
-      this.parameters.powerPlantOversizeRatio,
-      this.elecCapacity
+      this.powerPlantOversizeRatio,
+      this.electrolyserNominalCapacity
     );
 
     const operatingOutputs = getTabulatedOutput(
@@ -264,7 +310,7 @@ export class HydrogenModel {
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
       hourlyOperation.Net_Battery_Flow,
-      this.elecCapacity,
+      this.electrolyserNominalCapacity,
       this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
@@ -286,8 +332,8 @@ export class HydrogenModel {
     year: number
   ): ModelHourlyOperation {
     return this.calculateHourlyOperation(
-      this.totalNominalPowerPlantCapacity / this.elecCapacity,
-      this.elecCapacity,
+      this.totalNominalPowerPlantCapacity / this.electrolyserNominalCapacity,
+      this.electrolyserNominalCapacity,
       this.solarNominalCapacity / this.totalNominalPowerPlantCapacity,
       this.windNominalCapacity / this.totalNominalPowerPlantCapacity,
       this.parameters.solarDegradation,
@@ -317,7 +363,7 @@ export class HydrogenModel {
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
       hourlyOperation.Net_Battery_Flow,
-      this.elecCapacity,
+      this.electrolyserNominalCapacity,
       this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
       this.hoursPerYear,
