@@ -1,4 +1,4 @@
-import { Inputs, PowerPlantType } from "../../types";
+import { Inputs } from "../../types";
 
 export function backCalculateInputFields(
   synthesisedData: Inputs,

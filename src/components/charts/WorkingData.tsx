@@ -37,10 +37,7 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import {
-  backCalculateInputFields,
-  backCalculateSolarAndWindCapacity,
-} from "./basic-calculations";
+import { backCalculateInputFields } from "./basic-calculations";
 import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCBreakdown } from "./lch2-calculations";
@@ -237,18 +234,24 @@ export default function WorkingData(props: Props) {
   } = getCapex(
     inputs.powerPlantConfiguration,
     inputs.powerSupplyOption,
-    model.electrolyserNominalCapacity,
+    props.inputConfiguration === "Basic"
+      ? inputs.electrolyserNominalCapacity
+      : model.electrolyserNominalCapacity,
     inputs.electrolyserReferenceCapacity,
     inputs.electrolyserPurchaseCost,
     inputs.electrolyserCostReductionWithScale,
     inputs.electrolyserReferenceFoldIncrease,
     inputs.powerPlantType,
-    model.solarNominalCapacity,
+    props.inputConfiguration === "Basic"
+      ? inputs.solarNominalCapacity
+      : model.solarNominalCapacity,
     inputs.solarReferenceCapacity,
     inputs.solarFarmBuildCost,
     inputs.solarPVCostReductionWithScale,
     inputs.solarReferenceFoldIncrease,
-    model.windNominalCapacity,
+    props.inputConfiguration === "Basic"
+      ? inputs.windNominalCapacity
+      : model.windNominalCapacity,
     inputs.windReferenceCapacity,
     inputs.windFarmBuildCost,
     inputs.windCostReductionWithScale,
@@ -336,9 +339,13 @@ export default function WorkingData(props: Props) {
     inputs.electrolyserOMCost,
     inputs.powerPlantType,
     solarOpex,
-    model.solarNominalCapacity,
+    props.inputConfiguration === "Basic"
+      ? inputs.solarNominalCapacity
+      : model.solarNominalCapacity,
     windOpex,
-    model.windNominalCapacity,
+    props.inputConfiguration === "Basic"
+      ? inputs.windNominalCapacity
+      : model.windNominalCapacity,
     batteryOMCost,
     batteryRatedPower,
     batteryReplacementCost,
