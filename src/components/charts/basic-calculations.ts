@@ -1,4 +1,4 @@
-import { Inputs } from "../../types";
+import { Inputs, PowerPlantType } from "../../types";
 
 export function backCalculateInputFields(
   synthesisedData: Inputs,
@@ -11,6 +11,7 @@ export function backCalculateInputFields(
     electrolyserEfficiency = 1,
     powerPlantOversizeRatio = 1,
     solarToWindPercentage = 100,
+    powerPlantType: currentPowerPlantType,
   } = synthesisedData;
 
   const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
@@ -19,22 +20,28 @@ export function backCalculateInputFields(
     electrolyserCf,
     hoursPerYear
   );
-  recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;
 
+  let powerPlantType = currentPowerPlantType;
   if (solarToWindPercentage === 100) {
-    recalculatedInputs.powerPlantType = "Solar";
+    powerPlantType = "Solar";
   }
 
   if (solarToWindPercentage === 0) {
-    recalculatedInputs.powerPlantType = "Wind";
+    powerPlantType = "Wind";
   }
 
   const powerPlantNominalCapacity =
     powerPlantOversizeRatio * electrolyserNominalCapacity;
-  recalculatedInputs.solarNominalCapacity =
+  const solarNominalCapacity =
     powerPlantNominalCapacity * (solarToWindPercentage / 100);
-  recalculatedInputs.windNominalCapacity =
+
+  const windNominalCapacity =
     powerPlantNominalCapacity * (1 - solarToWindPercentage / 100);
+
+  recalculatedInputs.powerPlantType = powerPlantType;
+  recalculatedInputs.windNominalCapacity = windNominalCapacity;
+  recalculatedInputs.solarNominalCapacity = solarNominalCapacity;
+  recalculatedInputs.electrolyserNominalCapacity = electrolyserNominalCapacity;
 
   return recalculatedInputs;
 }
