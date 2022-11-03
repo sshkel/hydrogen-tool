@@ -33,9 +33,18 @@ import {
   TOTAL_OPERATING_TIME
 } from "./consts";
 
-import {getCapex} from "../components/charts/capex-calculations";
+import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
 
 export type HydrogenData = {
+  additionalUpfrontCosts: number;
+  batteryLandProcurementCosts:  number | undefined;
+  batteryEpcCosts: number | undefined;
+  windLandProcurementCosts: number;
+  windEpcCosts: number;
+  solarLandProcurementCosts: number;
+  solarEpcCosts: number;
+  electrolyserLandProcurementCosts: number;
+  electrolyserEpcCosts: number;
   gridConnectionCost: number;
   batteryCosts: number;
   windCostReductionWithScale: number;
@@ -258,6 +267,61 @@ export class HydrogenModel {
         this.parameters.batteryCosts,
         this.parameters.gridConnectionCost
     );
+
+    const {
+      electrolyserEpcCost,
+      electrolyserLandCost,
+      powerPlantEpcCost,
+      powerPlantLandCost,
+      batteryEpcCost,
+      batteryLandCost,
+    } = getEpcCosts(
+        electrolyserCAPEX,
+        this.parameters.electrolyserEpcCosts,
+        this.parameters.electrolyserLandProcurementCosts,
+        solarCAPEX,
+        this.parameters.solarEpcCosts,
+        this.parameters.solarLandProcurementCosts,
+        windCAPEX,
+        this.parameters.windEpcCosts,
+        this.parameters.windLandProcurementCosts,
+        batteryCAPEX,
+        this.parameters.batteryEpcCosts,
+        this.parameters.batteryLandProcurementCosts
+    );
+    const indirectCostBreakdown = {
+      "Electrolyser EPC": electrolyserEpcCost,
+      "Electrolyser Land": electrolyserLandCost,
+      "Power Plant EPC": powerPlantEpcCost,
+      "Power Plant Land": powerPlantLandCost,
+      "Battery EPC": batteryEpcCost,
+      "Battery Land": batteryLandCost,
+    };
+
+    const totalCapexCost =
+        electrolyserCAPEX +
+        powerPlantCAPEX +
+        batteryCAPEX +
+        this.parameters.additionalUpfrontCosts +
+        gridConnectionCAPEX; // Cost values for sales calculation
+    const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+    const totalLandCost =
+        electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+    const totalIndirectCosts =
+        electrolyserEpcCost +
+        electrolyserLandCost +
+        powerPlantEpcCost +
+        powerPlantLandCost;
+
+    const capitalCostBreakdown = {
+      "Electrolyser System": electrolyserCAPEX,
+      "Power Plant": powerPlantCAPEX,
+      Battery: batteryCAPEX,
+      "Grid Connection": gridConnectionCAPEX,
+      "Additional Upfront Costs": this.parameters.additionalUpfrontCosts,
+      "Indirect Costs": totalIndirectCosts,
+    };
+
 
 
     return {
