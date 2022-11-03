@@ -254,8 +254,6 @@ export class HydrogenModel {
       "Power Plant": hourlyOperations.Generator_CF,
     };
 
-
-
     const {
       electrolyserCAPEX,
       solarCAPEX,
@@ -840,9 +838,9 @@ export class HydrogenModel {
 
     // Stack degradation calculation
     const yearlyDegradationRate = this.calculateStackDegradation(
-      stackDegradation,
-      electrolyserCf,
-      year,
+        stackDegradation,
+        electrolyserCf,
+        year,
         stackLifetime
     );
 
