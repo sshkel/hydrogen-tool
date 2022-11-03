@@ -625,7 +625,9 @@ export class HydrogenModel {
     projectTimeline: number
   ): ProjectModelSummary {
     this.stackReplacementYears = initialiseStackReplacementYears(
-        this.parameters,
+        this.parameters.stackReplacementType,
+        this.parameters.stackDegradation,
+        this.parameters.maximumDegradationBeforeReplacement,
         projectTimeline
     );
     let year = 1;
