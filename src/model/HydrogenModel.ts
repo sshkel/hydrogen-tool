@@ -147,6 +147,7 @@ export class HydrogenModel {
   windNominalCapacity: number;
   powerPlantOversizeRatio: any;
   powerPlantType: PowerPlantType;
+  private discountRate: number;
 
   constructor(
     parameters: HydrogenData,
@@ -224,6 +225,7 @@ export class HydrogenModel {
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = parameters.batteryMinCharge / 100;
     this.specCons = this.parameters.secAtNominalLoad * this.H2VoltoMass;
+    this.discountRate = this.parameters.discountRate / 100;
   }
 
 
@@ -424,7 +426,7 @@ export class HydrogenModel {
         totalEpcCost,
         totalLandCost,
         this.parameters.projectTimeline,
-        this.parameters.discountRate / 100,
+        this.discountRate,
         totalOpex,
         h2Produced
     );
@@ -453,7 +455,7 @@ export class HydrogenModel {
         powerPlantOpexCost,
         electrolyserOpexCost,
         this.parameters.additionalAnnualCosts,
-        this.parameters.discountRate,
+        this.discountRate,
         batteryOpexCost,
         batteryReplacementCostsOverProjectLife,
         batteryCAPEX,

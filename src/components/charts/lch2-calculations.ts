@@ -108,7 +108,7 @@ function getLevelisedCostCalculation(
     let sum = 0;
     for (let i = 1; i <= years; i++) {
       // Need to minus 1 as assuming opexValues is zero indexes
-      sum += opexValues[i - 1] / (1 + discountRate / 100) ** i;
+      sum += opexValues[i - 1] / (1 + discountRate) ** i;
     }
     return (sum + additionalCAPEX) / hydrogenProductionCost;
   };
