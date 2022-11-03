@@ -14,25 +14,15 @@ import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
-import { ProjectModelSummary } from "../../model/ModelTypes";
 import {
-  BATTERY_OUTPUT,
-  ELECTROLYSER_CF,
-  ENERGY_INPUT,
-  ENERGY_OUTPUT,
   HOURS_PER_LEAR_YEAR,
   HOURS_PER_YEAR,
-  HYDROGEN_OUTPUT,
-  POWER_PLANT_CF,
-  RATED_CAPACITY_TIME,
-  TOTAL_OPERATING_TIME,
 } from "../../model/consts";
 import {
   InputConfiguration,
   Inputs,
   UserInputFields,
 } from "../../types";
-import { mean } from "../../utils";
 import { BLUE, SAPPHIRE } from "../input/colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
@@ -41,10 +31,7 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import { getCapex, getEpcCosts } from "./capex-calculations";
-import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
-import { generateLCBreakdown } from "./lch2-calculations";
-import { calculatePerYearOpex, getOpex } from "./opex-calculations";
+import { roundToNearestInteger } from "./cost-functions";
 
 export interface Props {
   location?: string;
