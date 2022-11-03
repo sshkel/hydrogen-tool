@@ -163,17 +163,34 @@ export default function WorkingData(props: Props) {
 
   const location = props.location;
   const dataModel: HydrogenData = {
+    windCostReductionWithScale:inputs.windCostReductionWithScale,
+    windReferenceFoldIncrease:inputs.windReferenceFoldIncrease,
+    windFarmBuildCost:inputs.windFarmBuildCost,
+    windReferenceCapacity:inputs.windReferenceCapacity,
+    solarReferenceFoldIncrease:inputs.solarReferenceFoldIncrease,
+    solarPVCostReductionWithScale:inputs.solarPVCostReductionWithScale,
+    solarFarmBuildCost:inputs.solarFarmBuildCost,
+    solarReferenceCapacity:inputs.solarReferenceCapacity,
+    electrolyserReferenceFoldIncrease:inputs.electrolyserReferenceFoldIncrease,
+    electrolyserCostReductionWithScale:inputs.electrolyserCostReductionWithScale,
+    electrolyserPurchaseCost:inputs.electrolyserPurchaseCost,
+    electrolyserReferenceCapacity:inputs.electrolyserReferenceCapacity,
+    powerSupplyOption: inputs.powerSupplyOption,
+    powerPlantConfiguration: inputs.powerPlantConfiguration,
+    gridConnectionCost,
     inputConfiguration,
     batteryLifetime,
     batteryMinCharge,
     batteryEfficiency,
     batteryStorageDuration,
     batteryRatedPower,
+    batteryCosts,
     timeBetweenOverloading,
     maximumLoadWhenOverloading,
     powerPlantType,
     powerCapacityConfiguration,
     projectScale,
+    projectTimeline,
     electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
     solarNominalCapacity: inputs.solarNominalCapacity,
     windNominalCapacity: inputs.windNominalCapacity,
@@ -193,7 +210,7 @@ export default function WorkingData(props: Props) {
   };
 
   const model = new HydrogenModel(dataModel, state.solarData, state.windData);
-
+  //
   let summary: ProjectModelSummary =
     model.calculateHydrogenModel(projectTimeline);
 
@@ -207,16 +224,7 @@ export default function WorkingData(props: Props) {
 
   const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
 
-  let hourlyOperations = model.getHourlyOperations();
-
-  const durationCurves = {
-    "Power Plant Duration Curve": hourlyOperations.Generator_CF,
-    "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
-  };
-  const hourlyCapFactors = {
-    Electrolyser: hourlyOperations.Electrolyser_CF,
-    "Power Plant": hourlyOperations.Generator_CF,
-  };
+  const results = model.produceResults()
 
   const {
     electrolyserCAPEX,
@@ -516,7 +524,7 @@ export default function WorkingData(props: Props) {
                 justifyContent={"space-between"}
               >
                 <Grid container item className="duration curves">
-                  {DurationCurves(durationCurves)}
+                  {DurationCurves(results.durationCurves)}
                 </Grid>
                 <Grid item>{Lch2BreakdownPane(lch2BreakdownData)}</Grid>
               </Grid>
@@ -524,7 +532,7 @@ export default function WorkingData(props: Props) {
           </Grid>
         </Grid>
         <Grid item>{OperatingCostsPane(operatingCosts)}</Grid>
-        <Grid item>{HourlyCapacityFactorsPane(hourlyCapFactors)}</Grid>
+        <Grid item>{HourlyCapacityFactorsPane(results.hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
   );

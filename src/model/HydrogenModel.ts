@@ -5,8 +5,8 @@ import {
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
-  PowerCapacityConfiguration,
-  PowerPlantType,
+  PowerCapacityConfiguration, PowerPlantConfiguration,
+  PowerPlantType, PowerSupplyOption,
   StackReplacementType,
 } from "../types";
 import { mean } from "../utils";
@@ -24,9 +24,35 @@ import {
   calculateOverloadingModel,
   getTabulatedOutput,
 } from "./ModelUtils";
-import {ELECTROLYSER_CF, SUMMARY_KEYS} from "./consts";
+import {
+  BATTERY_OUTPUT,
+  ELECTROLYSER_CF,
+  ENERGY_INPUT,
+  ENERGY_OUTPUT, HOURS_PER_YEAR, HYDROGEN_OUTPUT, POWER_PLANT_CF, RATED_CAPACITY_TIME,
+  SUMMARY_KEYS,
+  TOTAL_OPERATING_TIME
+} from "./consts";
+
+import {getCapex} from "../components/charts/capex-calculations";
 
 export type HydrogenData = {
+  gridConnectionCost: number;
+  batteryCosts: number;
+  windCostReductionWithScale: number;
+  windReferenceFoldIncrease: number;
+  windFarmBuildCost: number;
+  windReferenceCapacity: number;
+  solarReferenceFoldIncrease: number;
+  solarPVCostReductionWithScale: number;
+  solarFarmBuildCost: number;
+  solarReferenceCapacity: number;
+  electrolyserReferenceFoldIncrease: number;
+  electrolyserCostReductionWithScale: number;
+  electrolyserPurchaseCost: number;
+  electrolyserReferenceCapacity: number;
+  powerSupplyOption: PowerSupplyOption;
+  powerPlantConfiguration: PowerPlantConfiguration;
+  projectTimeline: number;
   powerPlantType: PowerPlantType;
   powerCapacityConfiguration: PowerCapacityConfiguration;
   inputConfiguration: InputConfiguration;
@@ -166,10 +192,78 @@ export class HydrogenModel {
     this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
-      parameters.batteryRatedPower * this.parameters.batteryStorageDuration;
+        parameters.batteryRatedPower * this.parameters.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = parameters.batteryMinCharge / 100;
     this.specCons = this.parameters.secAtNominalLoad * this.H2VoltoMass;
+  }
+
+
+  produceResults() {
+
+    let summary: ProjectModelSummary =
+        this.calculateHydrogenModel(this.parameters.projectTimeline);
+
+    // OPEX values
+    const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
+    const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
+    const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
+    const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
+        (hours) => hours * HOURS_PER_YEAR
+    );
+
+    const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
+
+    let hourlyOperations = this.getHourlyOperations();
+
+    const durationCurves = {
+      "Power Plant Duration Curve": hourlyOperations.Generator_CF,
+      "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
+    };
+    const hourlyCapFactors = {
+      Electrolyser: hourlyOperations.Electrolyser_CF,
+      "Power Plant": hourlyOperations.Generator_CF,
+    };
+
+
+
+    const {
+      electrolyserCAPEX,
+      solarCAPEX,
+      windCAPEX,
+      batteryCAPEX,
+      powerPlantCAPEX,
+      gridConnectionCAPEX,
+    } = getCapex(
+        this.parameters.powerPlantConfiguration,
+        this.parameters.powerSupplyOption,
+        this.electrolyserNominalCapacity,
+        this.parameters.electrolyserReferenceCapacity,
+        this.parameters.electrolyserPurchaseCost,
+        this.parameters.electrolyserCostReductionWithScale,
+        this.parameters.electrolyserReferenceFoldIncrease,
+        this.parameters.powerPlantType,
+        this.solarNominalCapacity,
+        this.parameters.solarReferenceCapacity,
+        this.parameters.solarFarmBuildCost,
+        this.parameters.solarPVCostReductionWithScale,
+        this.parameters.solarReferenceFoldIncrease,
+        this.windNominalCapacity,
+        this.parameters.windReferenceCapacity,
+        this.parameters.windFarmBuildCost,
+        this.parameters.windCostReductionWithScale,
+        this.parameters.windReferenceFoldIncrease,
+        this.parameters.batteryRatedPower,
+        this.parameters.batteryStorageDuration,
+        this.parameters.batteryCosts,
+        this.parameters.gridConnectionCost
+    );
+
+
+    return {
+      durationCurves: durationCurves,
+      hourlyCapFactors: hourlyCapFactors,
+    }
   }
 
   calculateHydrogenModel(projectTimeline: number): ProjectModelSummary {
