@@ -1,5 +1,5 @@
 import {
-  backCalculateElectrolyserCapacity,
+  backCalculateElectrolyserCapacity, backCalculateInputFields,
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
@@ -24,7 +24,7 @@ import {
   calculateOverloadingModel,
   getTabulatedOutput,
 } from "./ModelUtils";
-import { SUMMARY_KEYS } from "./consts";
+import {ELECTROLYSER_CF, SUMMARY_KEYS} from "./consts";
 
 export type HydrogenData = {
   powerPlantType: PowerPlantType;
@@ -92,6 +92,7 @@ export class HydrogenModel {
   solarNominalCapacity: number;
   windNominalCapacity: number;
   powerPlantOversizeRatio: any;
+  powerPlantType: PowerPlantType;
 
   constructor(
     parameters: HydrogenData,
@@ -99,6 +100,7 @@ export class HydrogenModel {
     windData: CsvRow[]
   ) {
     this.parameters = parameters;
+    this.powerPlantType = parameters.powerPlantType;
 
     // Loaded data
     this.solarData = solarData;
@@ -179,7 +181,29 @@ export class HydrogenModel {
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
-      return this.calculateBasicHydrogenModel(projectTimeline);
+      const projectSummary = this.calculateBasicHydrogenModel(projectTimeline);
+      const {
+        electrolyserEfficiency = 1,
+        powerPlantOversizeRatio = 1,
+        solarToWindPercentage = 100,
+        powerPlantType: currentPowerPlantType,
+      } = this.parameters;
+      const result = backCalculateInputFields(
+          electrolyserEfficiency,
+          powerPlantOversizeRatio,
+          solarToWindPercentage,
+          currentPowerPlantType,
+          this.parameters.projectScale,
+          mean(projectSummary[ELECTROLYSER_CF]),
+          this.hoursPerYear
+      );
+
+      this.powerPlantType = result.powerPlantType;
+      this.windNominalCapacity = result.windNominalCapacity;
+      this.solarNominalCapacity = result.solarNominalCapacity;
+      this.electrolyserNominalCapacity = result.electrolyserNominalCapacity;
+      return projectSummary;
+
     }
 
     const projectSummary =

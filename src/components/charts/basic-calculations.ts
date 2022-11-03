@@ -1,17 +1,14 @@
-import { Inputs } from "../../types";
+import {PowerPlantType} from "../../types";
 
 export function backCalculateInputFields(
-  synthesisedData: Inputs,
-  projectScale: number,
-  electrolyserCf: number,
-  hoursPerYear: number
+    electrolyserEfficiency: number,
+    powerPlantOversizeRatio: number,
+    solarToWindPercentage: number,
+    currentPowerPlantType: PowerPlantType,
+    projectScale: number,
+    electrolyserCf: number,
+    hoursPerYear: number
 ) {
-  const {
-    electrolyserEfficiency = 1,
-    powerPlantOversizeRatio = 1,
-    solarToWindPercentage = 100,
-    powerPlantType: currentPowerPlantType,
-  } = synthesisedData;
 
   const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
     projectScale,

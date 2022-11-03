@@ -30,7 +30,6 @@ import {
 import {
   InputConfiguration,
   Inputs,
-  PowerPlantType,
   UserInputFields,
 } from "../../types";
 import { mean } from "../../utils";
@@ -42,7 +41,6 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import { backCalculateInputFields } from "./basic-calculations";
 import { getCapex, getEpcCosts } from "./capex-calculations";
 import { roundToNearestInteger, roundToTwoDP, sales } from "./cost-functions";
 import { generateLCBreakdown } from "./lch2-calculations";
@@ -219,20 +217,6 @@ export default function WorkingData(props: Props) {
     Electrolyser: hourlyOperations.Electrolyser_CF,
     "Power Plant": hourlyOperations.Generator_CF,
   };
-  let result: {
-    powerPlantType: PowerPlantType;
-    windNominalCapacity: number;
-    solarNominalCapacity: number;
-    electrolyserNominalCapacity: number;
-  };
-  if (props.inputConfiguration === "Basic") {
-    result = backCalculateInputFields(
-      inputs,
-      projectScale,
-      mean(summary[ELECTROLYSER_CF]),
-      state.hoursPerYear
-    );
-  }
 
   const {
     electrolyserCAPEX,
@@ -242,34 +226,28 @@ export default function WorkingData(props: Props) {
     powerPlantCAPEX,
     gridConnectionCAPEX,
   } = getCapex(
-    inputs.powerPlantConfiguration,
-    inputs.powerSupplyOption,
-    props.inputConfiguration === "Basic"
-      ? result!.electrolyserNominalCapacity
-      : model.electrolyserNominalCapacity,
-    inputs.electrolyserReferenceCapacity,
-    inputs.electrolyserPurchaseCost,
-    inputs.electrolyserCostReductionWithScale,
-    inputs.electrolyserReferenceFoldIncrease,
-    inputs.powerPlantType,
-    props.inputConfiguration === "Basic"
-      ? result!.solarNominalCapacity
-      : model.solarNominalCapacity,
-    inputs.solarReferenceCapacity,
-    inputs.solarFarmBuildCost,
-    inputs.solarPVCostReductionWithScale,
-    inputs.solarReferenceFoldIncrease,
-    props.inputConfiguration === "Basic"
-      ? result!.windNominalCapacity
-      : model.windNominalCapacity,
-    inputs.windReferenceCapacity,
-    inputs.windFarmBuildCost,
-    inputs.windCostReductionWithScale,
-    inputs.windReferenceFoldIncrease,
-    batteryRatedPower,
-    batteryStorageDuration,
-    batteryCosts,
-    gridConnectionCost
+      inputs.powerPlantConfiguration,
+      inputs.powerSupplyOption,
+      model.electrolyserNominalCapacity,
+      inputs.electrolyserReferenceCapacity,
+      inputs.electrolyserPurchaseCost,
+      inputs.electrolyserCostReductionWithScale,
+      inputs.electrolyserReferenceFoldIncrease,
+      inputs.powerPlantType,
+      model.solarNominalCapacity,
+      inputs.solarReferenceCapacity,
+      inputs.solarFarmBuildCost,
+      inputs.solarPVCostReductionWithScale,
+      inputs.solarReferenceFoldIncrease,
+      model.windNominalCapacity,
+      inputs.windReferenceCapacity,
+      inputs.windFarmBuildCost,
+      inputs.windCostReductionWithScale,
+      inputs.windReferenceFoldIncrease,
+      batteryRatedPower,
+      batteryStorageDuration,
+      batteryCosts,
+      gridConnectionCost
   );
 
   const {
@@ -336,39 +314,35 @@ export default function WorkingData(props: Props) {
     gridConnectionOpexPerYear,
     totalOpex,
   } = getOpex(
-    inputs.powerPlantConfiguration,
-    inputs.powerSupplyOption,
-    stackReplacementType,
-    stackDegradation,
-    maximumDegradationBeforeReplacement,
-    projectTimeline,
-    totalOperatingHours,
-    stackLifetime,
-    inputs.electrolyserStackReplacement,
-    electrolyserCAPEX,
-    inputs.electrolyserOMCost,
-    inputs.powerPlantType,
-    solarOpex,
-    props.inputConfiguration === "Basic"
-      ? result!.solarNominalCapacity
-      : model.solarNominalCapacity,
-    windOpex,
-    props.inputConfiguration === "Basic"
-      ? result!.windNominalCapacity
-      : model.windNominalCapacity,
-    batteryOMCost,
-    batteryRatedPower,
-    batteryReplacementCost,
-    batteryCAPEX,
-    batteryLifetime,
-    additionalTransmissionCharges,
-    electricityConsumed,
-    electricityConsumedByBattery,
-    principalPPACost,
-    inputs.waterSupplyCost,
-    inputs.waterRequirementOfElectrolyser,
-    h2Produced,
-    inputs.additionalAnnualCosts
+      inputs.powerPlantConfiguration,
+      inputs.powerSupplyOption,
+      stackReplacementType,
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      projectTimeline,
+      totalOperatingHours,
+      stackLifetime,
+      inputs.electrolyserStackReplacement,
+      electrolyserCAPEX,
+      inputs.electrolyserOMCost,
+      inputs.powerPlantType,
+      solarOpex,
+      model.solarNominalCapacity,
+      windOpex,
+      model.windNominalCapacity,
+      batteryOMCost,
+      batteryRatedPower,
+      batteryReplacementCost,
+      batteryCAPEX,
+      batteryLifetime,
+      additionalTransmissionCharges,
+      electricityConsumed,
+      electricityConsumedByBattery,
+      principalPPACost,
+      inputs.waterSupplyCost,
+      inputs.waterRequirementOfElectrolyser,
+      h2Produced,
+      inputs.additionalAnnualCosts
   );
 
   const {
@@ -502,11 +476,9 @@ export default function WorkingData(props: Props) {
       <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
         <Grid item>
           {KeyInputsPane(
-            location,
-            props.inputConfiguration === "Basic"
-              ? result!.electrolyserNominalCapacity
-              : inputs.electrolyserNominalCapacity,
-            model.totalNominalPowerPlantCapacity
+              location,
+              model.electrolyserNominalCapacity,
+              model.totalNominalPowerPlantCapacity
           )}
         </Grid>
         <Grid item>
