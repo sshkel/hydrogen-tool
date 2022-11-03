@@ -124,14 +124,11 @@ export default function WorkingData(props: Props) {
     batteryRatedPower = 0,
     batteryStorageDuration = 0,
     electrolyserEfficiency = 0,
-    electrolyserMaximumLoad,
-    electrolyserMinimumLoad,
     gridConnectionCost = 0,
     principalPPACost = 0,
     secAtNominalLoad = 0,
     solarOpex = 0,
     windOpex = 0,
-
   } = inputs;
 
   const location = props.location;
@@ -154,8 +151,8 @@ export default function WorkingData(props: Props) {
     electrolyserEfficiency,
     electrolyserEpcCosts: inputs.electrolyserEpcCosts,
     electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
-    electrolyserMaximumLoad,
-    electrolyserMinimumLoad,
+    electrolyserMaximumLoad:inputs.electrolyserMaximumLoad,
+    electrolyserMinimumLoad:inputs.electrolyserMinimumLoad,
     electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
     electrolyserOMCost: inputs.electrolyserOMCost,
     electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
