@@ -2,7 +2,11 @@ import {
   backCalculateElectrolyserCapacity, backCalculateInputFields,
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
-import {getOpex, maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
+import {
+  calculatePerYearOpex,
+  getOpex,
+  maxDegradationStackReplacementYears
+} from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
   PowerCapacityConfiguration, PowerPlantConfiguration,
@@ -36,6 +40,7 @@ import {
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
 
 export type HydrogenData = {
+  inflationRate: number;
   additionalAnnualCosts: number;
   waterRequirementOfElectrolyser: number;
   waterSupplyCost: number;
@@ -373,6 +378,28 @@ export class HydrogenModel {
         this.parameters.waterRequirementOfElectrolyser,
         h2Produced,
         this.parameters.additionalAnnualCosts
+    );
+
+
+    const {
+      electrolyserOpexPerYear,
+      powerPlantOpexPerYear,
+      batteryOpexPerYear,
+      waterOpexPerYear,
+      electricityPurchaseOpexPerYear,
+      additionalOpexPerYear,
+    } = calculatePerYearOpex(
+        electrolyserOpexCost,
+        this.parameters.inflationRate,
+        this.parameters.projectTimeline,
+        stackReplacementCostsOverProjectLife,
+        electricityOpexCost,
+        powerPlantOpexCost,
+        this.parameters.additionalAnnualCosts,
+        this.parameters.batteryRatedPower,
+        batteryOpexCost,
+        batteryReplacementCostsOverProjectLife,
+        waterOpexCost
     );
 
 
