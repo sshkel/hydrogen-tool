@@ -38,8 +38,10 @@ import {
 } from "./consts";
 
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
+import {sales} from "../components/charts/cost-functions";
 
 export type HydrogenData = {
+  discountRate: number;
   inflationRate: number;
   additionalAnnualCosts: number;
   waterRequirementOfElectrolyser: number;
@@ -401,7 +403,30 @@ export class HydrogenModel {
         batteryReplacementCostsOverProjectLife,
         waterOpexCost
     );
+    const operatingCosts: {
+      projectTimeline: number;
+      costs: { [key: string]: number[] };
+    } = {
+      projectTimeline: this.parameters.projectTimeline,
+      costs: {
+        "Electrolyser OPEX": electrolyserOpexPerYear,
+        "Power Plant OPEX": powerPlantOpexPerYear,
+        "Battery OPEX": batteryOpexPerYear,
+        "Additional Annual Costs": additionalOpexPerYear,
+        "Water Costs": waterOpexPerYear,
+        "Electricity Purchase": electricityPurchaseOpexPerYear,
+      },
+    };
 
+    const { lch2, hydrogenProductionCost } = sales(
+        totalCapexCost,
+        totalEpcCost,
+        totalLandCost,
+        this.parameters.projectTimeline,
+        this.parameters.discountRate / 100,
+        totalOpex,
+        h2Produced
+    );
 
     return {
       durationCurves: durationCurves,

@@ -189,6 +189,7 @@ export default function WorkingData(props: Props) {
     waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
     waterSupplyCost: inputs.waterSupplyCost,
     inflationRate: inputs.inflationRate,
+    discountRate,
     principalPPACost,
     additionalTransmissionCharges,
     batteryReplacementCost,
