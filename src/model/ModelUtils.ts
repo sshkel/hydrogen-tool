@@ -10,6 +10,8 @@ import {
   RATED_CAPACITY_TIME,
   TOTAL_OPERATING_TIME,
 } from "./consts";
+import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
+import {HydrogenData} from "./HydrogenModel";
 
 // returns Generator_CF series
 export function calculateGeneratorCf(
@@ -279,3 +281,18 @@ export function getTabulatedOutput(
 
   return summary;
 }
+
+export function initialiseStackReplacementYears(
+    parameters: HydrogenData,
+    projectTimeline: number
+): number[] {
+  if (parameters.stackReplacementType === "Maximum Degradation Level") {
+    return maxDegradationStackReplacementYears(
+        parameters.stackDegradation,
+        parameters.maximumDegradationBeforeReplacement || 0,
+        projectTimeline
+    );
+  }
+  return [];
+}
+

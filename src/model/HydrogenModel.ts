@@ -5,7 +5,6 @@ import {
 import {
   calculatePerYearOpex,
   getOpex,
-  maxDegradationStackReplacementYears
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
@@ -26,7 +25,7 @@ import {
   calculateFixedHydrogenProduction,
   calculateGeneratorCf,
   calculateOverloadingModel,
-  getTabulatedOutput,
+  getTabulatedOutput, initialiseStackReplacementYears,
 } from "./ModelUtils";
 import {
   BATTERY_OUTPUT,
@@ -600,14 +599,14 @@ export class HydrogenModel {
   private calculateHydrogenModelWithDegradation(
     projectTimeline: number
   ): ProjectModelSummary {
-    this.stackReplacementYears = HydrogenModel.initialiseStackReplacementYears(
-      this.parameters,
-      projectTimeline
+    this.stackReplacementYears = initialiseStackReplacementYears(
+        this.parameters,
+        projectTimeline
     );
     let year = 1;
     // Calculate first year separately
     const hourlyOperation =
-      this.calculateAdvancedElectrolyserHourlyOperation(year);
+        this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
     const operatingOutputs = this.calculateElectrolyserOutput(hourlyOperation);
 
@@ -641,26 +640,30 @@ export class HydrogenModel {
     projectTimeline: number
   ): ProjectModelSummary {
     const hourlyOperation = this.calculateHourlyOperation(
-      this.powerPlantOversizeRatio,
-      this.electrolyserNominalCapacity,
-      this.parameters.solarToWindPercentage / 100,
-      1 - this.parameters.solarToWindPercentage / 100,
-      this.parameters.solarDegradation,
-      this.parameters.windDegradation,
-      this.parameters.stackDegradation,
-      this.parameters.location,
-      this.elecMaxLoad,
-      this.elecMinLoad,
-      this.hydOutput,
-      this.specCons,
-      this.elecOverload,
-      this.parameters.timeBetweenOverloading,
-      this.batteryEnergy,
-      this.parameters.batteryStorageDuration,
-      this.batteryEfficiency,
-      this.parameters.batteryRatedPower,
-      this.battMin,
-      1
+        this.stackLifetime,
+        this.solarData,
+        this.windData,
+        this.hoursPerYear,
+        this.powerPlantOversizeRatio,
+        this.electrolyserNominalCapacity,
+        this.parameters.solarToWindPercentage / 100,
+        1 - this.parameters.solarToWindPercentage / 100,
+        this.parameters.solarDegradation,
+        this.parameters.windDegradation,
+        this.parameters.stackDegradation,
+        this.parameters.location,
+        this.elecMaxLoad,
+        this.elecMinLoad,
+        this.hydOutput,
+        this.specCons,
+        this.elecOverload,
+        this.parameters.timeBetweenOverloading,
+        this.batteryEnergy,
+        this.parameters.batteryStorageDuration,
+        this.batteryEfficiency,
+        this.parameters.batteryRatedPower,
+        this.battMin,
+        1
     );
 
     this.hourlyOperationsInYearOne = hourlyOperation;
@@ -703,26 +706,30 @@ export class HydrogenModel {
     year: number
   ): ModelHourlyOperation {
     return this.calculateHourlyOperation(
-      this.totalNominalPowerPlantCapacity / this.electrolyserNominalCapacity,
-      this.electrolyserNominalCapacity,
-      this.solarNominalCapacity / this.totalNominalPowerPlantCapacity,
-      this.windNominalCapacity / this.totalNominalPowerPlantCapacity,
-      this.parameters.solarDegradation,
-      this.parameters.windDegradation,
-      this.parameters.stackDegradation,
-      this.parameters.location,
-      this.elecMaxLoad,
-      this.elecMinLoad,
-      this.hydOutput,
-      this.specCons,
-      this.elecOverload,
-      this.parameters.timeBetweenOverloading,
-      this.batteryEnergy,
-      this.parameters.batteryStorageDuration,
-      this.batteryEfficiency,
-      this.parameters.batteryRatedPower,
-      this.battMin,
-      year
+        this.stackLifetime,
+        this.solarData,
+        this.windData,
+        this.hoursPerYear,
+        this.totalNominalPowerPlantCapacity / this.electrolyserNominalCapacity,
+        this.electrolyserNominalCapacity,
+        this.solarNominalCapacity / this.totalNominalPowerPlantCapacity,
+        this.windNominalCapacity / this.totalNominalPowerPlantCapacity,
+        this.parameters.solarDegradation,
+        this.parameters.windDegradation,
+        this.parameters.stackDegradation,
+        this.parameters.location,
+        this.elecMaxLoad,
+        this.elecMinLoad,
+        this.hydOutput,
+        this.specCons,
+        this.elecOverload,
+        this.parameters.timeBetweenOverloading,
+        this.batteryEnergy,
+        this.parameters.batteryStorageDuration,
+        this.batteryEfficiency,
+        this.parameters.batteryRatedPower,
+        this.battMin,
+        year
     );
   }
 
@@ -749,36 +756,40 @@ export class HydrogenModel {
   //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
   //       """
   private calculateHourlyOperation(
-    oversizeRatio: number,
-    elecCapacity: number,
-    solarRatio: number,
-    windRatio: number,
-    solarDegradation: number,
-    windDegradation: number,
-    stackDegradation: number,
-    location: string,
-    elecMaxLoad: number,
-    elecMinLoad: number,
-    hydOutput: number,
-    specCons: number,
-    elecOverload: number,
-    elecOverloadRecharge: number,
-    batteryEnergy: number,
-    batteryHours: number,
-    batteryEfficiency: number,
-    batteryPower: number,
-    battMin: number,
-    year: number
+      stackLifetime: number | undefined,
+      solarData: CsvRow[],
+      windData: CsvRow[],
+      hoursPerYear: number,
+      oversizeRatio: number,
+      elecCapacity: number,
+      solarRatio: number,
+      windRatio: number,
+      solarDegradation: number,
+      windDegradation: number,
+      stackDegradation: number,
+      location: string,
+      elecMaxLoad: number,
+      elecMinLoad: number,
+      hydOutput: number,
+      specCons: number,
+      elecOverload: number,
+      elecOverloadRecharge: number,
+      batteryEnergy: number,
+      batteryHours: number,
+      batteryEfficiency: number,
+      batteryPower: number,
+      battMin: number,
+      year: number
   ): ModelHourlyOperation {
     const generatorCf = calculateGeneratorCf(
-      this.solarData,
-      this.windData,
-      solarRatio,
-      windRatio,
-      location,
-      solarDegradation,
-      windDegradation,
-      year
+        solarData,
+        windData,
+        solarRatio,
+        windRatio,
+        location,
+        solarDegradation,
+        windDegradation,
+        year
     );
 
     // normal electrolyser calculation
@@ -789,7 +800,7 @@ export class HydrogenModel {
       generatorCf
     );
 
-    let batteryNetCharge: number[] = new Array(this.hoursPerYear).fill(0);
+    let batteryNetCharge: number[] = new Array(hoursPerYear).fill(0);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
@@ -832,7 +843,7 @@ export class HydrogenModel {
       stackDegradation,
       electrolyserCf,
       year,
-      this.stackLifetime
+        stackLifetime
     );
 
     const hydrogenProdFixed = calculateFixedHydrogenProduction(
@@ -849,6 +860,7 @@ export class HydrogenModel {
       Net_Battery_Flow: batteryNetCharge,
     };
   }
+
   // TODO refactor Tara's dirty state setting
   private calculateStackDegradation(
     stackDegradation: number,
@@ -877,17 +889,4 @@ export class HydrogenModel {
     return 0;
   }
 
-  private static initialiseStackReplacementYears(
-      parameters: HydrogenData,
-      projectTimeline: number
-  ): number[] {
-    if (parameters.stackReplacementType === "Maximum Degradation Level") {
-      return maxDegradationStackReplacementYears(
-          parameters.stackDegradation,
-          parameters.maximumDegradationBeforeReplacement || 0,
-          projectTimeline
-      );
-    }
-    return [];
-  }
 }
