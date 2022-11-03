@@ -511,13 +511,13 @@ export class HydrogenModel {
     };
 
     return {
-      durationCurves: durationCurves,
-      hourlyCapFactors: hourlyCapFactors,
-      indirectCostBreakdown: indirectCostBreakdown,
-      capitalCostBreakdown: capitalCostBreakdown,
-      operatingCosts: operatingCosts,
-      lch2BreakdownData: lch2BreakdownData,
-      summaryTableData: summaryTableData
+      durationCurves,
+      hourlyCapFactors,
+      indirectCostBreakdown,
+      capitalCostBreakdown,
+      operatingCosts,
+      lch2BreakdownData,
+      summaryTableData
     }
   }
 
@@ -555,12 +555,10 @@ export class HydrogenModel {
 
     }
 
-    const projectSummary =
-      stackDegradation + solarDegradation + windDegradation === 0
+    return stackDegradation + solarDegradation + windDegradation === 0
         ? this.calculateHydrogenModelWithoutDegradation(projectTimeline)
         : this.calculateHydrogenModelWithDegradation(projectTimeline);
 
-    return projectSummary;
   }
 
   /**
@@ -602,7 +600,7 @@ export class HydrogenModel {
   private calculateHydrogenModelWithDegradation(
     projectTimeline: number
   ): ProjectModelSummary {
-    this.stackReplacementYears = this.initialiseStackReplacementYears(
+    this.stackReplacementYears = HydrogenModel.initialiseStackReplacementYears(
       this.parameters,
       projectTimeline
     );
@@ -731,20 +729,20 @@ export class HydrogenModel {
   private calculateElectrolyserOutput(
     hourlyOperation: ModelHourlyOperation
   ): ModelSummaryPerYear {
-    const operatingOutputs = getTabulatedOutput(
-      hourlyOperation.Generator_CF,
-      hourlyOperation.Electrolyser_CF,
-      hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Net_Battery_Flow,
-      this.electrolyserNominalCapacity,
-      this.totalNominalPowerPlantCapacity,
-      this.kgtoTonne,
-      this.hoursPerYear,
-      this.elecMaxLoad,
-      this.batteryEfficiency
+    return getTabulatedOutput(
+        hourlyOperation.Generator_CF,
+        hourlyOperation.Electrolyser_CF,
+        hourlyOperation.Hydrogen_prod_fixed,
+        hourlyOperation.Net_Battery_Flow,
+        this.electrolyserNominalCapacity,
+        this.totalNominalPowerPlantCapacity,
+        this.kgtoTonne,
+        this.hoursPerYear,
+        this.elecMaxLoad,
+        this.batteryEfficiency
     );
 
-    return operatingOutputs;
+
   }
 
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
@@ -844,14 +842,12 @@ export class HydrogenModel {
       specCons
     );
 
-    const workingDf = {
+    return {
       Generator_CF: generatorCf,
       Electrolyser_CF: electrolyserCf,
       Hydrogen_prod_fixed: hydrogenProdFixed,
       Net_Battery_Flow: batteryNetCharge,
     };
-
-    return workingDf;
   }
   // TODO refactor Tara's dirty state setting
   private calculateStackDegradation(
@@ -881,15 +877,15 @@ export class HydrogenModel {
     return 0;
   }
 
-  private initialiseStackReplacementYears(
-    parameters: HydrogenData,
-    projectTimeline: number
+  private static initialiseStackReplacementYears(
+      parameters: HydrogenData,
+      projectTimeline: number
   ): number[] {
     if (parameters.stackReplacementType === "Maximum Degradation Level") {
       return maxDegradationStackReplacementYears(
-        parameters.stackDegradation,
-        parameters.maximumDegradationBeforeReplacement || 0,
-        projectTimeline
+          parameters.stackDegradation,
+          parameters.maximumDegradationBeforeReplacement || 0,
+          projectTimeline
       );
     }
     return [];
