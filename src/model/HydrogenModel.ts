@@ -25,7 +25,7 @@ import {
   calculateFixedHydrogenProduction,
   calculateGeneratorCf,
   calculateOverloadingModel,
-  getTabulatedOutput, initialiseStackReplacementYears,
+  calculateSummary, initialiseStackReplacementYears,
 } from "./ModelUtils";
 import {
   BATTERY_OUTPUT,
@@ -575,7 +575,7 @@ export class HydrogenModel {
     const hourlyOperation =
       this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
-    const operatingOutputs = getTabulatedOutput(
+    const operatingOutputs = calculateSummary(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -679,7 +679,7 @@ export class HydrogenModel {
       this.electrolyserNominalCapacity
     );
 
-    const operatingOutputs = getTabulatedOutput(
+    const operatingOutputs = calculateSummary(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -736,7 +736,7 @@ export class HydrogenModel {
   private calculateElectrolyserOutput(
     hourlyOperation: ModelHourlyOperation
   ): ModelSummaryPerYear {
-    return getTabulatedOutput(
+    return calculateSummary(
         hourlyOperation.Generator_CF,
         hourlyOperation.Electrolyser_CF,
         hourlyOperation.Hydrogen_prod_fixed,

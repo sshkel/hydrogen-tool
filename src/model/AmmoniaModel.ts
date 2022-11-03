@@ -17,7 +17,7 @@ import {
   calculateFixedHydrogenProduction,
   calculateGeneratorCf,
   calculateOverloadingModel,
-  getTabulatedOutput,
+  calculateSummary,
 } from "./ModelUtils";
 import { SUMMARY_KEYS } from "./consts";
 
@@ -215,7 +215,7 @@ export class AmmoniaModel {
     const hourlyOperation =
       this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
-    const operatingOutputs = getTabulatedOutput(
+    const operatingOutputs = calculateSummary(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -315,7 +315,7 @@ export class AmmoniaModel {
       this.elecCapacity
     );
 
-    const operatingOutputs = getTabulatedOutput(
+    const operatingOutputs = calculateSummary(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,
@@ -368,7 +368,7 @@ export class AmmoniaModel {
   private calculateElectrolyserOutput(
     hourlyOperation: ModelHourlyOperation
   ): ModelSummaryPerYear {
-    const operatingOutputs = getTabulatedOutput(
+    const operatingOutputs = calculateSummary(
       hourlyOperation.Generator_CF,
       hourlyOperation.Electrolyser_CF,
       hourlyOperation.Hydrogen_prod_fixed,

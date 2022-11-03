@@ -232,7 +232,7 @@ export function calculateOverloadingModel(
   return electrolyserCfoverload;
 }
 
-export function getTabulatedOutput(
+export function calculateSummary(
   generatorCapFactor: number[],
   electrolyserCapFactor: number[],
   hydrogenProdFixed: number[],
