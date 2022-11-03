@@ -42,21 +42,21 @@ import {generateLCBreakdown} from "../components/charts/lch2-calculations";
 
 export type HydrogenData = {
   additionalAnnualCosts: number;
-  additionalTransmissionCharges: number;
+  additionalTransmissionCharges: number | undefined;
   additionalUpfrontCosts: number;
-  batteryCosts: number;
+  batteryCosts: number | undefined;
   batteryEfficiency: number;
   batteryEpcCosts: number | undefined;
-  batteryLandProcurementCosts:  number | undefined;
-  batteryLifetime: number;
-  batteryMinCharge: number;
-  batteryOMCost: number;
-  batteryRatedPower: number;
-  batteryReplacementCost: number;
-  batteryStorageDuration: number;
+  batteryLandProcurementCosts: number | undefined;
+  batteryLifetime: number | undefined;
+  batteryMinCharge: number | undefined;
+  batteryOMCost: number | undefined;
+  batteryRatedPower: number | undefined;
+  batteryReplacementCost: number | undefined;
+  batteryStorageDuration: number | undefined;
   discountRate: number;
   electrolyserCostReductionWithScale: number;
-  electrolyserEfficiency: number;
+  electrolyserEfficiency: number | undefined;
   electrolyserEpcCosts: number;
   electrolyserLandProcurementCosts: number;
   electrolyserMaximumLoad: number;
@@ -67,7 +67,7 @@ export type HydrogenData = {
   electrolyserReferenceCapacity: number;
   electrolyserReferenceFoldIncrease: number;
   electrolyserStackReplacement: number;
-  gridConnectionCost: number;
+  gridConnectionCost: number | undefined;
   inflationRate: number;
   inputConfiguration: InputConfiguration;
   location: string;
@@ -78,16 +78,16 @@ export type HydrogenData = {
   powerPlantOversizeRatio: number;
   powerPlantType: PowerPlantType;
   powerSupplyOption: PowerSupplyOption;
-  principalPPACost: number;
+  principalPPACost: number | undefined;
   projectScale: number;
   projectTimeline: number;
-  secAtNominalLoad: number;
+  secAtNominalLoad: number | undefined;
   solarDegradation: number;
   solarEpcCosts: number;
   solarFarmBuildCost: number;
   solarLandProcurementCosts: number;
   solarNominalCapacity: number;
-  solarOpex: number;
+  solarOpex: number | undefined;
   solarPVCostReductionWithScale: number;
   solarReferenceCapacity: number;
   solarReferenceFoldIncrease: number;
@@ -104,10 +104,9 @@ export type HydrogenData = {
   windFarmBuildCost: number;
   windLandProcurementCosts: number;
   windNominalCapacity: number;
-  windOpex: number;
+  windOpex: number | undefined;
   windReferenceCapacity: number;
   windReferenceFoldIncrease: number;
-
 };
 
 export class HydrogenModel {
@@ -115,7 +114,6 @@ export class HydrogenModel {
   readonly MWtokW = 1000; // kW/MW
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089; // kg/m3
-  readonly secAtNominalLoad = 33.33; // kWh/kg
 
   // calculated params
   totalNominalPowerPlantCapacity: number;
@@ -147,13 +145,42 @@ export class HydrogenModel {
   powerPlantOversizeRatio: any;
   powerPlantType: PowerPlantType;
   private discountRate: number;
+  private additionalTransmissionCharges: number;
+  private batteryCosts: number;
+  private batteryLifetime: number;
+  private batteryMinCharge: number;
+  private windOpex: number;
+  private solarOpex: number;
+  private principalPPACost: number;
+  private gridConnectionCost: number;
+  private batteryOMCost: number;
+  private batteryReplacementCost: number;
+  private batteryRatedPower: number;
+  private batteryStorageDuration: number;
+  private electrolyserEfficiency: number;
+  private secAtNominalLoad: number;
 
   constructor(
-    parameters: HydrogenData,
-    solarData: CsvRow[],
-    windData: CsvRow[]
+      parameters: HydrogenData,
+      solarData: CsvRow[],
+      windData: CsvRow[]
   ) {
     this.parameters = parameters;
+
+    this.additionalTransmissionCharges = parameters.additionalTransmissionCharges ?? 0;
+    this.batteryCosts = parameters.batteryCosts ?? 0;
+    this.batteryLifetime = parameters.batteryLifetime ?? 0;
+    this.batteryMinCharge = parameters.batteryMinCharge ?? 0;
+    this.batteryOMCost = parameters.batteryOMCost ?? 0;
+    this.batteryReplacementCost = parameters.batteryReplacementCost ?? 0;
+    this.batteryRatedPower = parameters.batteryRatedPower ?? 0;
+    this.batteryStorageDuration = parameters.batteryStorageDuration ?? 0;
+    this.electrolyserEfficiency = parameters.electrolyserEfficiency ?? 0;
+    this.gridConnectionCost = parameters.gridConnectionCost ?? 0;
+    this.principalPPACost = parameters.principalPPACost ?? 0;
+    this.secAtNominalLoad = parameters.secAtNominalLoad ?? 0;
+    this.solarOpex = parameters.solarOpex ?? 0;
+    this.windOpex = parameters.windOpex ?? 0;
     this.powerPlantType = parameters.powerPlantType;
 
     // Loaded data
@@ -164,7 +191,7 @@ export class HydrogenModel {
     // Stack replacement logic for degradation
     this.stackReplacementYears = [];
     this.stackLifetime =
-      parameters.stackReplacementType === "Cumulative Hours"
+        parameters.stackReplacementType === "Cumulative Hours"
         ? parameters.stackLifetime
         : undefined;
     this.currentStackOperatingHours = 0;
@@ -216,14 +243,14 @@ export class HydrogenModel {
 
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
-    this.elecEff = parameters.electrolyserEfficiency / 100;
+    this.elecEff = this.electrolyserEfficiency / 100;
     this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
-        parameters.batteryRatedPower * this.parameters.batteryStorageDuration;
+        this.batteryRatedPower * this.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
-    this.battMin = parameters.batteryMinCharge / 100;
-    this.specCons = this.parameters.secAtNominalLoad * this.H2VoltoMass;
+    this.battMin = this.batteryMinCharge / 100;
+    this.specCons = this.secAtNominalLoad * this.H2VoltoMass;
     this.discountRate = this.parameters.discountRate / 100;
   }
 
@@ -280,10 +307,10 @@ export class HydrogenModel {
         this.parameters.windFarmBuildCost,
         this.parameters.windCostReductionWithScale,
         this.parameters.windReferenceFoldIncrease,
-        this.parameters.batteryRatedPower,
-        this.parameters.batteryStorageDuration,
-        this.parameters.batteryCosts,
-        this.parameters.gridConnectionCost
+        this.batteryRatedPower,
+        this.batteryStorageDuration,
+        this.batteryCosts,
+        this.gridConnectionCost
     );
 
     const {
@@ -363,19 +390,19 @@ export class HydrogenModel {
         electrolyserCAPEX,
         this.parameters.electrolyserOMCost,
         this.parameters.powerPlantType,
-        this.parameters.solarOpex,
+        this.solarOpex,
         this.solarNominalCapacity,
-        this.parameters.windOpex,
+        this.windOpex,
         this.windNominalCapacity,
-        this.parameters.batteryOMCost,
-        this.parameters.batteryRatedPower,
-        this.parameters.batteryReplacementCost,
+        this.batteryOMCost,
+        this.batteryRatedPower,
+        this.batteryReplacementCost,
         batteryCAPEX,
-        this.parameters.batteryLifetime,
-        this.parameters.additionalTransmissionCharges,
+        this.batteryLifetime,
+        this.additionalTransmissionCharges,
         electricityConsumed,
         electricityConsumedByBattery,
-        this.parameters.principalPPACost,
+        this.principalPPACost,
         this.parameters.waterSupplyCost,
         this.parameters.waterRequirementOfElectrolyser,
         h2Produced,
@@ -398,7 +425,7 @@ export class HydrogenModel {
         electricityOpexCost,
         powerPlantOpexCost,
         this.parameters.additionalAnnualCosts,
-        this.parameters.batteryRatedPower,
+        this.batteryRatedPower,
         batteryOpexCost,
         batteryReplacementCostsOverProjectLife,
         waterOpexCost
@@ -461,7 +488,7 @@ export class HydrogenModel {
         stackReplacementCostsOverProjectLife,
         electricityConsumed,
         electricityConsumedByBattery,
-        this.parameters.principalPPACost,
+        this.principalPPACost,
         gridConnectionOpexPerYear,
         gridConnectionCAPEX
     );
@@ -657,9 +684,9 @@ export class HydrogenModel {
         this.elecOverload,
         this.parameters.timeBetweenOverloading,
         this.batteryEnergy,
-        this.parameters.batteryStorageDuration,
+        this.batteryStorageDuration,
         this.batteryEfficiency,
-        this.parameters.batteryRatedPower,
+        this.batteryRatedPower,
         this.battMin,
         1
     );
@@ -723,9 +750,9 @@ export class HydrogenModel {
         this.elecOverload,
         this.parameters.timeBetweenOverloading,
         this.batteryEnergy,
-        this.parameters.batteryStorageDuration,
+        this.batteryStorageDuration,
         this.batteryEfficiency,
-        this.parameters.batteryRatedPower,
+        this.batteryRatedPower,
         this.battMin,
         year
     );
