@@ -2,7 +2,7 @@ import {
   backCalculateElectrolyserCapacity, backCalculateInputFields,
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
-import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
+import {getOpex, maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
   PowerCapacityConfiguration, PowerPlantConfiguration,
@@ -36,6 +36,17 @@ import {
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
 
 export type HydrogenData = {
+  additionalAnnualCosts: number;
+  waterRequirementOfElectrolyser: number;
+  waterSupplyCost: number;
+  principalPPACost: number;
+  additionalTransmissionCharges: number;
+  batteryReplacementCost: number;
+  batteryOMCost: number;
+  windOpex: number;
+  solarOpex: number;
+  electrolyserOMCost: number;
+  electrolyserStackReplacement: number;
   additionalUpfrontCosts: number;
   batteryLandProcurementCosts:  number | undefined;
   batteryEpcCosts: number | undefined;
@@ -85,8 +96,8 @@ export type HydrogenData = {
   electrolyserEfficiency: number;
   // degradation parameters
   stackReplacementType: StackReplacementType;
-  stackLifetime?: number;
-  maximumDegradationBeforeReplacement?: number;
+  stackLifetime: number;
+  maximumDegradationBeforeReplacement: number;
   solarDegradation: number;
   windDegradation: number;
   stackDegradation: number;
@@ -322,6 +333,47 @@ export class HydrogenModel {
       "Indirect Costs": totalIndirectCosts,
     };
 
+    const {
+      electricityOpexCost,
+      electrolyserOpexCost,
+      powerPlantOpexCost,
+      batteryOpexCost,
+      waterOpexCost,
+      stackReplacementCostsOverProjectLife,
+      batteryReplacementCostsOverProjectLife,
+      gridConnectionOpexPerYear,
+      totalOpex,
+    } = getOpex(
+        this.parameters.powerPlantConfiguration,
+        this.parameters.powerSupplyOption,
+        this.parameters.stackReplacementType,
+        this.parameters.stackDegradation,
+        this.parameters.maximumDegradationBeforeReplacement,
+        this.parameters.projectTimeline,
+        totalOperatingHours,
+        this.parameters.stackLifetime,
+        this.parameters.electrolyserStackReplacement,
+        electrolyserCAPEX,
+        this.parameters.electrolyserOMCost,
+        this.parameters.powerPlantType,
+        this.parameters.solarOpex,
+        this.solarNominalCapacity,
+        this.parameters.windOpex,
+        this.windNominalCapacity,
+        this.parameters.batteryOMCost,
+        this.parameters.batteryRatedPower,
+        this.parameters.batteryReplacementCost,
+        batteryCAPEX,
+        this.parameters.batteryLifetime,
+        this.parameters.additionalTransmissionCharges,
+        electricityConsumed,
+        electricityConsumedByBattery,
+        this.parameters.principalPPACost,
+        this.parameters.waterSupplyCost,
+        this.parameters.waterRequirementOfElectrolyser,
+        h2Produced,
+        this.parameters.additionalAnnualCosts
+    );
 
 
     return {
