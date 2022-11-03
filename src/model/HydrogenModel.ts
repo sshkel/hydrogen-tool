@@ -38,7 +38,8 @@ import {
 } from "./consts";
 
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
-import {sales} from "../components/charts/cost-functions";
+import {roundToNearestInteger, roundToTwoDP, sales} from "../components/charts/cost-functions";
+import {generateLCBreakdown} from "../components/charts/lch2-calculations";
 
 export type HydrogenData = {
   discountRate: number;
@@ -418,7 +419,7 @@ export class HydrogenModel {
       },
     };
 
-    const { lch2, hydrogenProductionCost } = sales(
+    const {lch2, hydrogenProductionCost} = sales(
         totalCapexCost,
         totalEpcCost,
         totalLandCost,
@@ -428,9 +429,93 @@ export class HydrogenModel {
         h2Produced
     );
 
+    // LCH2 calculations
+    const {
+      lcPowerPlantCAPEX,
+      lcElectrolyserCAPEX,
+      lcIndirectCosts,
+      lcPowerPlantOPEX,
+      lcElectrolyserOPEX,
+      lcElectricityPurchase,
+      lcStackReplacement,
+      lcWater,
+      lcBattery,
+      lcGridConnection,
+      lcAdditionalCosts,
+    } = generateLCBreakdown(
+        this.parameters.powerPlantConfiguration,
+        this.parameters.powerSupplyOption,
+        powerPlantCAPEX,
+        hydrogenProductionCost,
+        electrolyserCAPEX,
+        totalIndirectCosts,
+        this.parameters.projectTimeline,
+        powerPlantOpexCost,
+        electrolyserOpexCost,
+        this.parameters.additionalAnnualCosts,
+        this.parameters.discountRate,
+        batteryOpexCost,
+        batteryReplacementCostsOverProjectLife,
+        batteryCAPEX,
+        waterOpexCost,
+        this.parameters.additionalUpfrontCosts,
+        stackReplacementCostsOverProjectLife,
+        electricityConsumed,
+        electricityConsumedByBattery,
+        this.parameters.principalPPACost,
+        gridConnectionOpexPerYear,
+        gridConnectionCAPEX
+    );
+
+    const lch2BreakdownData: { [key: string]: number } = {
+      "Power Plant CAPEX": lcPowerPlantCAPEX,
+      "Electrolyser CAPEX": lcElectrolyserCAPEX,
+      "Indirect Costs": lcIndirectCosts,
+      "Power Plant OPEX": lcPowerPlantOPEX,
+      "Electrolyser O&M": lcElectrolyserOPEX,
+      "Electricity Purchase": lcElectricityPurchase,
+      "Stack Replacement": lcStackReplacement,
+      "Water Cost": lcWater,
+      "Battery Cost": lcBattery,
+      "Grid Connection Cost": lcGridConnection,
+      "Additional Costs": lcAdditionalCosts,
+    };
+
+    const summaryTableData: { [key: string]: number } = {
+      "Power Plant Capacity Factor": roundToTwoDP(
+          mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
+      ),
+
+      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
+          mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))
+      ),
+      "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
+          mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
+      ),
+
+      "Electrolyser Capacity Factor": roundToTwoDP(
+          mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
+      ),
+
+      "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+          mean(electricityConsumed)
+      ),
+
+      "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+          roundToNearestInteger(mean(electricityProduced)),
+
+      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
+      "LCH2 ($/kg)": roundToTwoDP(lch2),
+    };
+
     return {
       durationCurves: durationCurves,
       hourlyCapFactors: hourlyCapFactors,
+      indirectCostBreakdown: indirectCostBreakdown,
+      capitalCostBreakdown: capitalCostBreakdown,
+      operatingCosts: operatingCosts,
+      lch2BreakdownData: lch2BreakdownData,
+      summaryTableData: summaryTableData
     }
   }
 
