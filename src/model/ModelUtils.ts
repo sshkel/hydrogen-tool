@@ -1,15 +1,5 @@
 import { mean, sum } from "../utils";
 import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
-import {
-  BATTERY_OUTPUT,
-  ELECTROLYSER_CF,
-  ENERGY_INPUT,
-  ENERGY_OUTPUT,
-  HYDROGEN_OUTPUT,
-  POWER_PLANT_CF,
-  RATED_CAPACITY_TIME,
-  TOTAL_OPERATING_TIME,
-} from "./consts";
 import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
 import {StackReplacementType} from "../types";
 
@@ -269,17 +259,16 @@ export function calculateSummary(
     -1 *
     (1 - (1 - batteryEfficiency) / 2);
 
-  let summary: ModelSummaryPerYear = {};
-  summary[POWER_PLANT_CF] = generatorCapacityFactor;
-  summary[RATED_CAPACITY_TIME] = timeElectrolyser;
-  summary[TOTAL_OPERATING_TIME] = totalOpsTime;
-  summary[ELECTROLYSER_CF] = achievedElectrolyserCf;
-  summary[ENERGY_INPUT] = energyInElectrolyser;
-  summary[ENERGY_OUTPUT] = surplus;
-  summary[BATTERY_OUTPUT] = totalBatteryOutput;
-  summary[HYDROGEN_OUTPUT] = hydrogenFixed;
-
-  return summary;
+  return {
+    powerPlantCapacityFactors:generatorCapacityFactor,
+    ratedCapacityTime: timeElectrolyser,
+    totalOperatingTime: totalOpsTime,
+    electrolyserCapacityFactors: achievedElectrolyserCf,
+    electricityConsumed: energyInElectrolyser,
+    electricityProduced:surplus,
+    electricityConsumedByBattery: totalBatteryOutput,
+    hydrogenProduction: hydrogenFixed
+  };
 }
 
 export function initialiseStackReplacementYears(

@@ -28,12 +28,8 @@ import {
   calculateSummary, initialiseStackReplacementYears,
 } from "./ModelUtils";
 import {
-  BATTERY_OUTPUT,
-  ELECTROLYSER_CF,
-  ENERGY_INPUT,
-  ENERGY_OUTPUT, HOURS_PER_YEAR, HYDROGEN_OUTPUT, POWER_PLANT_CF, RATED_CAPACITY_TIME,
-  SUMMARY_KEYS,
-  TOTAL_OPERATING_TIME
+  HOURS_PER_YEAR,
+
 } from "./consts";
 
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
@@ -261,14 +257,14 @@ export class HydrogenModel {
         this.calculateHydrogenModel(this.parameters.projectTimeline);
 
     // OPEX values
-    const electricityProduced: number[] = summary[`${ENERGY_OUTPUT}`];
-    const electricityConsumed: number[] = summary[`${ENERGY_INPUT}`];
-    const electricityConsumedByBattery: number[] = summary[`${BATTERY_OUTPUT}`];
-    const totalOperatingHours: number[] = summary[`${TOTAL_OPERATING_TIME}`].map(
+    const electricityProduced: number[] = summary.electricityProduced
+    const electricityConsumed: number[] = summary.electricityConsumed
+    const electricityConsumedByBattery: number[] = summary.electricityConsumedByBattery
+    const totalOperatingHours: number[] = summary.totalOperatingTime.map(
         (hours) => hours * HOURS_PER_YEAR
     );
 
-    const h2Produced = summary[`${HYDROGEN_OUTPUT}`];
+    const h2Produced = summary.hydrogenProduction;
 
     let hourlyOperations = this.getHourlyOperations();
 
@@ -509,18 +505,18 @@ export class HydrogenModel {
 
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
-          mean(summary[`${POWER_PLANT_CF}`].map((x) => x * 100))
+          mean(summary.powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
       "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
-          mean(summary[`${RATED_CAPACITY_TIME}`].map((x) => x * 100))
+          mean(summary.ratedCapacityTime.map((x) => x * 100))
       ),
       "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
-          mean(summary[`${TOTAL_OPERATING_TIME}`].map((x) => x * 100))
+          mean(summary.totalOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
-          mean(summary[`${ELECTROLYSER_CF}`].map((x) => x * 100))
+          mean(summary.electrolyserCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
@@ -567,7 +563,7 @@ export class HydrogenModel {
           solarToWindPercentage,
           currentPowerPlantType,
           this.parameters.projectScale,
-          mean(projectSummary[ELECTROLYSER_CF]),
+          mean(projectSummary.electrolyserCapacityFactors),
           this.hoursPerYear
       );
 
@@ -601,21 +597,30 @@ export class HydrogenModel {
       this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
     const operatingOutputs = calculateSummary(
-      hourlyOperation.powerplantCapacityFactors,
-      hourlyOperation.electrolyserCapacityFactors,
-      hourlyOperation.hydrogenProduction,
-      hourlyOperation.netBatteryFLow,
-      this.electrolyserNominalCapacity,
-      this.totalNominalPowerPlantCapacity,
-      this.kgtoTonne,
-      this.hoursPerYear,
-      this.elecMaxLoad,
-      this.batteryEfficiency
+        hourlyOperation.powerplantCapacityFactors,
+        hourlyOperation.electrolyserCapacityFactors,
+        hourlyOperation.hydrogenProduction,
+        hourlyOperation.netBatteryFLow,
+        this.electrolyserNominalCapacity,
+        this.totalNominalPowerPlantCapacity,
+        this.kgtoTonne,
+        this.hoursPerYear,
+        this.elecMaxLoad,
+        this.batteryEfficiency
     );
 
-    let projectSummary: ProjectModelSummary = {};
-    SUMMARY_KEYS.forEach((key) => {
-      projectSummary[key] = Array(projectTimeline).fill(operatingOutputs[key]);
+    let projectSummary: ProjectModelSummary = {
+      electricityConsumed: [],
+      electricityProduced: [],
+      electricityConsumedByBattery: [],
+      totalOperatingTime: [],
+      hydrogenProduction: [],
+      powerPlantCapacityFactors: [],
+      ratedCapacityTime: [],
+      electrolyserCapacityFactors: [],
+    };
+    Object.keys(projectSummary).forEach((key) => {
+      projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
     });
 
     return projectSummary;
@@ -662,15 +667,21 @@ export class HydrogenModel {
       );
     }
 
-    let projectSummary: ProjectModelSummary = {};
+    let projectSummary: ProjectModelSummary = {
+      electricityConsumed: [],
+      electricityProduced: [],
+      electricityConsumedByBattery: [],
+      totalOperatingTime: [],
+      hydrogenProduction: [],
+      powerPlantCapacityFactors: [],
+      ratedCapacityTime: [],
+      electrolyserCapacityFactors: [],
+    };
 
-    SUMMARY_KEYS.forEach((key) => {
-      projectSummary[key] = [];
-    });
 
     modelSummaryPerYear.forEach((yearSummary) => {
-      SUMMARY_KEYS.forEach((key) => {
-        projectSummary[key].push(yearSummary[key]);
+      Object.keys(projectSummary).forEach((key) => {
+        projectSummary[key as keyof ProjectModelSummary].push(yearSummary[key]);
       });
     });
 
@@ -723,19 +734,29 @@ export class HydrogenModel {
     const operatingOutputs = calculateSummary(
       hourlyOperation.powerplantCapacityFactors,
       hourlyOperation.electrolyserCapacityFactors,
-      hourlyOperation.hydrogenProduction,
-      hourlyOperation.netBatteryFLow,
-      this.electrolyserNominalCapacity,
-      this.totalNominalPowerPlantCapacity,
-      this.kgtoTonne,
-      this.hoursPerYear,
-      this.elecMaxLoad,
-      this.batteryEfficiency
+        hourlyOperation.hydrogenProduction,
+        hourlyOperation.netBatteryFLow,
+        this.electrolyserNominalCapacity,
+        this.totalNominalPowerPlantCapacity,
+        this.kgtoTonne,
+        this.hoursPerYear,
+        this.elecMaxLoad,
+        this.batteryEfficiency
     );
 
-    let projectSummary: ProjectModelSummary = {};
+    let projectSummary: ProjectModelSummary = {
+      electricityConsumed: [],
+      electricityProduced: [],
+      electricityConsumedByBattery: [],
+      totalOperatingTime: [],
+      hydrogenProduction: [],
+      powerPlantCapacityFactors: [],
+      ratedCapacityTime: [],
+      electrolyserCapacityFactors: [],
+    };
+
     Object.keys(operatingOutputs).forEach((key) => {
-      projectSummary[key] = Array(projectTimeline).fill(operatingOutputs[key]);
+      projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
     });
 
     return projectSummary;

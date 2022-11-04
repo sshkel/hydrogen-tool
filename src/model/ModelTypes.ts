@@ -10,5 +10,13 @@ export type ModelSummaryPerYear = {
 };
 
 export type ProjectModelSummary = {
-  [k: string]: number[];
+  electricityConsumed: number[]
+  electricityProduced:number[]
+  electricityConsumedByBattery: number[]
+  totalOperatingTime: number[]
+  hydrogenProduction: number[]
+  powerPlantCapacityFactors:number[]
+  ratedCapacityTime: number[]
+  electrolyserCapacityFactors: number[]
+
 };

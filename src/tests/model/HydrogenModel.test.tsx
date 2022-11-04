@@ -1,5 +1,5 @@
-import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
-import { CsvRow, ModelSummaryPerYear } from "../../model/ModelTypes";
+import {HydrogenData, HydrogenModel} from "../../model/HydrogenModel";
+import {CsvRow, ModelSummaryPerYear, ProjectModelSummary} from "../../model/ModelTypes";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf1 from "../resources/example1-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
@@ -269,8 +269,19 @@ function compareToModel(
     );
   });
 
+  const summaryTranslations = {
+    electricityConsumed: "Energy in to Electrolyser [MWh/yr]",
+    electricityProduced: "Surplus Energy [MWh/yr]",
+    electricityConsumedByBattery: "Total Battery Output [MWh/yr]",
+    totalOperatingTime: "Total Time Electrolyser is Operating",
+    hydrogenProduction: "Hydrogen Output [t/yr]",
+    powerPlantCapacityFactors: "Generator Capacity Factor",
+    ratedCapacityTime: "Time Electrolyser is at its Rated Capacity",
+    electrolyserCapacityFactors: "Achieved Electrolyser Capacity Factor"
+  }
+
   Object.keys(project_output).forEach((key: string) => {
     // Check first year results only since no degradation
-    expect(project_output[key][0]).toBeCloseTo(outputs[key], 8);
+    expect(project_output[key as keyof ProjectModelSummary][0]).toBeCloseTo(outputs[summaryTranslations[key as keyof ProjectModelSummary]], 8);
   });
 }
