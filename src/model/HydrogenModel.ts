@@ -635,16 +635,30 @@ export class HydrogenModel {
     const hourlyOperation =
         this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
-    const operatingOutputs = this.calculateElectrolyserOutput(hourlyOperation);
+    const calculateElectrolyserOutput = (hourlyOperation: ModelHourlyOperation) => {
+      return calculateSummary(
+          hourlyOperation.Generator_CF,
+          hourlyOperation.Electrolyser_CF,
+          hourlyOperation.Hydrogen_prod_fixed,
+          hourlyOperation.Net_Battery_Flow,
+          this.electrolyserNominalCapacity,
+          this.totalNominalPowerPlantCapacity,
+          this.kgtoTonne,
+          this.hoursPerYear,
+          this.elecMaxLoad,
+          this.batteryEfficiency
+      );
+    }
+    const operatingOutputs = calculateElectrolyserOutput(hourlyOperation);
 
     let modelSummaryPerYear: ModelSummaryPerYear[] = [];
     modelSummaryPerYear.push(operatingOutputs);
 
     for (year = 2; year <= projectTimeline; year++) {
       const hourlyOperationsByYear =
-        this.calculateAdvancedElectrolyserHourlyOperation(year);
+          this.calculateAdvancedElectrolyserHourlyOperation(year);
       modelSummaryPerYear.push(
-        this.calculateElectrolyserOutput(hourlyOperationsByYear)
+          calculateElectrolyserOutput(hourlyOperationsByYear)
       );
     }
 
@@ -758,25 +772,6 @@ export class HydrogenModel {
         this.battMin,
         year
     );
-  }
-
-  private calculateElectrolyserOutput(
-    hourlyOperation: ModelHourlyOperation
-  ): ModelSummaryPerYear {
-    return calculateSummary(
-        hourlyOperation.Generator_CF,
-        hourlyOperation.Electrolyser_CF,
-        hourlyOperation.Hydrogen_prod_fixed,
-        hourlyOperation.Net_Battery_Flow,
-        this.electrolyserNominalCapacity,
-        this.totalNominalPowerPlantCapacity,
-        this.kgtoTonne,
-        this.hoursPerYear,
-        this.elecMaxLoad,
-        this.batteryEfficiency
-    );
-
-
   }
 
   // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
