@@ -20,7 +20,7 @@ import {
 } from "../../model/consts";
 import {
   InputConfiguration,
-  Inputs,
+  Inputs, Model,
   UserInputFields,
 } from "../../types";
 import { BLUE, SAPPHIRE } from "../input/colors";
@@ -108,12 +108,14 @@ export default function WorkingData(props: Props) {
 
   const {
     inputConfiguration,
-    data: { projectScale = 0 },
+    data: {projectScale = 0},
   } = props;
 
   let inputs: Inputs = new SynthesisedInputs(props.data);
 
   const location = props.location;
+  const powerfuel = props.data.powerfuel;
+
   const dataModel: HydrogenData = {
     inputConfiguration: inputConfiguration,
     location: location,
@@ -183,19 +185,19 @@ export default function WorkingData(props: Props) {
     windCostReductionWithScale: inputs.windCostReductionWithScale,
   };
 
-  const model = new HydrogenModel(dataModel, state.solarData, state.windData);
+  let model: Model = new HydrogenModel(dataModel, state.solarData, state.windData);
+
   const results = model.produceResults()
 
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
-        <Grid item>
-          {KeyInputsPane(
-              location,
-              model.electrolyserNominalCapacity,
-              model.totalNominalPowerPlantCapacity
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <Grid container direction="column" sx={{backgroundColor: SAPPHIRE}}>
+          <Grid item>
+            {KeyInputsPane(
+                location,
+              results.electrolyserNominalCapacity,
+              results.totalNominalPowerPlantCapacity
           )}
         </Grid>
         <Grid item>

@@ -111,10 +111,8 @@ export type AmmoniaData = {
   ammoniaPlantSec: number; // raw input
   asuSec: number; // raw input
   hydrogenStorageCapacity: number; // raw input
-
   // ammonia plant load range
   ammoniaPlantMinimumTurndown: number; // raw input %
-
   // electrolyster and hydrogen storage paramteres
   // other operation factors
   minimumHydrogenStorage: number;
@@ -172,7 +170,7 @@ export class AmmoniaModel {
   // ammonia
   private ammoniaPlantPowerDemand: number;
   private airSeparationUnitCapacity: number;
-  private air_separation_unit_power_demand: number;
+  private airSeparationUnitPowerDemand: number;
   private hydrogenOutput: number;
 
   // parameters to expose to working data
@@ -280,7 +278,7 @@ export class AmmoniaModel {
     this.airSeparationUnitCapacity = air_separation_unit_capacity(
         this.parameters.ammoniaPlantCapacity
     );
-    this.air_separation_unit_power_demand = air_separation_unit_power_demand(
+    this.airSeparationUnitPowerDemand = air_separation_unit_power_demand(
         this.airSeparationUnitCapacity,
         this.parameters.asuSec
     );
@@ -294,14 +292,14 @@ export class AmmoniaModel {
     );
     this.solarNominalCapacity = nominal_solar_capacity(
         this.ammoniaPlantPowerDemand,
-        this.air_separation_unit_power_demand,
+        this.airSeparationUnitPowerDemand,
         this.electrolyserNominalCapacity,
         this.parameters.solarToWindPercentage / 100,
         this.parameters.powerPlantOversizeRatio
     );
     this.windNominalCapacity = nominal_wind_capacity(
         this.ammoniaPlantPowerDemand,
-        this.air_separation_unit_power_demand,
+        this.airSeparationUnitPowerDemand,
         this.electrolyserNominalCapacity,
         1 - this.parameters.solarToWindPercentage / 100,
         this.parameters.powerPlantOversizeRatio
@@ -316,16 +314,17 @@ export class AmmoniaModel {
     let summary: ProjectModelSummary =
         this.calculateHydrogenModel(this.parameters.projectTimeline);
 
-
     let hourlyOperations = this.getHourlyOperations();
 
     const durationCurves = {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
       "Electrolyser Duration Curve": hourlyOperations.electrolyserCapacityFactors,
+      Ammonia: hourlyOperations.ammoniaCapacityFactors,
     };
     const hourlyCapFactors = {
       Electrolyser: hourlyOperations.electrolyserCapacityFactors,
       "Power Plant": hourlyOperations.powerplantCapacityFactors,
+      Ammonia: hourlyOperations.ammoniaCapacityFactors,
     };
 
     const {
@@ -585,6 +584,8 @@ export class AmmoniaModel {
     };
 
     return {
+      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
+      totalNominalPowerPlantCapacity: this.totalNominalPowerPlantCapacity,
       durationCurves,
       hourlyCapFactors,
       indirectCostBreakdown,
@@ -941,7 +942,7 @@ export class AmmoniaModel {
           batteryEfficiency,
           this.totalNominalPowerPlantCapacity,
           this.electrolyserNominalCapacity,
-          this.air_separation_unit_power_demand,
+          this.airSeparationUnitPowerDemand,
           this.ammoniaPlantPowerDemand
       );
     }

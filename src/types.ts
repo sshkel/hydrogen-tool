@@ -35,6 +35,7 @@ export interface InputProps {
 }
 
 export interface UserInputFields {
+  powerfuel?: string;
   projectScale?: number;
   powerPlantOversizeRatio?: number;
   solarToWindPercentage?: number;
@@ -178,4 +179,9 @@ export interface Inputs {
   projectTimeline: number;
   discountRate: number;
   inflationRate: number;
+}
+
+
+export interface Model {
+  produceResults(): any
 }

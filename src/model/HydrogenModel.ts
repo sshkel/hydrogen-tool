@@ -7,7 +7,7 @@ import {
   getOpex,
 } from "../components/charts/opex-calculations";
 import {
-  InputConfiguration,
+  InputConfiguration, Model,
   PowerCapacityConfiguration, PowerPlantConfiguration,
   PowerPlantType, PowerSupplyOption,
   StackReplacementType,
@@ -105,7 +105,7 @@ export type HydrogenData = {
   windReferenceFoldIncrease: number;
 };
 
-export class HydrogenModel {
+export class HydrogenModel implements Model{
   // consts
   private readonly MWtokW = 1000; // kW/MW
   private readonly kgtoTonne = 1 / 1000;
@@ -528,6 +528,8 @@ export class HydrogenModel {
     };
 
     return {
+      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
+      totalNominalPowerPlantCapacity: this.totalNominalPowerPlantCapacity,
       durationCurves,
       hourlyCapFactors,
       indirectCostBreakdown,
