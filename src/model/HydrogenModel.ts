@@ -734,7 +734,7 @@ export class HydrogenModel {
     );
 
     let projectSummary: ProjectModelSummary = {};
-    SUMMARY_KEYS.forEach((key) => {
+    Object.keys(operatingOutputs).forEach((key) => {
       projectSummary[key] = Array(projectTimeline).fill(operatingOutputs[key]);
     });
 
