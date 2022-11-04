@@ -105,19 +105,19 @@ export type AmmoniaData = {
   windReferenceFoldIncrease: number;
   // AMMONIA
   // system sizing
-  ammonia_plant_capacity: number; // raw input
-  electrolyser_system_oversizing: number; // raw input %
+  ammoniaPlantCapacity: number; // raw input
+  electrolyserSystemOversizing: number; // raw input %
   // specific electricity consumption sec
-  ammonia_plant_sec: number; // raw input
-  asu_sec: number; // raw input
-  hydrogen_storage_capacity: number; // raw input
+  ammoniaPlantSec: number; // raw input
+  asuSec: number; // raw input
+  hydrogenStorageCapacity: number; // raw input
 
   // ammonia plant load range
-  ammonia_plant_minimum_turndown: number; // raw input %
+  ammoniaPlantMinimumTurndown: number; // raw input %
 
   // electrolyster and hydrogen storage paramteres
   // other operation factors
-  minimum_hydrogen_storage: number;
+  minimumHydrogenStorage: number;
 };
 
 export class AmmoniaModel {
@@ -170,8 +170,8 @@ export class AmmoniaModel {
   private currentStackOperatingHours: number;
 
   // ammonia
-  private ammonia_plant_power_demand: number;
-  private air_separation_unit_capacity: number;
+  private ammoniaPlantPowerDemand: number;
+  private airSeparationUnitCapacity: number;
   private air_separation_unit_power_demand: number;
   private hydrogenOutput: number;
 
@@ -272,35 +272,35 @@ export class AmmoniaModel {
 
 
     // ammonia
-    this.ammonia_plant_power_demand = ammonia_plant_power_demand(
-        this.parameters.ammonia_plant_capacity,
-        this.parameters.ammonia_plant_sec,
+    this.ammoniaPlantPowerDemand = ammonia_plant_power_demand(
+        this.parameters.ammoniaPlantCapacity,
+        this.parameters.ammoniaPlantSec,
         this.hoursPerYear
     );
-    this.air_separation_unit_capacity = air_separation_unit_capacity(
-        this.parameters.ammonia_plant_capacity
+    this.airSeparationUnitCapacity = air_separation_unit_capacity(
+        this.parameters.ammoniaPlantCapacity
     );
     this.air_separation_unit_power_demand = air_separation_unit_power_demand(
-        this.air_separation_unit_capacity,
-        this.parameters.asu_sec
+        this.airSeparationUnitCapacity,
+        this.parameters.asuSec
     );
     this.hydrogenOutput = hydrogen_output(
-        this.parameters.ammonia_plant_capacity
+        this.parameters.ammoniaPlantCapacity
     );
     this.electrolyserNominalCapacity = nominal_electrolyser_capacity(
         this.hydrogenOutput,
         this.secAtNominalLoad,
-        this.parameters.electrolyser_system_oversizing / 100
+        this.parameters.electrolyserSystemOversizing / 100
     );
     this.solarNominalCapacity = nominal_solar_capacity(
-        this.ammonia_plant_power_demand,
+        this.ammoniaPlantPowerDemand,
         this.air_separation_unit_power_demand,
         this.electrolyserNominalCapacity,
         this.parameters.solarToWindPercentage / 100,
         this.parameters.powerPlantOversizeRatio
     );
     this.windNominalCapacity = nominal_wind_capacity(
-        this.ammonia_plant_power_demand,
+        this.ammoniaPlantPowerDemand,
         this.air_separation_unit_power_demand,
         this.electrolyserNominalCapacity,
         1 - this.parameters.solarToWindPercentage / 100,
@@ -942,7 +942,7 @@ export class AmmoniaModel {
           this.totalNominalPowerPlantCapacity,
           this.electrolyserNominalCapacity,
           this.air_separation_unit_power_demand,
-          this.ammonia_plant_power_demand
+          this.ammoniaPlantPowerDemand
       );
     }
 
@@ -962,12 +962,12 @@ export class AmmoniaModel {
     );
     const ammoniaCapacityFactors = calculateNH3CapFactors(
         hydrogenProduction,
-        this.parameters.ammonia_plant_capacity,
-        this.parameters.hydrogen_storage_capacity,
-        this.parameters.ammonia_plant_minimum_turndown,
-        this.parameters.minimum_hydrogen_storage,
+        this.parameters.ammoniaPlantCapacity,
+        this.parameters.hydrogenStorageCapacity,
+        this.parameters.ammoniaPlantMinimumTurndown,
+        this.parameters.minimumHydrogenStorage,
         this.hydrogenOutput,
-        this.air_separation_unit_capacity,
+        this.airSeparationUnitCapacity,
         this.hoursPerYear
     );
 
