@@ -107,9 +107,9 @@ export type HydrogenData = {
 
 export class HydrogenModel {
   // consts
-  readonly MWtokW = 1000; // kW/MW
-  readonly kgtoTonne = 1 / 1000;
-  readonly H2VoltoMass = 0.089; // kg/m3
+  private readonly MWtokW = 1000; // kW/MW
+  private readonly kgtoTonne = 1 / 1000;
+  private readonly H2VoltoMass = 0.089; // kg/m3
 
   private readonly discountRate: number;
   private readonly additionalTransmissionCharges: number;
