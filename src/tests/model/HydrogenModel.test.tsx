@@ -256,7 +256,7 @@ function compareToModel(
 
   const hourly_outputs = model.getHourlyOperations();
 
-  const hourlyTrnaslation: { [key: string]: string } = {
+  const hourlyTranslation: { [key: string]: string } = {
     powerplantCapacityFactors: "Generator_CF",
     electrolyserCapacityFactors: "Electrolyser_CF",
     hydrogenProduction: "Hydrogen_prod_fixed",
@@ -264,7 +264,7 @@ function compareToModel(
   }
 
   Object.keys(hourly_outputs).forEach((key: string) => {
-    Object.values(workingdf[hourlyTrnaslation[key]]).forEach((x: number, i: number) =>
+    Object.values(workingdf[hourlyTranslation[key]]).forEach((x: number, i: number) =>
         expect(hourly_outputs[key][i]).toBeCloseTo(x, 9)
     );
   });
