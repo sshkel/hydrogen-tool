@@ -259,14 +259,6 @@ export class HydrogenModel {
     let summary: ProjectModelSummary =
         this.calculateHydrogenModel(this.parameters.projectTimeline);
 
-    // OPEX values
-
-
-
-    const totalOperatingHours: number[] = summary.totalOperatingTime.map(
-        (hours) => hours * HOURS_PER_YEAR
-    );
-
 
     let hourlyOperations = this.getHourlyOperations();
 
@@ -365,6 +357,9 @@ export class HydrogenModel {
       "Indirect Costs": totalIndirectCosts,
     };
 
+    const totalOperatingHours: number[] = summary.totalOperatingTime.map(
+        (hours) => hours * HOURS_PER_YEAR
+    );
     const {
       electricityOpexCost,
       electrolyserOpexCost,
