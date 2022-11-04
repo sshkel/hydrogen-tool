@@ -4,7 +4,7 @@ import {maxDegradationStackReplacementYears} from "../components/charts/opex-cal
 import {StackReplacementType} from "../types";
 
 // returns powerplantCapacityFactors series
-export function calculateGeneratorCf(
+export function calculatePowerPlantCapacityFactors(
   solarData: CsvRow[],
   windData: CsvRow[],
   solarRatio: number,
@@ -48,7 +48,7 @@ export function calculateGeneratorCf(
   }
 }
 // returns electrolyserCapacityFactors series
-export function calculateElectrolyserCf(
+export function calculateElectrolyserCapacityFactors(
   oversizeRatio: number,
   elecMaxLoad: number,
   elecMinLoad: number,
@@ -174,7 +174,7 @@ export function calculateBatteryModel(
     battery_net_charge: batteryNetCharge,
   };
 }
-export function calculateFixedHydrogenProduction(
+export function calculateHydrogenProduction(
   electrolyserCf: number[],
   hydOutput: number,
   yearlyDegradationRate: number,

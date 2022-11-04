@@ -21,9 +21,9 @@ import {
 } from "./ModelTypes";
 import {
   calculateBatteryModel,
-  calculateElectrolyserCf,
-  calculateFixedHydrogenProduction,
-  calculateGeneratorCf,
+  calculateElectrolyserCapacityFactors,
+  calculateHydrogenProduction,
+  calculatePowerPlantCapacityFactors,
   calculateOverloadingModel,
   calculateSummary, initialiseStackReplacementYears,
 } from "./ModelUtils";
@@ -824,7 +824,7 @@ export class HydrogenModel {
       battMin: number,
       year: number
   ): ModelHourlyOperation {
-    const generatorCf = calculateGeneratorCf(
+    const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
         solarData,
         windData,
         solarRatio,
@@ -836,24 +836,24 @@ export class HydrogenModel {
     );
 
     // normal electrolyser calculation
-    let electrolyserCf = calculateElectrolyserCf(
+    let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
       oversizeRatio,
       elecMaxLoad,
       elecMinLoad,
-      generatorCf
+      powerplantCapacityFactors
     );
 
-    let batteryNetCharge: number[] = new Array(hoursPerYear).fill(0);
+    let netBatteryFLow: number[] = new Array(hoursPerYear).fill(0);
 
     // overload calculation
     if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
-      electrolyserCf = calculateOverloadingModel(
+      electrolyserCapacityFactors = calculateOverloadingModel(
         oversizeRatio,
         elecMaxLoad,
         elecOverloadRecharge,
         elecOverload,
-        generatorCf,
-        electrolyserCf
+        powerplantCapacityFactors,
+        electrolyserCapacityFactors
       );
     }
 
@@ -868,8 +868,8 @@ export class HydrogenModel {
       const batteryModel = calculateBatteryModel(
         oversizeRatio,
         elecCapacity,
-        generatorCf,
-        electrolyserCf,
+        powerplantCapacityFactors,
+        electrolyserCapacityFactors,
         batteryEfficiency,
         elecMinLoad,
         elecMaxLoad,
@@ -877,30 +877,30 @@ export class HydrogenModel {
         batteryEnergy,
         battMin
       );
-      electrolyserCf = batteryModel.electrolyser_cf;
-      batteryNetCharge = batteryModel.battery_net_charge;
+      electrolyserCapacityFactors = batteryModel.electrolyser_cf;
+      netBatteryFLow = batteryModel.battery_net_charge;
     }
 
     // Stack degradation calculation
     const yearlyDegradationRate = this.calculateStackDegradation(
         stackDegradation,
-        electrolyserCf,
+        electrolyserCapacityFactors,
         year,
         stackLifetime
     );
 
-    const hydrogenProdFixed = calculateFixedHydrogenProduction(
-      electrolyserCf,
+    const hydrogenProduction = calculateHydrogenProduction(
+      electrolyserCapacityFactors,
       hydOutput,
       yearlyDegradationRate,
       specCons
     );
 
     return {
-      powerplantCapacityFactors: generatorCf,
-      electrolyserCapacityFactors: electrolyserCf,
-      hydrogenProduction: hydrogenProdFixed,
-      netBatteryFLow: batteryNetCharge,
+      powerplantCapacityFactors,
+      electrolyserCapacityFactors,
+      hydrogenProduction,
+      netBatteryFLow
     };
   }
 

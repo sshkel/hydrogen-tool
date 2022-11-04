@@ -13,9 +13,9 @@ import {
 } from "./ModelTypes";
 import {
   calculateBatteryModel,
-  calculateElectrolyserCf,
-  calculateFixedHydrogenProduction,
-  calculateGeneratorCf,
+  calculateElectrolyserCapacityFactors,
+  calculateHydrogenProduction,
+  calculatePowerPlantCapacityFactors,
   calculateOverloadingModel,
   calculateSummary,
 } from "./ModelUtils";
@@ -409,7 +409,7 @@ export class AmmoniaModel {
     battMin: number,
     year: number
   ): ModelHourlyOperation {
-    const generatorCf = calculateGeneratorCf(
+    const generatorCf = calculatePowerPlantCapacityFactors(
       this.solarData,
       this.windData,
       solarRatio,
@@ -421,7 +421,7 @@ export class AmmoniaModel {
     );
 
     // normal electrolyser calculation
-    let electrolyserCf = calculateElectrolyserCf(
+    let electrolyserCf = calculateElectrolyserCapacityFactors(
       oversizeRatio,
       elecMaxLoad,
       elecMinLoad,
@@ -485,7 +485,7 @@ export class AmmoniaModel {
       this.stackLifetime
     );
 
-    const hydrogen = calculateFixedHydrogenProduction(
+    const hydrogen = calculateHydrogenProduction(
       electrolyserCf,
       hydOutput,
       yearlyDegradationRate,
