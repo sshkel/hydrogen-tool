@@ -260,14 +260,13 @@ export class HydrogenModel {
         this.calculateHydrogenModel(this.parameters.projectTimeline);
 
     // OPEX values
-    const electricityProduced: number[] = summary.electricityProduced
-    const electricityConsumed: number[] = summary.electricityConsumed
-    const electricityConsumedByBattery: number[] = summary.electricityConsumedByBattery
+
+
+
     const totalOperatingHours: number[] = summary.totalOperatingTime.map(
         (hours) => hours * HOURS_PER_YEAR
     );
 
-    const h2Produced = summary.hydrogenProduction;
 
     let hourlyOperations = this.getHourlyOperations();
 
@@ -399,12 +398,12 @@ export class HydrogenModel {
         batteryCAPEX,
         this.batteryLifetime,
         this.additionalTransmissionCharges,
-        electricityConsumed,
-        electricityConsumedByBattery,
+        summary.electricityConsumed,
+        summary.electricityConsumedByBattery,
         this.principalPPACost,
         this.parameters.waterSupplyCost,
         this.parameters.waterRequirementOfElectrolyser,
-        h2Produced,
+        summary.hydrogenProduction,
         this.parameters.additionalAnnualCosts
     );
 
@@ -451,7 +450,7 @@ export class HydrogenModel {
         this.parameters.projectTimeline,
         this.discountRate,
         totalOpex,
-        h2Produced
+        summary.hydrogenProduction
     );
 
     // LCH2 calculations
@@ -485,8 +484,8 @@ export class HydrogenModel {
         waterOpexCost,
         this.parameters.additionalUpfrontCosts,
         stackReplacementCostsOverProjectLife,
-        electricityConsumed,
-        electricityConsumedByBattery,
+        summary.electricityConsumed,
+        summary.electricityConsumedByBattery,
         this.principalPPACost,
         gridConnectionOpexPerYear,
         gridConnectionCAPEX
@@ -523,13 +522,13 @@ export class HydrogenModel {
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
-          mean(electricityConsumed)
+          mean(summary.electricityConsumed)
       ),
 
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-          roundToNearestInteger(mean(electricityProduced)),
+          roundToNearestInteger(mean(summary.electricityProduced)),
 
-      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(h2Produced)),
+      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(summary.hydrogenProduction)),
       "LCH2 ($/kg)": roundToTwoDP(lch2),
     };
 
