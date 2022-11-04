@@ -13,7 +13,7 @@ import {
 import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
 import {StackReplacementType} from "../types";
 
-// returns Generator_CF series
+// returns powerplantCapacityFactors series
 export function calculateGeneratorCf(
   solarData: CsvRow[],
   windData: CsvRow[],
@@ -57,7 +57,7 @@ export function calculateGeneratorCf(
     );
   }
 }
-// returns Electrolyser_CF series
+// returns electrolyserCapacityFactors series
 export function calculateElectrolyserCf(
   oversizeRatio: number,
   elecMaxLoad: number,

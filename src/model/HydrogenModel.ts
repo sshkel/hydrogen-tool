@@ -273,12 +273,12 @@ export class HydrogenModel {
     let hourlyOperations = this.getHourlyOperations();
 
     const durationCurves = {
-      "Power Plant Duration Curve": hourlyOperations.Generator_CF,
-      "Electrolyser Duration Curve": hourlyOperations.Electrolyser_CF,
+      "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
+      "Electrolyser Duration Curve": hourlyOperations.electrolyserCapacityFactors,
     };
     const hourlyCapFactors = {
-      Electrolyser: hourlyOperations.Electrolyser_CF,
-      "Power Plant": hourlyOperations.Generator_CF,
+      Electrolyser: hourlyOperations.electrolyserCapacityFactors,
+      "Power Plant": hourlyOperations.powerplantCapacityFactors,
     };
 
     const {
@@ -601,10 +601,10 @@ export class HydrogenModel {
       this.calculateAdvancedElectrolyserHourlyOperation(year);
     this.hourlyOperationsInYearOne = hourlyOperation;
     const operatingOutputs = calculateSummary(
-      hourlyOperation.Generator_CF,
-      hourlyOperation.Electrolyser_CF,
-      hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Net_Battery_Flow,
+      hourlyOperation.powerplantCapacityFactors,
+      hourlyOperation.electrolyserCapacityFactors,
+      hourlyOperation.hydrogenProduction,
+      hourlyOperation.netBatteryFLow,
       this.electrolyserNominalCapacity,
       this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
@@ -637,10 +637,10 @@ export class HydrogenModel {
     this.hourlyOperationsInYearOne = hourlyOperation;
     const calculateElectrolyserOutput = (hourlyOperation: ModelHourlyOperation) => {
       return calculateSummary(
-          hourlyOperation.Generator_CF,
-          hourlyOperation.Electrolyser_CF,
-          hourlyOperation.Hydrogen_prod_fixed,
-          hourlyOperation.Net_Battery_Flow,
+          hourlyOperation.powerplantCapacityFactors,
+          hourlyOperation.electrolyserCapacityFactors,
+          hourlyOperation.hydrogenProduction,
+          hourlyOperation.netBatteryFLow,
           this.electrolyserNominalCapacity,
           this.totalNominalPowerPlantCapacity,
           this.kgtoTonne,
@@ -712,7 +712,7 @@ export class HydrogenModel {
     this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
       this.parameters.projectScale,
       this.elecEff,
-      mean(hourlyOperation.Electrolyser_CF),
+      mean(hourlyOperation.electrolyserCapacityFactors),
       this.hoursPerYear
     );
     this.totalNominalPowerPlantCapacity = backCalculatePowerPlantCapacity(
@@ -721,10 +721,10 @@ export class HydrogenModel {
     );
 
     const operatingOutputs = calculateSummary(
-      hourlyOperation.Generator_CF,
-      hourlyOperation.Electrolyser_CF,
-      hourlyOperation.Hydrogen_prod_fixed,
-      hourlyOperation.Net_Battery_Flow,
+      hourlyOperation.powerplantCapacityFactors,
+      hourlyOperation.electrolyserCapacityFactors,
+      hourlyOperation.hydrogenProduction,
+      hourlyOperation.netBatteryFLow,
       this.electrolyserNominalCapacity,
       this.totalNominalPowerPlantCapacity,
       this.kgtoTonne,
@@ -774,8 +774,8 @@ export class HydrogenModel {
     );
   }
 
-  // """Private method- Creates a dataframe with a row for each hour of the year and columns Generator_CF,
-  //       Electrolyser_CF, Hydrogen_prod_fixed and Hydrogen_prod_var
+  // """Private method- Creates a dataframe with a row for each hour of the year and columns powerplantCapacityFactors,
+  //       electrolyserCapacityFactors, hydrogenProduction and Hydrogen_prod_var
   //       """
   private calculateHourlyOperation(
       stackLifetime: number | undefined,
@@ -876,10 +876,10 @@ export class HydrogenModel {
     );
 
     return {
-      Generator_CF: generatorCf,
-      Electrolyser_CF: electrolyserCf,
-      Hydrogen_prod_fixed: hydrogenProdFixed,
-      Net_Battery_Flow: batteryNetCharge,
+      powerplantCapacityFactors: generatorCf,
+      electrolyserCapacityFactors: electrolyserCf,
+      hydrogenProduction: hydrogenProdFixed,
+      netBatteryFLow: batteryNetCharge,
     };
   }
 
