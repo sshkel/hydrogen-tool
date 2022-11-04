@@ -111,50 +111,53 @@ export class HydrogenModel {
   readonly kgtoTonne = 1 / 1000;
   readonly H2VoltoMass = 0.089; // kg/m3
 
+  private readonly discountRate: number;
+  private readonly additionalTransmissionCharges: number;
+  private readonly batteryCosts: number;
+  private readonly batteryLifetime: number;
+  private readonly batteryMinCharge: number;
+  private readonly windOpex: number;
+  private readonly solarOpex: number;
+  private readonly principalPPACost: number;
+  private readonly gridConnectionCost: number;
+  private readonly batteryOMCost: number;
+  private readonly batteryReplacementCost: number;
+  private readonly batteryRatedPower: number;
+  private readonly batteryStorageDuration: number;
+  private readonly electrolyserEfficiency: number;
+  private readonly secAtNominalLoad: number;
+
   // calculated params
-  totalNominalPowerPlantCapacity: number;
-  electrolyserNominalCapacity: number;
-  elecMaxLoad: number;
-  elecMinLoad: number;
-  elecEff: number;
-  hydOutput: number;
-  parameters: HydrogenData;
-  elecOverload: number;
-  batteryEnergy: number;
-  batteryEfficiency: number;
-  battMin: number;
-  stackReplacementYears: number[];
-  stackLifetime?: number;
-  lastStackReplacementYear: number;
-  currentStackOperatingHours: number;
+  private readonly elecMaxLoad: number;
+  private readonly elecMinLoad: number;
+  private readonly elecEff: number;
+  private readonly hydOutput: number;
+  private readonly parameters: HydrogenData;
+  private readonly elecOverload: number;
+  private readonly batteryEnergy: number;
+  private readonly batteryEfficiency: number;
+  private readonly battMin: number;
+  private readonly stackLifetime?: number;
   // data from renewables
-  solarData: CsvRow[];
-  windData: CsvRow[];
+  private readonly solarData: CsvRow[];
+  private readonly windData: CsvRow[];
   // calculated based on number of CSV rows
-  hoursPerYear: number;
-  specCons: number;
+  private readonly hoursPerYear: number;
+  private readonly specCons: number;
+
+  private stackReplacementYears: number[];
+  private hourlyOperationsInYearOne: ModelHourlyOperation;
+  private solarNominalCapacity: number;
+  private windNominalCapacity: number;
+  private powerPlantOversizeRatio: number;
+  private powerPlantType: PowerPlantType;
+  private lastStackReplacementYear: number;
+  private currentStackOperatingHours: number;
 
   // parameters to expose to working data
-  hourlyOperationsInYearOne: ModelHourlyOperation;
-  solarNominalCapacity: number;
-  windNominalCapacity: number;
-  powerPlantOversizeRatio: any;
-  powerPlantType: PowerPlantType;
-  private discountRate: number;
-  private additionalTransmissionCharges: number;
-  private batteryCosts: number;
-  private batteryLifetime: number;
-  private batteryMinCharge: number;
-  private windOpex: number;
-  private solarOpex: number;
-  private principalPPACost: number;
-  private gridConnectionCost: number;
-  private batteryOMCost: number;
-  private batteryReplacementCost: number;
-  private batteryRatedPower: number;
-  private batteryStorageDuration: number;
-  private electrolyserEfficiency: number;
-  private secAtNominalLoad: number;
+  electrolyserNominalCapacity: number;
+  totalNominalPowerPlantCapacity: number;
+
 
   constructor(
       parameters: HydrogenData,
