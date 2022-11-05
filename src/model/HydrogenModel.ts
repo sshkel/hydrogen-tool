@@ -3,11 +3,7 @@ import {
   backCalculateInputFields,
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
-import {
-  calculatePerYearOpex,
-  getOpex,
-  maxDegradationStackReplacementYears,
-} from "../components/charts/opex-calculations";
+import {calculatePerYearOpex, getOpex,} from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
   Model,
@@ -24,7 +20,9 @@ import {
   calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
   calculateHydrogenProduction,
   calculatePowerPlantCapacityFactors,
-  calculateSummary, CumulativeDegradation, MaxDegradation,
+  calculateSummary,
+  CumulativeDegradation,
+  MaxDegradation,
 } from "./ModelUtils";
 import {HOURS_PER_YEAR,} from "./consts";
 
