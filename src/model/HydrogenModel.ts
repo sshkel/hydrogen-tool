@@ -13,7 +13,7 @@ import {
   PowerSupplyOption,
   StackReplacementType,
 } from "../types";
-import {mean} from "../utils";
+import {mean, projectYears} from "../utils";
 import {CsvRow, ModelHourlyOperation, ModelSummaryPerYear, ProjectModelSummary,} from "./ModelTypes";
 import {
   backCalculateSolarAndWindCapacities,
@@ -678,31 +678,13 @@ export class HydrogenModel implements Model {
       projectTimeline: number
   ): ProjectModelSummary {
 
-    let year = 1;
-    // Calculate first year separately
-    const hourlyOperation =
-        this.calculatePowerplantAndElectrolyserHourlyOperation(
-            this.solarNominalCapacity / this.powerPlantNominalCapacity,
-            this.windNominalCapacity / this.powerPlantNominalCapacity,
-            this.powerPlantNominalCapacity / this.electrolyserNominalCapacity,
-            year
-        );
-
-    let degradationCalculator;
+    let degradationCalculator: MaxDegradation | CumulativeDegradation;
     if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
       degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
     } else {
       degradationCalculator = new CumulativeDegradation(this.parameters.stackDegradation, this.parameters.stackLifetime)
     }
-    const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
 
-    const hydrogenProduction = calculateHydrogenProduction(
-        hourlyOperation.electrolyserCapacityFactors,
-        this.hydOutput,
-        yearlyDegradationRate,
-        this.specCons,
-    );
-    this.hourlyOperationsInYearOne = {...hourlyOperation, hydrogenProduction};
     const calculateElectrolyserOutput = (hourlyOperation: ModelHourlyOperation) => {
       return calculateSummary(
           hourlyOperation.powerplantCapacityFactors,
@@ -717,31 +699,30 @@ export class HydrogenModel implements Model {
           this.batteryEfficiency
       );
     }
-    const operatingOutputs = calculateElectrolyserOutput({...hourlyOperation, hydrogenProduction});
 
-    let modelSummaryPerYear: ModelSummaryPerYear[] = [];
-    modelSummaryPerYear.push(operatingOutputs);
-
-    for (year = 2; year <= projectTimeline; year++) {
-      const hourlyOperationsByYear =
+    const capFactorsByYear = projectYears(projectTimeline).map((year: number) => {
+      const hourlyOperation =
           this.calculatePowerplantAndElectrolyserHourlyOperation(
               this.solarNominalCapacity / this.powerPlantNominalCapacity,
               this.windNominalCapacity / this.powerPlantNominalCapacity,
               this.powerPlantNominalCapacity / this.electrolyserNominalCapacity,
               year
           );
-      const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperationsByYear.electrolyserCapacityFactors)
-
+      const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
       const hydrogenProduction = calculateHydrogenProduction(
-          hourlyOperationsByYear.electrolyserCapacityFactors,
+          hourlyOperation.electrolyserCapacityFactors,
           this.hydOutput,
           yearlyDegradationRate,
           this.specCons,
       );
-      modelSummaryPerYear.push(
-          calculateElectrolyserOutput({...hourlyOperationsByYear, hydrogenProduction})
-      );
-    }
+      return {...hourlyOperation, hydrogenProduction}
+    })
+
+    this.hourlyOperationsInYearOne = capFactorsByYear[0];
+
+    let modelSummaryPerYear: ModelSummaryPerYear[] = capFactorsByYear.map(value => {
+      return calculateElectrolyserOutput(value)
+    });
 
     let projectSummary: ProjectModelSummary = {
       electricityConsumed: [],
