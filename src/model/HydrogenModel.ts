@@ -678,7 +678,7 @@ export class HydrogenModel implements Model{
   private calculateBasicHydrogenModel(
     projectTimeline: number
   ): ProjectModelSummary {
-    const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
+    const powerPlantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
         this.windData,
         this.parameters.solarToWindPercentage / 100,
@@ -689,7 +689,7 @@ export class HydrogenModel implements Model{
         1
     );
     const {electrolyserCapacityFactors, netBatteryFLow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
-        powerplantCapacityFactors,
+        powerPlantCapacityFactors,
         this.hoursPerYear,
         this.powerPlantOversizeRatio,
         this.electrolyserNominalCapacity,
@@ -720,7 +720,7 @@ export class HydrogenModel implements Model{
     );
 
     this.hourlyOperationsInYearOne = {
-      powerplantCapacityFactors,
+      powerplantCapacityFactors: powerPlantCapacityFactors,
       electrolyserCapacityFactors,
       hydrogenProduction,
       netBatteryFLow
@@ -738,7 +738,7 @@ export class HydrogenModel implements Model{
     );
 
     const operatingOutputs = calculateSummary(
-        powerplantCapacityFactors,
+        powerPlantCapacityFactors,
         electrolyserCapacityFactors,
         hydrogenProduction,
         netBatteryFLow,
@@ -820,7 +820,6 @@ export class HydrogenModel implements Model{
       hydrogenProduction,
       netBatteryFLow
     };
-
   }
 
 
