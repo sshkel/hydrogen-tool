@@ -539,10 +539,25 @@ export class HydrogenModel implements Model{
     if (inputConfiguration === "Basic") {
       const hourlyOperations = this.calculateBasicHydrogenModel();
 
+      // Stack degradation calculation
+      const yearlyDegradationRate = this.calculateStackDegradation(
+          this.parameters.stackDegradation,
+          hourlyOperations.electrolyserCapacityFactors,
+          1,
+          this.stackLifetime
+      );
+
+      const hydrogenProduction = calculateHydrogenProduction(
+          hourlyOperations.electrolyserCapacityFactors,
+          this.hydOutput,
+          yearlyDegradationRate,
+          this.specCons,
+      );
+
       this.hourlyOperationsInYearOne = {
         powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
         electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
-        hydrogenProduction: hourlyOperations.hydrogenProduction,
+        hydrogenProduction,
         netBatteryFLow: hourlyOperations.netBatteryFLow
       };
 
@@ -560,7 +575,7 @@ export class HydrogenModel implements Model{
       const operatingOutputs = calculateSummary(
           hourlyOperations.powerplantCapacityFactors,
           hourlyOperations.electrolyserCapacityFactors,
-          hourlyOperations.hydrogenProduction,
+          hydrogenProduction,
           hourlyOperations.netBatteryFLow,
           this.electrolyserNominalCapacity,
           this.powerPlantNominalCapacity,
@@ -749,25 +764,9 @@ export class HydrogenModel implements Model{
         this.battMin,
     );
 
-    // Stack degradation calculation
-    const yearlyDegradationRate = this.calculateStackDegradation(
-        this.parameters.stackDegradation,
-        electrolyserCapacityFactors,
-        1,
-        this.stackLifetime
-    );
-
-    const hydrogenProduction = calculateHydrogenProduction(
-        electrolyserCapacityFactors,
-        this.hydOutput,
-        yearlyDegradationRate,
-        this.specCons,
-    );
-
     return {
       powerplantCapacityFactors: powerPlantCapacityFactors,
       electrolyserCapacityFactors,
-      hydrogenProduction,
       netBatteryFLow
     };
   }
