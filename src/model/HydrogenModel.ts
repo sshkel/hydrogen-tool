@@ -891,8 +891,8 @@ class MaxDegradation {
     );
     this.lastStackReplacementYear = 0;
   }
-
-  getStackDegradation(year: number, electrolyserCf: number[]) {
+// just want the same function interface for both degradations
+  getStackDegradation(year: number, _: number[]) {
     const power = year - 1 - this.lastStackReplacementYear;
     if (this.replacementYears.includes(year)) {
       this.lastStackReplacementYear = year;
