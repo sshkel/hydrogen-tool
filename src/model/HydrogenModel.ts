@@ -532,18 +532,10 @@ export class HydrogenModel implements Model {
     if (inputConfiguration === "Basic") {
       const hourlyOperations = this.calculateBasicHydrogenModel();
 
-      // Stack degradation calculation
-      const yearlyDegradationRate = this.calculateStackDegradation(
-          this.parameters.stackDegradation,
-          hourlyOperations.electrolyserCapacityFactors,
-          1,
-          this.stackLifetime
-      );
-
       const hydrogenProduction = calculateHydrogenProduction(
           hourlyOperations.electrolyserCapacityFactors,
           this.hydOutput,
-          yearlyDegradationRate,
+          0,
           this.specCons,
       );
 
@@ -624,18 +616,10 @@ export class HydrogenModel implements Model {
       const year = 1;
       const hourlyOperation = this.calculateAdvancedElectrolyserHourlyOperation(year);
 
-      // Stack degradation calculation
-      const yearlyDegradationRate = this.calculateStackDegradation(
-          this.parameters.stackDegradation,
-          hourlyOperation.electrolyserCapacityFactors,
-          year,
-          this.stackLifetime
-      );
-
       const hydrogenProduction = calculateHydrogenProduction(
           hourlyOperation.electrolyserCapacityFactors,
           this.hydOutput,
-          yearlyDegradationRate,
+          0,
           this.specCons,
       );
 
@@ -832,35 +816,5 @@ export class HydrogenModel implements Model {
       electrolyserCapacityFactors,
       netBatteryFLow
     };
-  }
-
-
-  // TODO refactor Tara's dirty state setting
-  private calculateStackDegradation(
-      stackDegradation: number,
-      electrolyserCf: number[],
-      year: number,
-      stackLifetime: number | undefined
-  ): number {
-    if (stackDegradation > 0) {
-      // Cumulative hour degradation logic if defined
-      if (stackLifetime) {
-        this.currentStackOperatingHours += electrolyserCf.filter(
-            (e) => e > 0
-        ).length;
-        if (this.currentStackOperatingHours >= stackLifetime) {
-          this.currentStackOperatingHours -= stackLifetime;
-          this.stackReplacementYears.push(year);
-        }
-      }
-
-      const power = year - 1 - this.lastStackReplacementYear;
-
-      if (this.stackReplacementYears.includes(year)) {
-        this.lastStackReplacementYear = year;
-      }
-      return 1 - 1 / (1 + stackDegradation / 100) ** power;
-    }
-    return 0;
   }
 }
