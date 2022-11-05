@@ -224,36 +224,36 @@ export function calculateOverloadingModel(
 }
 
 export function calculateSummary(
-  generatorCapFactor: number[],
-  electrolyserCapFactor: number[],
-  hydrogenProdFixed: number[],
+  powerPlantCapacityFactors: number[],
+  electrolyserCapacityFactors: number[],
+  hydrogenProduction: number[],
   netBatteryFlow: number[],
-  elecCapacity: number,
-  genCapacity: number,
-  kgtoTonne: number,
+  electrolyserNominalCapacity: number,
+  powerPlantNominalCapacity: number,
+  kgToTonne: number,
   hoursPerYear: number,
   elecMaxLoad: number,
   batteryEfficiency: number
 ): ModelSummaryPerYear {
-  const generatorCapacityFactor = mean(generatorCapFactor);
+  const generatorCapacityFactor = mean(powerPlantCapacityFactors);
   // Time Electrolyser is at its Rated Capacity"
   const timeElectrolyser =
-    electrolyserCapFactor.filter((e) => e === elecMaxLoad).length /
+    electrolyserCapacityFactors.filter((e) => e === elecMaxLoad).length /
     hoursPerYear;
   //Total Time Electrolyser is Operating
   const totalOpsTime =
-    electrolyserCapFactor.filter((e) => e > 0).length / hoursPerYear;
+    electrolyserCapacityFactors.filter((e) => e > 0).length / hoursPerYear;
 
   // Achieved Electrolyser Capacity Factor
-  const achievedElectrolyserCf = mean(electrolyserCapFactor);
+  const achievedElectrolyserCf = mean(electrolyserCapacityFactors);
   // Energy in to Electrolyser [MWh/yr]
-  const energyInElectrolyser = sum(electrolyserCapFactor) * elecCapacity;
+  const energyInElectrolyser = sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
   // Surplus Energy [MWh/yr]
   const surplus =
-    sum(generatorCapFactor) * genCapacity -
-    sum(electrolyserCapFactor) * elecCapacity;
+    sum(powerPlantCapacityFactors) * powerPlantNominalCapacity -
+    sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
   // Hydrogen Output [t/yr]
-  const hydrogenFixed = sum(hydrogenProdFixed) * elecCapacity * kgtoTonne;
+  const hydrogenFixed = sum(hydrogenProduction) * electrolyserNominalCapacity * kgToTonne;
   // Total Battery Output (MWh/yr)
   const totalBatteryOutput =
     sum(netBatteryFlow.filter((num) => num < 0)) *
