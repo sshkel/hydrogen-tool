@@ -1,5 +1,5 @@
 import {mean, sum} from "../utils";
-import {CsvRow, ModelSummaryPerYear} from "./ModelTypes";
+import {CsvRow, ModelHourlyOperation, ModelSummaryPerYear} from "./ModelTypes";
 import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
 import {PowerPlantType, StackReplacementType} from "../types";
 import {backCalculatePowerPlantCapacity} from "../components/charts/basic-calculations";
@@ -320,5 +320,71 @@ export function backCalculateSolarAndWindCapacities(
         (1 - solarToWindPercentage / 100);
   }
   return {calculatedSolarNominalCapacity, calculatedWindNominalCapacity};
+}
+export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+    powerplantCapacityFactors: number[],
+    hoursPerYear: number,
+    oversizeRatio: number,
+    elecCapacity: number,
+    elecMaxLoad: number,
+    elecMinLoad: number,
+    elecOverload: number,
+    elecOverloadRecharge: number,
+    batteryEnergy: number,
+    batteryHours: number,
+    batteryEfficiency: number,
+    batteryPower: number,
+    battMin: number,
+): ModelHourlyOperation {
+
+  // normal electrolyser calculation
+  let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
+      oversizeRatio,
+      elecMaxLoad,
+      elecMinLoad,
+      powerplantCapacityFactors
+  );
+
+  // overload calculation
+  if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
+    electrolyserCapacityFactors = calculateOverloadingModel(
+        oversizeRatio,
+        elecMaxLoad,
+        elecOverloadRecharge,
+        elecOverload,
+        powerplantCapacityFactors,
+        electrolyserCapacityFactors
+    );
+  }
+
+  let netBatteryFLow: number[] = new Array(hoursPerYear).fill(0);
+  // // battery model calc
+  if (batteryEnergy > 0) {
+    const hours = [1, 2, 4, 8];
+    if (!hours.includes(batteryHours)) {
+      throw new Error(
+          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
+      );
+    }
+    const batteryModel = calculateBatteryModel(
+        oversizeRatio,
+        elecCapacity,
+        powerplantCapacityFactors,
+        electrolyserCapacityFactors,
+        batteryEfficiency,
+        elecMinLoad,
+        elecMaxLoad,
+        batteryPower,
+        batteryEnergy,
+        battMin
+    );
+    electrolyserCapacityFactors = batteryModel.electrolyser_cf;
+    netBatteryFLow = batteryModel.battery_net_charge;
+  }
+
+  return {
+    electrolyserCapacityFactors,
+    netBatteryFLow
+  };
 }
 
