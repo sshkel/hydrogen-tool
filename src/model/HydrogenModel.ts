@@ -25,7 +25,7 @@ import {
   calculateHydrogenProduction,
   calculatePowerPlantCapacityFactors,
   calculateOverloadingModel,
-  calculateSummary, initialiseStackReplacementYears,
+  calculateSummary, initialiseStackReplacementYears, backCalculateSolarAndWindCapacities,
 } from "./ModelUtils";
 import {
   HOURS_PER_YEAR,
@@ -212,29 +212,14 @@ export class HydrogenModel implements Model{
       parameters.inputConfiguration === "Advanced" &&
       parameters.powerCapacityConfiguration === "Oversize Ratio"
     ) {
-      const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-        this.powerPlantOversizeRatio,
-        this.parameters.electrolyserNominalCapacity
+      let {calculatedSolarNominalCapacity, calculatedWindNominalCapacity} = backCalculateSolarAndWindCapacities(
+          this.powerPlantOversizeRatio,
+          this.electrolyserNominalCapacity,
+          this.powerPlantType,
+          this.parameters.solarToWindPercentage
       );
-
-      if (this.parameters.powerPlantType === "Solar") {
-        this.solarNominalCapacity = powerPlantNominalCapacity;
-        this.windNominalCapacity = 0;
-      }
-
-      if (this.parameters.powerPlantType === "Wind") {
-        this.solarNominalCapacity = 0;
-        this.windNominalCapacity = powerPlantNominalCapacity;
-      }
-
-      if (this.parameters.powerPlantType === "Hybrid") {
-        this.solarNominalCapacity =
-          powerPlantNominalCapacity *
-          (this.parameters.solarToWindPercentage / 100);
-        this.windNominalCapacity =
-          powerPlantNominalCapacity *
-          (1 - this.parameters.solarToWindPercentage / 100);
-      }
+      this.solarNominalCapacity = calculatedSolarNominalCapacity;
+      this.windNominalCapacity = calculatedWindNominalCapacity;
     }
 
     this.totalNominalPowerPlantCapacity =

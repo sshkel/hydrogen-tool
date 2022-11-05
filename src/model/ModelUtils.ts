@@ -1,17 +1,18 @@
-import { mean, sum } from "../utils";
-import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
+import {mean, sum} from "../utils";
+import {CsvRow, ModelSummaryPerYear} from "./ModelTypes";
 import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
-import {StackReplacementType} from "../types";
+import {PowerPlantType, StackReplacementType} from "../types";
+import {backCalculatePowerPlantCapacity} from "../components/charts/basic-calculations";
 
 // returns powerplantCapacityFactors series
 export function calculatePowerPlantCapacityFactors(
-  solarData: CsvRow[],
-  windData: CsvRow[],
-  solarRatio: number,
-  windRatio: number,
-  location: string,
-  solarDegradation: number = 0,
-  windDegradation: number = 0,
+    solarData: CsvRow[],
+    windData: CsvRow[],
+    solarRatio: number,
+    windRatio: number,
+    location: string,
+    solarDegradation: number = 0,
+    windDegradation: number = 0,
   year: number = 1
 ): number[] {
   // padd with zeros for zones where there is no solar data available
@@ -285,5 +286,39 @@ export function initialiseStackReplacementYears(
     );
   }
   return [];
+}
+
+export function backCalculateSolarAndWindCapacities(
+    powerPlantOversizeRatio: number,
+    electrolyserNominalCapacity: number,
+    powerPlantType: PowerPlantType,
+    solarToWindPercentage: number
+) {
+  const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
+      powerPlantOversizeRatio,
+      electrolyserNominalCapacity
+  );
+  let calculatedSolarNominalCapacity = 0;
+  let calculatedWindNominalCapacity = 0;
+
+  if (powerPlantType === "Solar") {
+    calculatedSolarNominalCapacity = powerPlantNominalCapacity;
+    calculatedWindNominalCapacity = 0;
+  }
+
+  if (powerPlantType === "Wind") {
+    calculatedSolarNominalCapacity = 0;
+    calculatedWindNominalCapacity = powerPlantNominalCapacity;
+  }
+
+  if (powerPlantType === "Hybrid") {
+    calculatedSolarNominalCapacity =
+        powerPlantNominalCapacity *
+        (solarToWindPercentage / 100);
+    calculatedWindNominalCapacity =
+        powerPlantNominalCapacity *
+        (1 - solarToWindPercentage / 100);
+  }
+  return {calculatedSolarNominalCapacity, calculatedWindNominalCapacity};
 }
 
