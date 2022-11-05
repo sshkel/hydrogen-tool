@@ -530,7 +530,7 @@ export class HydrogenModel implements Model {
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
-      const hourlyOperations = this.calculateBasicHydrogenModel();
+      const hourlyOperations = this.calculateBasicElectrolyserHourlyOperations();
 
       const hydrogenProduction = calculateHydrogenProduction(
           hourlyOperations.electrolyserCapacityFactors,
@@ -746,7 +746,7 @@ export class HydrogenModel implements Model {
     return projectSummary;
   }
 
-  private calculateBasicHydrogenModel() {
+  private calculateBasicElectrolyserHourlyOperations() {
     const powerPlantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
         this.windData,
