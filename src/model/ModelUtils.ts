@@ -447,5 +447,7 @@ export class CumulativeDegradation {
     }
     return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
   }
+
+
 }
 
