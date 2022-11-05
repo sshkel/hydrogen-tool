@@ -609,9 +609,45 @@ export class HydrogenModel implements Model{
 
     }
 
-    return stackDegradation + solarDegradation + windDegradation === 0
-        ? this.calculateHydrogenModelWithoutDegradation(projectTimeline)
-        : this.calculateHydrogenModelWithDegradation(projectTimeline);
+    // advanced input calculations
+    const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
+
+    if (noDegradation) {
+      const year = 1;
+      const hourlyOperation = this.calculateAdvancedElectrolyserHourlyOperation(year);
+
+      this.hourlyOperationsInYearOne = hourlyOperation;
+      const operatingOutputs = calculateSummary(
+          hourlyOperation.powerplantCapacityFactors,
+          hourlyOperation.electrolyserCapacityFactors,
+          hourlyOperation.hydrogenProduction,
+          hourlyOperation.netBatteryFLow,
+          this.electrolyserNominalCapacity,
+          this.powerPlantNominalCapacity,
+          this.kgtoTonne,
+          this.hoursPerYear,
+          this.elecMaxLoad,
+          this.batteryEfficiency
+      );
+
+      let projectSummary: ProjectModelSummary = {
+        electricityConsumed: [],
+        electricityProduced: [],
+        electricityConsumedByBattery: [],
+        totalOperatingTime: [],
+        hydrogenProduction: [],
+        powerPlantCapacityFactors: [],
+        ratedCapacityTime: [],
+        electrolyserCapacityFactors: [],
+      };
+      Object.keys(projectSummary).forEach((key) => {
+        projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
+      });
+      return projectSummary;
+    }
+
+    const projectSummary = this.calculateHydrogenModelWithDegradation(projectTimeline);
+    return projectSummary
 
   }
 
@@ -623,42 +659,6 @@ export class HydrogenModel implements Model{
     return this.hourlyOperationsInYearOne;
   }
 
-  private calculateHydrogenModelWithoutDegradation(
-    projectTimeline: number
-  ): ProjectModelSummary {
-    const year = 1;
-    const hourlyOperation =
-      this.calculateAdvancedElectrolyserHourlyOperation(year);
-    this.hourlyOperationsInYearOne = hourlyOperation;
-    const operatingOutputs = calculateSummary(
-        hourlyOperation.powerplantCapacityFactors,
-        hourlyOperation.electrolyserCapacityFactors,
-        hourlyOperation.hydrogenProduction,
-        hourlyOperation.netBatteryFLow,
-        this.electrolyserNominalCapacity,
-        this.powerPlantNominalCapacity,
-        this.kgtoTonne,
-        this.hoursPerYear,
-        this.elecMaxLoad,
-        this.batteryEfficiency
-    );
-
-    let projectSummary: ProjectModelSummary = {
-      electricityConsumed: [],
-      electricityProduced: [],
-      electricityConsumedByBattery: [],
-      totalOperatingTime: [],
-      hydrogenProduction: [],
-      powerPlantCapacityFactors: [],
-      ratedCapacityTime: [],
-      electrolyserCapacityFactors: [],
-    };
-    Object.keys(projectSummary).forEach((key) => {
-      projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
-    });
-
-    return projectSummary;
-  }
 
   private calculateHydrogenModelWithDegradation(
     projectTimeline: number
