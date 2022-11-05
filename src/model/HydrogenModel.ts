@@ -4,7 +4,7 @@ import {
 } from "../components/charts/basic-calculations";
 import {
   calculatePerYearOpex,
-  getOpex,
+  getOpex, maxDegradationStackReplacementYears,
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration, Model,
@@ -108,7 +108,7 @@ export type HydrogenData = {
   windReferenceFoldIncrease: number;
 };
 
-export class HydrogenModel implements Model{
+export class HydrogenModel implements Model {
   // consts
   private readonly MWtokW = 1000; // kW/MW
   private readonly kgtoTonne = 1 / 1000;
@@ -194,8 +194,8 @@ export class HydrogenModel implements Model{
     this.stackReplacementYears = [];
     this.stackLifetime =
         parameters.stackReplacementType === "Cumulative Hours"
-        ? parameters.stackLifetime
-        : undefined;
+            ? parameters.stackLifetime
+            : undefined;
     this.currentStackOperatingHours = 0;
     this.lastStackReplacementYear = 0;
     this.hourlyOperationsInYearOne = {};
@@ -205,15 +205,15 @@ export class HydrogenModel implements Model{
     this.electrolyserNominalCapacity = parameters.electrolyserNominalCapacity;
 
     this.powerPlantOversizeRatio =
-      parameters.powerCapacityConfiguration === "Oversize Ratio"
-        ? parameters.powerPlantOversizeRatio
-        : (this.solarNominalCapacity + this.windNominalCapacity) /
-          this.electrolyserNominalCapacity;
+        parameters.powerCapacityConfiguration === "Oversize Ratio"
+            ? parameters.powerPlantOversizeRatio
+            : (this.solarNominalCapacity + this.windNominalCapacity) /
+            this.electrolyserNominalCapacity;
 
     // calculated values
     if (
-      parameters.inputConfiguration === "Advanced" &&
-      parameters.powerCapacityConfiguration === "Oversize Ratio"
+        parameters.inputConfiguration === "Advanced" &&
+        parameters.powerCapacityConfiguration === "Oversize Ratio"
     ) {
       let {calculatedSolarNominalCapacity, calculatedWindNominalCapacity} = backCalculateSolarAndWindCapacities(
           this.powerPlantOversizeRatio,
@@ -226,7 +226,7 @@ export class HydrogenModel implements Model{
     }
 
     this.powerPlantNominalCapacity =
-      this.solarNominalCapacity + this.windNominalCapacity;
+        this.solarNominalCapacity + this.windNominalCapacity;
 
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
@@ -689,26 +689,22 @@ export class HydrogenModel implements Model{
     return this.hourlyOperationsInYearOne;
   }
 
-
   private calculateHydrogenModelWithDegradation(
-    projectTimeline: number
+      projectTimeline: number
   ): ProjectModelSummary {
-    this.stackReplacementYears = initialiseStackReplacementYears(
-        this.parameters.stackReplacementType,
-        this.parameters.stackDegradation,
-        this.parameters.maximumDegradationBeforeReplacement,
-        projectTimeline
-    );
+
+    let degradationCalculator;
+    if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
+      degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
+    } else {
+      degradationCalculator = new CumulativeDegradation(this.parameters.stackDegradation, this.parameters.stackLifetime)
+    }
+
     let year = 1;
     // Calculate first year separately
     const hourlyOperation =
         this.calculateAdvancedElectrolyserHourlyOperation(year);
-    const yearlyDegradationRate = this.calculateStackDegradation(
-        this.parameters.stackDegradation,
-        hourlyOperation.electrolyserCapacityFactors,
-        year,
-        this.stackLifetime
-    );
+    const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
 
     const hydrogenProduction = calculateHydrogenProduction(
         hourlyOperation.electrolyserCapacityFactors,
@@ -739,12 +735,7 @@ export class HydrogenModel implements Model{
     for (year = 2; year <= projectTimeline; year++) {
       const hourlyOperationsByYear =
           this.calculateAdvancedElectrolyserHourlyOperation(year);
-      const yearlyDegradationRate = this.calculateStackDegradation(
-          this.parameters.stackDegradation,
-          hourlyOperationsByYear.electrolyserCapacityFactors,
-          year,
-          this.stackLifetime
-      );
+      const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperationsByYear.electrolyserCapacityFactors)
 
       const hydrogenProduction = calculateHydrogenProduction(
           hourlyOperationsByYear.electrolyserCapacityFactors,
@@ -815,7 +806,7 @@ export class HydrogenModel implements Model{
   // wrapper around calculate_hourly_operation with passing of all the args.
   // being lazy here
   private calculateAdvancedElectrolyserHourlyOperation(
-    year: number
+      year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
@@ -853,22 +844,23 @@ export class HydrogenModel implements Model{
 
   // TODO refactor Tara's dirty state setting
   private calculateStackDegradation(
-    stackDegradation: number,
-    electrolyserCf: number[],
-    year: number,
-    stackLifetime: number | undefined
+      stackDegradation: number,
+      electrolyserCf: number[],
+      year: number,
+      stackLifetime: number | undefined
   ): number {
     if (stackDegradation > 0) {
       // Cumulative hour degradation logic if defined
       if (stackLifetime) {
         this.currentStackOperatingHours += electrolyserCf.filter(
-          (e) => e > 0
+            (e) => e > 0
         ).length;
         if (this.currentStackOperatingHours >= stackLifetime) {
           this.currentStackOperatingHours -= stackLifetime;
           this.stackReplacementYears.push(year);
         }
       }
+
       const power = year - 1 - this.lastStackReplacementYear;
 
       if (this.stackReplacementYears.includes(year)) {
@@ -877,6 +869,66 @@ export class HydrogenModel implements Model{
       return 1 - 1 / (1 + stackDegradation / 100) ** power;
     }
     return 0;
+  }
+}
+
+
+class MaxDegradation {
+  private replacementYears: number[];
+  private lastStackReplacementYear: number;
+  private stackDegradation: number;
+
+  constructor(
+      stackDegradation: number,
+      maximumDegradationBeforeReplacement: number,
+      projectTimeline: number
+  ) {
+    this.stackDegradation = stackDegradation;
+    this.replacementYears = maxDegradationStackReplacementYears(
+        stackDegradation,
+        maximumDegradationBeforeReplacement,
+        projectTimeline
+    );
+    this.lastStackReplacementYear = 0;
+  }
+
+  getStackDegradation(year: number, electrolyserCf: number[]) {
+    const power = year - 1 - this.lastStackReplacementYear;
+    if (this.replacementYears.includes(year)) {
+      this.lastStackReplacementYear = year;
+    }
+    return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
+  }
+}
+
+
+class CumulativeDegradation {
+  private readonly stackDegradation: number;
+  private stackLifeTime: number;
+  private lastStackReplacementYear: number;
+  private currentStackOperatingHours: number;
+
+  constructor(
+      stackDegradation: number,
+      stackLifetime: number,
+  ) {
+    this.stackDegradation = stackDegradation;
+    this.stackLifeTime = stackLifetime;
+    this.currentStackOperatingHours = 0;
+    this.lastStackReplacementYear = 0;
+
+  }
+
+  getStackDegradation(year: number, electrolyserCf: number[]) {
+    this.currentStackOperatingHours += electrolyserCf.filter(
+        (e) => e > 0
+    ).length;
+    const power = year - 1 - this.lastStackReplacementYear;
+    if (this.currentStackOperatingHours >= this.stackLifeTime) {
+      this.currentStackOperatingHours -= this.stackLifeTime;
+      this.lastStackReplacementYear = year;
+    }
+    return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
   }
 
 }
