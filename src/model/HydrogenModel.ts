@@ -1,39 +1,32 @@
 import {
-  backCalculateElectrolyserCapacity, backCalculateInputFields,
+  backCalculateElectrolyserCapacity,
+  backCalculateInputFields,
   backCalculatePowerPlantCapacity,
 } from "../components/charts/basic-calculations";
 import {
   calculatePerYearOpex,
-  getOpex, maxDegradationStackReplacementYears,
+  getOpex,
+  maxDegradationStackReplacementYears,
 } from "../components/charts/opex-calculations";
 import {
-  InputConfiguration, Model,
-  PowerCapacityConfiguration, PowerPlantConfiguration,
-  PowerPlantType, PowerSupplyOption,
+  InputConfiguration,
+  Model,
+  PowerCapacityConfiguration,
+  PowerPlantConfiguration,
+  PowerPlantType,
+  PowerSupplyOption,
   StackReplacementType,
 } from "../types";
-import { mean } from "../utils";
+import {mean} from "../utils";
+import {CsvRow, ModelHourlyOperation, ModelSummaryPerYear, ProjectModelSummary,} from "./ModelTypes";
 import {
-  CsvRow,
-  ModelHourlyOperation,
-  ModelSummaryPerYear,
-  ProjectModelSummary,
-} from "./ModelTypes";
-import {
-  calculateBatteryModel,
-  calculateElectrolyserCapacityFactors,
-  calculateHydrogenProduction,
-  calculatePowerPlantCapacityFactors,
-  calculateOverloadingModel,
-  calculateSummary,
-  initialiseStackReplacementYears,
   backCalculateSolarAndWindCapacities,
   calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
+  calculateHydrogenProduction,
+  calculatePowerPlantCapacityFactors,
+  calculateSummary,
 } from "./ModelUtils";
-import {
-  HOURS_PER_YEAR,
-
-} from "./consts";
+import {HOURS_PER_YEAR,} from "./consts";
 
 import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
 import {roundToNearestInteger, roundToTwoDP, sales} from "../components/charts/cost-functions";
