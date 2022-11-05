@@ -197,7 +197,7 @@ export default function WorkingData(props: Props) {
             {KeyInputsPane(
                 location,
               results.electrolyserNominalCapacity,
-              results.totalNominalPowerPlantCapacity
+              results.powerPlantNominalCapacity
           )}
         </Grid>
         <Grid item>

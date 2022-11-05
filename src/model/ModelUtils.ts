@@ -51,45 +51,45 @@ export function calculatePowerPlantCapacityFactors(
 // returns electrolyserCapacityFactors series
 export function calculateElectrolyserCapacityFactors(
   oversizeRatio: number,
-  elecMaxLoad: number,
-  elecMinLoad: number,
-  generatorCf: number[]
+  electrolyserMaxLoad: number,
+  electrolyserMinLoad: number,
+  powerPlantCapacityFactors: number[]
 ): number[] {
   const calculateElectrolyser = (x: number): number => {
-    if (x * oversizeRatio > elecMaxLoad) {
-      return elecMaxLoad;
+    if (x * oversizeRatio > electrolyserMaxLoad) {
+      return electrolyserMaxLoad;
     }
 
-    if (x * oversizeRatio < elecMinLoad) {
+    if (x * oversizeRatio < electrolyserMinLoad) {
       return 0;
     }
     return x * oversizeRatio;
   };
 
-  return generatorCf.map(calculateElectrolyser);
+  return powerPlantCapacityFactors.map(calculateElectrolyser);
 }
 export function calculateBatteryModel(
   oversize: number,
   elecCapacity: number,
-  generatorCf: number[],
-  electrolyserCf: number[],
+  powerPlantCapacityFactors: number[],
+  electrolyserCapacityFactors: number[],
   batteryEfficiency: number,
-  elecMinLoad: number,
-  elecMaxLoad: number,
+  electrolyserMinLoad: number,
+  electrolyserMaxLoad: number,
   batteryPower: number,
   batteryEnergy: number,
   battMin: number
 ): { electrolyser_cf: number[]; battery_net_charge: number[] } {
-  const size = generatorCf.length;
-  const excessGeneration = generatorCf.map(
+  const size = powerPlantCapacityFactors.length;
+  const excessGeneration = powerPlantCapacityFactors.map(
     (_: number, i: number) =>
-      (generatorCf[i] * oversize - electrolyserCf[i]) * elecCapacity
+      (powerPlantCapacityFactors[i] * oversize - electrolyserCapacityFactors[i]) * elecCapacity
   );
   const batteryNetCharge = Array(size).fill(0.0);
   const batterySoc = Array(size).fill(0.0);
   const battLosses = 1 - (1 - batteryEfficiency) / 2;
-  const elecMin = elecMinLoad * elecCapacity;
-  const elecMax = elecMaxLoad * elecCapacity;
+  const elecMin = electrolyserMinLoad * elecCapacity;
+  const elecMax = electrolyserMaxLoad * elecCapacity;
 
   batteryNetCharge[0] = Math.min(
     batteryPower,
@@ -100,13 +100,13 @@ export function calculateBatteryModel(
   for (let hour = 1; hour < size; hour++) {
     const battSoc = batterySoc[hour - 1];
     const spill = excessGeneration[hour];
-    const elecCons = electrolyserCf[hour] * elecCapacity;
+    const elecCons = electrolyserCapacityFactors[hour] * elecCapacity;
     const battDischargePotential =
       Math.min(batteryPower, (battSoc - battMin) * batteryEnergy) * battLosses;
     const elecJustOperating =
       elecCons > 0 ||
       batteryNetCharge[hour - 1] < 0 ||
-      electrolyserCf[hour - 1] > 0;
+      electrolyserCapacityFactors[hour - 1] > 0;
     if (
       elecCons === 0 &&
       spill + battDischargePotential > elecMin &&
@@ -161,12 +161,12 @@ export function calculateBatteryModel(
   const electrolyserCfBatt = batteryNetCharge.map((_: number, i: number) => {
     if (batteryNetCharge[i] < 0) {
       return (
-        electrolyserCf[i] +
+        electrolyserCapacityFactors[i] +
         (-1 * batteryNetCharge[i] * battLosses + excessGeneration[i]) /
           elecCapacity
       );
     } else {
-      return electrolyserCf[i];
+      return electrolyserCapacityFactors[i];
     }
   });
 
