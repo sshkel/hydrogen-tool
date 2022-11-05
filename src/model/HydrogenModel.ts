@@ -680,13 +680,6 @@ export class HydrogenModel implements Model {
       projectTimeline: number
   ): ProjectModelSummary {
 
-    let degradationCalculator;
-    if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
-      degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
-    } else {
-      degradationCalculator = new CumulativeDegradation(this.parameters.stackDegradation, this.parameters.stackLifetime)
-    }
-
     let year = 1;
     // Calculate first year separately
     const hourlyOperation =
@@ -696,6 +689,13 @@ export class HydrogenModel implements Model {
             this.powerPlantNominalCapacity / this.electrolyserNominalCapacity,
             year
         );
+
+    let degradationCalculator;
+    if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
+      degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
+    } else {
+      degradationCalculator = new CumulativeDegradation(this.parameters.stackDegradation, this.parameters.stackLifetime)
+    }
     const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
 
     const hydrogenProduction = calculateHydrogenProduction(
