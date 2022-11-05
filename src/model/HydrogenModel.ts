@@ -675,19 +675,23 @@ export class HydrogenModel implements Model{
   private calculateBasicHydrogenModel(
     projectTimeline: number
   ): ProjectModelSummary {
-    const hourlyOperation = this.calculateHourlyOperation(
-        this.stackLifetime,
+    const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
         this.windData,
+        this.parameters.solarToWindPercentage / 100,
+        1 - this.parameters.solarToWindPercentage / 100,
+        this.parameters.location,
+        this.parameters.solarDegradation,
+        this.parameters.windDegradation,
+        1
+    );
+    const hourlyOperation = this.calculateHourlyOperation(
+        powerplantCapacityFactors,
+        this.stackLifetime,
         this.hoursPerYear,
         this.powerPlantOversizeRatio,
         this.electrolyserNominalCapacity,
-        this.parameters.solarToWindPercentage / 100,
-        1 - this.parameters.solarToWindPercentage / 100,
-        this.parameters.solarDegradation,
-        this.parameters.windDegradation,
         this.parameters.stackDegradation,
-        this.parameters.location,
         this.elecMaxLoad,
         this.elecMinLoad,
         this.hydOutput,
@@ -751,19 +755,23 @@ export class HydrogenModel implements Model{
   private calculateAdvancedElectrolyserHourlyOperation(
     year: number
   ): ModelHourlyOperation {
-    return this.calculateHourlyOperation(
-        this.stackLifetime,
+    const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
         this.windData,
+        this.solarNominalCapacity / this.powerPlantNominalCapacity,
+        this.windNominalCapacity / this.powerPlantNominalCapacity,
+        this.parameters.location,
+        this.parameters.solarDegradation,
+        this.parameters.windDegradation,
+        year
+    );
+    return this.calculateHourlyOperation(
+        powerplantCapacityFactors,
+        this.stackLifetime,
         this.hoursPerYear,
         this.powerPlantNominalCapacity / this.electrolyserNominalCapacity,
         this.electrolyserNominalCapacity,
-        this.solarNominalCapacity / this.powerPlantNominalCapacity,
-        this.windNominalCapacity / this.powerPlantNominalCapacity,
-        this.parameters.solarDegradation,
-        this.parameters.windDegradation,
         this.parameters.stackDegradation,
-        this.parameters.location,
         this.elecMaxLoad,
         this.elecMinLoad,
         this.hydOutput,
@@ -783,18 +791,12 @@ export class HydrogenModel implements Model{
   //       electrolyserCapacityFactors, hydrogenProduction and Hydrogen_prod_var
   //       """
   private calculateHourlyOperation(
+      powerplantCapacityFactors: number[],
       stackLifetime: number | undefined,
-      solarData: CsvRow[],
-      windData: CsvRow[],
       hoursPerYear: number,
       oversizeRatio: number,
       elecCapacity: number,
-      solarRatio: number,
-      windRatio: number,
-      solarDegradation: number,
-      windDegradation: number,
       stackDegradation: number,
-      location: string,
       elecMaxLoad: number,
       elecMinLoad: number,
       hydOutput: number,
@@ -808,16 +810,6 @@ export class HydrogenModel implements Model{
       battMin: number,
       year: number
   ): ModelHourlyOperation {
-    const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
-        solarData,
-        windData,
-        solarRatio,
-        windRatio,
-        location,
-        solarDegradation,
-        windDegradation,
-        year
-    );
 
     // normal electrolyser calculation
     let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
