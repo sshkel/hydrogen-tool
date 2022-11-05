@@ -537,7 +537,54 @@ export class HydrogenModel implements Model{
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
-      const projectSummary = this.calculateBasicHydrogenModel(projectTimeline);
+      const hourlyOperations = this.calculateBasicHydrogenModel();
+
+      this.hourlyOperationsInYearOne = {
+        powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
+        electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
+        hydrogenProduction: hourlyOperations.hydrogenProduction,
+        netBatteryFLow: hourlyOperations.netBatteryFLow
+      };
+
+      this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
+          this.parameters.projectScale,
+          this.elecEff,
+          mean(hourlyOperations.electrolyserCapacityFactors),
+          this.hoursPerYear
+      );
+      this.powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
+          this.powerPlantOversizeRatio,
+          this.electrolyserNominalCapacity
+      );
+
+      const operatingOutputs = calculateSummary(
+          hourlyOperations.powerplantCapacityFactors,
+          hourlyOperations.electrolyserCapacityFactors,
+          hourlyOperations.hydrogenProduction,
+          hourlyOperations.netBatteryFLow,
+          this.electrolyserNominalCapacity,
+          this.powerPlantNominalCapacity,
+          this.kgtoTonne,
+          this.hoursPerYear,
+          this.elecMaxLoad,
+          this.batteryEfficiency
+      );
+
+      let projectSummary: ProjectModelSummary = {
+        electricityConsumed: [],
+        electricityProduced: [],
+        electricityConsumedByBattery: [],
+        totalOperatingTime: [],
+        hydrogenProduction: [],
+        powerPlantCapacityFactors: [],
+        ratedCapacityTime: [],
+        electrolyserCapacityFactors: [],
+      };
+
+      Object.keys(operatingOutputs).forEach((key) => {
+        projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
+      });
+
       const {
         electrolyserEfficiency = 1,
         powerPlantOversizeRatio = 1,
@@ -675,9 +722,7 @@ export class HydrogenModel implements Model{
     return projectSummary;
   }
 
-  private calculateBasicHydrogenModel(
-    projectTimeline: number
-  ): ProjectModelSummary {
+  private calculateBasicHydrogenModel() {
     const powerPlantCapacityFactors = calculatePowerPlantCapacityFactors(
         this.solarData,
         this.windData,
@@ -719,53 +764,12 @@ export class HydrogenModel implements Model{
         this.specCons,
     );
 
-    this.hourlyOperationsInYearOne = {
+    return {
       powerplantCapacityFactors: powerPlantCapacityFactors,
       electrolyserCapacityFactors,
       hydrogenProduction,
       netBatteryFLow
     };
-
-    this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
-        this.parameters.projectScale,
-        this.elecEff,
-        mean(electrolyserCapacityFactors),
-        this.hoursPerYear
-    );
-    this.powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-        this.powerPlantOversizeRatio,
-        this.electrolyserNominalCapacity
-    );
-
-    const operatingOutputs = calculateSummary(
-        powerPlantCapacityFactors,
-        electrolyserCapacityFactors,
-        hydrogenProduction,
-        netBatteryFLow,
-        this.electrolyserNominalCapacity,
-        this.powerPlantNominalCapacity,
-        this.kgtoTonne,
-        this.hoursPerYear,
-        this.elecMaxLoad,
-        this.batteryEfficiency
-    );
-
-    let projectSummary: ProjectModelSummary = {
-      electricityConsumed: [],
-      electricityProduced: [],
-      electricityConsumedByBattery: [],
-      totalOperatingTime: [],
-      hydrogenProduction: [],
-      powerPlantCapacityFactors: [],
-      ratedCapacityTime: [],
-      electrolyserCapacityFactors: [],
-    };
-
-    Object.keys(operatingOutputs).forEach((key) => {
-      projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
-    });
-
-    return projectSummary;
   }
 
   // wrapper around calculate_hourly_operation with passing of all the args.
