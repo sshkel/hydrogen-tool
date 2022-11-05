@@ -386,5 +386,66 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
     electrolyserCapacityFactors,
     netBatteryFLow
   };
+
+}
+
+
+export class MaxDegradation {
+  private replacementYears: number[];
+  private lastStackReplacementYear: number;
+  private stackDegradation: number;
+
+  constructor(
+      stackDegradation: number,
+      maximumDegradationBeforeReplacement: number,
+      projectTimeline: number
+  ) {
+    this.stackDegradation = stackDegradation;
+    this.replacementYears = maxDegradationStackReplacementYears(
+        stackDegradation,
+        maximumDegradationBeforeReplacement,
+        projectTimeline
+    );
+    this.lastStackReplacementYear = 0;
+  }
+// just want the same function interface for both degradations
+  getStackDegradation(year: number, _: number[]) {
+    const power = year - 1 - this.lastStackReplacementYear;
+    if (this.replacementYears.includes(year)) {
+      this.lastStackReplacementYear = year;
+    }
+    return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
+  }
+}
+
+
+export class CumulativeDegradation {
+  private readonly stackDegradation: number;
+  private stackLifeTime: number;
+  private lastStackReplacementYear: number;
+  private currentStackOperatingHours: number;
+
+  constructor(
+      stackDegradation: number,
+      stackLifetime: number,
+  ) {
+    this.stackDegradation = stackDegradation;
+    this.stackLifeTime = stackLifetime;
+    this.currentStackOperatingHours = 0;
+    this.lastStackReplacementYear = 0;
+
+  }
+
+  getStackDegradation(year: number, electrolyserCf: number[]) {
+    this.currentStackOperatingHours += electrolyserCf.filter(
+        (e) => e > 0
+    ).length;
+    const power = year - 1 - this.lastStackReplacementYear;
+    if (this.currentStackOperatingHours >= this.stackLifeTime) {
+      this.currentStackOperatingHours -= this.stackLifeTime;
+      this.lastStackReplacementYear = year;
+    }
+    return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
+  }
 }
 
