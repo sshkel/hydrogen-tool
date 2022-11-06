@@ -546,7 +546,7 @@ export class HydrogenModel implements Model {
         powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
         electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
-        netBatteryFLow: hourlyOperations.netBatteryFLow
+        netBatteryFlow: hourlyOperations.netBatteryFlow
       };
 
       this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
@@ -564,7 +564,7 @@ export class HydrogenModel implements Model {
           hourlyOperations.powerplantCapacityFactors,
           hourlyOperations.electrolyserCapacityFactors,
           hydrogenProduction,
-          hourlyOperations.netBatteryFLow,
+          hourlyOperations.netBatteryFlow,
           this.electrolyserNominalCapacity,
           this.powerPlantNominalCapacity,
           this.kgtoTonne,
@@ -643,7 +643,7 @@ export class HydrogenModel implements Model {
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
           hydrogenProduction,
-          hourlyOperation.netBatteryFLow,
+          hourlyOperation.netBatteryFlow,
           this.electrolyserNominalCapacity,
           this.powerPlantNominalCapacity,
           this.kgtoTonne,
@@ -688,7 +688,7 @@ export class HydrogenModel implements Model {
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
           hourlyOperation.hydrogenProduction,
-          hourlyOperation.netBatteryFLow,
+          hourlyOperation.netBatteryFlow,
           this.electrolyserNominalCapacity,
           this.powerPlantNominalCapacity,
           this.kgtoTonne,
@@ -767,7 +767,7 @@ export class HydrogenModel implements Model {
         this.parameters.windDegradation,
         year
     );
-    const {electrolyserCapacityFactors, netBatteryFLow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+    const {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         powerplantCapacityFactors,
         this.hoursPerYear,
         oversizeRatio,
@@ -786,7 +786,7 @@ export class HydrogenModel implements Model {
     return {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
-      netBatteryFLow
+      netBatteryFlow
     };
   }
 }

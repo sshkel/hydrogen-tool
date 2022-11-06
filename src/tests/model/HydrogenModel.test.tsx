@@ -260,7 +260,7 @@ function compareToModel(
     powerplantCapacityFactors: "Generator_CF",
     electrolyserCapacityFactors: "Electrolyser_CF",
     hydrogenProduction: "Hydrogen_prod_fixed",
-    netBatteryFLow: "Net_Battery_Flow",
+    netBatteryFlow: "Net_Battery_Flow",
   }
 
   Object.keys(project_output).forEach((key: string) => {

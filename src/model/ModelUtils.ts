@@ -357,7 +357,7 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
     );
   }
 
-  let netBatteryFLow: number[] = new Array(hoursPerYear).fill(0);
+  let netBatteryFlow: number[] = new Array(hoursPerYear).fill(0);
   // // battery model calc
   if (batteryEnergy > 0) {
     const hours = [1, 2, 4, 8];
@@ -379,14 +379,13 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         battMin
     );
     electrolyserCapacityFactors = batteryModel.electrolyser_cf;
-    netBatteryFLow = batteryModel.battery_net_charge;
+    netBatteryFlow = batteryModel.battery_net_charge;
   }
 
   return {
     electrolyserCapacityFactors,
-    netBatteryFLow
+    netBatteryFlow
   };
-
 }
 
 
