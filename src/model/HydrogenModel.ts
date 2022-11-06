@@ -136,7 +136,6 @@ export class HydrogenModel implements Model {
   // calculated based on number of CSV rows
   private readonly hoursPerYear: number;
   private readonly specCons: number;
-  private powerPlantType: PowerPlantType;
 
   // parameters to expose to working data
   electrolyserNominalCapacity: number;
@@ -163,7 +162,6 @@ export class HydrogenModel implements Model {
     this.secAtNominalLoad = parameters.secAtNominalLoad ?? 0;
     this.solarOpex = parameters.solarOpex ?? 0;
     this.windOpex = parameters.windOpex ?? 0;
-    this.powerPlantType = parameters.powerPlantType;
 
     // Loaded data
     this.solarData = solarData;
@@ -594,7 +592,7 @@ export class HydrogenModel implements Model {
         let {calculatedSolarNominalCapacity, calculatedWindNominalCapacity} = backCalculateSolarAndWindCapacities(
             this.parameters.powerPlantOversizeRatio,
             this.electrolyserNominalCapacity,
-            this.powerPlantType,
+            this.parameters.powerPlantType,
             this.parameters.solarToWindPercentage
         );
         solarNominalCapacity = calculatedSolarNominalCapacity;
@@ -659,7 +657,7 @@ export class HydrogenModel implements Model {
           projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
         });
         return {
-          powerPlantType: this.powerPlantType,
+          powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
           windNominalCapacity: windNominalCapacity,
           electrolyserNominalCapacity: this.electrolyserNominalCapacity,
@@ -734,7 +732,7 @@ export class HydrogenModel implements Model {
       });
 
       return {
-        powerPlantType: this.powerPlantType,
+        powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
         electrolyserNominalCapacity: this.electrolyserNominalCapacity,
