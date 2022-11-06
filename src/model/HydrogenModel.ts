@@ -494,12 +494,13 @@ export class HydrogenModel implements Model {
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
-      const electrolyserNominalCapacity = 1;
+
       const hourlyOperations = this.calculatePowerplantAndElectrolyserHourlyOperation(
           this.parameters.solarToWindPercentage / 100,
           1 - this.parameters.solarToWindPercentage / 100,
           this.parameters.powerPlantOversizeRatio,
-          electrolyserNominalCapacity,
+          // default for the first calculation
+          1,
           1
       );
 
@@ -517,7 +518,7 @@ export class HydrogenModel implements Model {
         netBatteryFlow: hourlyOperations.netBatteryFlow
       };
 
-      this.electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
+      const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
           this.parameters.projectScale,
           this.elecEff,
           mean(hourlyOperations.electrolyserCapacityFactors),
@@ -525,7 +526,7 @@ export class HydrogenModel implements Model {
       );
       const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
           this.parameters.powerPlantOversizeRatio,
-          this.electrolyserNominalCapacity
+          electrolyserNominalCapacity
       );
 
       const operatingOutputs = calculateSummary(
@@ -533,7 +534,7 @@ export class HydrogenModel implements Model {
           hourlyOperations.electrolyserCapacityFactors,
           hydrogenProduction,
           hourlyOperations.netBatteryFlow,
-          this.electrolyserNominalCapacity,
+          electrolyserNominalCapacity,
           powerPlantNominalCapacity,
           this.kgtoTonne,
           this.hoursPerYear,
