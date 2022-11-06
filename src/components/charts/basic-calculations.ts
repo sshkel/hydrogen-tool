@@ -1,4 +1,4 @@
-export function backCalculatePowerPlantNominalCapacities(
+export function backCalculateSolarnAndWindNominalCapacities(
     powerPlantOversizeRatio: number,
     solarToWindPercentage: number,
     electrolyserNominalCapacity: number

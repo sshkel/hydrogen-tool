@@ -1,6 +1,6 @@
 import {
   backCalculateElectrolyserCapacity,
-  backCalculatePowerPlantNominalCapacities,
+  backCalculateSolarnAndWindNominalCapacities,
 } from "../components/charts/basic-calculations";
 import {calculatePerYearOpex, getOpex,} from "../components/charts/opex-calculations";
 import {
@@ -516,12 +516,12 @@ export class HydrogenModel implements Model {
           this.hoursPerYear
       );
 
-
       const {
         powerPlantOversizeRatio = 1,
         solarToWindPercentage = 100,
       } = this.parameters;
-
+      // back calcualte power plant type from the percentages.
+      // Default to hybrid
       let powerPlantType: PowerPlantType = "Hybrid";
       if (solarToWindPercentage === 100) {
         powerPlantType = "Solar";
@@ -530,7 +530,7 @@ export class HydrogenModel implements Model {
       if (solarToWindPercentage === 0) {
         powerPlantType = "Wind";
       }
-      const result = backCalculatePowerPlantNominalCapacities(
+      const result = backCalculateSolarnAndWindNominalCapacities(
           powerPlantOversizeRatio,
           solarToWindPercentage,
           electrolyserNominalCapacity
