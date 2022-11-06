@@ -1,19 +1,7 @@
-import { ChartData } from "./types";
-
 export const nameToId = (key: string) => key.replace(/\s+/g, "-").toLowerCase();
 
 export const isSolar = (tech: string): boolean => tech !== "Wind";
 export const isWind = (tech: string): boolean => tech !== "Solar";
-
-export function getActiveYearsLabels(projectTimeline: number): string[] {
-  const labels: string[] = [];
-  labels.push(
-    "Startup",
-    ...projectYears(projectTimeline).map(String),
-    "Decommisioning"
-  );
-  return labels;
-}
 
 export function fillYearsArray(
   years: number,
@@ -41,26 +29,6 @@ export function startup(element: number, projectTimeline: number) {
   paddedArray[0] = element;
 
   return paddedArray;
-}
-
-export function decomissioning(element: number, projectTimeline: number) {
-  const paddedArray = Array(projectTimeline + 2).fill(0);
-  paddedArray[projectTimeline + 1] = element;
-
-  return paddedArray;
-}
-
-export function dropPadding(arr: number[]) {
-  return arr.slice(1, arr.length - 1);
-}
-export function checkLength(datapoints: ChartData[], projectTimeline: number) {
-  datapoints.forEach((p) => {
-    if (p.data.length !== projectTimeline) {
-      throw new Error(
-        `Invalid size of ${p.data.length} for ${p.label}. Should be ${projectTimeline}. Data is ${p.data}`
-      );
-    }
-  });
 }
 
 export function sum(arr: number[]): number {
