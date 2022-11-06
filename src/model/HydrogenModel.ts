@@ -679,22 +679,7 @@ export class HydrogenModel implements Model {
       };
     }
 
-    const projectSummary = this.calculateHydrogenModelWithDegradation(projectTimeline);
-    return {
-      powerPlantType: this.powerPlantType,
-      solarNominalCapacity: this.solarNominalCapacity,
-      windNominalCapacity: this.windNominalCapacity,
-      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
-      hourlyOperations: this.hourlyOperationsInYearOne,
-      ...projectSummary
-    };
-
-  }
-
-  private calculateHydrogenModelWithDegradation(
-      projectTimeline: number
-  ): ProjectModelSummary {
-
+  // Advanced model with degradation
     let degradationCalculator: MaxDegradation | CumulativeDegradation;
     if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
       degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
@@ -752,15 +737,23 @@ export class HydrogenModel implements Model {
       electrolyserCapacityFactors: [],
     };
 
-
     modelSummaryPerYear.forEach((yearSummary) => {
       Object.keys(projectSummary).forEach((key) => {
         projectSummary[key as keyof ProjectModelSummary].push(yearSummary[key]);
       });
     });
 
-    return projectSummary;
+    return {
+      powerPlantType: this.powerPlantType,
+      solarNominalCapacity: this.solarNominalCapacity,
+      windNominalCapacity: this.windNominalCapacity,
+      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
+      hourlyOperations: this.hourlyOperationsInYearOne,
+      ...projectSummary
+    };
+
   }
+
 
   private calculatePowerplantAndElectrolyserHourlyOperation(
       solarRatio: number,
