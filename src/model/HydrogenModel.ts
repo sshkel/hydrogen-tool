@@ -131,7 +131,6 @@ export class HydrogenModel implements Model {
   private readonly batteryEnergy: number;
   private readonly batteryEfficiency: number;
   private readonly battMin: number;
-  private readonly stackLifetime?: number;
   // data from renewables
   private readonly solarData: CsvRow[];
   private readonly windData: CsvRow[];
@@ -174,7 +173,6 @@ export class HydrogenModel implements Model {
     this.hoursPerYear = solarData.length;
 
 
-    this.stackLifetime = parameters.stackLifetime;
     this.electrolyserNominalCapacity = parameters.electrolyserNominalCapacity;
 
     this.powerPlantNominalCapacity = 0;
