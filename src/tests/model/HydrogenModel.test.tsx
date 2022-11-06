@@ -264,9 +264,12 @@ function compareToModel(
   }
 
   Object.keys(hourly_outputs).forEach((key: string) => {
-    Object.values(workingdf[hourlyTranslation[key]]).forEach((x: number, i: number) =>
-        expect(hourly_outputs[key][i]).toBeCloseTo(x, 9)
-    );
+    if (Object.keys(hourlyTranslation).includes(key)) {
+      Object.values(workingdf[hourlyTranslation[key]]).forEach((x: number, i: number) =>
+
+          expect(hourly_outputs[key][i]).toBeCloseTo(x, 9)
+      );
+    }
   });
 
   const summaryTranslations = {
@@ -281,7 +284,10 @@ function compareToModel(
   }
 
   Object.keys(project_output).forEach((key: string) => {
-    // Check first year results only since no degradation
-    expect(project_output[key as keyof ProjectModelSummary][0]).toBeCloseTo(outputs[summaryTranslations[key as keyof ProjectModelSummary]], 8);
-  });
+        if (Object.keys(summaryTranslations).includes(key)) {
+          // Check first year results only since no degradation
+          expect(project_output[key as keyof ProjectModelSummary][0]).toBeCloseTo(outputs[summaryTranslations[key as keyof ProjectModelSummary]], 8);
+        }
+      }
+  );
 }

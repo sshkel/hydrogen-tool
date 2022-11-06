@@ -235,11 +235,19 @@ export class HydrogenModel implements Model {
 
   produceResults() {
 
-    let summary: ProjectModelSummary =
-        this.calculateHydrogenModel(this.parameters.projectTimeline);
 
+    const {
+      powerPlantCapacityFactors,
+      electrolyserCapacityFactors,
+      electricityConsumed,
+      electricityProduced,
+      electricityConsumedByBattery,
+      hydrogenProduction,
+      ratedCapacityTime,
+      totalOperatingTime,
+      hourlyOperations
+    } = this.calculateHydrogenModel(this.parameters.projectTimeline);
 
-    let hourlyOperations = this.getHourlyOperations();
 
     const durationCurves = {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
@@ -336,7 +344,7 @@ export class HydrogenModel implements Model {
       "Indirect Costs": totalIndirectCosts,
     };
 
-    const totalOperatingHours: number[] = summary.totalOperatingTime.map(
+    const totalOperatingHours: number[] = totalOperatingTime.map(
         (hours) => hours * HOURS_PER_YEAR
     );
     const {
@@ -372,12 +380,12 @@ export class HydrogenModel implements Model {
         batteryCAPEX,
         this.batteryLifetime,
         this.additionalTransmissionCharges,
-        summary.electricityConsumed,
-        summary.electricityConsumedByBattery,
+        electricityConsumed,
+        electricityConsumedByBattery,
         this.principalPPACost,
         this.parameters.waterSupplyCost,
         this.parameters.waterRequirementOfElectrolyser,
-        summary.hydrogenProduction,
+        hydrogenProduction,
         this.parameters.additionalAnnualCosts
     );
 
@@ -424,7 +432,7 @@ export class HydrogenModel implements Model {
         this.parameters.projectTimeline,
         this.discountRate,
         totalOpex,
-        summary.hydrogenProduction
+        hydrogenProduction
     );
 
     // LCH2 calculations
@@ -458,8 +466,8 @@ export class HydrogenModel implements Model {
         waterOpexCost,
         this.parameters.additionalUpfrontCosts,
         stackReplacementCostsOverProjectLife,
-        summary.electricityConsumed,
-        summary.electricityConsumedByBattery,
+        electricityConsumed,
+        electricityConsumedByBattery,
         this.principalPPACost,
         gridConnectionOpexPerYear,
         gridConnectionCAPEX
@@ -481,28 +489,28 @@ export class HydrogenModel implements Model {
 
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
-          mean(summary.powerPlantCapacityFactors.map((x) => x * 100))
+          mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
       "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
-          mean(summary.ratedCapacityTime.map((x) => x * 100))
+          mean(ratedCapacityTime.map((x) => x * 100))
       ),
       "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
-          mean(summary.totalOperatingTime.map((x) => x * 100))
+          mean(totalOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
-          mean(summary.electrolyserCapacityFactors.map((x) => x * 100))
+          mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
-          mean(summary.electricityConsumed)
+          mean(electricityConsumed)
       ),
 
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-          roundToNearestInteger(mean(summary.electricityProduced)),
+          roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(summary.hydrogenProduction)),
+      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
       "LCH2 ($/kg)": roundToTwoDP(lch2),
     };
 
@@ -519,7 +527,7 @@ export class HydrogenModel implements Model {
     }
   }
 
-  calculateHydrogenModel(projectTimeline: number): ProjectModelSummary {
+  calculateHydrogenModel(projectTimeline: number) {
     const {
       stackDegradation,
       solarDegradation,
@@ -608,7 +616,10 @@ export class HydrogenModel implements Model {
       this.windNominalCapacity = result.windNominalCapacity;
       this.solarNominalCapacity = result.solarNominalCapacity;
       this.electrolyserNominalCapacity = result.electrolyserNominalCapacity;
-      return projectSummary;
+      return {
+        hourlyOperations: this.hourlyOperationsInYearOne,
+        ...projectSummary
+      };
 
     }
 
@@ -658,20 +669,18 @@ export class HydrogenModel implements Model {
       Object.keys(projectSummary).forEach((key) => {
         projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
       });
-      return projectSummary;
+      return {
+        hourlyOperations: this.hourlyOperationsInYearOne,
+        ...projectSummary
+      };
     }
 
     const projectSummary = this.calculateHydrogenModelWithDegradation(projectTimeline);
-    return projectSummary
+    return {
+      hourlyOperations: this.hourlyOperationsInYearOne,
+      ...projectSummary
+    };
 
-  }
-
-  /**
-   * NOTE: This must be called after #calculateHydrogenModel to be properly populated
-   * @returns hourly operations for first year of project life
-   */
-  getHourlyOperations(): ModelHourlyOperation {
-    return this.hourlyOperationsInYearOne;
   }
 
   private calculateHydrogenModelWithDegradation(
