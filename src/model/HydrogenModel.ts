@@ -139,8 +139,6 @@ export class HydrogenModel implements Model {
   private readonly hoursPerYear: number;
   private readonly specCons: number;
 
-
-  private hourlyOperationsInYearOne: ModelHourlyOperation;
   private solarNominalCapacity: number;
   private windNominalCapacity: number;
   private powerPlantOversizeRatio: number;
@@ -181,8 +179,6 @@ export class HydrogenModel implements Model {
 
 
     this.stackLifetime = parameters.stackLifetime;
-
-    this.hourlyOperationsInYearOne = {};
 
     this.solarNominalCapacity = parameters.solarNominalCapacity;
     this.windNominalCapacity = parameters.windNominalCapacity;
@@ -546,7 +542,7 @@ export class HydrogenModel implements Model {
           this.specCons,
       );
 
-      this.hourlyOperationsInYearOne = {
+      const hourlyOperationsInYearOne: ModelHourlyOperation = {
         powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
         electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
@@ -617,7 +613,7 @@ export class HydrogenModel implements Model {
         solarNominalCapacity: result.solarNominalCapacity,
         windNominalCapacity: result.windNominalCapacity,
         electrolyserNominalCapacity: result.electrolyserNominalCapacity,
-        hourlyOperations: this.hourlyOperationsInYearOne,
+        hourlyOperations: hourlyOperationsInYearOne,
         ...projectSummary
       };
 
@@ -642,7 +638,7 @@ export class HydrogenModel implements Model {
           this.specCons,
       );
 
-      this.hourlyOperationsInYearOne = {...hourlyOperation, hydrogenProduction};
+      const hourlyOperationsInYearOne: ModelHourlyOperation = {...hourlyOperation, hydrogenProduction};
       const operatingOutputs = calculateSummary(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
@@ -674,7 +670,7 @@ export class HydrogenModel implements Model {
         solarNominalCapacity: this.solarNominalCapacity,
         windNominalCapacity: this.windNominalCapacity,
         electrolyserNominalCapacity: this.electrolyserNominalCapacity,
-        hourlyOperations: this.hourlyOperationsInYearOne,
+        hourlyOperations: hourlyOperationsInYearOne,
         ...projectSummary
       };
     }
@@ -720,7 +716,7 @@ export class HydrogenModel implements Model {
       return {...hourlyOperation, hydrogenProduction}
     })
 
-    this.hourlyOperationsInYearOne = capFactorsByYear[0];
+    const hourlyOperationsInYearOne: ModelHourlyOperation = capFactorsByYear[0];
 
     const modelSummaryPerYear = capFactorsByYear.map(value => {
       return calculateElectrolyserOutput(value)
@@ -748,7 +744,7 @@ export class HydrogenModel implements Model {
       solarNominalCapacity: this.solarNominalCapacity,
       windNominalCapacity: this.windNominalCapacity,
       electrolyserNominalCapacity: this.electrolyserNominalCapacity,
-      hourlyOperations: this.hourlyOperationsInYearOne,
+      hourlyOperations: hourlyOperationsInYearOne,
       ...projectSummary
     };
 
