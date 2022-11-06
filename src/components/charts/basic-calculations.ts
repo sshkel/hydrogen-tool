@@ -17,6 +17,7 @@ export function backCalculateInputFields(
 
   const powerPlantNominalCapacity =
     powerPlantOversizeRatio * electrolyserNominalCapacity;
+
   const solarNominalCapacity =
     powerPlantNominalCapacity * (solarToWindPercentage / 100);
 

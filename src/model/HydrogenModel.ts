@@ -524,10 +524,20 @@ export class HydrogenModel implements Model {
           mean(hourlyOperations.electrolyserCapacityFactors),
           this.hoursPerYear
       );
-      const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-          this.parameters.powerPlantOversizeRatio,
+
+      const {
+        powerPlantOversizeRatio = 1,
+        solarToWindPercentage = 100,
+        powerPlantType: currentPowerPlantType,
+      } = this.parameters;
+      const result = backCalculateInputFields(
+          powerPlantOversizeRatio,
+          solarToWindPercentage,
+          currentPowerPlantType,
           electrolyserNominalCapacity
       );
+
+      const powerPlantNominalCapacity = result.solarNominalCapacity + result.windNominalCapacity;
 
       const operatingOutputs = calculateSummary(
           hourlyOperations.powerplantCapacityFactors,
@@ -557,17 +567,6 @@ export class HydrogenModel implements Model {
         projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
       });
 
-      const {
-        powerPlantOversizeRatio = 1,
-        solarToWindPercentage = 100,
-        powerPlantType: currentPowerPlantType,
-      } = this.parameters;
-      const result = backCalculateInputFields(
-          powerPlantOversizeRatio,
-          solarToWindPercentage,
-          currentPowerPlantType,
-          electrolyserNominalCapacity
-      );
 
       this.powerPlantType = result.powerPlantType;
       return {
