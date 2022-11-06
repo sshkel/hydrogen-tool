@@ -141,7 +141,6 @@ export class HydrogenModel implements Model {
 
   // parameters to expose to working data
   electrolyserNominalCapacity: number;
-  powerPlantNominalCapacity: number;
 
 
   constructor(
@@ -175,7 +174,6 @@ export class HydrogenModel implements Model {
 
     this.electrolyserNominalCapacity = parameters.electrolyserNominalCapacity;
 
-    this.powerPlantNominalCapacity = 0;
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = this.electrolyserEfficiency / 100;
@@ -208,7 +206,7 @@ export class HydrogenModel implements Model {
       hourlyOperations
     } = this.calculateHydrogenModel(this.parameters.projectTimeline);
 
-
+    const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
     const durationCurves = {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
       "Electrolyser Duration Curve": hourlyOperations.electrolyserCapacityFactors,
@@ -476,7 +474,7 @@ export class HydrogenModel implements Model {
 
     return {
       electrolyserNominalCapacity,
-      powerPlantNominalCapacity: this.powerPlantNominalCapacity,
+      powerPlantNominalCapacity,
       durationCurves,
       hourlyCapFactors,
       indirectCostBreakdown,
@@ -523,7 +521,7 @@ export class HydrogenModel implements Model {
           mean(hourlyOperations.electrolyserCapacityFactors),
           this.hoursPerYear
       );
-      this.powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
+      const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
           this.parameters.powerPlantOversizeRatio,
           this.electrolyserNominalCapacity
       );
@@ -534,7 +532,7 @@ export class HydrogenModel implements Model {
           hydrogenProduction,
           hourlyOperations.netBatteryFlow,
           this.electrolyserNominalCapacity,
-          this.powerPlantNominalCapacity,
+          powerPlantNominalCapacity,
           this.kgtoTonne,
           this.hoursPerYear,
           this.elecMaxLoad,
@@ -611,7 +609,6 @@ export class HydrogenModel implements Model {
 
       const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
 
-      this.powerPlantNominalCapacity = powerPlantNominalCapacity;
       // advanced input calculations
       const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
 
@@ -683,7 +680,7 @@ export class HydrogenModel implements Model {
             hourlyOperation.hydrogenProduction,
             hourlyOperation.netBatteryFlow,
             this.electrolyserNominalCapacity,
-            this.powerPlantNominalCapacity,
+            powerPlantNominalCapacity,
             this.kgtoTonne,
             this.hoursPerYear,
             this.elecMaxLoad,
