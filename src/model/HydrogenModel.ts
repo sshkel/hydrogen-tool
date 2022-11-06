@@ -235,8 +235,11 @@ export class HydrogenModel implements Model {
 
   produceResults() {
 
-
     const {
+      powerPlantType,
+      solarNominalCapacity,
+      windNominalCapacity,
+      electrolyserNominalCapacity,
       powerPlantCapacityFactors,
       electrolyserCapacityFactors,
       electricityConsumed,
@@ -268,18 +271,18 @@ export class HydrogenModel implements Model {
     } = getCapex(
         this.parameters.powerPlantConfiguration,
         this.parameters.powerSupplyOption,
-        this.electrolyserNominalCapacity,
+        electrolyserNominalCapacity,
         this.parameters.electrolyserReferenceCapacity,
         this.parameters.electrolyserPurchaseCost,
         this.parameters.electrolyserCostReductionWithScale,
         this.parameters.electrolyserReferenceFoldIncrease,
-        this.parameters.powerPlantType,
-        this.solarNominalCapacity,
+        powerPlantType,
+        solarNominalCapacity,
         this.parameters.solarReferenceCapacity,
         this.parameters.solarFarmBuildCost,
         this.parameters.solarPVCostReductionWithScale,
         this.parameters.solarReferenceFoldIncrease,
-        this.windNominalCapacity,
+        windNominalCapacity,
         this.parameters.windReferenceCapacity,
         this.parameters.windFarmBuildCost,
         this.parameters.windCostReductionWithScale,
@@ -369,11 +372,11 @@ export class HydrogenModel implements Model {
         this.parameters.electrolyserStackReplacement,
         electrolyserCAPEX,
         this.parameters.electrolyserOMCost,
-        this.parameters.powerPlantType,
+        powerPlantType,
         this.solarOpex,
-        this.solarNominalCapacity,
+        solarNominalCapacity,
         this.windOpex,
-        this.windNominalCapacity,
+        windNominalCapacity,
         this.batteryOMCost,
         this.batteryRatedPower,
         this.batteryReplacementCost,
@@ -515,7 +518,7 @@ export class HydrogenModel implements Model {
     };
 
     return {
-      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
+      electrolyserNominalCapacity,
       powerPlantNominalCapacity: this.powerPlantNominalCapacity,
       durationCurves,
       hourlyCapFactors,
@@ -617,6 +620,10 @@ export class HydrogenModel implements Model {
       this.solarNominalCapacity = result.solarNominalCapacity;
       this.electrolyserNominalCapacity = result.electrolyserNominalCapacity;
       return {
+        powerPlantType: result.powerPlantType,
+        solarNominalCapacity: result.solarNominalCapacity,
+        windNominalCapacity: result.windNominalCapacity,
+        electrolyserNominalCapacity: result.electrolyserNominalCapacity,
         hourlyOperations: this.hourlyOperationsInYearOne,
         ...projectSummary
       };
@@ -670,6 +677,10 @@ export class HydrogenModel implements Model {
         projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
       });
       return {
+        powerPlantType: this.powerPlantType,
+        solarNominalCapacity: this.solarNominalCapacity,
+        windNominalCapacity: this.windNominalCapacity,
+        electrolyserNominalCapacity: this.electrolyserNominalCapacity,
         hourlyOperations: this.hourlyOperationsInYearOne,
         ...projectSummary
       };
@@ -677,6 +688,10 @@ export class HydrogenModel implements Model {
 
     const projectSummary = this.calculateHydrogenModelWithDegradation(projectTimeline);
     return {
+      powerPlantType: this.powerPlantType,
+      solarNominalCapacity: this.solarNominalCapacity,
+      windNominalCapacity: this.windNominalCapacity,
+      electrolyserNominalCapacity: this.electrolyserNominalCapacity,
       hourlyOperations: this.hourlyOperationsInYearOne,
       ...projectSummary
     };

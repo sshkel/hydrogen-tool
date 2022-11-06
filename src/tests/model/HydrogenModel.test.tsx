@@ -254,7 +254,7 @@ function compareToModel(
 ) {
   const project_output = model.calculateHydrogenModel(PROJECT_LIFE);
 
-  const hourly_outputs = model.getHourlyOperations();
+  const hourly_outputs = project_output.hourlyOperations;
 
   const hourlyTranslation: { [key: string]: string } = {
     powerplantCapacityFactors: "Generator_CF",
@@ -263,7 +263,7 @@ function compareToModel(
     netBatteryFLow: "Net_Battery_Flow",
   }
 
-  Object.keys(hourly_outputs).forEach((key: string) => {
+  Object.keys(project_output).forEach((key: string) => {
     if (Object.keys(hourlyTranslation).includes(key)) {
       Object.values(workingdf[hourlyTranslation[key]]).forEach((x: number, i: number) =>
 
