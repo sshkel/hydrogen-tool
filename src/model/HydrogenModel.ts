@@ -494,10 +494,12 @@ export class HydrogenModel implements Model {
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
+      const electrolyserNominalCapacity = 1;
       const hourlyOperations = this.calculatePowerplantAndElectrolyserHourlyOperation(
           this.parameters.solarToWindPercentage / 100,
           1 - this.parameters.solarToWindPercentage / 100,
           this.parameters.powerPlantOversizeRatio,
+          electrolyserNominalCapacity,
           1
       );
 
@@ -618,6 +620,7 @@ export class HydrogenModel implements Model {
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
             powerPlantNominalCapacity / this.electrolyserNominalCapacity,
+            this.electrolyserNominalCapacity,
             year
         );
 
@@ -694,6 +697,7 @@ export class HydrogenModel implements Model {
                 solarNominalCapacity / powerPlantNominalCapacity,
                 windNominalCapacity / powerPlantNominalCapacity,
                 powerPlantNominalCapacity / this.electrolyserNominalCapacity,
+                this.electrolyserNominalCapacity,
                 year
             );
         const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
@@ -747,6 +751,7 @@ export class HydrogenModel implements Model {
       solarRatio: number,
       windRatio: number,
       oversizeRatio: number,
+      electrolyserNominalCapacity: number,
       year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
@@ -763,7 +768,7 @@ export class HydrogenModel implements Model {
         powerplantCapacityFactors,
         this.hoursPerYear,
         oversizeRatio,
-        this.electrolyserNominalCapacity,
+        electrolyserNominalCapacity,
         this.elecMaxLoad,
         this.elecMinLoad,
         this.elecOverload,
