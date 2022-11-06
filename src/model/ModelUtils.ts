@@ -79,7 +79,7 @@ export function calculateBatteryModel(
   batteryPower: number,
   batteryEnergy: number,
   battMin: number
-): { electrolyser_cf: number[]; battery_net_charge: number[] } {
+): { electrolyserCapacityFactors: number[]; netBatteryFlow: number[] } {
   const size = powerPlantCapacityFactors.length;
   const excessGeneration = powerPlantCapacityFactors.map(
     (_: number, i: number) =>
@@ -171,8 +171,8 @@ export function calculateBatteryModel(
   });
 
   return {
-    electrolyser_cf: electrolyserCfBatt,
-    battery_net_charge: batteryNetCharge,
+    electrolyserCapacityFactors: electrolyserCfBatt,
+    netBatteryFlow: batteryNetCharge,
   };
 }
 export function calculateHydrogenProduction(
@@ -378,8 +378,8 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         batteryEnergy,
         battMin
     );
-    electrolyserCapacityFactors = batteryModel.electrolyser_cf;
-    netBatteryFlow = batteryModel.battery_net_charge;
+    electrolyserCapacityFactors = batteryModel.electrolyserCapacityFactors;
+    netBatteryFlow = batteryModel.netBatteryFlow;
   }
 
   return {
