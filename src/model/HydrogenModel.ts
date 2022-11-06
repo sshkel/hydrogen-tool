@@ -100,9 +100,9 @@ export type HydrogenData = {
 
 export class HydrogenModel implements Model {
   // consts
-  private readonly MWtokW = 1000; // kW/MW
-  private readonly kgtoTonne = 1 / 1000;
-  private readonly H2VoltoMass = 0.089; // kg/m3
+  private readonly mwToKw = 1000; // kW/MW
+  private readonly kgToTonne = 1 / 1000;
+  private readonly h2VolToMass = 0.089; // kg/m3
 
   private readonly discountRate: number;
   private readonly additionalTransmissionCharges: number;
@@ -168,13 +168,13 @@ export class HydrogenModel implements Model {
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = this.electrolyserEfficiency / 100;
-    this.hydOutput = this.H2VoltoMass * this.MWtokW * this.elecEff; // kg.kWh/m3.MWh
+    this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
         this.batteryRatedPower * this.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = this.batteryMinCharge / 100;
-    this.specCons = this.secAtNominalLoad * this.H2VoltoMass;
+    this.specCons = this.secAtNominalLoad * this.h2VolToMass;
     this.discountRate = this.parameters.discountRate / 100;
   }
 
@@ -545,7 +545,7 @@ export class HydrogenModel implements Model {
           hourlyOperations.netBatteryFlow,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
-          this.kgtoTonne,
+          this.kgToTonne,
           this.hoursPerYear,
           this.elecMaxLoad,
           this.batteryEfficiency
@@ -628,7 +628,7 @@ export class HydrogenModel implements Model {
             hourlyOperation.netBatteryFlow,
             this.parameters.electrolyserNominalCapacity,
             powerPlantNominalCapacity,
-            this.kgtoTonne,
+            this.kgToTonne,
             this.hoursPerYear,
             this.elecMaxLoad,
             this.batteryEfficiency
@@ -673,7 +673,7 @@ export class HydrogenModel implements Model {
             hourlyOperation.netBatteryFlow,
             this.parameters.electrolyserNominalCapacity,
             powerPlantNominalCapacity,
-            this.kgtoTonne,
+            this.kgToTonne,
             this.hoursPerYear,
             this.elecMaxLoad,
             this.batteryEfficiency
