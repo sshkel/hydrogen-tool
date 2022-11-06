@@ -115,9 +115,9 @@ export function calculateBatteryModel(
       // When the generation is insufficient alone but combined with battery power can power the electrolyser
       if (spill + battDischargePotential > elecMax) {
         batteryNetCharge[hour] =
-          -1 * Math.min(batteryPower, ((elecMax - spill) * 1) / battLosses);
+          -1 * Math.min(batteryPower, (elecMax - spill) / battLosses);
       } else {
-        batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
+        batteryNetCharge[hour] = (-1 * battDischargePotential) / battLosses;
       }
     } else if (
       spill > 0 &&
@@ -144,11 +144,11 @@ export function calculateBatteryModel(
       elecJustOperating
     ) {
       //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
-      batteryNetCharge[hour] = (-1 * battDischargePotential * 1) / battLosses;
+      batteryNetCharge[hour] = (-1 * battDischargePotential) / battLosses;
     } else if (spill === 0 && elecJustOperating) {
       //  When the stored power is enough to power the electrolyser at max capacity
       batteryNetCharge[hour] =
-        -1 * Math.min(batteryPower, ((elecMax - elecCons) * 1) / battLosses);
+        -1 * Math.min(batteryPower, ((elecMax - elecCons)) / battLosses);
     } else if (spill === 0) {
       batteryNetCharge[hour] = 0;
     } else {
@@ -420,7 +420,7 @@ export class MaxDegradation {
 
 export class CumulativeDegradation {
   private readonly stackDegradation: number;
-  private stackLifeTime: number;
+  private readonly stackLifeTime: number;
   private lastStackReplacementYear: number;
   private currentStackOperatingHours: number;
 
@@ -446,7 +446,6 @@ export class CumulativeDegradation {
     }
     return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
   }
-
 
 }
 
