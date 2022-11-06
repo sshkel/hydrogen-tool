@@ -720,7 +720,7 @@ export class HydrogenModel implements Model {
 
     this.hourlyOperationsInYearOne = capFactorsByYear[0];
 
-    let modelSummaryPerYear: ModelSummaryPerYear[] = capFactorsByYear.map(value => {
+    const modelSummaryPerYear = capFactorsByYear.map(value => {
       return calculateElectrolyserOutput(value)
     });
 
