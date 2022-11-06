@@ -210,10 +210,10 @@ export function calculateOverloadingModel(
 
   const electrolyserCfoverload = canOverload.map(
     (canOverload: boolean, i: number) => {
-      const energy_generated = generatorCf[i] * oversize;
+      const energyGenerated = generatorCf[i] * oversize;
       if (canOverload) {
         //Energy_for_overloading
-        return Math.min(maxOverload, energy_generated);
+        return Math.min(maxOverload, energyGenerated);
       } else {
         return electrolyserCf[i];
       }
