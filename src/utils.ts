@@ -1,3 +1,5 @@
+import {ChartData} from "./types";
+
 export const nameToId = (key: string) => key.replace(/\s+/g, "-").toLowerCase();
 
 export const isSolar = (tech: string): boolean => tech !== "Wind";
@@ -30,7 +32,15 @@ export function startup(element: number, projectTimeline: number) {
 
   return paddedArray;
 }
-
+export function checkLength(datapoints: ChartData[], projectTimeline: number) {
+  datapoints.forEach((p) => {
+    if (p.data.length !== projectTimeline) {
+      throw new Error(
+          `Invalid size of ${p.data.length} for ${p.label}. Should be ${projectTimeline}. Data is ${p.data}`
+      );
+    }
+  });
+}
 export function sum(arr: number[]): number {
   return arr.reduce((a, b) => a + b, 0);
 }
