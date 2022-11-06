@@ -558,13 +558,11 @@ export class HydrogenModel implements Model {
       });
 
       const {
-        electrolyserEfficiency = 1,
         powerPlantOversizeRatio = 1,
         solarToWindPercentage = 100,
         powerPlantType: currentPowerPlantType,
       } = this.parameters;
       const result = backCalculateInputFields(
-          electrolyserEfficiency,
           powerPlantOversizeRatio,
           solarToWindPercentage,
           currentPowerPlantType,
@@ -572,7 +570,6 @@ export class HydrogenModel implements Model {
       );
 
       this.powerPlantType = result.powerPlantType;
-      this.electrolyserNominalCapacity = result.electrolyserNominalCapacity;
       return {
         powerPlantType: result.powerPlantType,
         solarNominalCapacity: result.solarNominalCapacity,

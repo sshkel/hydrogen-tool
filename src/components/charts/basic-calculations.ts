@@ -1,7 +1,6 @@
 import {PowerPlantType} from "../../types";
 
 export function backCalculateInputFields(
-    electrolyserEfficiency: number,
     powerPlantOversizeRatio: number,
     solarToWindPercentage: number,
     currentPowerPlantType: PowerPlantType,
