@@ -14,7 +14,7 @@ import {
   StackReplacementType,
 } from "../types";
 import {mean, projectYears} from "../utils";
-import {CsvRow, ModelHourlyOperation, ModelSummaryPerYear, ProjectModelSummary,} from "./ModelTypes";
+import {CsvRow, ModelHourlyOperation, ProjectModelSummary,} from "./ModelTypes";
 import {
   backCalculateSolarAndWindCapacities,
   calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
