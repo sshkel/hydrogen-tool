@@ -139,14 +139,12 @@ export class HydrogenModel implements Model {
   private readonly hoursPerYear: number;
   private readonly specCons: number;
 
-  private stackReplacementYears: number[];
+
   private hourlyOperationsInYearOne: ModelHourlyOperation;
   private solarNominalCapacity: number;
   private windNominalCapacity: number;
   private powerPlantOversizeRatio: number;
   private powerPlantType: PowerPlantType;
-  private lastStackReplacementYear: number;
-  private currentStackOperatingHours: number;
 
   // parameters to expose to working data
   electrolyserNominalCapacity: number;
@@ -181,14 +179,9 @@ export class HydrogenModel implements Model {
     this.windData = windData;
     this.hoursPerYear = solarData.length;
 
-    // Stack replacement logic for degradation
-    this.stackReplacementYears = [];
-    this.stackLifetime =
-        parameters.stackReplacementType === "Cumulative Hours"
-            ? parameters.stackLifetime
-            : undefined;
-    this.currentStackOperatingHours = 0;
-    this.lastStackReplacementYear = 0;
+
+    this.stackLifetime = parameters.stackLifetime;
+
     this.hourlyOperationsInYearOne = {};
 
     this.solarNominalCapacity = parameters.solarNominalCapacity;
