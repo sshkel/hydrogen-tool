@@ -10,24 +10,6 @@ export const roundToNearestInteger = (n: number) => Math.round(n) || 0;
 
 export const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
 
-export function calculateLoanBalance(
-  totalLoan: number,
-  projectTimeline: number,
-  loanRepayment: number
-) {
-  const loanBalance: number[] = [0, totalLoan];
-
-  for (let i = 1; i <= projectTimeline; i++) {
-    const newBalance = loanBalance[i] - loanRepayment;
-    if (newBalance > 0) {
-      loanBalance.push(newBalance);
-    } else {
-      loanBalance.push(0);
-    }
-  }
-  return loanBalance;
-}
-
 export function sales(
   // Calculated values
   totalCapexCost: number,

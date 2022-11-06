@@ -1,5 +1,4 @@
 import {
-  calculateLoanBalance,
   getBaseLog,
   getInflationFn,
   roundToNearestThousand,
@@ -26,22 +25,5 @@ describe("Cost function calculations", () => {
     expect(inflationValues).toEqual([
       1, 1.5, 2.25, 3.375, 5.0625, 7.59375, 11.390625, 17.0859375, 25.62890625,
     ]);
-  });
-
-  it("calculates loan balance correctly", () => {
-    const totalLoan = 7_500_000;
-    const loanRepayment = 750_000;
-    const projectTimeline = 20;
-    const result = calculateLoanBalance(
-      totalLoan,
-      projectTimeline,
-      loanRepayment
-    );
-    const expected = [
-      0, 7_500_000, 6750000, 6000000, 5250000, 4500000, 3750000, 3000000,
-      2250000, 1500000, 750000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    ];
-    expect(result.length).toEqual(projectTimeline + 2);
-    expect(result).toEqual(expected);
   });
 });
