@@ -578,7 +578,7 @@ export class HydrogenModel implements Model {
     } else if (inputConfiguration === "Advanced") {
       let windNominalCapacity: number;
       let solarNominalCapacity: number;
-      let powerPlantOversizeRatio: number;
+
       if (
           this.parameters.powerCapacityConfiguration === "Oversize Ratio"
       ) {
@@ -591,27 +591,24 @@ export class HydrogenModel implements Model {
         );
         solarNominalCapacity = calculatedSolarNominalCapacity;
         windNominalCapacity = calculatedWindNominalCapacity;
-        powerPlantOversizeRatio = this.parameters.powerPlantOversizeRatio;
       } else if (this.parameters.powerCapacityConfiguration === "Nominal Capacity") {
         solarNominalCapacity = this.parameters.solarNominalCapacity;
         windNominalCapacity = this.parameters.windNominalCapacity;
-        powerPlantOversizeRatio = (solarNominalCapacity + windNominalCapacity) /
-            this.parameters.electrolyserNominalCapacity
       } else {
         throw new Error("Unknown powerCapacityConfiguration: " + this.parameters.powerCapacityConfiguration)
       }
 
       const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
+      const powerPlantOversizeRatio = (solarNominalCapacity + windNominalCapacity) /
+          this.parameters.electrolyserNominalCapacity
 
-      // advanced input calculations
       const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
-
       if (noDegradation) {
         const year = 1;
         const hourlyOperation = this.calculatePowerplantAndElectrolyserHourlyOperation(
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
-            powerPlantNominalCapacity / this.parameters.electrolyserNominalCapacity,
+            powerPlantOversizeRatio,
             this.parameters.electrolyserNominalCapacity,
             year
         );
@@ -688,7 +685,7 @@ export class HydrogenModel implements Model {
             this.calculatePowerplantAndElectrolyserHourlyOperation(
                 solarNominalCapacity / powerPlantNominalCapacity,
                 windNominalCapacity / powerPlantNominalCapacity,
-                powerPlantNominalCapacity / this.parameters.electrolyserNominalCapacity,
+                powerPlantOversizeRatio,
                 this.parameters.electrolyserNominalCapacity,
                 year
             );
