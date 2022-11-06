@@ -5,18 +5,8 @@ export function backCalculateInputFields(
     powerPlantOversizeRatio: number,
     solarToWindPercentage: number,
     currentPowerPlantType: PowerPlantType,
-    projectScale: number,
-    electrolyserCf: number,
-    hoursPerYear: number
+    electrolyserNominalCapacity: number
 ) {
-
-  const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
-    projectScale,
-    electrolyserEfficiency / 100,
-    electrolyserCf,
-    hoursPerYear
-  );
-
   let powerPlantType = currentPowerPlantType;
   if (solarToWindPercentage === 100) {
     powerPlantType = "Solar";
@@ -38,7 +28,6 @@ export function backCalculateInputFields(
     powerPlantType,
     windNominalCapacity,
     solarNominalCapacity,
-    electrolyserNominalCapacity,
   };
 }
 

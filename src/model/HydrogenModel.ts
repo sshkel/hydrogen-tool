@@ -568,9 +568,7 @@ export class HydrogenModel implements Model {
           powerPlantOversizeRatio,
           solarToWindPercentage,
           currentPowerPlantType,
-          this.parameters.projectScale,
-          mean(projectSummary.electrolyserCapacityFactors),
-          this.hoursPerYear
+          electrolyserNominalCapacity
       );
 
       this.powerPlantType = result.powerPlantType;
@@ -579,7 +577,7 @@ export class HydrogenModel implements Model {
         powerPlantType: result.powerPlantType,
         solarNominalCapacity: result.solarNominalCapacity,
         windNominalCapacity: result.windNominalCapacity,
-        electrolyserNominalCapacity: result.electrolyserNominalCapacity,
+        electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
         ...projectSummary
       };
