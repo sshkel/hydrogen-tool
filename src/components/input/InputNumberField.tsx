@@ -2,12 +2,12 @@ import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { useEffect } from "react";
 
 import InputTitle from "./InputTitle";
 import { BLUE, GREY } from "./colors";
 import { numberFieldDefaultInputs } from "./data";
-import { defaultInputs } from "./defaults";
+import { DefaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {
@@ -57,11 +57,21 @@ function InputNumberField({ inputKey }: Props) {
     max,
   } = numberFieldDefaultInputs[inputKey];
 
-  const defaultValue = defaultInputs[inputKey];
+  const defaultValue = DefaultInputs.get(inputKey);
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue
   );
+
+  useEffect(() => {
+    // Capture current state on unmount and in between state change of app
+    return () => {
+      DefaultInputs.set(
+        inputKey,
+        typeof value === "number" ? value : defaultValue
+      );
+    };
+  });
 
   const valueText: string | undefined =
     min && max ? "Value: " + min + " - " + max : undefined;

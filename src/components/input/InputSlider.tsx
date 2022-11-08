@@ -3,11 +3,12 @@ import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { useEffect } from "react";
 
 import InputTitle from "./InputTitle";
 import { BLUE, WHITE } from "./colors";
 import { sliderFieldDefaultInputs } from "./data";
-import { defaultInputs } from "./defaults";
+import { DefaultInputs } from "./defaults";
 
 interface Props {
   inputKey: string;
@@ -45,11 +46,21 @@ export default function InputSlider({ inputKey }: Props) {
   }
 
   const { title, helperText, min = 0, max = 100, step = 10 } = data;
-  const defaultValue = defaultInputs[inputKey];
+  const defaultValue = DefaultInputs.get(inputKey);
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue
   );
+
+  useEffect(() => {
+    // Capture current state on unmount and in between state change of app
+    return () => {
+      DefaultInputs.set(
+        inputKey,
+        typeof value === "number" ? value : defaultValue
+      );
+    };
+  });
 
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
     setValue(newValue);

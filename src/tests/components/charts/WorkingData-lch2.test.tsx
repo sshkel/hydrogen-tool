@@ -7,6 +7,7 @@ import WorkingData, {
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
+  basicHybridPPAScenario,
   basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneHybridWithDegradationScenario,
@@ -361,6 +362,51 @@ describe("Working Data calculations", () => {
           );
         expect(cashFlowChart).toHaveLength(1);
         const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for basic hybrid with ppa agreement", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          inputConfiguration={basicHybridPPAScenario.inputConfiguration}
+          data={basicHybridPPAScenario.data}
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+          location={basicHybridPPAScenario.location}
+        />
+      );
+
+      // lcPowerPlantCAPEX,
+      // lcElectrolyserCAPEX,
+      // lcIndirectCosts,
+      // lcPowerPlantOPEX,
+      // lcElectrolyserOPEX,
+      // lcElectricityPurchase,
+      // lcStackReplacement,
+      // lcWater,
+      // lcBattery,
+      // lcGridConnection,
+      // lcAdditionalCosts,
+      const costBreakdown = [
+        0, 0.536, 0.193, 0, 0.142, 0.667, 0.109, 0.075, 0, 0, 0,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(WaterFallPane)
+          .filterWhere(
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+          );
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("items");
+
         Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );

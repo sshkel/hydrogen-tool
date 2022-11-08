@@ -82,24 +82,26 @@ export function getCapex(
     electrolyserReferenceFoldIncrease
   );
 
-  const solarCAPEX = isSolar(powerPlantType)
-    ? calculateCapex(
-        solarNominalCapacity,
-        solarReferenceCapacity,
-        solarFarmBuildCost,
-        solarPVCostReductionWithScale,
-        solarReferenceFoldIncrease
-      )
-    : 0;
-  const windCAPEX = isWind(powerPlantType)
-    ? calculateCapex(
-        windNominalCapacity,
-        windReferenceCapacity,
-        windFarmBuildCost,
-        windCostReductionWithScale,
-        windReferenceFoldIncrease
-      )
-    : 0;
+  const solarCAPEX =
+    isSolar(powerPlantType) && !ppaAgreement
+      ? calculateCapex(
+          solarNominalCapacity,
+          solarReferenceCapacity,
+          solarFarmBuildCost,
+          solarPVCostReductionWithScale,
+          solarReferenceFoldIncrease
+        )
+      : 0;
+  const windCAPEX =
+    isWind(powerPlantType) && !ppaAgreement
+      ? calculateCapex(
+          windNominalCapacity,
+          windReferenceCapacity,
+          windFarmBuildCost,
+          windCostReductionWithScale,
+          windReferenceFoldIncrease
+        )
+      : 0;
 
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 

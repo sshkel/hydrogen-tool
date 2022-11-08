@@ -44,26 +44,26 @@ class DefaultInputs implements Inputs {
   powerPlantType = "Hybrid" as PowerPlantType;
   powerSupplyOption = "Self Build" as PowerSupplyOption;
   powerCapacityConfiguration = "Oversize Ratio" as PowerCapacityConfiguration;
+  powerPlantOversizeRatio = 1;
+  solarToWindPercentage = 100;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
   solarReferenceCapacity = 10;
   windReferenceCapacity = 10;
   solarFarmBuildCost = 1200;
   windFarmBuildCost = 2000;
-  powerPlantOversizeRatio = 1;
-  solarToWindPercentage = 100;
   solarEpcCosts = 30;
   solarLandProcurementCosts = 6;
   solarPVCostReductionWithScale = 10;
   solarReferenceFoldIncrease = 10;
-  solarDegradation = 0;
-  windDegradation = 0;
   solarOpex = 17_000;
   windCostReductionWithScale = 10;
   windEpcCosts = 30;
   windLandProcurementCosts = 6;
   windReferenceFoldIncrease = 10;
   windOpex = 25_000;
+  solarDegradation = 0;
+  windDegradation = 0;
 
   // Stack
   stackReplacementType = "Cumulative Hours" as StackReplacementType;

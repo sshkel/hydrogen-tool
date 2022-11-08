@@ -757,3 +757,24 @@ export const standaloneWindWithBatteryAndDegradationScenario: {
     inflationRate: 2.5,
   },
 };
+
+export const basicHybridPPAScenario: {
+  location: string;
+  inputConfiguration: InputConfiguration;
+  data: UserInputFields;
+} = {
+  location: "Z1",
+  inputConfiguration: "Basic",
+  data: {
+    powerSupplyOption: "Power Purchase Agreement (PPA)",
+    powerPlantOversizeRatio: 2,
+    solarToWindPercentage: 50,
+    electrolyserPurchaseCost: 1000,
+    projectScale: 100_000,
+    electrolyserEfficiency: 50,
+    waterSupplyCost: 5,
+    principalPPACost: 10,
+    projectTimeline: 20,
+    discountRate: 7,
+  },
+};

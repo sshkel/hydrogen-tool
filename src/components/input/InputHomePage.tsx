@@ -94,6 +94,9 @@ export default function InputHomePage(props: Props) {
     navigate("/result");
   };
 
+  const powerfuelTitle =
+    powerfuel.charAt(0).toLocaleUpperCase() + powerfuel.slice(1);
+
   return (
     <Box
       component="form"
@@ -114,7 +117,7 @@ export default function InputHomePage(props: Props) {
               gutterBottom
               marginBottom={0}
             >
-              {powerfuel}
+              {powerfuelTitle}
             </Typography>
             <Typography variant="subtitle1">
               General {powerfuel} production cost for region.​

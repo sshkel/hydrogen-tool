@@ -15,11 +15,11 @@ interface Props {
 export default function HourlyCapacityFactors(props: Props) {
   // randomly sample for demo until we fix and have zoom in functionality
   // https://youtube.com/clip/UgkxlUpRBGgl1xSjlEPyATuGK1_Eaqu50GxV
-  const sampleToPlot = 8760;
   const { datapoints } = props;
+  const samplesToPlot = datapoints.length;
 
   const graphData = {
-    labels: [...Array(sampleToPlot).keys()].map((i) => i + 1),
+    labels: [...Array(samplesToPlot).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
       label: point.label,
       data: point.data.map((x) => x * 100),
@@ -57,7 +57,7 @@ export default function HourlyCapacityFactors(props: Props) {
       },
       zoom: {
         limits: {
-          x: { min: 0, max: 8760 },
+          x: { min: 0, max: samplesToPlot },
         },
         pan: {
           enabled: true,

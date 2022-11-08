@@ -5,6 +5,7 @@ import WorkingData, {
 } from "../../../components/charts/WorkingData";
 import { UserInputFields } from "../../../types";
 import {
+  basicHybridPPAScenario,
   defaultInputData,
   standaloneSolarWithBatteryScenario,
 } from "../../scenario";
@@ -604,6 +605,30 @@ describe("Working Data calculations", () => {
       expect(chartData["Power Plant Land"]).toEqual(120_000);
       // Battery Land = 339_000
       expect(chartData["Battery Land"]).toEqual(339_000);
+    });
+
+    it("calculates indirect costs when ppa agreement", () => {
+      const wrapper = shallow(
+        <WorkingData
+          data={basicHybridPPAScenario.data}
+          inputConfiguration="Basic"
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={basicHybridPPAScenario.location}
+        />
+      );
+
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const chartData = costBreakdownChart.at(0).prop("items");
+      expect(chartData["Electrolyser EPC"]).toEqual(0);
+      expect(chartData["Electrolyser Land"]).toEqual(0);
+      expect(chartData["Power Plant EPC"]).toEqual(0);
+      expect(chartData["Power Plant Land"]).toEqual(0);
+      expect(chartData["Battery EPC"]).toEqual(0);
+      expect(chartData["Battery Land"]).toEqual(0);
     });
   });
 });

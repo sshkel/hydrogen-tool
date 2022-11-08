@@ -70,12 +70,14 @@ export function getOpex(
       projectTimeline
     );
 
-  const solarOpexCost = isSolar(powerPlantType)
-    ? roundToNearestThousand(solarOpex * solarNominalCapacity)
-    : 0;
-  const windOpexCost = isWind(powerPlantType)
-    ? roundToNearestThousand(windOpex * windNominalCapacity)
-    : 0;
+  const solarOpexCost =
+    isSolar(powerPlantType) && !ppaAgreement
+      ? roundToNearestThousand(solarOpex * solarNominalCapacity)
+      : 0;
+  const windOpexCost =
+    isWind(powerPlantType) && !ppaAgreement
+      ? roundToNearestThousand(windOpex * windNominalCapacity)
+      : 0;
 
   const powerPlantOpexCost = solarOpexCost + windOpexCost;
 
