@@ -9,8 +9,8 @@ import { SideBar } from "./SideBar";
 import WorkingData from "./charts/WorkingData";
 import InputHomePage from "./input/InputHomePage";
 import Map from "./map/Map";
-import { About } from "./misc/About";
-import { ToolDescription } from "./misc/ToolDescription";
+import { Contact } from "./misc/Contact";
+import { HomePage } from "./misc/HomePage";
 
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
@@ -52,8 +52,8 @@ function App() {
                 />
               }
             />
-            <Route path="/about" element={<About />} />
-            <Route path="/tool" element={<ToolDescription />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/tool" element={<HomePage />} />
             <Route
               path="*"
               element={

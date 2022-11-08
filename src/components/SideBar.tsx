@@ -65,7 +65,7 @@ export function SideBar() {
 
         <ListItem disableGutters>
           <ListItemButton
-            onClick={() => navigate("/about")}
+            onClick={() => navigate("/contact")}
             sx={{
               minHeight: 48,
               justifyContent: "center",
