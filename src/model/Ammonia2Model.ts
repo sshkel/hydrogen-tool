@@ -620,7 +620,6 @@ export class AmmoniaModel implements Model {
           this.parameters.asuSec
       );
 
-
       const electrolyserNominalCapacity = nominal_electrolyser_capacity(
           hydrogenOutput,
           this.secAtNominalLoad,
@@ -1375,44 +1374,6 @@ function nh3_unit_capacity_factor(
   return nh3_unit_out.map(
       (v: number) => v / (ammonia_plant_capacity * (1_000_000 / hoursPerYear))
   );
-}
-
-// should be repeated for multiple cells
-function to_h2_storage(
-    excess_h2: number[],
-    h2_store_balance: number,
-    hydrogen_storage_capacity: number
-) {
-  return excess_h2.map((_: number, i: number) => {
-    if (i === 0) {
-      return excess_h2[i] > 0 ? excess_h2[i] : 0;
-    } else {
-      return h2_store_balance + excess_h2[i] < hydrogen_storage_capacity &&
-      excess_h2[i] > 0
-          ? excess_h2
-          : 0;
-    }
-  });
-}
-
-// should be repeated for multiple cells
-function from_h2_storage(
-    deficit_h2: number[],
-    h2_store_balance: number,
-    hydrogen_storage_capacity: number,
-    minimum_hydrogen_storage_percentage: number
-) {
-  return deficit_h2.map((_: number, i: number) => {
-    if (i === 0) {
-      return deficit_h2[i] < 0 ? deficit_h2[i] : 0;
-    } else {
-      return h2_store_balance + deficit_h2[i] >
-      hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
-      deficit_h2[i] < 0
-          ? deficit_h2
-          : 0;
-    }
-  });
 }
 
 function h2_storage_balance(
