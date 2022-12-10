@@ -4,6 +4,7 @@ import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
 import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
+import ControlledAmmoniaPowerPlantCard from "./ControlledAmmoniaPowerPlantCard";
 
 export default function AdvancedHydrogenInput() {
   return (
@@ -204,7 +205,7 @@ export default function AdvancedHydrogenInput() {
 
       <Grid container item flexDirection="column" rowSpacing={1} xs={4}>
         <Grid item>
-          <ControlledPowerPlantCard />
+          <ControlledAmmoniaPowerPlantCard />
         </Grid>
       </Grid>
 

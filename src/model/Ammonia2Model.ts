@@ -95,7 +95,7 @@ export type AmmoniaData = {
   windReferenceFoldIncrease: number;
 
   //Ammonia
-  ammoniaPlantCapacity: number; // raw input
+  ammoniaPlantCapacity: number; // raw input done
   electrolyserSystemOversizing: number; // raw input %
 
   ammoniaPlantSec: number; // raw input
