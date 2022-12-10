@@ -7,6 +7,8 @@ import {
   styled,
 } from "@mui/material";
 
+import { OFF_WHITE, WHITE } from "../colors";
+
 const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.h5,
   padding: theme.spacing(1),
@@ -25,12 +27,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
   justifyContent: "center",
   margin: "10px",
 }));
-export function AboutPage() {
+export default function AboutPage() {
   return (
-    <Grid container direction="column" justifyContent={"space-between"}>
-      <Grid item>
-        <StyledCard sx={{ alignItems: "center" }}>
-          <CardContent sx={{ width: "40vw" }}>
+    <Grid container direction="column" justifyContent="space-between">
+      <Grid item sx={{ backgroundColor: OFF_WHITE }}>
+        <StyledCard sx={{ alignItems: "center", backgroundColor: OFF_WHITE }}>
+          <CardContent sx={{ width: "40vw", backgroundColor: OFF_WHITE }}>
             <ItemTitle>NSW Powerfuel Value Chain Tool</ItemTitle>
             <ItemText>
               The NSW Powerfuel Value Chain Tool has been developed to
@@ -59,19 +61,30 @@ export function AboutPage() {
           />
         </StyledCard>
       </Grid>
-      <Grid item>
-        <StyledCard sx={{ flexDirection: "row-reverse", alignItems: "center" }}>
+      <Grid item sx={{ backgroundColor: OFF_WHITE }}>
+        <StyledCard
+          sx={{
+            flexDirection: "row-reverse",
+            alignItems: "center",
+            backgroundColor: OFF_WHITE,
+          }}
+        >
           <CardContent sx={{ width: "40vw" }}>
-            <ItemTitle>Disclaimer</ItemTitle>
+            <ItemTitle>Tool Competencies</ItemTitle>
             <ItemText>
-              THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-              EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-              NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-              HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-              WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-              OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-              DEALINGS IN THE SOFTWARE.
+              An open-source, user friendly design, allows the user to select
+              any location across NSW and then assess their potential hydrogen
+              and powerfuels projects via two options. The first is a basic
+              analysis allowing the user to define the critical parameters to
+              generate a quick result, and the second is an advanced analysis
+              allowing the user to define a broad range of parameters to
+              evaluate their projects.
+            </ItemText>
+            <ItemText>
+              The output from the analysis generates a breakdown of the key
+              components making up the levelized cost and summarizes key
+              technical outputs such as capacity factors, system availability,
+              annual production rates and energy consumed.
             </ItemText>
           </CardContent>
           <CardMedia
@@ -81,33 +94,31 @@ export function AboutPage() {
           />
         </StyledCard>
       </Grid>
-      <Grid item>
+      <Grid item sx={{ backgroundColor: OFF_WHITE }}>
         <StyledCard
           sx={{
             flexDirection: "row-reverse",
             alignItems: "center",
+            backgroundColor: OFF_WHITE,
           }}
         >
           <CardContent sx={{ width: "40vw" }}>
-            <ItemTitle>Distribution License</ItemTitle>
+            <ItemTitle>Analysis Methodology</ItemTitle>
             <ItemText>
-              Copyright 2022 University of New South Wales (UNSW) Permission is
-              hereby granted, free of charge, to any person using this web-based
-              tool and associated documentation files (the "Software"), to deal
-              in the Software without restriction, including without limitation
-              the rights to use, publish, distribute, sublicensing of the
-              Software, and to permit persons to whom the Software is furnished
-              to do so, subject to the following conditions: The above copyright
-              notice and this permission notice shall be included in all copies
-              or substantial portions of the Software.
+              The backbone of the tool is built up of historical hourly solar
+              and wind potential data across NSW. Depending on the renewable
+              power configuration defined by the user (solar, wind or hybrid),
+              an hourly energy output to the entire system is mapped out across
+              a one- year period. The energy output is then correlated with the
+              systems specific energy consumption to determine the mass of
+              hydrogen and/or powerfuel generated at an hourly interval across a
+              one-year period and subsequently the lifetime of the project.
             </ItemText>
             <ItemText>
-              The Powerfuel Value Chain Tool has been developed primarily for
-              analysis as part of the NSW Power-to-X Industry Feasibility Study.
-              Nevertheless, the NSW Government encourages the open-source use of
-              the tool as well as is open for feedback to report issues and
-              suggest improvements to design and functionality of the overall
-              tool (refer to contact page)
+              User defined project capital and operating costs, discount rate
+              and project lifetime, along with the total quantity of hydrogen or
+              powerfuel generated are used to calculate a levelized cost of
+              hydrogen or the powerfuel of choice.
             </ItemText>
           </CardContent>
           <CardMedia
@@ -116,6 +127,40 @@ export function AboutPage() {
             image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc3.svg"
           />
         </StyledCard>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          background:
+            "radial-gradient(circle at center, rgba(88,115,166,255) 1%, rgba(0,34,78,255))",
+        }}
+        padding={12}
+      >
+        <Typography
+          align="center"
+          fontSize={40}
+          fontStyle="Nunito"
+          fontWeight="800"
+          color={WHITE}
+        >
+          Feedback
+        </Typography>
+        <br />
+        <Typography
+          align="center"
+          fontSize={18}
+          fontStyle="Nunito"
+          color={WHITE}
+        >
+          We encourage feedback from the user to help us improve the tool.
+          <br />
+          <br />
+          Feedback can be provided to Associate Professor Iain MacGill
+          (i.macgill@unsw.edu.au) and Dr. Rahman Daiyan (r.daiyan@unsw.edu.au)
+          and further updates on the tool will be provided at
+          https://www.globh2e.org.au/
+        </Typography>
       </Grid>
     </Grid>
   );

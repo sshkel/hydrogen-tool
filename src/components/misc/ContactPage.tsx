@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { OFF_WHITE, WHITE } from "../colors";
 import { OFFICE_OF_CHIEF_SCIENTIST } from "../logos";
 
-export function Contact() {
+export default function ContactPage() {
   return (
     <Grid container flexDirection="column">
       <Grid

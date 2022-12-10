@@ -1,5 +1,6 @@
 import "@fontsource/nunito/700.css";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import MuiDrawer from "@mui/material/Drawer";
@@ -122,6 +123,13 @@ export function SideBar() {
       <List>
         <StyledListItem disableGutters>
           <StyledListItemButton onClick={() => navigate("/")} open={open}>
+            <HomeRoundedIcon sx={iconStyle} />
+            <StyledListItemText primary="Home" open={open} />
+          </StyledListItemButton>
+        </StyledListItem>
+
+        <StyledListItem disableGutters>
+          <StyledListItemButton onClick={() => navigate("/map")} open={open}>
             <SettingsSuggestRoundedIcon sx={iconStyle} />
             <StyledListItemText primary="Design Tool" open={open} />
           </StyledListItemButton>

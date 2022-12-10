@@ -14,8 +14,9 @@ import WorkingData from "./charts/WorkingData";
 import { BLACK, BLUE, ORANGE, WHITE } from "./colors";
 import InputHomePage from "./input/InputHomePage";
 import Map from "./map/Map";
-import { AboutPage } from "./misc/AboutPage";
-import { Contact } from "./misc/Contact";
+import AboutPage from "./misc/AboutPage";
+import ContactPage from "./misc/ContactPage";
+import HomePage from "./misc/HomePage";
 
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
@@ -62,7 +63,8 @@ function App() {
             sx={{ flexGrow: 1, bgcolor: "background.default" }}
           >
             <Routes>
-              <Route path="/" element={<Map setLocation={setLocation} />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/map" element={<Map setLocation={setLocation} />} />
               <Route
                 path="/design/:powerfuel"
                 element={
@@ -84,7 +86,7 @@ function App() {
                   />
                 }
               />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/contact" element={<ContactPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route
                 path="*"
