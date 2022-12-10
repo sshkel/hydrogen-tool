@@ -6,6 +6,7 @@ import Card, { CardProps } from "@mui/material/Card";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import { clsx } from "clsx";
 import React, { Suspense } from "react";
 
 import { nameToId } from "../../utils";
@@ -18,6 +19,7 @@ export interface InputCardProps {
   expanded?: boolean;
   onExpandChange?: () => void;
   mountOnEnter?: boolean;
+  className?: string;
 }
 
 interface StyledCardProps extends CardProps {
@@ -76,6 +78,7 @@ function InputCard(props: InputCardProps) {
     children,
     mountOnEnter,
     onExpandChange,
+    className,
   } = props;
   const [expanded, setExpanded] = React.useState(!!props.expanded);
 
@@ -110,6 +113,10 @@ function InputCard(props: InputCardProps) {
             color: expanded ? ORANGE : BLUE,
             padding: "8px 8px 8px 18px",
           }}
+          className={clsx(
+            subtitle && expanded && "selectedConfiguration",
+            subtitle && expanded && className
+          )}
         >
           {title}
         </Typography>
