@@ -503,7 +503,7 @@ export class AmmoniaModel implements Model {
           this.parameters.powerPlantOversizeRatio,
           // default for the first calculation
           1,
-          1
+          1,
       );
 
       const hydrogenProduction = calculateHydrogenProduction(
@@ -631,27 +631,56 @@ export class AmmoniaModel implements Model {
       const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
       if (noDegradation) {
         const year = 1;
-        const hourlyOperation = this.calculatePowerplantAndElectrolyserHourlyOperation(
+        let {
+          powerplantCapacityFactors,
+          electrolyserCapacityFactors,
+          netBatteryFlow
+        } = this.calculatePowerplantAndElectrolyserHourlyOperation(
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
             this.parameters.powerPlantOversizeRatio,
             electrolyserNominalCapacity,
             year
         );
+        electrolyserCapacityFactors = calculateAmmoniaElectrolyserCapacityFactors(
+            powerplantCapacityFactors,
+            netBatteryFlow,
+            electrolyserCapacityFactors,
+            this.batteryEfficiency,
+            powerPlantNominalCapacity,
+            electrolyserNominalCapacity,
+            airSeparationUnitPowerDemand,
+            ammoniaPlantPowerDemand
+        );
 
         const hydrogenProduction = calculateHydrogenProduction(
-            hourlyOperation.electrolyserCapacityFactors,
+            electrolyserCapacityFactors,
             this.hydOutput,
             0,
             this.specCons,
         );
 
-        const hourlyOperationsInYearOne: ModelHourlyOperation = {...hourlyOperation, hydrogenProduction};
-        const operatingOutputs = calculateSummary(
-            hourlyOperation.powerplantCapacityFactors,
-            hourlyOperation.electrolyserCapacityFactors,
+        const ammoniaCapacityFactors = calculateNH3CapFactors(
             hydrogenProduction,
-            hourlyOperation.netBatteryFlow,
+            this.parameters.ammoniaPlantCapacity,
+            this.parameters.hydrogenStorageCapacity,
+            this.parameters.ammoniaPlantMinimumTurndown,
+            this.parameters.minimumHydrogenStorage,
+            hydrogenOutput,
+            airSeparationUnitCapacity,
+            this.hoursPerYear
+        );
+
+        const hourlyOperationsInYearOne: ModelHourlyOperation = {
+          powerplantCapacityFactors,
+          electrolyserCapacityFactors,
+          netBatteryFlow, hydrogenProduction, ammoniaCapacityFactors
+        };
+        const operatingOutputs = calculateSummary(
+            powerplantCapacityFactors,
+            electrolyserCapacityFactors,
+            hydrogenProduction,
+            netBatteryFlow,
             electrolyserNominalCapacity,
             powerPlantNominalCapacity,
             this.kgToTonne,
@@ -707,22 +736,52 @@ export class AmmoniaModel implements Model {
       }
 
       const capFactorsByYear = projectYears(projectTimeline).map((year: number) => {
-        const hourlyOperation =
+        let {
+          powerplantCapacityFactors,
+          electrolyserCapacityFactors,
+          netBatteryFlow
+        } =
             this.calculatePowerplantAndElectrolyserHourlyOperation(
                 solarNominalCapacity / powerPlantNominalCapacity,
                 windNominalCapacity / powerPlantNominalCapacity,
                 this.parameters.powerPlantOversizeRatio,
                 electrolyserNominalCapacity,
-                year
+                year,
             );
-        const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
+
+        electrolyserCapacityFactors = calculateAmmoniaElectrolyserCapacityFactors(
+            powerplantCapacityFactors,
+            netBatteryFlow,
+            electrolyserCapacityFactors,
+            this.batteryEfficiency,
+            powerPlantNominalCapacity,
+            electrolyserNominalCapacity,
+            airSeparationUnitPowerDemand,
+            ammoniaPlantPowerDemand
+        );
+
+        const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, electrolyserCapacityFactors)
         const hydrogenProduction = calculateHydrogenProduction(
-            hourlyOperation.electrolyserCapacityFactors,
+            electrolyserCapacityFactors,
             this.hydOutput,
             yearlyDegradationRate,
             this.specCons,
         );
-        return {...hourlyOperation, hydrogenProduction}
+        const ammoniaCapacityFactors = calculateNH3CapFactors(
+            hydrogenProduction,
+            this.parameters.ammoniaPlantCapacity,
+            this.parameters.hydrogenStorageCapacity,
+            this.parameters.ammoniaPlantMinimumTurndown,
+            this.parameters.minimumHydrogenStorage,
+            hydrogenOutput,
+            airSeparationUnitCapacity,
+            this.hoursPerYear
+        );
+        return {
+          powerplantCapacityFactors,
+          electrolyserCapacityFactors,
+          netBatteryFlow, hydrogenProduction, ammoniaCapacityFactors
+        }
       })
 
       const hourlyOperationsInYearOne: ModelHourlyOperation = capFactorsByYear[0];
@@ -779,7 +838,7 @@ export class AmmoniaModel implements Model {
         this.parameters.windDegradation,
         year
     );
-    let {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+    const {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         powerplantCapacityFactors,
         this.hoursPerYear,
         oversizeRatio,
@@ -794,7 +853,6 @@ export class AmmoniaModel implements Model {
         this.batteryRatedPower,
         this.battMin,
     );
-
     return {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
@@ -1377,7 +1435,7 @@ function h2_storage_balance(
   return { from_h2_store, h2_storage_balance_result };
 }
 // will be used to calculate mass_of_hydrogen
-function calculateGeneratorCapFactors(
+function calculateAmmoniaElectrolyserCapacityFactors(
     generatorCapFactor: number[], // calculated in hydrogen
     net_battery_flow: number[], // calculated in hydrogen
     electrolyserCapFactor: number[], // calculated in hydrogen
@@ -1388,6 +1446,10 @@ function calculateGeneratorCapFactors(
     asu_power_demand: number,
     ammonia_plant_power_demand: number
 ): number[] {
+  // if no battery is defined return as it is
+  if (batteryEfficiency === 0) {
+    return electrolyserCapFactor
+  }
   const generator_actual_power_result: number[] = generator_actual_power(
       total_nominal_power_plant_capacity,
       generatorCapFactor
