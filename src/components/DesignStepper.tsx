@@ -40,7 +40,7 @@ export default function HorizontalLabelPositionBelowStepper(props: {
   activeStep: number;
 }) {
   return (
-    <Box sx={{ width: "100%", backgroundColor: "#F4F9FA", paddingY: 1.5 }}>
+    <Box sx={{ width: "100%", backgroundColor: "#F4F9FA", paddingY: 1 }}>
       <Stepper
         activeStep={props.activeStep}
         alternativeLabel
