@@ -7,16 +7,18 @@ import {
   styled,
 } from "@mui/material";
 
-import { OFF_WHITE, WHITE } from "../colors";
+import { NAVY, OFF_WHITE, WHITE } from "../colors";
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
-  ...theme.typography.h5,
+  ...theme.typography.h4,
   padding: theme.spacing(1),
-  fontWeight: "bold",
+  fontWeight: "800",
+  color: NAVY,
 }));
 const ItemText = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(4),
+  paddingBottom: theme.spacing(2),
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -56,7 +58,7 @@ export default function AboutPage() {
           </CardContent>
           <CardMedia
             component="img"
-            sx={{ width: "40vw", height: "50vh" }}
+            sx={{ width: "40vw", height: "60vh" }}
             image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc1.svg"
           />
         </StyledCard>
@@ -89,7 +91,7 @@ export default function AboutPage() {
           </CardContent>
           <CardMedia
             component="img"
-            sx={{ width: "30vw", height: "40vh" }}
+            sx={{ width: "30vw", height: "50vh" }}
             image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc2.svg"
           />
         </StyledCard>
@@ -123,7 +125,7 @@ export default function AboutPage() {
           </CardContent>
           <CardMedia
             component="img"
-            sx={{ width: "30vw", height: "40vh" }}
+            sx={{ width: "30vw", height: "50vh" }}
             image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc3.svg"
           />
         </StyledCard>

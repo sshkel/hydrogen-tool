@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
-import { BLACK, BLUE, OFF_WHITE, WHITE } from "../colors";
+import { BLACK, BLUE, NAVY, OFF_WHITE, WHITE } from "../colors";
 import { OFFICE_OF_CHIEF_SCIENTIST } from "../logos";
 
 export default function HomePage() {
@@ -39,7 +39,7 @@ export default function HomePage() {
           <Typography
             fontSize={32}
             fontStyle="Nunito"
-            color="#284069"
+            color={NAVY}
             align="center"
           >
             Welcome to the
@@ -48,7 +48,7 @@ export default function HomePage() {
             fontSize={40}
             fontStyle="Nunito"
             fontWeight="800"
-            color="#284069"
+            color={NAVY}
             align="center"
           >
             NSW Powerfuel Value Chain Tool
