@@ -212,10 +212,12 @@ export class AmmoniaModel implements Model {
     const durationCurves = {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
       "Electrolyser Duration Curve": hourlyOperations.electrolyserCapacityFactors,
+      "Ammonia Duration Curve": hourlyOperations.ammoniaCapacityFactors,
     };
     const hourlyCapFactors = {
       Electrolyser: hourlyOperations.electrolyserCapacityFactors,
       "Power Plant": hourlyOperations.powerplantCapacityFactors,
+      "Ammonia": hourlyOperations.ammoniaCapacityFactors,
     };
 
     const {
