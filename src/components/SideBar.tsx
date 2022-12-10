@@ -86,7 +86,10 @@ const StyledListItemText = styled(ListItemText, {
 })<StyledListItemTextProps>(({ open }) => ({
   opacity: open ? 1 : 0,
   color: "white",
-  fontSize: 48,
+
+  "& .MuiTypography-root": {
+    fontWeight: 700,
+  },
 }));
 
 export function SideBar() {

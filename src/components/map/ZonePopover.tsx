@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { BLUE, GREY } from "../colors";
+import { BLUE, GREY, WHITE } from "../colors";
 import { PowerfuelPathwayCard } from "./PowerfuelPathwayCard";
 import { zoneInfo } from "./ZoneInfo";
 
@@ -164,8 +164,10 @@ export function ZonePopover(props: Props) {
           style={{
             backgroundColor: BLUE,
             textTransform: "none",
+            color: WHITE,
             borderRadius: 20,
             marginBottom: 24,
+            fontSize: "0.9rem",
           }}
         >
           Start Project Design

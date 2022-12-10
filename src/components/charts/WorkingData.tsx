@@ -21,6 +21,7 @@ import {
   Model,
   UserInputFields,
 } from "../../types";
+import DesignStepper from "../DesignStepper";
 import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
@@ -191,6 +192,7 @@ export default function WorkingData(props: Props) {
 
   return (
     <ThemeProvider theme={theme}>
+      <DesignStepper activeStep={3} />
       <CssBaseline />
       <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
         <Grid item>

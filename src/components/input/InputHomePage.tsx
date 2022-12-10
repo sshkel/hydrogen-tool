@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "../../input.css";
 import { InputConfiguration } from "../../types";
+import DesignStepper from "../DesignStepper";
 import AdvancedHydrogenInput from "./AdvancedHydrogenInput";
 import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
@@ -73,6 +74,7 @@ export default function InputHomePage(props: Props) {
       autoComplete="off"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
+      <DesignStepper activeStep={2} />
       <Grid
         container
         padding={4}

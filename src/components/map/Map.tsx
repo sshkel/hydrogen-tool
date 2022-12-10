@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer, ZoomControl } from "react-leaflet";
 
+import DesignStepper from "../DesignStepper";
 import { ZonePopover } from "./ZonePopover";
 import geoJson from "./zones.json";
 
@@ -64,6 +65,7 @@ export default function Map(props: Props) {
           alignItems: "center",
         }}
       >
+        <DesignStepper activeStep={sideMenuOpen ? 1 : 0} />
         <ZonePopover
           zone={zone}
           sideMenuState={sideMenuOpen}

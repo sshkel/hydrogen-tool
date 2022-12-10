@@ -1,3 +1,5 @@
+import "@fontsource/nunito";
+import "@fontsource/nunito/800.css";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme } from "@mui/material/styles";
@@ -30,7 +32,7 @@ function App() {
     palette: {
       primary: {
         main: BLUE,
-        contrastText: BLACK,
+        contrastText: WHITE,
       },
       secondary: {
         main: "#F2F2F2",
