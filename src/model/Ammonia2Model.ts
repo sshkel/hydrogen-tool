@@ -50,7 +50,6 @@ export type AmmoniaData = {
   electrolyserLandProcurementCosts: number;
   electrolyserMaximumLoad: number;
   electrolyserMinimumLoad: number;
-  electrolyserNominalCapacity: number;
   electrolyserOMCost: number;
   electrolyserPurchaseCost: number;
   electrolyserReferenceCapacity: number;
@@ -75,7 +74,6 @@ export type AmmoniaData = {
   solarEpcCosts: number;
   solarFarmBuildCost: number;
   solarLandProcurementCosts: number;
-  solarNominalCapacity: number;
   solarOpex: number | undefined;
   solarPVCostReductionWithScale: number;
   solarReferenceCapacity: number;
@@ -92,10 +90,22 @@ export type AmmoniaData = {
   windEpcCosts: number;
   windFarmBuildCost: number;
   windLandProcurementCosts: number;
-  windNominalCapacity: number;
   windOpex: number | undefined;
   windReferenceCapacity: number;
   windReferenceFoldIncrease: number;
+
+  //Ammonia
+  ammoniaPlantCapacity: number; // raw input
+  electrolyserSystemOversizing: number; // raw input %
+
+  ammoniaPlantSec: number; // raw input
+  asuSec: number; // raw input
+  hydrogenStorageCapacity: number; // raw input
+
+  ammoniaPlantMinimumTurndown: number; // raw input %
+  // electrolyster and hydrogen storage paramteres
+  // other operation factors
+  minimumHydrogenStorage: number;
 };
 
 export class AmmoniaModel implements Model {
@@ -168,6 +178,7 @@ export class AmmoniaModel implements Model {
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = this.electrolyserEfficiency / 100;
+    // TODO check if this should be replaced by the other calculation.
     this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy =
@@ -576,31 +587,46 @@ export class AmmoniaModel implements Model {
       };
 
     } else if (inputConfiguration === "Advanced") {
-      let windNominalCapacity: number;
-      let solarNominalCapacity: number;
 
-      if (
-          this.parameters.powerCapacityConfiguration === "Oversize Ratio"
-      ) {
-        // Generate solar and wind nominal capacitues from oversize ratios
-        let {calculatedSolarNominalCapacity, calculatedWindNominalCapacity} = backCalculateSolarAndWindCapacities(
-            this.parameters.powerPlantOversizeRatio,
-            this.parameters.electrolyserNominalCapacity,
-            this.parameters.powerPlantType,
-            this.parameters.solarToWindPercentage
-        );
-        solarNominalCapacity = calculatedSolarNominalCapacity;
-        windNominalCapacity = calculatedWindNominalCapacity;
-      } else if (this.parameters.powerCapacityConfiguration === "Nominal Capacity") {
-        solarNominalCapacity = this.parameters.solarNominalCapacity;
-        windNominalCapacity = this.parameters.windNominalCapacity;
-      } else {
-        throw new Error("Unknown powerCapacityConfiguration: " + this.parameters.powerCapacityConfiguration)
-      }
+      // ammonia
+      const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
+          this.parameters.ammoniaPlantCapacity,
+          this.parameters.ammoniaPlantSec,
+          this.hoursPerYear
+      );
+      const airSeparationUnitCapacity = air_separation_unit_capacity(
+          this.parameters.ammoniaPlantCapacity
+      );
+      const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
+          airSeparationUnitCapacity,
+          this.parameters.asuSec
+      );
+      const hydrogenOutput = hydrogen_output(
+          this.parameters.ammoniaPlantCapacity
+      );
+
+      const electrolyserNominalCapacity = nominal_electrolyser_capacity(
+          hydrogenOutput,
+          this.secAtNominalLoad,
+          this.parameters.electrolyserSystemOversizing / 100
+      );
+
+      const solarNominalCapacity = nominal_solar_capacity(
+          ammoniaPlantPowerDemand,
+          airSeparationUnitPowerDemand,
+          electrolyserNominalCapacity,
+          this.parameters.solarToWindPercentage / 100,
+          this.parameters.powerPlantOversizeRatio
+      );
+      const windNominalCapacity = nominal_wind_capacity(
+          ammoniaPlantPowerDemand,
+          airSeparationUnitPowerDemand,
+          electrolyserNominalCapacity,
+          1 - this.parameters.solarToWindPercentage / 100,
+          this.parameters.powerPlantOversizeRatio
+      );
 
       const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
-      const powerPlantOversizeRatio = (solarNominalCapacity + windNominalCapacity) /
-          this.parameters.electrolyserNominalCapacity
 
       const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
       if (noDegradation) {
@@ -608,8 +634,8 @@ export class AmmoniaModel implements Model {
         const hourlyOperation = this.calculatePowerplantAndElectrolyserHourlyOperation(
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
-            powerPlantOversizeRatio,
-            this.parameters.electrolyserNominalCapacity,
+            this.parameters.powerPlantOversizeRatio,
+            electrolyserNominalCapacity,
             year
         );
 
@@ -626,7 +652,7 @@ export class AmmoniaModel implements Model {
             hourlyOperation.electrolyserCapacityFactors,
             hydrogenProduction,
             hourlyOperation.netBatteryFlow,
-            this.parameters.electrolyserNominalCapacity,
+            electrolyserNominalCapacity,
             powerPlantNominalCapacity,
             this.kgToTonne,
             this.hoursPerYear,
@@ -651,7 +677,7 @@ export class AmmoniaModel implements Model {
           powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
           windNominalCapacity: windNominalCapacity,
-          electrolyserNominalCapacity: this.parameters.electrolyserNominalCapacity,
+          electrolyserNominalCapacity: electrolyserNominalCapacity,
           hourlyOperations: hourlyOperationsInYearOne,
           ...projectSummary
         };
@@ -671,7 +697,7 @@ export class AmmoniaModel implements Model {
             hourlyOperation.electrolyserCapacityFactors,
             hourlyOperation.hydrogenProduction,
             hourlyOperation.netBatteryFlow,
-            this.parameters.electrolyserNominalCapacity,
+            electrolyserNominalCapacity,
             powerPlantNominalCapacity,
             this.kgToTonne,
             this.hoursPerYear,
@@ -685,8 +711,8 @@ export class AmmoniaModel implements Model {
             this.calculatePowerplantAndElectrolyserHourlyOperation(
                 solarNominalCapacity / powerPlantNominalCapacity,
                 windNominalCapacity / powerPlantNominalCapacity,
-                powerPlantOversizeRatio,
-                this.parameters.electrolyserNominalCapacity,
+                this.parameters.powerPlantOversizeRatio,
+                electrolyserNominalCapacity,
                 year
             );
         const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
@@ -726,7 +752,7 @@ export class AmmoniaModel implements Model {
         powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
-        electrolyserNominalCapacity: this.parameters.electrolyserNominalCapacity,
+        electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
         ...projectSummary
       };
@@ -753,7 +779,7 @@ export class AmmoniaModel implements Model {
         this.parameters.windDegradation,
         year
     );
-    const {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+    let {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         powerplantCapacityFactors,
         this.hoursPerYear,
         oversizeRatio,
