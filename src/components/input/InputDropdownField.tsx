@@ -3,8 +3,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 
+import { GREY, OFF_WHITE, ORANGE } from "../colors";
 import InputTitle from "./InputTitle";
-import { GREY, ORANGE } from "./colors";
 
 interface Props {
   id: string;
@@ -63,7 +63,7 @@ export default function InputDropdownField(props: Props) {
         MenuProps={{
           MenuListProps: {
             sx: {
-              backgroundColor: "#F4F9FA",
+              backgroundColor: OFF_WHITE,
               "&& .Mui-selected": {
                 backgroundColor: ORANGE,
               },

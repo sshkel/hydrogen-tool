@@ -9,15 +9,13 @@ import {
   Divider,
   Grid,
   Popover,
-  ThemeProvider,
   Typography,
-  createTheme,
   styled,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { BLUE, GREY } from "../input/colors";
+import { BLUE, GREY, WHITE } from "../colors";
 import { PowerfuelPathwayCard } from "./PowerfuelPathwayCard";
 import { zoneInfo } from "./ZoneInfo";
 
@@ -26,12 +24,6 @@ type Props = {
   sideMenuState: boolean;
   closeSideMenu: () => void;
 };
-
-const theme = createTheme({
-  typography: {
-    fontFamily: "Nunito",
-  },
-});
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
@@ -60,187 +52,165 @@ export function ZonePopover(props: Props) {
 
   const summary = (
     <SideCard>
-      <ThemeProvider theme={theme}>
-        <CardHeader
-          title="Location summary"
-          sx={{
-            backgroundColor: GREY,
-            paddingLeft: "20px",
-          }}
-          titleTypographyProps={{
-            fontWeight: "bold",
-          }}
-        />
-        <CardContent>
+      <CardHeader
+        title="Location summary"
+        sx={{
+          backgroundColor: GREY,
+          paddingLeft: "20px",
+        }}
+        titleTypographyProps={{
+          fontWeight: "bold",
+        }}
+      />
+      <CardContent>
+        <Grid
+          container
+          role="presentation"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid container item justifyContent="space-between" flexWrap="nowrap">
+            <Grid item xs>
+              <ItemTitle>Location:</ItemTitle>
+            </Grid>
+
+            <Grid item xs>
+              <ItemText>{zoneInfo[zone].location}</ItemText>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider flexItem />
+          </Grid>
+          <Grid container item justifyContent="space-between" flexWrap="nowrap">
+            <Grid item xs>
+              <ItemTitle>Regional Centers:</ItemTitle>
+            </Grid>
+            <Grid item xs>
+              <ItemText>{zoneInfo[zone].regionalCenters}</ItemText>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider flexItem />
+          </Grid>
           <Grid
             container
-            role="presentation"
-            justifyContent="center"
+            item
+            justifyContent="space-between"
+            flexWrap="nowrap"
             alignItems="center"
           >
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-            >
-              <Grid item xs>
-                <ItemTitle>Location:</ItemTitle>
-              </Grid>
-
-              <Grid item xs>
-                <ItemText>{zoneInfo[zone].location}</ItemText>
-              </Grid>
+            <Grid item xs>
+              <ItemTitle>Solar/Wind capacity factor:</ItemTitle>
             </Grid>
-            <Grid item xs={12}>
-              <Divider flexItem />
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-            >
-              <Grid item xs>
-                <ItemTitle>Regional Centers:</ItemTitle>
-              </Grid>
-              <Grid item xs>
-                <ItemText>{zoneInfo[zone].regionalCenters}</ItemText>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider flexItem />
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-              alignItems="center"
-            >
-              <Grid item xs>
-                <ItemTitle>Solar/Wind capacity factor:</ItemTitle>
-              </Grid>
-              <Grid container item xs alignItems="center">
-                <Grid item>
-                  <WbSunnyRoundedIcon />
-                </Grid>
-                <Grid item>
-                  <ItemText>{zoneInfo[zone].solarCapFactor}</ItemText>
-                </Grid>
-                <Grid item>
-                  <WindPowerRoundedIcon />
-                </Grid>
-                <Grid item>
-                  <ItemText>{zoneInfo[zone].windCapFactor}</ItemText>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider flexItem />
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-            >
-              <Grid item xs>
-                <ItemTitle>Main industries:</ItemTitle>
-              </Grid>
-              <Grid item xs>
-                <ItemText>{zoneInfo[zone].mainIndustries}</ItemText>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider flexItem />
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              flexWrap="nowrap"
-            >
-              <Grid item xs>
-                <ItemTitle>Water availability:</ItemTitle>
-              </Grid>
-              <Grid item xs>
-                <ItemText>{zoneInfo[zone].waterAvailability}</ItemText>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider flexItem />
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="space-between"
-              direction="column"
-            >
+            <Grid container item xs alignItems="center">
               <Grid item>
-                <ItemTitle> Infrastructure:</ItemTitle>
+                <WbSunnyRoundedIcon />
               </Grid>
               <Grid item>
-                <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+                <ItemText>{zoneInfo[zone].solarCapFactor}</ItemText>
+              </Grid>
+              <Grid item>
+                <WindPowerRoundedIcon />
+              </Grid>
+              <Grid item>
+                <ItemText>{zoneInfo[zone].windCapFactor}</ItemText>
               </Grid>
             </Grid>
           </Grid>
-        </CardContent>
-        <CardActions style={{ justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            onClick={() => setComponent("powerfuel")}
-            style={{
-              backgroundColor: BLUE,
-              textTransform: "none",
-              borderRadius: 20,
-              marginBottom: 24,
-            }}
+          <Grid item xs={12}>
+            <Divider flexItem />
+          </Grid>
+          <Grid container item justifyContent="space-between" flexWrap="nowrap">
+            <Grid item xs>
+              <ItemTitle>Main industries:</ItemTitle>
+            </Grid>
+            <Grid item xs>
+              <ItemText>{zoneInfo[zone].mainIndustries}</ItemText>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider flexItem />
+          </Grid>
+          <Grid container item justifyContent="space-between" flexWrap="nowrap">
+            <Grid item xs>
+              <ItemTitle>Water availability:</ItemTitle>
+            </Grid>
+            <Grid item xs>
+              <ItemText>{zoneInfo[zone].waterAvailability}</ItemText>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider flexItem />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="space-between"
+            direction="column"
           >
-            Start Project Design
-          </Button>
-        </CardActions>
-      </ThemeProvider>
+            <Grid item>
+              <ItemTitle> Infrastructure:</ItemTitle>
+            </Grid>
+            <Grid item>
+              <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions style={{ justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          onClick={() => setComponent("powerfuel")}
+          style={{
+            backgroundColor: BLUE,
+            textTransform: "none",
+            color: WHITE,
+            borderRadius: 20,
+            marginBottom: 24,
+            fontSize: "0.9rem",
+          }}
+        >
+          Start Project Design
+        </Button>
+      </CardActions>
     </SideCard>
   );
 
   const powerfuel = (
     <SideCard>
-      <ThemeProvider theme={theme}>
-        <CardHeader
-          title="Select powerfuel pathway"
-          titleTypographyProps={{
-            fontWeight: "bold",
-          }}
-          sx={{ backgroundColor: GREY, paddingLeft: "20px" }}
-        />
-        <CardContent>
-          <Grid
-            container
-            role="presentation"
-            direction="column"
-            justifyContent="center"
-            alignItems="stretch"
-            rowSpacing="30"
-            padding="20px"
-          >
-            <Grid item xs={2}>
-              <PowerfuelPathwayCard
-                onClick={() => startDesign("hydrogen")}
-                title="Hydrogen"
-                subheader="General hydrogen production cost for region"
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <PowerfuelPathwayCard
-                onClick={() => startDesign("ammonia")}
-                title="Ammonia"
-                subheader="Integrated hydrogen production and conversion into Ammonia"
-              />
-            </Grid>
+      <CardHeader
+        title="Select powerfuel pathway"
+        titleTypographyProps={{
+          fontWeight: "bold",
+        }}
+        sx={{ backgroundColor: GREY, paddingLeft: "20px" }}
+      />
+      <CardContent>
+        <Grid
+          container
+          role="presentation"
+          direction="column"
+          justifyContent="center"
+          alignItems="stretch"
+          rowSpacing="30"
+          padding="20px"
+        >
+          <Grid item xs={2}>
+            <PowerfuelPathwayCard
+              onClick={() => startDesign("hydrogen")}
+              title="Hydrogen"
+              subheader="General hydrogen production cost for region"
+            />
           </Grid>
-        </CardContent>
-      </ThemeProvider>
+          <Grid item xs={2}>
+            <PowerfuelPathwayCard
+              onClick={() => startDesign("ammonia")}
+              title="Ammonia"
+              subheader="Integrated hydrogen production and conversion into Ammonia"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
     </SideCard>
   );
 
