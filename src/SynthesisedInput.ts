@@ -85,6 +85,14 @@ class DefaultInputs implements Inputs {
   projectTimeline = 20;
   discountRate = 7;
   inflationRate = 2.5;
+  // Ammonia 
+  ammoniaPlantCapacity = 50;
+  electrolyserSystemOversizing = 45;
+  ammoniaPlantSec = 0.41;
+  asuSec = 0.22;
+  hydrogenStorageCapacity = 49_000;
+  ammoniaPlantMinimumTurndown = 33;
+  minimumHydrogenStorage = 10;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

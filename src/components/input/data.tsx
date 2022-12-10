@@ -171,7 +171,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Hydrogen Storage Capacity",
     adornmentLabel: "kg",
   },
-  ammoniaPlantMinTurndown: {
+  ammoniaPlantMinimumTurndown: {
     title: "Ammonia Plant Minimum Turndown",
     adornmentLabel: "%",
   },

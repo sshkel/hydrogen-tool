@@ -65,7 +65,7 @@ export const defaultInputs: { [k: string]: number } = {
   ammoniaPlantSec: 0.41,
   asuSec: 0.22,
   hydrogenStorageCapacity: 49_000,
-  ammoniaPlantMinTurndown: 33,
+  ammoniaPlantMinimumTurndown: 33,
   minimumHydrogenStorage: 10,
 };
 
@@ -139,7 +139,7 @@ class Defaults {
       ammoniaPlantSec: 0.41,
       asuSec: 0.22,
       hydrogenStorageCapacity: 49_000,
-      ammoniaPlantMinTurndown: 33,
+      ammoniaPlantMinimumTurndown: 33,
       minimumHydrogenStorage: 10,
     };
   }
