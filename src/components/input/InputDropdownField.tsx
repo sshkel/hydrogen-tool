@@ -3,8 +3,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 
+import { GREY, ORANGE } from "../colors";
 import InputTitle from "./InputTitle";
-import { GREY, ORANGE } from "./colors";
 
 interface Props {
   id: string;

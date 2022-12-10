@@ -2,20 +2,12 @@ import {
   Card,
   CardContent,
   Grid,
-  ThemeProvider,
   Typography,
   TypographyProps,
-  createTheme,
   styled,
 } from "@mui/material";
 
-import { GREY } from "../input/colors";
-
-const theme = createTheme({
-  typography: {
-    fontFamily: "Nunito",
-  },
-});
+import { GREY } from "../colors";
 
 const ItemHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.h5,
@@ -35,47 +27,45 @@ const StyledListItem = styled(Typography)<TypographyProps>(({ theme }) => ({
 }));
 export function Contact() {
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container flexDirection="column" sx={{ backgroundColor: GREY }}>
-        <Grid container item alignItems="stretch">
-          <Grid item xs={12}>
-            <StyledCard>
-              <CardContent>
-                <ItemHeading>The Development Team</ItemHeading>
+    <Grid container flexDirection="column" sx={{ backgroundColor: GREY }}>
+      <Grid container item alignItems="stretch">
+        <Grid item xs={12}>
+          <StyledCard>
+            <CardContent>
+              <ItemHeading>The Development Team</ItemHeading>
 
-                <StyledListItem
-                  variant="body2"
-                  variantMapping={{ body2: "span" }}
-                >
-                  The Powerfuel Value Chain Cost Tool was developed by NSW
-                  Powerfuels including:
-                  <ul>
-                    <li>Hydrogen Network NSW Decarbonisation</li>
-                    <li>
-                      Innovation Hub ARC Training Centre for The Global Hydrogen
-                    </li>
-                    <li>Economy NSW Office of Chief Scientist and Engineer</li>
-                  </ul>
-                </StyledListItem>
-              </CardContent>
-            </StyledCard>
-          </Grid>
-          <Grid item xs={12}>
-            <StyledCard>
-              <CardContent>
-                <ItemHeading>Contact</ItemHeading>
-                <StyledListItem>
-                  Dr. Rahman Daiyan
-                  <br />
-                  UNSW Sydney
-                  <br />
-                  r.daiyan@unsw.edu.au
-                </StyledListItem>
-              </CardContent>
-            </StyledCard>
-          </Grid>
+              <StyledListItem
+                variant="body2"
+                variantMapping={{ body2: "span" }}
+              >
+                The Powerfuel Value Chain Cost Tool was developed by NSW
+                Powerfuels including:
+                <ul>
+                  <li>Hydrogen Network NSW Decarbonisation</li>
+                  <li>
+                    Innovation Hub ARC Training Centre for The Global Hydrogen
+                  </li>
+                  <li>Economy NSW Office of Chief Scientist and Engineer</li>
+                </ul>
+              </StyledListItem>
+            </CardContent>
+          </StyledCard>
+        </Grid>
+        <Grid item xs={12}>
+          <StyledCard>
+            <CardContent>
+              <ItemHeading>Contact</ItemHeading>
+              <StyledListItem>
+                Dr. Rahman Daiyan
+                <br />
+                UNSW Sydney
+                <br />
+                r.daiyan@unsw.edu.au
+              </StyledListItem>
+            </CardContent>
+          </StyledCard>
         </Grid>
       </Grid>
-    </ThemeProvider>
+    </Grid>
   );
 }

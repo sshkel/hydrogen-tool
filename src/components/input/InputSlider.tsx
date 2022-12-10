@@ -5,8 +5,8 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useEffect } from "react";
 
+import { BLUE, WHITE } from "../colors";
 import InputTitle from "./InputTitle";
-import { BLUE, WHITE } from "./colors";
 import { sliderFieldDefaultInputs } from "./data";
 import { DefaultInputs } from "./defaults";
 

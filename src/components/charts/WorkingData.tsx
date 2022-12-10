@@ -6,7 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
-import { createTheme, styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import "chart.js/auto";
 import Chart from "chart.js/auto";
@@ -14,16 +14,14 @@ import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
-import {
-  HOURS_PER_LEAR_YEAR,
-  HOURS_PER_YEAR,
-} from "../../model/consts";
+import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
 import {
   InputConfiguration,
-  Inputs, Model,
+  Inputs,
+  Model,
   UserInputFields,
 } from "../../types";
-import { BLUE, SAPPHIRE } from "../input/colors";
+import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
@@ -61,11 +59,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "20px",
 }));
 
-const theme = createTheme({
-  typography: {
-    fontFamily: "Nunito",
-  },
-});
 // setup default fonts for the charts
 Chart.defaults.font.family = "Nunito";
 
@@ -75,6 +68,8 @@ export default function WorkingData(props: Props) {
     windData: [],
     hoursPerYear: HOURS_PER_YEAR,
   });
+
+  const theme = useTheme();
 
   // TODO: Error handling if we can't load solar and wind data
   // TODO: Add some validation for correct number of rows
@@ -108,7 +103,7 @@ export default function WorkingData(props: Props) {
 
   const {
     inputConfiguration,
-    data: {projectScale = 0},
+    data: { projectScale = 0 },
   } = props;
 
   let inputs: Inputs = new SynthesisedInputs(props.data);
@@ -133,7 +128,8 @@ export default function WorkingData(props: Props) {
     batteryReplacementCost: inputs.batteryReplacementCost,
     batteryStorageDuration: inputs.batteryStorageDuration,
     discountRate: inputs.discountRate,
-    electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
+    electrolyserCostReductionWithScale:
+      inputs.electrolyserCostReductionWithScale,
     electrolyserEfficiency: inputs.electrolyserEfficiency,
     electrolyserEpcCosts: inputs.electrolyserEpcCosts,
     electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
@@ -147,7 +143,8 @@ export default function WorkingData(props: Props) {
     electrolyserStackReplacement: inputs.electrolyserStackReplacement,
     gridConnectionCost: inputs.gridConnectionCost,
     inflationRate: inputs.inflationRate,
-    maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
+    maximumDegradationBeforeReplacement:
+      inputs.maximumDegradationBeforeReplacement,
     maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
     powerCapacityConfiguration: inputs.powerCapacityConfiguration,
     powerPlantConfiguration: inputs.powerPlantConfiguration,
@@ -184,19 +181,23 @@ export default function WorkingData(props: Props) {
     windCostReductionWithScale: inputs.windCostReductionWithScale,
   };
 
-  let model: Model = new HydrogenModel(dataModel, state.solarData, state.windData);
+  let model: Model = new HydrogenModel(
+    dataModel,
+    state.solarData,
+    state.windData
+  );
 
-  const results = model.produceResults()
+  const results = model.produceResults();
 
   return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <Grid container direction="column" sx={{backgroundColor: SAPPHIRE}}>
-          <Grid item>
-            {KeyInputsPane(
-                location,
-              results.electrolyserNominalCapacity,
-              results.powerPlantNominalCapacity
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
+        <Grid item>
+          {KeyInputsPane(
+            location,
+            results.electrolyserNominalCapacity,
+            results.powerPlantNominalCapacity
           )}
         </Grid>
         <Grid item>

@@ -8,19 +8,21 @@ interface Props {
 }
 
 interface StyledTabProps extends TabProps {
-  active: string; // avoid console log errors
+  active: boolean;
 }
 
-const StyledTab = styled(Tab)<StyledTabProps>(({ active }) => ({
+const StyledTab = styled(Tab, {
+  shouldForwardProp: (prop) => prop !== "active",
+})<StyledTabProps>(({ active }) => ({
   fontWeight: "bold",
   textTransform: "none",
   fontSize: "18px",
   borderRadius: "20px 20px 0px 0px",
-  backgroundColor: active === "true" ? "#F2F2F2" : "#A6A6A6",
+  backgroundColor: active ? "#F2F2F2" : "#A6A6A6",
   minWidth: "180px",
   marginLeft: 20,
 }));
 
 export default function InputTab(props: Props) {
-  return <StyledTab {...props} active={String(props.active)} />;
+  return <StyledTab {...props} active={props.active} />;
 }

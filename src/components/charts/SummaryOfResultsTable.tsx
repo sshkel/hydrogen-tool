@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { BLUE } from "../input/colors";
+import { BLUE } from "../colors";
 
 interface Props {
   title?: string;

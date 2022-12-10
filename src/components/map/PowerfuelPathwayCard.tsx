@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardHeader } from "@mui/material";
 
-import { BLACK, BLUE, WHITE } from "../input/colors";
+import { BLACK, BLUE, WHITE } from "../colors";
 
 type Props = {
   onClick: () => void;

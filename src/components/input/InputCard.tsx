@@ -9,7 +9,7 @@ import { styled } from "@mui/material/styles";
 import React, { Suspense } from "react";
 
 import { nameToId } from "../../utils";
-import { BLUE, ORANGE } from "./colors";
+import { BLUE, ORANGE } from "../colors";
 
 export interface InputCardProps {
   title: string;

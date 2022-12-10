@@ -4,8 +4,8 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
 
+import { BLUE, GREY } from "../colors";
 import InputTitle from "./InputTitle";
-import { BLUE, GREY } from "./colors";
 import { numberFieldDefaultInputs } from "./data";
 import { DefaultInputs } from "./defaults";
 

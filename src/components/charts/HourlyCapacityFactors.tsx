@@ -4,7 +4,7 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
-import { colors } from "../input/colors";
+import { colors } from "../colors";
 
 ChartJS.register(zoomPlugin);
 

@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
 import { checkLength } from "../../utils";
-import { colors } from "../input/colors";
+import { colors } from "../colors";
 
 interface Props {
   title: string;
