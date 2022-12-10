@@ -1,35 +1,10 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TypographyProps,
-  styled,
-  useTheme,
-} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
-import { BLUE, GREY, OFF_WHITE, WHITE } from "../colors";
+import { OFF_WHITE, WHITE } from "../colors";
 import { OFFICE_OF_CHIEF_SCIENTIST } from "../logos";
 
-const ItemHeading = styled(Typography)(({ theme }) => ({
-  ...theme.typography.h5,
-  padding: theme.spacing(1),
-  fontWeight: "bold",
-}));
-const StyledCard = styled(Card)(({ theme }) => ({
-  ...theme.typography.body2,
-  height: "90%",
-  margin: "15px",
-  borderRadius: "20px",
-}));
-const StyledListItem = styled(Typography)<TypographyProps>(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(0.1),
-  paddingLeft: "10px",
-}));
 export function Contact() {
-  const theme = useTheme();
-
   return (
     <Grid container flexDirection="column">
       <Grid
@@ -51,7 +26,10 @@ export function Contact() {
         </Grid>
 
         <Grid item xs={4}>
-          <img src={OFFICE_OF_CHIEF_SCIENTIST} />
+          <img
+            alt="Office of NSW Chief Scientist logo"
+            src={OFFICE_OF_CHIEF_SCIENTIST}
+          />
         </Grid>
 
         <Grid item xs={12}>
