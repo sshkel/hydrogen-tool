@@ -494,6 +494,12 @@ export class AmmoniaModel implements Model {
       windDegradation,
       inputConfiguration,
     } = this.parameters;
+    const airSeparationUnitCapacity = air_separation_unit_capacity(
+        this.parameters.ammoniaPlantCapacity
+    );
+    const hydrogenOutput = hydrogen_output(
+        this.parameters.ammoniaPlantCapacity
+    );
 
     if (inputConfiguration === "Basic") {
 
@@ -513,11 +519,24 @@ export class AmmoniaModel implements Model {
           this.specCons,
       );
 
+      const ammoniaCapacityFactors = calculateNH3CapFactors(
+          hydrogenProduction,
+          this.parameters.ammoniaPlantCapacity,
+          this.parameters.hydrogenStorageCapacity,
+          this.parameters.ammoniaPlantMinimumTurndown,
+          this.parameters.minimumHydrogenStorage,
+          hydrogenOutput,
+          airSeparationUnitCapacity,
+          this.hoursPerYear
+      );
+
+
       const hourlyOperationsInYearOne: ModelHourlyOperation = {
         powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
         electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
-        netBatteryFlow: hourlyOperations.netBatteryFlow
+        netBatteryFlow: hourlyOperations.netBatteryFlow,
+        ammoniaCapacityFactors
       };
 
       const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
@@ -548,6 +567,7 @@ export class AmmoniaModel implements Model {
       );
 
       const powerPlantNominalCapacity = result.solarNominalCapacity + result.windNominalCapacity;
+
 
       const operatingOutputs = calculateSummary(
           hourlyOperations.powerplantCapacityFactors,
@@ -594,16 +614,12 @@ export class AmmoniaModel implements Model {
           this.parameters.ammoniaPlantSec,
           this.hoursPerYear
       );
-      const airSeparationUnitCapacity = air_separation_unit_capacity(
-          this.parameters.ammoniaPlantCapacity
-      );
+
       const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
           airSeparationUnitCapacity,
           this.parameters.asuSec
       );
-      const hydrogenOutput = hydrogen_output(
-          this.parameters.ammoniaPlantCapacity
-      );
+
 
       const electrolyserNominalCapacity = nominal_electrolyser_capacity(
           hydrogenOutput,
