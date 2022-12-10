@@ -1,5 +1,8 @@
 import "@fontsource/nunito/700.css";
-import Box from "@mui/material/Box";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
+import Grid from "@mui/material/Grid";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Step from "@mui/material/Step";
 import StepConnector, {
   stepConnectorClasses,
@@ -7,6 +10,7 @@ import StepConnector, {
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 import { BLUE } from "./colors";
 
@@ -17,7 +21,7 @@ const steps = [
   "Results",
 ];
 
-const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+const ColorlibConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
       backgroundImage: "linear-gradient(90deg, #5A6FFA, #BDD7EF)",
@@ -36,41 +40,80 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
 }));
 
-export default function HorizontalLabelPositionBelowStepper(props: {
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+interface StepperProps {
   activeStep: number;
-}) {
+}
+
+export default function DesignStepper(props: StepperProps) {
+  const { activeStep } = props;
+  const [expanded, setExpanded] = useState(true);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <Box sx={{ width: "100%", backgroundColor: "#F4F9FA", paddingY: 1 }}>
-      <Stepper
-        activeStep={props.activeStep}
-        alternativeLabel
-        connector={<ColorlibConnector />}
-      >
-        {steps.map((label) => (
-          <Step
-            sx={{
-              "& .MuiStepLabel-alternativeLabel": {
-                fontWeight: 700,
-              },
-              "& .MuiSvgIcon-root": {
-                width: "28px",
-                height: "28px",
-              },
-            }}
-            key={label}
+    <Grid container sx={{ width: "100%", backgroundColor: "#F4F9FA" }}>
+      <Grid item xs={12}>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            connector={<ColorlibConnector />}
+            sx={{ paddingTop: 2 }}
           >
-            <StepLabel
-              sx={{
-                "& .MuiStepLabel-label": {
-                  fontWeight: "700 !important",
-                },
-              }}
-            >
-              {label}
-            </StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-    </Box>
+            {steps.map((label) => (
+              <Step
+                sx={{
+                  "& .MuiStepLabel-alternativeLabel": {
+                    fontWeight: 700,
+                  },
+                  "& .MuiSvgIcon-root": {
+                    width: "28px",
+                    height: "28px",
+                  },
+                }}
+                key={label}
+              >
+                <StepLabel
+                  sx={{
+                    "& .MuiStepLabel-label": {
+                      fontWeight: "700 !important",
+                    },
+                  }}
+                >
+                  {label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Collapse>
+      </Grid>
+      <Grid item display={"flex"} flexBasis={"50%"}>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="display guide"
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </Grid>
+    </Grid>
   );
 }

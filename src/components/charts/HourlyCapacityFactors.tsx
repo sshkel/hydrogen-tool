@@ -16,7 +16,7 @@ export default function HourlyCapacityFactors(props: Props) {
   // randomly sample for demo until we fix and have zoom in functionality
   // https://youtube.com/clip/UgkxlUpRBGgl1xSjlEPyATuGK1_Eaqu50GxV
   const { datapoints } = props;
-  const samplesToPlot = datapoints.length;
+  const samplesToPlot = datapoints[0].data.length;
 
   const graphData = {
     labels: [...Array(samplesToPlot).keys()].map((i) => i + 1),
