@@ -189,7 +189,7 @@ export default function WorkingData(props: Props) {
       asuSec: inputs.asuSec!,
       hydrogenStorageCapacity: inputs.hydrogenStorageCapacity!,
       ammoniaPlantMinimumTurndown: inputs.ammoniaPlantMinimumTurndown!,
-      minimumHydrogenStorage: inputs.minimumHydrogenStorage!
+      minimumHydrogenStorage: inputs.minimumHydrogenStorage!,
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);

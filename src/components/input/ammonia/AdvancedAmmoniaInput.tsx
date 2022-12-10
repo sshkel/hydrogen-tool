@@ -39,8 +39,8 @@ export default function AdvancedHydrogenInput() {
                     inputKey="ammoniaPlantCapacity"
                   />,
                   <InputNumberField
-                    key="ammoniaPlantMinTurndown"
-                    inputKey="ammoniaPlantMinTurndown"
+                    key="ammoniaPlantMinimumTurndown"
+                    inputKey="ammoniaPlantMinimumTurndown"
                   />,
                 ]}
               />,
