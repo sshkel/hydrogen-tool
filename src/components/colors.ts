@@ -6,6 +6,7 @@ export const LIGHT_BLUE = "#2397F1";
 export const TEAL = "#0DD4C7";
 export const WHITE = "#FFFFFF";
 export const BLACK = "#000000";
+export const OFF_WHITE = "#F4F9FA";
 export const colors = [
   "#F17D23", // orange
   "#2397F1", // light blue

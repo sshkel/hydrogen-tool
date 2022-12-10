@@ -12,7 +12,7 @@ import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 
-import { BLUE } from "./colors";
+import { BLUE, OFF_WHITE } from "./colors";
 
 const steps = [
   "Select location",
@@ -68,7 +68,7 @@ export default function DesignStepper(props: StepperProps) {
   };
 
   return (
-    <Grid container sx={{ width: "100%", backgroundColor: "#F4F9FA" }}>
+    <Grid container sx={{ width: "100%", backgroundColor: OFF_WHITE }}>
       <Grid item xs={12}>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Stepper
