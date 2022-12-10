@@ -13,7 +13,7 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
-import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
+import {HydrogenData, HydrogenModel} from "../../model/HydrogenModel";
 import {
   HOURS_PER_LEAR_YEAR,
   HOURS_PER_YEAR,
@@ -23,17 +23,19 @@ import {
   Inputs, Model,
   UserInputFields,
 } from "../../types";
-import { BLUE, SAPPHIRE } from "../input/colors";
-import { zoneInfo } from "../map/ZoneInfo";
+import {BLUE, SAPPHIRE} from "../input/colors";
+import {zoneInfo} from "../map/ZoneInfo";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import { roundToNearestInteger } from "./cost-functions";
+import {roundToNearestInteger} from "./cost-functions";
+import {AmmoniaData, AmmoniaModel} from "../../model/Ammonia2Model";
 
 export interface Props {
+  powerfuel?: string;
   location?: string;
   data?: UserInputFields;
   inputConfiguration: InputConfiguration;
@@ -115,76 +117,155 @@ export default function WorkingData(props: Props) {
 
   const location = props.location;
 
-  const dataModel: HydrogenData = {
-    inputConfiguration: inputConfiguration,
-    location: location,
-    projectScale: projectScale,
-    additionalAnnualCosts: inputs.additionalAnnualCosts,
-    additionalTransmissionCharges: inputs.additionalTransmissionCharges,
-    additionalUpfrontCosts: inputs.additionalUpfrontCosts,
-    batteryCosts: inputs.batteryCosts,
-    batteryEfficiency: inputs.batteryEfficiency,
-    batteryEpcCosts: inputs.batteryEpcCosts,
-    batteryLandProcurementCosts: inputs.batteryLandProcurementCosts,
-    batteryLifetime: inputs.batteryLifetime,
-    batteryMinCharge: inputs.batteryMinCharge,
-    batteryOMCost: inputs.batteryOMCost,
-    batteryRatedPower: inputs.batteryRatedPower,
-    batteryReplacementCost: inputs.batteryReplacementCost,
-    batteryStorageDuration: inputs.batteryStorageDuration,
-    discountRate: inputs.discountRate,
-    electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
-    electrolyserEfficiency: inputs.electrolyserEfficiency,
-    electrolyserEpcCosts: inputs.electrolyserEpcCosts,
-    electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
-    electrolyserMaximumLoad: inputs.electrolyserMaximumLoad,
-    electrolyserMinimumLoad: inputs.electrolyserMinimumLoad,
-    electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
-    electrolyserOMCost: inputs.electrolyserOMCost,
-    electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
-    electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
-    electrolyserReferenceFoldIncrease: inputs.electrolyserReferenceFoldIncrease,
-    electrolyserStackReplacement: inputs.electrolyserStackReplacement,
-    gridConnectionCost: inputs.gridConnectionCost,
-    inflationRate: inputs.inflationRate,
-    maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
-    maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
-    powerCapacityConfiguration: inputs.powerCapacityConfiguration,
-    powerPlantConfiguration: inputs.powerPlantConfiguration,
-    powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
-    powerPlantType: inputs.powerPlantType,
-    powerSupplyOption: inputs.powerSupplyOption,
-    principalPPACost: inputs.principalPPACost,
-    projectTimeline: inputs.projectTimeline,
-    secAtNominalLoad: inputs.secAtNominalLoad,
-    solarDegradation: inputs.solarDegradation,
-    solarEpcCosts: inputs.solarEpcCosts,
-    solarFarmBuildCost: inputs.solarFarmBuildCost,
-    solarLandProcurementCosts: inputs.solarLandProcurementCosts,
-    solarNominalCapacity: inputs.solarNominalCapacity,
-    solarOpex: inputs.solarOpex,
-    solarPVCostReductionWithScale: inputs.solarPVCostReductionWithScale,
-    solarReferenceCapacity: inputs.solarReferenceCapacity,
-    solarReferenceFoldIncrease: inputs.solarReferenceFoldIncrease,
-    solarToWindPercentage: inputs.solarToWindPercentage,
-    stackDegradation: inputs.stackDegradation,
-    stackLifetime: inputs.stackLifetime,
-    stackReplacementType: inputs.stackReplacementType,
-    timeBetweenOverloading: inputs.timeBetweenOverloading,
-    waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
-    waterSupplyCost: inputs.waterSupplyCost,
-    windDegradation: inputs.windDegradation,
-    windEpcCosts: inputs.windEpcCosts,
-    windFarmBuildCost: inputs.windFarmBuildCost,
-    windLandProcurementCosts: inputs.windLandProcurementCosts,
-    windNominalCapacity: inputs.windNominalCapacity,
-    windOpex: inputs.windOpex,
-    windReferenceCapacity: inputs.windReferenceCapacity,
-    windReferenceFoldIncrease: inputs.windReferenceFoldIncrease,
-    windCostReductionWithScale: inputs.windCostReductionWithScale,
-  };
+  let model: Model;
+  if (props.data.powerfuel === "ammonia") {
+    const dataModel: AmmoniaData = {
+      inputConfiguration: inputConfiguration,
+      location: location,
+      projectScale: projectScale,
+      additionalAnnualCosts: inputs.additionalAnnualCosts,
+      additionalTransmissionCharges: inputs.additionalTransmissionCharges,
+      additionalUpfrontCosts: inputs.additionalUpfrontCosts,
+      batteryCosts: inputs.batteryCosts,
+      batteryEfficiency: inputs.batteryEfficiency,
+      batteryEpcCosts: inputs.batteryEpcCosts,
+      batteryLandProcurementCosts: inputs.batteryLandProcurementCosts,
+      batteryLifetime: inputs.batteryLifetime,
+      batteryMinCharge: inputs.batteryMinCharge,
+      batteryOMCost: inputs.batteryOMCost,
+      batteryRatedPower: inputs.batteryRatedPower,
+      batteryReplacementCost: inputs.batteryReplacementCost,
+      batteryStorageDuration: inputs.batteryStorageDuration,
+      discountRate: inputs.discountRate,
+      electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
+      electrolyserEfficiency: inputs.electrolyserEfficiency,
+      electrolyserEpcCosts: inputs.electrolyserEpcCosts,
+      electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
+      electrolyserMaximumLoad: inputs.electrolyserMaximumLoad,
+      electrolyserMinimumLoad: inputs.electrolyserMinimumLoad,
+      electrolyserOMCost: inputs.electrolyserOMCost,
+      electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
+      electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
+      electrolyserReferenceFoldIncrease: inputs.electrolyserReferenceFoldIncrease,
+      electrolyserStackReplacement: inputs.electrolyserStackReplacement,
+      gridConnectionCost: inputs.gridConnectionCost,
+      inflationRate: inputs.inflationRate,
+      maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
+      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
+      powerCapacityConfiguration: inputs.powerCapacityConfiguration,
+      powerPlantConfiguration: inputs.powerPlantConfiguration,
+      powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
+      powerPlantType: inputs.powerPlantType,
+      powerSupplyOption: inputs.powerSupplyOption,
+      principalPPACost: inputs.principalPPACost,
+      projectTimeline: inputs.projectTimeline,
+      secAtNominalLoad: inputs.secAtNominalLoad,
+      solarDegradation: inputs.solarDegradation,
+      solarEpcCosts: inputs.solarEpcCosts,
+      solarFarmBuildCost: inputs.solarFarmBuildCost,
+      solarLandProcurementCosts: inputs.solarLandProcurementCosts,
+      solarOpex: inputs.solarOpex,
+      solarPVCostReductionWithScale: inputs.solarPVCostReductionWithScale,
+      solarReferenceCapacity: inputs.solarReferenceCapacity,
+      solarReferenceFoldIncrease: inputs.solarReferenceFoldIncrease,
+      solarToWindPercentage: inputs.solarToWindPercentage,
+      stackDegradation: inputs.stackDegradation,
+      stackLifetime: inputs.stackLifetime,
+      stackReplacementType: inputs.stackReplacementType,
+      timeBetweenOverloading: inputs.timeBetweenOverloading,
+      waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
+      waterSupplyCost: inputs.waterSupplyCost,
+      windDegradation: inputs.windDegradation,
+      windEpcCosts: inputs.windEpcCosts,
+      windFarmBuildCost: inputs.windFarmBuildCost,
+      windLandProcurementCosts: inputs.windLandProcurementCosts,
+      windOpex: inputs.windOpex,
+      windReferenceCapacity: inputs.windReferenceCapacity,
+      windReferenceFoldIncrease: inputs.windReferenceFoldIncrease,
+      windCostReductionWithScale: inputs.windCostReductionWithScale,
+      ammoniaPlantCapacity: inputs.ammoniaPlantCapacity!,
+      electrolyserSystemOversizing: inputs.electrolyserSystemOversizing!,
+      ammoniaPlantSec: inputs.ammoniaPlantSec!,
+      asuSec: inputs.asuSec!,
+      hydrogenStorageCapacity: inputs.hydrogenStorageCapacity!,
+      ammoniaPlantMinimumTurndown: inputs.ammoniaPlantMinimumTurndown!,
+      minimumHydrogenStorage: inputs.minimumHydrogenStorage!
+    };
 
-  let model: Model = new HydrogenModel(dataModel, state.solarData, state.windData);
+    model = new AmmoniaModel(dataModel, state.solarData, state.windData);
+
+  } else {
+    const dataModel: HydrogenData = {
+      inputConfiguration: inputConfiguration,
+      location: location,
+      projectScale: projectScale,
+      additionalAnnualCosts: inputs.additionalAnnualCosts,
+      additionalTransmissionCharges: inputs.additionalTransmissionCharges,
+      additionalUpfrontCosts: inputs.additionalUpfrontCosts,
+      batteryCosts: inputs.batteryCosts,
+      batteryEfficiency: inputs.batteryEfficiency,
+      batteryEpcCosts: inputs.batteryEpcCosts,
+      batteryLandProcurementCosts: inputs.batteryLandProcurementCosts,
+      batteryLifetime: inputs.batteryLifetime,
+      batteryMinCharge: inputs.batteryMinCharge,
+      batteryOMCost: inputs.batteryOMCost,
+      batteryRatedPower: inputs.batteryRatedPower,
+      batteryReplacementCost: inputs.batteryReplacementCost,
+      batteryStorageDuration: inputs.batteryStorageDuration,
+      discountRate: inputs.discountRate,
+      electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
+      electrolyserEfficiency: inputs.electrolyserEfficiency,
+      electrolyserEpcCosts: inputs.electrolyserEpcCosts,
+      electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
+      electrolyserMaximumLoad: inputs.electrolyserMaximumLoad,
+      electrolyserMinimumLoad: inputs.electrolyserMinimumLoad,
+      electrolyserNominalCapacity: inputs.electrolyserNominalCapacity,
+      electrolyserOMCost: inputs.electrolyserOMCost,
+      electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
+      electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
+      electrolyserReferenceFoldIncrease: inputs.electrolyserReferenceFoldIncrease,
+      electrolyserStackReplacement: inputs.electrolyserStackReplacement,
+      gridConnectionCost: inputs.gridConnectionCost,
+      inflationRate: inputs.inflationRate,
+      maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
+      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
+      powerCapacityConfiguration: inputs.powerCapacityConfiguration,
+      powerPlantConfiguration: inputs.powerPlantConfiguration,
+      powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
+      powerPlantType: inputs.powerPlantType,
+      powerSupplyOption: inputs.powerSupplyOption,
+      principalPPACost: inputs.principalPPACost,
+      projectTimeline: inputs.projectTimeline,
+      secAtNominalLoad: inputs.secAtNominalLoad,
+      solarDegradation: inputs.solarDegradation,
+      solarEpcCosts: inputs.solarEpcCosts,
+      solarFarmBuildCost: inputs.solarFarmBuildCost,
+      solarLandProcurementCosts: inputs.solarLandProcurementCosts,
+      solarNominalCapacity: inputs.solarNominalCapacity,
+      solarOpex: inputs.solarOpex,
+      solarPVCostReductionWithScale: inputs.solarPVCostReductionWithScale,
+      solarReferenceCapacity: inputs.solarReferenceCapacity,
+      solarReferenceFoldIncrease: inputs.solarReferenceFoldIncrease,
+      solarToWindPercentage: inputs.solarToWindPercentage,
+      stackDegradation: inputs.stackDegradation,
+      stackLifetime: inputs.stackLifetime,
+      stackReplacementType: inputs.stackReplacementType,
+      timeBetweenOverloading: inputs.timeBetweenOverloading,
+      waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
+      waterSupplyCost: inputs.waterSupplyCost,
+      windDegradation: inputs.windDegradation,
+      windEpcCosts: inputs.windEpcCosts,
+      windFarmBuildCost: inputs.windFarmBuildCost,
+      windLandProcurementCosts: inputs.windLandProcurementCosts,
+      windNominalCapacity: inputs.windNominalCapacity,
+      windOpex: inputs.windOpex,
+      windReferenceCapacity: inputs.windReferenceCapacity,
+      windReferenceFoldIncrease: inputs.windReferenceFoldIncrease,
+      windCostReductionWithScale: inputs.windCostReductionWithScale,
+    };
+
+    model = new HydrogenModel(dataModel, state.solarData, state.windData);
+  }
 
   const results = model.produceResults()
 

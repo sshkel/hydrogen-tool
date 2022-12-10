@@ -179,6 +179,15 @@ export interface Inputs {
   projectTimeline: number;
   discountRate: number;
   inflationRate: number;
+
+  // Ammonia
+  ammoniaPlantCapacity?: number;
+  electrolyserSystemOversizing?: number;
+  ammoniaPlantSec?: number;
+  asuSec?: number;
+  hydrogenStorageCapacity?: number;
+  ammoniaPlantMinimumTurndown?: number;
+  minimumHydrogenStorage?: number;
 }
 
 
