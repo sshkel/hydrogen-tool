@@ -529,14 +529,14 @@ export class AmmoniaModel implements Model {
       );
 
       const ammoniaCapacityFactors = calculateNH3CapFactors(
-        hydrogenProduction,
-        this.parameters.ammoniaPlantCapacity,
-        this.parameters.hydrogenStorageCapacity,
-        this.parameters.ammoniaPlantMinimumTurndown,
-        this.parameters.minimumHydrogenStorage,
-        hydrogenOutput,
-        airSeparationUnitCapacity,
-        this.hoursPerYear
+          hydrogenProduction,
+          this.parameters.ammoniaPlantCapacity,
+          this.parameters.hydrogenStorageCapacity,
+          this.parameters.ammoniaPlantMinimumTurndown / 100,
+          this.parameters.minimumHydrogenStorage / 100,
+          hydrogenOutput,
+          airSeparationUnitCapacity,
+          this.hoursPerYear
       );
 
       const hourlyOperationsInYearOne: ModelHourlyOperation = {
@@ -686,14 +686,14 @@ export class AmmoniaModel implements Model {
         );
 
         const ammoniaCapacityFactors = calculateNH3CapFactors(
-          hydrogenProduction,
-          this.parameters.ammoniaPlantCapacity,
-          this.parameters.hydrogenStorageCapacity,
-          this.parameters.ammoniaPlantMinimumTurndown,
-          this.parameters.minimumHydrogenStorage,
-          hydrogenOutput,
-          airSeparationUnitCapacity,
-          this.hoursPerYear
+            hydrogenProduction,
+            this.parameters.ammoniaPlantCapacity,
+            this.parameters.hydrogenStorageCapacity,
+            this.parameters.ammoniaPlantMinimumTurndown / 100,
+            this.parameters.minimumHydrogenStorage / 100,
+            hydrogenOutput,
+            airSeparationUnitCapacity,
+            this.hoursPerYear
         );
 
         const hourlyOperationsInYearOne: ModelHourlyOperation = {
@@ -813,14 +813,14 @@ export class AmmoniaModel implements Model {
             this.specCons
           );
           const ammoniaCapacityFactors = calculateNH3CapFactors(
-            hydrogenProduction,
-            this.parameters.ammoniaPlantCapacity,
-            this.parameters.hydrogenStorageCapacity,
-            this.parameters.ammoniaPlantMinimumTurndown,
-            this.parameters.minimumHydrogenStorage,
-            hydrogenOutput,
-            airSeparationUnitCapacity,
-            this.hoursPerYear
+              hydrogenProduction,
+              this.parameters.ammoniaPlantCapacity,
+              this.parameters.hydrogenStorageCapacity,
+              this.parameters.ammoniaPlantMinimumTurndown / 100,
+              this.parameters.minimumHydrogenStorage / 100,
+              hydrogenOutput,
+              airSeparationUnitCapacity,
+              this.hoursPerYear
           );
           return {
             powerplantCapacityFactors,
@@ -1468,26 +1468,26 @@ function calculateAmmoniaElectrolyserCapacityFactors(
   );
 
   const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
-    ammonia_plant_power_demand,
-    asu_power_demand,
-    generator_actual_power_result
+      ammonia_plant_power_demand,
+      asu_power_demand,
+      generator_actual_power_result
   );
 
   const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
-    nominal_electrolyser_capacity,
-    generator_actual_power_result,
-    asu_nh3_actual_power_result
+      nominal_electrolyser_capacity,
+      generator_actual_power_result,
+      asu_nh3_actual_power_result
   );
 
   return electrolyser_with_battery_capacity_factor(
-    net_battery_flow,
-    electrolyser_actual_power_result,
-    asu_nh3_actual_power_result,
-    electrolyserCapFactor,
-    ammonia_plant_power_demand,
-    asu_power_demand,
-    nominal_electrolyser_capacity,
-    batteryEfficiency
+      net_battery_flow,
+      electrolyser_actual_power_result,
+      asu_nh3_actual_power_result,
+      electrolyserCapFactor,
+      ammonia_plant_power_demand,
+      asu_power_demand,
+      nominal_electrolyser_capacity,
+      batteryEfficiency
   );
 }
 
@@ -1512,7 +1512,7 @@ function calculateNH3CapFactors(
     deficit_h2_result,
     excess_h2_result,
     hydrogen_storage_capacity,
-    minimum_hydrogen_storage / 100
+      minimum_hydrogen_storage
   );
   const h2_to_nh3_result = h2_to_nh3(
     mass_of_hydrogen,
