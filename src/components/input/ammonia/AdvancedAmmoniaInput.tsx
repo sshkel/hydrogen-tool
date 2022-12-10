@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Grid";
 
-import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
 import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
