@@ -89,7 +89,7 @@ export default function BasicHydrogenInput() {
                 selectKey="powerSupplyOptionSelect"
                 prompt="Power Supply Option"
                 selectClass="powerSupplyOption"
-                helperText="Add farm build costs or PPA supply costs."
+                helperText="Select Self Build for cases in which a new power plant is built in conjunction with electrolyser. Select PPA if there is a grid connection to a power supplier."
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
                 buttonChildren={[
                   [

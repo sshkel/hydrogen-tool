@@ -34,107 +34,84 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     max: 1_000_000,
     step: 50_000,
     title: "Project Scale (tonnes/yr)",
+    helperText:
+      "Hydrogen production rate. The standard is 175 ton/yr per MW of electrolyser capacity",
   },
   electrolyserEfficiency: {
     min: 50,
     max: 100,
     step: 2.5,
     title: "Electrolyser Efficiency (%)",
-    helperText: "Percentage value relevant to LHV of H2 (33.33 kWh/kg of H2)",
+    helperText:
+      "Electrolyser efficiency relative to 33.33 kWh/kg of H2 required.",
   },
   powerPlantOversizeRatio: {
     min: 1,
     max: 3,
     step: 0.1,
     title: "Power Plant Oversize Ratio",
+    helperText:
+      "Capacity of power plant relative to electrolyser, e.g., choosing 3 results in powe rplant being 3 times larger than the electrolyser capacity.",
   },
   solarToWindPercentage: {
     min: 0,
     max: 100,
     step: 10,
     title: "Solar to Wind Capacity Ratio (%)",
+    helperText: "Split of solar and wind farm share in the power plant output.",
   },
   electrolyserPurchaseCost: {
     min: 100,
     max: 5000,
     step: 100,
     title: "Electrolyser Capital Cost ($/kW)",
+    helperText:
+      "Capital cost of electrolyser including the equipment and installation costs.",
   },
   solarFarmBuildCost: {
     min: 100,
     max: 5000,
     step: 100,
     title: "Solar Farm Build Cost ($/kW)",
+    helperText:
+      "Capital cost of solar farm including the equipment and installation costs.",
   },
   windFarmBuildCost: {
     min: 100,
     max: 5000,
     step: 100,
     title: "Wind Farm Build Cost ($/kW)",
+    helperText:
+      "Capital cost of wind farm including the equipment and installation costs.",
   },
   principalPPACost: {
     min: 0,
     max: 200,
     step: 10,
     title: "PPA Cost ($/MWh)",
+    helperText:
+      "Cost of PPA - Electricity consumption and transmission/grid usage charges.",
   },
   waterSupplyCost: {
     min: 0,
     max: 10,
     step: 0.5,
     title: "Water Supply Cost ($/kL)",
+    helperText: "Wholesale cost of water supply.",
   },
   discountRate: {
     min: 1,
     max: 15,
     step: 1,
     title: "Discount Rate (%)",
-    helperText: "Discount rate for NPV analysis and LCH2.",
+    helperText: "Required rate of return based on similar investments.",
   },
   projectTimeline: {
     min: 10,
     max: 50,
     step: 5,
     title: "Project Timeline (years)",
-    helperText:
-      "Same for both Power Plant and Electrolyser (Fixed Value). Must be less than or equal to 50.",
-  },
-  shareOfTotalInvestmentFinancedViaEquity: {
-    min: 10,
-    max: 100,
-    step: 10,
-    title: "Equity to Loan Share (%)",
-  },
-  interestOnLoan: {
-    min: 1,
-    max: 10,
-    step: 1,
-    title: "Interest on Loan (%/yr)",
-  },
-  loanTerm: {
-    min: 5,
-    max: 50,
-    step: 5,
-    title: "Loan Term (years)",
-    helperText: "Loan repayment duration",
-  },
-  inflationRate: {
-    min: 0,
-    max: 10,
-    step: 0.5,
-    title: "Inflation Rate (%/yr)",
-  },
-  taxRate: {
-    min: 0,
-    max: 50,
-    step: 5,
-    title: "Tax Rate (%/yr)",
-  },
-  hydrogenSalesMargin: {
-    min: 0,
-    max: 50,
-    step: 5,
-    title: "Hydrogen Sales Margin (%/kg)",
+    helperText: "Length of time that project is operational.",
   },
 };
 
@@ -508,25 +485,28 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Additional Upfront Costs",
     adornmentLabel: "$",
     helperText:
-      "Any other additional costs to include as a once off in the LCH2 calculation",
+      "Any other additional costs to include as a once off in the LCH2 calculation.",
   },
   additionalAnnualCosts: {
     title: "Additional Annual Costs",
     adornmentLabel: "$/yr",
     helperText:
-      "Any other additional costs to include as an annual cost in the LCH2 calculation",
+      "Any other additional costs to include as an annual cost in the LCH2 calculation.",
   },
   // Financing Parameters
   projectTimeline: {
     title: "Project Timeline",
     adornmentLabel: "yrs",
+    min: 1,
+    max: 50,
     helperText:
-      "Same for both Power Plant and Electrolyser (Fixed Value). Must be less than or equal to 50.",
+      "Length of time that project is operational. Same for both power plant and electrolyser.",
   },
   discountRate: {
     title: "Discount Rate",
     adornmentLabel: "% p.a.",
-    helperText: "Discount rate for NPV analysis and LCH2.",
+    helperText:
+      "Discount rate for NPV analysis and LCH2. Required rate of return based on similar investments.",
   },
   // Additional liabilities
   inflationRate: {

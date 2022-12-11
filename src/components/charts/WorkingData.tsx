@@ -285,7 +285,11 @@ export default function WorkingData(props: Props) {
     <ThemeProvider theme={theme}>
       <DesignStepper activeStep={3} />
       <CssBaseline />
-      <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
+      <Grid
+        container
+        direction="column"
+        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4 }}
+      >
         <Grid item>
           {KeyInputsPane(
             location,
