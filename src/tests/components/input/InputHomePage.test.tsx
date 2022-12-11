@@ -116,19 +116,43 @@ describe("InputHomePage", () => {
         ).toEqual(21),
       { timeout: 2000 }
     );
+
+    fireEvent.click(getByText(/Oversize Ratio/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(21),
+      { timeout: 2000 }
+    );
+
+    fireEvent.click(getByText(/Grid Connected/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(23),
+      { timeout: 2000 }
+    );
+
     fireEvent.click(getByText(/Calculate/i));
 
     expect(setState).toHaveBeenCalledWith({
       electrolyserNominalCapacity: 10,
-      powerPlantConfiguration: "Standalone",
+      additionalTransmissionCharges: 0,
+      powerPlantConfiguration: "Grid Connected",
+      gridConnectionCost: 0,
       powerfuel: "hydrogen",
-      // powerPlantType: "Solar",
+      powerPlantType: "Hybrid",
       powerSupplyOption: "Self Build",
-      powerCapacityConfiguration: "Nominal Capacity",
+      powerCapacityConfiguration: "Oversize Ratio",
+      powerPlantOversizeRatio: 2,
       solarEpcCosts: 30,
       solarFarmBuildCost: 1200,
       solarLandProcurementCosts: 6,
-      solarNominalCapacity: 10,
+      solarToWindPercentage: 50,
       solarOpex: 17000,
       solarPVCostReductionWithScale: 10,
       solarReferenceCapacity: 1000,
@@ -138,7 +162,6 @@ describe("InputHomePage", () => {
       windEpcCosts: 30,
       windFarmBuildCost: 2000,
       windLandProcurementCosts: 6,
-      windNominalCapacity: 10,
       windOpex: 25000,
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,

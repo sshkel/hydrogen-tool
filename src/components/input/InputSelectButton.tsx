@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import { clsx } from "clsx";
 import React, { Suspense } from "react";
 
 import InputCard from "./InputCard";
@@ -42,7 +43,6 @@ function InputSelectButton(props: Props) {
           <StyledButton
             variant={selected ? "contained" : "outlined"}
             color={selected ? "success" : "info"}
-            className={className}
             fullWidth
             onClick={openExpand}
           >
@@ -57,6 +57,7 @@ function InputSelectButton(props: Props) {
           unmountOnExit={!selected}
           children={
             <InputCard
+              className={className}
               subtitle={true}
               title={text}
               onExpandChange={closeExpand}

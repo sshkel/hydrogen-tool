@@ -47,17 +47,17 @@ export default function InputHomePage(props: Props) {
       }
     }
 
-    for (let button of e.target.getElementsByTagName("button")) {
-      const classList = button.classList;
-      if (classList.contains("MuiButton-containedSuccess")) {
-        const value = button.textContent;
+    for (let config of e.target.getElementsByClassName(
+      "selectedConfiguration"
+    )) {
+      const value = config.textContent;
+      const classList = config.classList;
 
-        configurationTypes.forEach((config) => {
-          if (classList.contains(config)) {
-            form[config] = value;
-          }
-        });
-      }
+      configurationTypes.forEach((config) => {
+        if (classList.contains(config)) {
+          form[config] = value;
+        }
+      });
     }
 
     localStorage.setItem("savedData", JSON.stringify(form));
