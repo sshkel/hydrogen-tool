@@ -199,10 +199,7 @@ export default function WorkingData(props: Props) {
       ammoniaPlantOMCost: inputs.ammoniaPlantOMCost!,
       ammoniaStorageOMCost: inputs.ammoniaStorageOMCost!,
       asuPlantOMCost: inputs.asuPlantOMCost!,
-<<<<<<< Updated upstream
-      hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!
-=======
->>>>>>> Stashed changes
+      hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!,
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);
