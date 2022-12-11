@@ -37,6 +37,10 @@ export default function AdvancedHydrogenInput() {
                     key="ammoniaPlantCapacity"
                     inputKey="ammoniaPlantCapacity"
                   />,
+                    <InputNumberField
+                        key="ammoniaStorageCapacity"
+                        inputKey="ammoniaStorageCapacity"
+                    />,
                   <InputNumberField
                     key="ammoniaPlantMinimumTurndown"
                     inputKey="ammoniaPlantMinimumTurndown"
@@ -56,6 +60,46 @@ export default function AdvancedHydrogenInput() {
                   <InputNumberField key="asuSec" inputKey="asuSec" />,
                 ]}
               />,
+                <InputCard
+                    subtitle
+                    mountOnEnter
+                    key="ammoniaCapitalAndOperatingCosts"
+                    title="Ammonia Capital and Operating Costs"
+                    children={[
+                        <InputNumberField
+                            key="ammoniaSynthesisUnitCost"
+                            inputKey="ammoniaSynthesisUnitCost"
+                        />,
+                        <InputNumberField
+                            key="ammoniaStorageCost"
+                            inputKey="ammoniaStorageCost"
+                        />,
+                        <InputNumberField
+                            key="airSeparationUnitCost"
+                            inputKey="airSeparationUnitCost"
+                        />,
+                        <InputNumberField
+                            key="ammoniaEpcCosts"
+                            inputKey="ammoniaEpcCosts"
+                        />,
+                        <InputNumberField
+                            key="ammoniaLandProcurementCosts"
+                            inputKey="ammoniaLandProcurementCosts"
+                        />,
+                        <InputNumberField
+                            key="ammoniaPlantOMCost"
+                            inputKey="ammoniaPlantOMCost"
+                        />,
+                        <InputNumberField
+                            key="ammoniaStorageOMCost"
+                            inputKey="ammoniaStorageOMCost"
+                        />,
+                        <InputNumberField
+                            key="asuPlantOMCost"
+                            inputKey="asuPlantOMCost"
+                        />,
+                    ]}
+                />,
             ]}
           />
         </Grid>

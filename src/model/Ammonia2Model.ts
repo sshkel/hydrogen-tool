@@ -105,6 +105,7 @@ export type AmmoniaData = {
 
   //Ammonia
   ammoniaPlantCapacity: number; // raw input done
+  ammoniaStorageCapacity: number;
   electrolyserSystemOversizing: number; // raw input %
 
   ammoniaPlantSec: number; // raw input
@@ -115,6 +116,15 @@ export type AmmoniaData = {
   // electrolyster and hydrogen storage paramteres
   // other operation factors
   minimumHydrogenStorage: number;
+  // operating costs
+  ammoniaSynthesisUnitCost: number;
+  ammoniaStorageCost: number;
+  airSeparationUnitCost: number;
+  ammoniaEpcCosts: number;
+  ammoniaLandProcurementCosts: number;
+  ammoniaPlantOMCost: number;
+  ammoniaStorageOMCost: number;
+  asuPlantOMCost: number;
 };
 
 export class AmmoniaModel implements Model {
@@ -199,6 +209,7 @@ export class AmmoniaModel implements Model {
 
   produceResults() {
     const {
+      airSeparationUnitCapacity,
       powerPlantType,
       solarNominalCapacity,
       windNominalCapacity,
@@ -236,29 +247,32 @@ export class AmmoniaModel implements Model {
       powerPlantCAPEX,
       gridConnectionCAPEX,
     } = getCapex(
-      this.parameters.powerPlantConfiguration,
-      this.parameters.powerSupplyOption,
-      electrolyserNominalCapacity,
-      this.parameters.electrolyserReferenceCapacity,
-      this.parameters.electrolyserPurchaseCost,
-      this.parameters.electrolyserCostReductionWithScale,
-      this.parameters.electrolyserReferenceFoldIncrease,
-      powerPlantType,
-      solarNominalCapacity,
-      this.parameters.solarReferenceCapacity,
-      this.parameters.solarFarmBuildCost,
-      this.parameters.solarPVCostReductionWithScale,
-      this.parameters.solarReferenceFoldIncrease,
-      windNominalCapacity,
-      this.parameters.windReferenceCapacity,
-      this.parameters.windFarmBuildCost,
-      this.parameters.windCostReductionWithScale,
-      this.parameters.windReferenceFoldIncrease,
-      this.batteryRatedPower,
-      this.batteryStorageDuration,
-      this.batteryCosts,
-      this.gridConnectionCost
+        this.parameters.powerPlantConfiguration,
+        this.parameters.powerSupplyOption,
+        electrolyserNominalCapacity,
+        this.parameters.electrolyserReferenceCapacity,
+        this.parameters.electrolyserPurchaseCost,
+        this.parameters.electrolyserCostReductionWithScale,
+        this.parameters.electrolyserReferenceFoldIncrease,
+        powerPlantType,
+        solarNominalCapacity,
+        this.parameters.solarReferenceCapacity,
+        this.parameters.solarFarmBuildCost,
+        this.parameters.solarPVCostReductionWithScale,
+        this.parameters.solarReferenceFoldIncrease,
+        windNominalCapacity,
+        this.parameters.windReferenceCapacity,
+        this.parameters.windFarmBuildCost,
+        this.parameters.windCostReductionWithScale,
+        this.parameters.windReferenceFoldIncrease,
+        this.batteryRatedPower,
+        this.batteryStorageDuration,
+        this.batteryCosts,
+        this.gridConnectionCost
     );
+
+    const ammoniaCapex = ammonia_plant_CAPEX(this.parameters.ammoniaPlantCapacity, this.parameters.ammoniaStorageCapacity, airSeparationUnitCapacity, this.parameters.ammoniaSynthesisUnitCost, this.parameters.ammoniaStorageCost,
+        this.parameters.airSeparationUnitCost)
 
     const {
       electrolyserEpcCost,
@@ -268,18 +282,18 @@ export class AmmoniaModel implements Model {
       batteryEpcCost,
       batteryLandCost,
     } = getEpcCosts(
-      electrolyserCAPEX,
-      this.parameters.electrolyserEpcCosts,
-      this.parameters.electrolyserLandProcurementCosts,
-      solarCAPEX,
-      this.parameters.solarEpcCosts,
-      this.parameters.solarLandProcurementCosts,
-      windCAPEX,
-      this.parameters.windEpcCosts,
-      this.parameters.windLandProcurementCosts,
-      batteryCAPEX,
-      this.parameters.batteryEpcCosts,
-      this.parameters.batteryLandProcurementCosts
+        electrolyserCAPEX,
+        this.parameters.electrolyserEpcCosts,
+        this.parameters.electrolyserLandProcurementCosts,
+        solarCAPEX,
+        this.parameters.solarEpcCosts,
+        this.parameters.solarLandProcurementCosts,
+        windCAPEX,
+        this.parameters.windEpcCosts,
+        this.parameters.windLandProcurementCosts,
+        batteryCAPEX,
+        this.parameters.batteryEpcCosts,
+        this.parameters.batteryLandProcurementCosts
     );
     const indirectCostBreakdown = {
       "Electrolyser EPC": electrolyserEpcCost,
@@ -291,11 +305,12 @@ export class AmmoniaModel implements Model {
     };
 
     const totalCapexCost =
-      electrolyserCAPEX +
-      powerPlantCAPEX +
-      batteryCAPEX +
-      this.parameters.additionalUpfrontCosts +
-      gridConnectionCAPEX; // Cost values for sales calculation
+        ammoniaCapex +
+        electrolyserCAPEX +
+        powerPlantCAPEX +
+        batteryCAPEX +
+        this.parameters.additionalUpfrontCosts +
+        gridConnectionCAPEX; // Cost values for sales calculation
     const totalEpcCost =
       electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
     const totalLandCost =
@@ -307,6 +322,7 @@ export class AmmoniaModel implements Model {
       powerPlantLandCost;
 
     const capitalCostBreakdown = {
+      "Ammonia": ammoniaCapex,
       "Electrolyser System": electrolyserCAPEX,
       "Power Plant": powerPlantCAPEX,
       Battery: batteryCAPEX,
@@ -607,6 +623,7 @@ export class AmmoniaModel implements Model {
       });
 
       return {
+        airSeparationUnitCapacity,
         powerPlantType: powerPlantType,
         solarNominalCapacity: result.solarNominalCapacity,
         windNominalCapacity: result.windNominalCapacity,
@@ -732,6 +749,7 @@ export class AmmoniaModel implements Model {
           ).fill(operatingOutputs[key]);
         });
         return {
+          airSeparationUnitCapacity,
           powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
           windNominalCapacity: windNominalCapacity,
@@ -859,6 +877,7 @@ export class AmmoniaModel implements Model {
       });
 
       return {
+        airSeparationUnitCapacity,
         powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
@@ -1285,20 +1304,20 @@ function calculateNH3CapFactors(
 //   return air_separation_unit_capacity * (365 / 1000);
 // }
 //
-// function ammonia_plant_CAPEX(
-//     ammonia_plant_capacity: number, // size of ammonia plant
-//     ammonia_storage_capacity: number, // size of ammonia storage
-//     asu_plant_capacity: number, // size of asu
-//     ammonia_synthesis_unit_purchase_cost: number, // cost per T ofr Ammonia Synthesis Unit
-//     ammonia_storage_purchase_cost: number, // cost per T for Ammonia Storage
-//     asu_purchase_cost: number // cost per T for ASU
-// ) {
-//   return (
-//       ammonia_plant_capacity * 1000 * ammonia_synthesis_unit_purchase_cost +
-//       ((ammonia_storage_capacity * 1000) / 365) * ammonia_storage_purchase_cost +
-//       asu_plant_capacity * asu_purchase_cost * 365
-//   );
-// }
+function ammonia_plant_CAPEX(
+    ammonia_plant_capacity: number, // size of ammonia plant
+    ammonia_storage_capacity: number, // size of ammonia storage
+    asu_plant_capacity: number, // size of asu
+    ammonia_synthesis_unit_purchase_cost: number, // cost per T ofr Ammonia Synthesis Unit
+    ammonia_storage_purchase_cost: number, // cost per T for Ammonia Storage
+    asu_purchase_cost: number // cost per T for ASU
+) {
+  return (
+      ammonia_plant_capacity * 1000 * ammonia_synthesis_unit_purchase_cost +
+      ((ammonia_storage_capacity * 1000) / 365) * ammonia_storage_purchase_cost +
+      asu_plant_capacity * asu_purchase_cost * 365
+  );
+}
 //
 // function ammonia_plant_epc(
 //     ammonia_plant_epc: number, // % of capex

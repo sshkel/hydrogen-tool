@@ -180,12 +180,22 @@ export default function WorkingData(props: Props) {
       windReferenceFoldIncrease: inputs.windReferenceFoldIncrease,
       windCostReductionWithScale: inputs.windCostReductionWithScale,
       ammoniaPlantCapacity: inputs.ammoniaPlantCapacity!,
+      ammoniaStorageCapacity: inputs.ammoniaStorageCapacity!,
       electrolyserSystemOversizing: inputs.electrolyserSystemOversizing!,
       ammoniaPlantSec: inputs.ammoniaPlantSec!,
       asuSec: inputs.asuSec!,
       hydrogenStorageCapacity: inputs.hydrogenStorageCapacity!,
       ammoniaPlantMinimumTurndown: inputs.ammoniaPlantMinimumTurndown!,
       minimumHydrogenStorage: inputs.minimumHydrogenStorage!,
+      // operating costs
+      ammoniaSynthesisUnitCost: inputs.ammoniaSynthesisUnitCost!,
+      ammoniaStorageCost: inputs.ammoniaStorageCost!,
+      airSeparationUnitCost: inputs.airSeparationUnitCost!,
+      ammoniaEpcCosts: inputs.ammoniaEpcCosts!,
+      ammoniaLandProcurementCosts: inputs.ammoniaLandProcurementCosts!,
+      ammoniaPlantOMCost: inputs.ammoniaPlantOMCost!,
+      ammoniaStorageOMCost: inputs.ammoniaStorageOMCost!,
+      asuPlantOMCost: inputs.asuPlantOMCost!
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);
