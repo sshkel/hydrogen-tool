@@ -71,6 +71,7 @@ export const defaultInputs: { [k: string]: number } = {
 
 class Defaults {
   private defaultInputs: { [k: string]: number };
+
   constructor() {
     this.defaultInputs = {
       electrolyserNominalCapacity: 10,
@@ -150,7 +151,7 @@ class Defaults {
       ammoniaPlantOMCost: 2,
       ammoniaStorageOMCost: 2,
       asuPlantOMCost: 2,
-      hydrogenStoragePurchaseCost: 878
+      hydrogenStoragePurchaseCost: 878,
     };
   }
 

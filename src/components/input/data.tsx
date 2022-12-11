@@ -147,7 +147,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   ammoniaStorageCapacity: {
     title: "Ammonia Storage Capacity",
-    adornmentLabel: "days"
+    adornmentLabel: "days",
   },
   electrolyserSystemOversizing: {
     // done
@@ -186,39 +186,39 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // ammonia plant operating costs
   ammoniaSynthesisUnitCost: {
     title: "Ammonia Synthesis Unit Cost",
-    adornmentLabel: "A$/TNH3"
+    adornmentLabel: "A$/TNH3",
   },
   ammoniaStorageCost: {
     title: "Ammonia Storage Cost",
-    adornmentLabel: "A$/TNH3"
+    adornmentLabel: "A$/TNH3",
   },
   airSeparationUnitCost: {
     title: "Air Separation Unit Cost",
-    adornmentLabel: "A$/TN2"
+    adornmentLabel: "A$/TN2",
   },
   ammoniaEpcCosts: {
     title: "EPC Costs",
-    adornmentLabel: "% of CAPEX"
+    adornmentLabel: "% of CAPEX",
   },
   ammoniaLandProcurementCosts: {
     title: "Land Procurement Cost",
-    adornmentLabel: "% of CAPEX"
+    adornmentLabel: "% of CAPEX",
   },
   ammoniaPlantOMCost: {
     title: "Ammonia Plant O&M",
-    adornmentLabel: "% of CAPEX"
+    adornmentLabel: "% of CAPEX",
   },
   ammoniaStorageOMCost: {
     title: "Ammonia Storage O&M",
-    adornmentLabel: "% of CAPEX"
+    adornmentLabel: "% of CAPEX",
   },
   asuPlantOMCost: {
     title: "ASU plant O&M",
-    adornmentLabel: "% of CAPEX"
+    adornmentLabel: "% of CAPEX",
   },
   hydrogenStoragePurchaseCost: {
     title: "Hydrogen Storage Purchase Cost",
-    adornmentLabel: "A$/kg"
+    adornmentLabel: "A$/kg",
   },
   powerPlantDegradationRate: {
     //done
