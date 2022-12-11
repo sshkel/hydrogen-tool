@@ -13,6 +13,7 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
+import { AmmoniaData, AmmoniaModel } from "../../model/Ammonia2Model";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
 import {
@@ -30,8 +31,7 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import {roundToNearestInteger} from "./cost-functions";
-import {AmmoniaData, AmmoniaModel} from "../../model/Ammonia2Model";
+import { roundToNearestInteger } from "./cost-functions";
 
 export interface Props {
   powerfuel?: string;
@@ -133,7 +133,8 @@ export default function WorkingData(props: Props) {
       batteryReplacementCost: inputs.batteryReplacementCost,
       batteryStorageDuration: inputs.batteryStorageDuration,
       discountRate: inputs.discountRate,
-      electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
+      electrolyserCostReductionWithScale:
+        inputs.electrolyserCostReductionWithScale,
       electrolyserEfficiency: inputs.electrolyserEfficiency,
       electrolyserEpcCosts: inputs.electrolyserEpcCosts,
       electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
@@ -142,11 +143,13 @@ export default function WorkingData(props: Props) {
       electrolyserOMCost: inputs.electrolyserOMCost,
       electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
       electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
-      electrolyserReferenceFoldIncrease: inputs.electrolyserReferenceFoldIncrease,
+      electrolyserReferenceFoldIncrease:
+        inputs.electrolyserReferenceFoldIncrease,
       electrolyserStackReplacement: inputs.electrolyserStackReplacement,
       gridConnectionCost: inputs.gridConnectionCost,
       inflationRate: inputs.inflationRate,
-      maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
+      maximumDegradationBeforeReplacement:
+        inputs.maximumDegradationBeforeReplacement,
       maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
       powerCapacityConfiguration: inputs.powerCapacityConfiguration,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
@@ -196,11 +199,13 @@ export default function WorkingData(props: Props) {
       ammoniaPlantOMCost: inputs.ammoniaPlantOMCost!,
       ammoniaStorageOMCost: inputs.ammoniaStorageOMCost!,
       asuPlantOMCost: inputs.asuPlantOMCost!,
+<<<<<<< Updated upstream
       hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!
+=======
+>>>>>>> Stashed changes
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);
-
   } else {
     const dataModel: HydrogenData = {
       inputConfiguration: inputConfiguration,
@@ -220,7 +225,8 @@ export default function WorkingData(props: Props) {
       batteryReplacementCost: inputs.batteryReplacementCost,
       batteryStorageDuration: inputs.batteryStorageDuration,
       discountRate: inputs.discountRate,
-      electrolyserCostReductionWithScale: inputs.electrolyserCostReductionWithScale,
+      electrolyserCostReductionWithScale:
+        inputs.electrolyserCostReductionWithScale,
       electrolyserEfficiency: inputs.electrolyserEfficiency,
       electrolyserEpcCosts: inputs.electrolyserEpcCosts,
       electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
@@ -230,11 +236,13 @@ export default function WorkingData(props: Props) {
       electrolyserOMCost: inputs.electrolyserOMCost,
       electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
       electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
-      electrolyserReferenceFoldIncrease: inputs.electrolyserReferenceFoldIncrease,
+      electrolyserReferenceFoldIncrease:
+        inputs.electrolyserReferenceFoldIncrease,
       electrolyserStackReplacement: inputs.electrolyserStackReplacement,
       gridConnectionCost: inputs.gridConnectionCost,
       inflationRate: inputs.inflationRate,
-      maximumDegradationBeforeReplacement: inputs.maximumDegradationBeforeReplacement,
+      maximumDegradationBeforeReplacement:
+        inputs.maximumDegradationBeforeReplacement,
       maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
       powerCapacityConfiguration: inputs.powerCapacityConfiguration,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
@@ -274,13 +282,17 @@ export default function WorkingData(props: Props) {
     model = new HydrogenModel(dataModel, state.solarData, state.windData);
   }
 
-  const results = model.produceResults()
+  const results = model.produceResults();
 
   return (
     <ThemeProvider theme={theme}>
       <DesignStepper activeStep={3} />
       <CssBaseline />
-      <Grid container direction="column" sx={{ backgroundColor: SAPPHIRE }}>
+      <Grid
+        container
+        direction="column"
+        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4 }}
+      >
         <Grid item>
           {KeyInputsPane(
             location,
