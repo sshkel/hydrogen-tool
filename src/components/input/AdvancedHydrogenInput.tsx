@@ -22,7 +22,14 @@ export default function AdvancedHydrogenInput() {
         },
       }}
     >
-      <Grid xs={4} container item rowSpacing={1} flexDirection="column">
+      <Grid
+        xs={4}
+        container
+        item
+        rowSpacing={1}
+        flexDirection="column"
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Electrolyser Parameters"
@@ -150,13 +157,27 @@ export default function AdvancedHydrogenInput() {
         </Grid>
       </Grid>
 
-      <Grid container item flexDirection="column" rowSpacing={1} xs={4}>
+      <Grid
+        container
+        item
+        flexDirection="column"
+        rowSpacing={1}
+        xs={4}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <ControlledPowerPlantCard />
         </Grid>
       </Grid>
 
-      <Grid container item flexDirection="column" xs={4} rowSpacing={1}>
+      <Grid
+        container
+        item
+        flexDirection="column"
+        xs={4}
+        rowSpacing={1}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Battery Parameters"

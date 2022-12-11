@@ -33,7 +33,7 @@ export function PowerfuelPathwayCard(props: Props) {
             color: BLACK,
           }}
           sx={{
-            padding: "12px",
+            padding: "16px",
             "&:hover": {
               backgroundColor: BLUE,
               color: WHITE,
