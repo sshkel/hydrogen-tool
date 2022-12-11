@@ -1307,15 +1307,7 @@ function calculateNH3CapFactors(
   );
 }
 
-// // TODO Uncomment when these functions are used
 
-// // kTPA
-//  // Not sure what this formula should be used for
-// function asu_plant_capacity(
-//     air_separation_unit_capacity: number // size of air separation unit
-// ) {
-//   return air_separation_unit_capacity * (365 / 1000);
-// }
 
 function ammonia_plant_CAPEX(
     ammonia_plant_capacity: number, // size of ammonia plant
@@ -1347,51 +1339,6 @@ function ammonia_plant_land_procurement_cost(
   return ammonia_plant_land_procurement_cost * ammonia_plant_CAPEX;
 }
 
-function ammonia_synthesis_unit_OandM(
-    ammonia_plant_capacity: number, // size of ammonia plant
-    asu_synthesis_unit_purchase_cost: number, // cost per T for Ammoni Synthesis Unit
-    ammonia_synthesis_unit_OandM: number // % of CAPEX
-) {
-  return (
-      ammonia_synthesis_unit_OandM *
-      ammonia_plant_capacity *
-      1000 *
-      asu_synthesis_unit_purchase_cost
-  );
-}
-
-function ammonia_storage_unit_OandM(
-    ammonia_plant_capacity: number, // size of ammonia plant
-    ammonia_storage_capacity: number, // size of ammonia storage tank
-    ammonia_storage_purchase_cost: number, // Cost per T for mmonia Storage unit
-    ammonia_storage_unit_OandM: number // % of CAPEX
-) {
-  return (
-      ammonia_storage_unit_OandM *
-      ammonia_storage_capacity *
-      ammonia_plant_capacity *
-      (1000 / 365) *
-      ammonia_storage_purchase_cost
-  );
-}
-
-function asu_OandM(
-    asu_plant_capacity: number, // size of ASU
-    asu_purchase_cost: number, // Cost per T for ASU
-    asu_OandM: number // % of CAPEX
-) {
-  return asu_OandM * asu_plant_capacity * 365 * asu_purchase_cost;
-}
-
-// TODO I think there is a typo in the first param, the cells don't add up
-function ammonia_plant_OandM(
-    asu_plant_capacity: number, // size of ASU
-    asu_purchase_cost: number, // cost per T for ASU
-    asu_OandM: number
-) {
-  return asu_plant_capacity + asu_purchase_cost + asu_OandM;
-}
-
 function hydrogen_storage_CAPEX(
     hydrogen_storage_capacity: number, // size of hydrogen storage tank
     hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
@@ -1399,150 +1346,187 @@ function hydrogen_storage_CAPEX(
   return hydrogen_storage_capacity * hydrogen_storage_purchase_cost;
 }
 
-function electrolyser_hydrogen_storage_system_capex_cost(
-    hydrogen_storage_capacity: number, // size of hydrogen storage tank
-    hydrogen_storage_purchase_cost: number, // cost per kg for hydrogen storage
-    nominal_electrolyser_capacity: number, // size of electrolyser
-    scaled_purchase_cost_of_electrolyser: number // Price per kW for Electrolyser
-) {
-  return (
-      nominal_electrolyser_capacity *
-      1000 *
-      scaled_purchase_cost_of_electrolyser +
-      hydrogen_storage_purchase_cost * hydrogen_storage_capacity
-  );
-}
+// // TODO Uncomment when these functions are used
 
-function hydrogen_storage_OandM(
-    hydrogen_storage_capacity: number, // size of asu
-    hydrogen_storage_purchase_cost: number, // Cost per T for ASU
-    hydrogen_storage_OandM: number // % of CAPEX
-) {
-  return (
-      hydrogen_storage_capacity *
-      hydrogen_storage_purchase_cost *
-      hydrogen_storage_OandM
-  );
-}
+// // kTPA
+//  // Not sure what this formula should be used for
+// function asu_plant_capacity(
+//     air_separation_unit_capacity: number // size of air separation unit
+// ) {
+//   return air_separation_unit_capacity * (365 / 1000);
+// }
 
-function indirect_costs(
-    ammonia_plant_indirect_costs: number, // indirect_cost_for ammonia plant
-    electrolyser_and_hydrogen_storage_indirect_costs: number, // indirect costs for electrolyser and h2 storage
-    epc_costs: number, // power plant EPC costs
-    land_procurement_cost: number, // power plant land procurement costs
-    battery_storage_indirect_costs: number // indirect costs for battery if selected
-) {
-  return (
-      ammonia_plant_indirect_costs +
-      electrolyser_and_hydrogen_storage_indirect_costs +
-      epc_costs +
-      land_procurement_cost +
-      battery_storage_indirect_costs // TODO should be conditional
-  );
-}
+// function ammonia_synthesis_unit_OandM(
+//     ammonia_plant_capacity: number, // size of ammonia plant
+//     asu_synthesis_unit_purchase_cost: number, // cost per T for Ammoni Synthesis Unit
+//     ammonia_synthesis_unit_OandM: number // % of CAPEX
+// ) {
+//   return (
+//       ammonia_synthesis_unit_OandM *
+//       ammonia_plant_capacity *
+//       1000 *
+//       asu_synthesis_unit_purchase_cost
+//   );
+// }
+//
+// function ammonia_storage_unit_OandM(
+//     ammonia_plant_capacity: number, // size of ammonia plant
+//     ammonia_storage_capacity: number, // size of ammonia storage tank
+//     ammonia_storage_purchase_cost: number, // Cost per T for mmonia Storage unit
+//     ammonia_storage_unit_OandM: number // % of CAPEX
+// ) {
+//   return (
+//       ammonia_storage_unit_OandM *
+//       ammonia_storage_capacity *
+//       ammonia_plant_capacity *
+//       (1000 / 365) *
+//       ammonia_storage_purchase_cost
+//   );
+// }
+//
+// function asu_OandM(
+//     asu_plant_capacity: number, // size of ASU
+//     asu_purchase_cost: number, // Cost per T for ASU
+//     asu_OandM: number // % of CAPEX
+// ) {
+//   return asu_OandM * asu_plant_capacity * 365 * asu_purchase_cost;
+// }
+//
+// // TODO I think there is a typo in the first param, the cells don't add up
+// function ammonia_plant_OandM(
+//     asu_plant_capacity: number, // size of ASU
+//     asu_purchase_cost: number, // cost per T for ASU
+//     asu_OandM: number
+// ) {
+//   return asu_plant_capacity + asu_purchase_cost + asu_OandM;
+// }
+//
 
-// this would be repeated for multiple years
-function ammonia_produced(
-    nh3_produced_per_year: number, //ammonia produced in year X
-    plant_year: number, // year X of operation
-    discount_rate: number // discount rate
-) {
-  return (nh3_produced_per_year * 1000) / (1 + discount_rate) ** plant_year;
-}
-
-// this should be repeated for multiple years
-function h2_storage_opex(
-    h2_storage_opex: number, // undiscounted OPEX for h2 storage
-    plant_year: number, // year X of operation
-    discount_rate: number // discount rate
-) {
-  return h2_storage_opex / (1 + discount_rate) ** plant_year;
-}
-
-// this should be repeated for multiple years
-function ammonia_plant_opex(
-    ammonia_plant_opex: number, // undiscounted OPEX for h2 storage
-    plant_year: number, // year X of operation
-    discount_rate: number // discount rate
-) {
-  return ammonia_plant_opex / (1 + discount_rate) ** plant_year;
-}
-
-// should bre repeated for multiple years
-function lcnh3(
-    total_discounted_cash_flow_power_plant_capex: number, // discounted cash flow for power plant capex
-    total_discounted_ammonia_produced: number // discounted ammonia produced
-) {
-  return (
-      total_discounted_cash_flow_power_plant_capex /
-      total_discounted_ammonia_produced
-  );
-}
-
-function capex_cost(
-    electrolyser_capex: number, // electrolyser capex
-    h2_storage_capex: number, // h2 storage capex
-    ammonia_plant_CAPEX: number, // ammonia plant capex
-    power_plant_capex: number, // power plant cappex
-    battery_capex: number, // battery capex
-    additional_upfront_costs: number, // additional costs
-    grid_connection_costs: number
-) {
-  return (
-      electrolyser_capex +
-      h2_storage_capex +
-      +ammonia_plant_CAPEX +
-      power_plant_capex +
-      battery_capex +
-      additional_upfront_costs +
-      grid_connection_costs
-  );
-}
-
-// repeated for multiple cells
-function nh3_sales(
-    nh3_produced_per_year: number, // ammonia produces in year X
-    retail_price_of_ammonia: number, // sale price for ammonia
-    plant_year: number, // year X of operation
-    discount_rate: number
-) {
-  return (
-      nh3_produced_per_year *
-      1000 *
-      retail_price_of_ammonia *
-      (1 + discount_rate) ** plant_year
-  );
-}
-
-// MWh
-// should be repeated for multiple cells
-function excess_generation(
-    generator_actual_power: number, // generator actual power MW
-    electrolyser_actual_power: number, // electrolyser actual power MW
-    asu_nh3_actual_power: number // asu nh3 acutal power
-) {
-  return (
-      asu_nh3_actual_power - electrolyser_actual_power - generator_actual_power
-  );
-}
-
-// %
-// should be repeated for multiple cells
-function asu_nh3_with_battery_cf(
-    asu_nh3_capacity_factor: number,
-    net_battery_flow: number
-) {
-  return asu_nh3_capacity_factor < 1 && net_battery_flow < 0
-      ? asu_nh3_capacity_factor + (1 - asu_nh3_capacity_factor)
-      : asu_nh3_capacity_factor;
-}
-
-// %
-// should be repeated for multiple cells
-function asu_nh3_capacity_factor(
-    ammonia_power_demand: number, // ammonia power demand
-    asu_power_demand: number, // asu power demand
-    asu_nh3_actual_power: number // asu/nh3 actual power
-) {
-  return asu_nh3_actual_power / (ammonia_power_demand + asu_power_demand);
-}
+// // might not need anymore, i just reused previous electrolyser capex calculations
+// function electrolyser_hydrogen_storage_system_capex_cost(
+//     hydrogen_storage_capacity: number, // size of hydrogen storage tank
+//     hydrogen_storage_purchase_cost: number, // cost per kg for hydrogen storage
+//     nominal_electrolyser_capacity: number, // size of electrolyser
+//     scaled_purchase_cost_of_electrolyser: number // Price per kW for Electrolyser
+// ) {
+//   return (
+//       nominal_electrolyser_capacity *
+//       1000 *
+//       scaled_purchase_cost_of_electrolyser +
+//       hydrogen_storage_purchase_cost * hydrogen_storage_capacity
+//   );
+// }
+//
+// function hydrogen_storage_OandM(
+//     hydrogen_storage_capacity: number, // size of asu
+//     hydrogen_storage_purchase_cost: number, // Cost per T for ASU
+//     hydrogen_storage_OandM: number // % of CAPEX
+// ) {
+//   return (
+//       hydrogen_storage_capacity *
+//       hydrogen_storage_purchase_cost *
+//       hydrogen_storage_OandM
+//   );
+// }
+//
+// function indirect_costs(
+//     ammonia_plant_indirect_costs: number, // indirect_cost_for ammonia plant
+//     electrolyser_and_hydrogen_storage_indirect_costs: number, // indirect costs for electrolyser and h2 storage
+//     epc_costs: number, // power plant EPC costs
+//     land_procurement_cost: number, // power plant land procurement costs
+//     battery_storage_indirect_costs: number // indirect costs for battery if selected
+// ) {
+//   return (
+//       ammonia_plant_indirect_costs +
+//       electrolyser_and_hydrogen_storage_indirect_costs +
+//       epc_costs +
+//       land_procurement_cost +
+//       battery_storage_indirect_costs // TODO should be conditional
+//   );
+// }
+//
+// // this would be repeated for multiple years
+// function ammonia_produced(
+//     nh3_produced_per_year: number, //ammonia produced in year X
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return (nh3_produced_per_year * 1000) / (1 + discount_rate) ** plant_year;
+// }
+//
+// // this should be repeated for multiple years
+// function h2_storage_opex(
+//     h2_storage_opex: number, // undiscounted OPEX for h2 storage
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return h2_storage_opex / (1 + discount_rate) ** plant_year;
+// }
+//
+// // this should be repeated for multiple years
+// function ammonia_plant_opex(
+//     ammonia_plant_opex: number, // undiscounted OPEX for h2 storage
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return ammonia_plant_opex / (1 + discount_rate) ** plant_year;
+// }
+//
+// // should bre repeated for multiple years
+// function lcnh3(
+//     total_discounted_cash_flow_power_plant_capex: number, // discounted cash flow for power plant capex
+//     total_discounted_ammonia_produced: number // discounted ammonia produced
+// ) {
+//   return (
+//       total_discounted_cash_flow_power_plant_capex /
+//       total_discounted_ammonia_produced
+//   );
+// }
+//
+// // repeated for multiple cells
+// function nh3_sales(
+//     nh3_produced_per_year: number, // ammonia produces in year X
+//     retail_price_of_ammonia: number, // sale price for ammonia
+//     plant_year: number, // year X of operation
+//     discount_rate: number
+// ) {
+//   return (
+//       nh3_produced_per_year *
+//       1000 *
+//       retail_price_of_ammonia *
+//       (1 + discount_rate) ** plant_year
+//   );
+// }
+//
+// // MWh
+// // should be repeated for multiple cells
+// function excess_generation(
+//     generator_actual_power: number, // generator actual power MW
+//     electrolyser_actual_power: number, // electrolyser actual power MW
+//     asu_nh3_actual_power: number // asu nh3 acutal power
+// ) {
+//   return (
+//       asu_nh3_actual_power - electrolyser_actual_power - generator_actual_power
+//   );
+// }
+//
+// // %
+// // should be repeated for multiple cells
+// function asu_nh3_with_battery_cf(
+//     asu_nh3_capacity_factor: number,
+//     net_battery_flow: number
+// ) {
+//   return asu_nh3_capacity_factor < 1 && net_battery_flow < 0
+//       ? asu_nh3_capacity_factor + (1 - asu_nh3_capacity_factor)
+//       : asu_nh3_capacity_factor;
+// }
+//
+// // %
+// // should be repeated for multiple cells
+// function asu_nh3_capacity_factor(
+//     ammonia_power_demand: number, // ammonia power demand
+//     asu_power_demand: number, // asu power demand
+//     asu_nh3_actual_power: number // asu/nh3 actual power
+// ) {
+//   return asu_nh3_actual_power / (ammonia_power_demand + asu_power_demand);
+// }
