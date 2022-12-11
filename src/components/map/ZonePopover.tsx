@@ -36,7 +36,7 @@ const ItemText = styled(Typography)(({ theme }) => ({
 }));
 
 const SideCard = styled(Card)(({ theme }) => ({
-  width: "400px",
+  width: "450px",
   minHeight: "60vh",
   borderRadius: "20px",
 }));
@@ -56,7 +56,7 @@ export function ZonePopover(props: Props) {
         title="Location summary"
         sx={{
           backgroundColor: GREY,
-          paddingLeft: "20px",
+          padding: "24px 28px",
         }}
         titleTypographyProps={{
           fontWeight: "bold",
@@ -68,6 +68,7 @@ export function ZonePopover(props: Props) {
           role="presentation"
           justifyContent="center"
           alignItems="center"
+          paddingX="4px"
         >
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
             <Grid item xs>
@@ -183,7 +184,7 @@ export function ZonePopover(props: Props) {
         titleTypographyProps={{
           fontWeight: "bold",
         }}
-        sx={{ backgroundColor: GREY, paddingLeft: "20px" }}
+        sx={{ backgroundColor: GREY, padding: "24px 28px" }}
       />
       <CardContent>
         <Grid
@@ -192,8 +193,8 @@ export function ZonePopover(props: Props) {
           direction="column"
           justifyContent="center"
           alignItems="stretch"
-          rowSpacing="30"
-          padding="20px"
+          rowSpacing={1}
+          padding="8px"
         >
           <Grid item xs={2}>
             <PowerfuelPathwayCard
@@ -206,7 +207,7 @@ export function ZonePopover(props: Props) {
             <PowerfuelPathwayCard
               onClick={() => startDesign("ammonia")}
               title="Ammonia"
-              subheader="Integrated hydrogen production and conversion into Ammonia"
+              subheader="Integrated hydrogen production and conversion into ammonia"
             />
           </Grid>
         </Grid>
@@ -220,7 +221,7 @@ export function ZonePopover(props: Props) {
       TransitionProps={{ onExited: () => setComponent("location") }}
       onClose={props.closeSideMenu}
       anchorReference="anchorPosition"
-      anchorPosition={{ top: 80, left: 100 }}
+      anchorPosition={{ top: 75, left: 100 }}
       anchorOrigin={{
         vertical: "top",
         horizontal: "left",

@@ -84,8 +84,8 @@ export default function DesignStepper(props: StepperProps) {
                     fontWeight: 700,
                   },
                   "& .MuiSvgIcon-root": {
-                    width: "28px",
-                    height: "28px",
+                    width: "24px",
+                    height: "24px",
                   },
                 }}
                 key={label}
@@ -111,7 +111,7 @@ export default function DesignStepper(props: StepperProps) {
           aria-expanded={expanded}
           aria-label="display guide"
         >
-          <ExpandMoreIcon />
+          <ExpandMoreIcon fontSize="small" />
         </ExpandMore>
       </Grid>
     </Grid>

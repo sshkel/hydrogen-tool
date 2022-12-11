@@ -23,7 +23,15 @@ export default function BasicHydrogenInput() {
         },
       }}
     >
-      <Grid xs={4} container item rowSpacing={1} flexDirection="column">
+      <Grid
+        xs={4}
+        container
+        item
+        rowSpacing={1}
+        flexDirection="column"
+        columnSpacing={2}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Project Scale"
@@ -60,7 +68,14 @@ export default function BasicHydrogenInput() {
         </Grid>
       </Grid>
 
-      <Grid container item flexDirection="column" rowSpacing={1} xs={4}>
+      <Grid
+        container
+        item
+        flexDirection="column"
+        rowSpacing={1}
+        xs={4}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Capital & Operating Cost"
@@ -101,7 +116,14 @@ export default function BasicHydrogenInput() {
         </Grid>
       </Grid>
 
-      <Grid container item flexDirection="column" xs={4} rowSpacing={1}>
+      <Grid
+        container
+        item
+        flexDirection="column"
+        xs={4}
+        rowSpacing={1}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Cost Analysis"

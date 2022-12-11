@@ -1,7 +1,6 @@
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import { clsx } from "clsx";
 import React, { Suspense } from "react";
 
 import InputCard from "./InputCard";
