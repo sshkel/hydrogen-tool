@@ -125,6 +125,7 @@ export type AmmoniaData = {
   ammoniaPlantOMCost: number;
   ammoniaStorageOMCost: number;
   asuPlantOMCost: number;
+  hydrogenStoragePurchaseCost: number;
 };
 
 export class AmmoniaModel implements Model {
@@ -273,7 +274,7 @@ export class AmmoniaModel implements Model {
 
     const ammoniaCapex = ammonia_plant_CAPEX(this.parameters.ammoniaPlantCapacity, this.parameters.ammoniaStorageCapacity, airSeparationUnitCapacity, this.parameters.ammoniaSynthesisUnitCost, this.parameters.ammoniaStorageCost,
         this.parameters.airSeparationUnitCost)
-
+    const h2StorageCapex = hydrogen_storage_CAPEX(this.parameters.hydrogenStorageCapacity, this.parameters.hydrogenStoragePurchaseCost);
     const {
       electrolyserEpcCost,
       electrolyserLandCost,
@@ -311,6 +312,7 @@ export class AmmoniaModel implements Model {
 
     const totalCapexCost =
         ammoniaCapex +
+        h2StorageCapex +
         electrolyserCAPEX +
         powerPlantCAPEX +
         batteryCAPEX +
@@ -330,6 +332,7 @@ export class AmmoniaModel implements Model {
 
     const capitalCostBreakdown = {
       "Ammonia": ammoniaCapex,
+      "H2 Storage": h2StorageCapex,
       "Electrolyser System": electrolyserCAPEX,
       "Power Plant": powerPlantCAPEX,
       Battery: batteryCAPEX,
@@ -1304,13 +1307,15 @@ function calculateNH3CapFactors(
   );
 }
 
-// TODO Uncomment when these functions are used
-// kTPA
-function asu_plant_capacity(
-    air_separation_unit_capacity: number // size of air separation unit
-) {
-  return air_separation_unit_capacity * (365 / 1000);
-}
+// // TODO Uncomment when these functions are used
+
+// // kTPA
+//  // Not sure what this formula should be used for
+// function asu_plant_capacity(
+//     air_separation_unit_capacity: number // size of air separation unit
+// ) {
+//   return air_separation_unit_capacity * (365 / 1000);
+// }
 
 function ammonia_plant_CAPEX(
     ammonia_plant_capacity: number, // size of ammonia plant
@@ -1387,7 +1392,7 @@ function ammonia_plant_OandM(
   return asu_plant_capacity + asu_purchase_cost + asu_OandM;
 }
 
-function hydrogen_storage_purchase_cost(
+function hydrogen_storage_CAPEX(
     hydrogen_storage_capacity: number, // size of hydrogen storage tank
     hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
 ) {
@@ -1491,26 +1496,6 @@ function capex_cost(
       battery_capex +
       additional_upfront_costs +
       grid_connection_costs
-  );
-}
-
-function epc_cost(
-    electrolyser_epc: number,
-    ammonia_plant_epc: number,
-    power_plant_epc: number,
-    battery_epc: number
-) {
-  return electrolyser_epc + ammonia_plant_epc + power_plant_epc + battery_epc;
-}
-
-function land_cost(
-    electrolyser_land: number,
-    ammonia_plant_land: number,
-    power_plant_land: number,
-    battery_land: number
-) {
-  return (
-      electrolyser_land + ammonia_plant_land + power_plant_land + battery_land
   );
 }
 

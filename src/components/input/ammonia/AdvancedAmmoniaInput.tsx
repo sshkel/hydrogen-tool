@@ -208,27 +208,31 @@ export default function AdvancedHydrogenInput() {
                     inputKey="electrolyserReferenceCapacity"
                   />,
                   <InputNumberField
-                    key="electrolyserPurchaseCost"
-                    inputKey="electrolyserPurchaseCost"
+                      key="electrolyserPurchaseCost"
+                      inputKey="electrolyserPurchaseCost"
                   />,
-                  <InputNumberField
-                    key="electrolyserCostReductionWithScale"
-                    inputKey="electrolyserCostReductionWithScale"
-                  />,
-                  <InputNumberField
-                    key="electrolyserReferenceFoldIncrease"
-                    inputKey="electrolyserReferenceFoldIncrease"
-                  />,
-                  <InputNumberField
-                    key="electrolyserEpcCosts"
-                    inputKey="electrolyserEpcCosts"
-                  />,
-                  <InputNumberField
-                    key="electrolyserLandProcurementCosts"
-                    inputKey="electrolyserLandProcurementCosts"
-                  />,
-                  <InputNumberField
-                    key="electrolyserOMCost"
+                    <InputNumberField
+                        key="electrolyserCostReductionWithScale"
+                        inputKey="electrolyserCostReductionWithScale"
+                    />,
+                    <InputNumberField
+                        key="electrolyserReferenceFoldIncrease"
+                        inputKey="electrolyserReferenceFoldIncrease"
+                    />,
+                    <InputNumberField
+                        key="hydrogenStoragePurchaseCost"
+                        inputKey="hydrogenStoragePurchaseCost"
+                    />,
+                    <InputNumberField
+                        key="electrolyserEpcCosts"
+                        inputKey="electrolyserEpcCosts"
+                    />,
+                    <InputNumberField
+                        key="electrolyserLandProcurementCosts"
+                        inputKey="electrolyserLandProcurementCosts"
+                    />,
+                    <InputNumberField
+                        key="electrolyserOMCost"
                     inputKey="electrolyserOMCost"
                   />,
                   <InputNumberField

@@ -216,7 +216,10 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "ASU plant O&M",
     adornmentLabel: "% of CAPEX"
   },
-
+  hydrogenStoragePurchaseCost: {
+    title: "Hydrogen Storage Purchase Cost",
+    adornmentLabel: "A$/kg"
+  },
   powerPlantDegradationRate: {
     //done
     title: "Power Plant Degradation Rate",

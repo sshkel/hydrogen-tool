@@ -150,6 +150,7 @@ class Defaults {
       ammoniaPlantOMCost: 2,
       ammoniaStorageOMCost: 2,
       asuPlantOMCost: 2,
+      hydrogenStoragePurchaseCost: 878
     };
   }
 
