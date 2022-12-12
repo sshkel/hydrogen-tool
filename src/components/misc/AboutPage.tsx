@@ -1,13 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Card, CardContent, Grid, Typography, styled } from "@mui/material";
 
+import KANGAROO_LOGO from "../../assets/OZ-01.png";
+import KOALA_LOGO from "../../assets/OZ-02.png";
+import QUOKKA_LOGO from "../../assets/OZ-03.png";
 import { NAVY, OFF_WHITE, WHITE } from "../colors";
+
+const LOGO_HEIGHT = 350;
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.h4,
@@ -56,10 +54,10 @@ export default function AboutPage() {
               across NSW.
             </ItemText>
           </CardContent>
-          <CardMedia
-            component="img"
-            sx={{ width: "40vw", height: "60vh" }}
-            image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc1.svg"
+          <img
+            height={LOGO_HEIGHT}
+            src={KANGAROO_LOGO}
+            alt="logo with emu and kangaroo"
           />
         </StyledCard>
       </Grid>
@@ -89,11 +87,7 @@ export default function AboutPage() {
               annual production rates and energy consumed.
             </ItemText>
           </CardContent>
-          <CardMedia
-            component="img"
-            sx={{ width: "30vw", height: "50vh" }}
-            image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc2.svg"
-          />
+          <img height={LOGO_HEIGHT} src={KOALA_LOGO} alt="logo with koala" />
         </StyledCard>
       </Grid>
       <Grid item sx={{ backgroundColor: OFF_WHITE }}>
@@ -123,11 +117,7 @@ export default function AboutPage() {
               hydrogen or the powerfuel of choice.
             </ItemText>
           </CardContent>
-          <CardMedia
-            component="img"
-            sx={{ width: "30vw", height: "50vh" }}
-            image="https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/images/desc3.svg"
-          />
+          <img height={LOGO_HEIGHT} src={QUOKKA_LOGO} alt="logo with quokka" />
         </StyledCard>
       </Grid>
       <Grid

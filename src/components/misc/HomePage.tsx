@@ -3,8 +3,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
+import GLOBH2E_LOGO from "../../assets/globh2e-logo.png";
+import NSW_GOV_LOGO from "../../assets/nsw-gov-logo.png";
+import NSW_OCSE_LOGO from "../../assets/nsw-ocse-logo.png";
 import { BLACK, BLUE, NAVY, OFF_WHITE, WHITE } from "../colors";
-import { OFFICE_OF_CHIEF_SCIENTIST } from "../logos";
+
+const LOGO_HEIGHT = 80;
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -17,15 +21,34 @@ export default function HomePage() {
       <Grid
         item
         container
-        alignItems="stretch"
+        justifyContent="space-evenly"
         sx={{ backgroundColor: OFF_WHITE }}
         paddingTop={8}
         paddingX={12}
+        rowSpacing={12}
       >
-        <Grid item xs={4}>
+        <Grid item xs={4} display="flex" justifyContent="center">
           <img
-            alt="Office of NSW Chief Scientist logo"
-            src={OFFICE_OF_CHIEF_SCIENTIST}
+            alt="NSW Office of the Chief Scientist and Engineer logo"
+            src={NSW_OCSE_LOGO}
+            height={LOGO_HEIGHT}
+            // width="310px"
+          />
+        </Grid>
+        <Grid item xs={4} display="flex" justifyContent="center">
+          <img
+            alt="NSW Government logo"
+            src={NSW_GOV_LOGO}
+            height={LOGO_HEIGHT}
+            // width="91px"
+          />
+        </Grid>
+        <Grid item xs={4} display="flex" justifyContent="center">
+          <img
+            alt="GlobH2E logo"
+            src={GLOBH2E_LOGO}
+            height={LOGO_HEIGHT}
+            // width="310px"
           />
         </Grid>
         <Grid
