@@ -370,6 +370,7 @@ function DurationCurves(durationCurves: { [key: string]: number[] }) {
     );
   });
 }
+
 function HourlyCapacityFactorsPane(hourlyCapFactors: {
   [key: string]: number[];
 }) {

@@ -195,7 +195,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   hydrogenStoragePurchaseCost: {
     title: "Hydrogen Storage Purchase Cost",
-    adornmentLabel: "A$/kg"
+    adornmentLabel: "A$/kg",
   },
   powerPlantDegradationRate: {
     //done

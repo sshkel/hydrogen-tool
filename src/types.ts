@@ -201,7 +201,6 @@ export interface Inputs {
   hydrogenStoragePurchaseCost?: number;
 }
 
-
 export interface Model {
-  produceResults(): any
+  produceResults(): any;
 }

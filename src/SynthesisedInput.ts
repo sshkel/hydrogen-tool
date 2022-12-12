@@ -85,22 +85,22 @@ class DefaultInputs implements Inputs {
   projectTimeline = 20;
   discountRate = 7;
   inflationRate = 2.5;
-  // Ammonia 
+  // Ammonia
   ammoniaPlantCapacity = 50;
-  ammoniaStorageCapacity= 30;
+  ammoniaStorageCapacity = 30;
   electrolyserSystemOversizing = 45;
   ammoniaPlantSec = 0.41;
   asuSec = 0.22;
   hydrogenStorageCapacity = 49_000;
   ammoniaPlantMinimumTurndown = 33;
   minimumHydrogenStorage = 10;
-  ammoniaSynthesisUnitCost= 520;
-  ammoniaStorageCost= 1370;
-  airSeparationUnitCost= 251;
-  ammoniaEpcCosts= 0;
-  ammoniaLandProcurementCosts= 0;
-  ammoniaPlantOMCost= 2;
-  ammoniaStorageOMCost= 2;
+  ammoniaSynthesisUnitCost = 520;
+  ammoniaStorageCost = 1370;
+  airSeparationUnitCost = 251;
+  ammoniaEpcCosts = 0;
+  ammoniaLandProcurementCosts = 0;
+  ammoniaPlantOMCost = 2;
+  ammoniaStorageOMCost = 2;
   asuPlantOMCost = 2;
   hydrogenStoragePurchaseCost = 878;
 }
