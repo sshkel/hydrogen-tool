@@ -567,7 +567,9 @@ export class AmmoniaModel implements Model {
           this.parameters.powerPlantOversizeRatio,
           // default for the first calculation
           1,
-          1
+          1, // TODO check with Jack if this works
+          1,
+          airSeparationUnitCapacity
         );
 
       const hydrogenProduction = calculateHydrogenProduction(
@@ -714,6 +716,8 @@ export class AmmoniaModel implements Model {
           windNominalCapacity / powerPlantNominalCapacity,
           this.parameters.powerPlantOversizeRatio,
           electrolyserNominalCapacity,
+          powerPlantNominalCapacity,
+          airSeparationUnitCapacity,
           year
         );
         electrolyserCapacityFactors =
@@ -837,6 +841,8 @@ export class AmmoniaModel implements Model {
             windNominalCapacity / powerPlantNominalCapacity,
             this.parameters.powerPlantOversizeRatio,
             electrolyserNominalCapacity,
+            powerPlantNominalCapacity,
+            airSeparationUnitCapacity,
             year
           );
 
@@ -928,6 +934,8 @@ export class AmmoniaModel implements Model {
     windRatio: number,
     oversizeRatio: number,
     electrolyserNominalCapacity: number,
+    powerPlantNominalCapacity: number,
+    airSeparationUnitCapacity: number,
     year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
@@ -941,28 +949,40 @@ export class AmmoniaModel implements Model {
       year
     );
 
-    // normal electrolyser calculation
-    let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
-      oversizeRatio,
-      this.elecMaxLoad,
-      this.elecMinLoad,
+    const generatorActualPower = generator_actual_power(
+      powerPlantNominalCapacity,
       powerplantCapacityFactors
     );
-
-    // overload calculation
-    if (
-      this.elecOverload > this.elecMaxLoad &&
-      this.parameters.timeBetweenOverloading > 0
-    ) {
-      electrolyserCapacityFactors = calculateOverloadingModel(
-        oversizeRatio,
-        this.elecMaxLoad,
-        this.parameters.timeBetweenOverloading,
-        this.elecOverload,
-        powerplantCapacityFactors,
-        electrolyserCapacityFactors
-      );
-    }
+    const ammoniaPowerDemand = ammonia_plant_power_demand(
+      this.parameters.ammoniaPlantCapacity,
+      this.parameters.ammoniaPlantSec,
+      this.hoursPerYear
+    );
+    const asuPowerDemand = air_separation_unit_power_demand(
+      airSeparationUnitCapacity,
+      this.parameters.asuSec
+    );
+    const asuNh3ActualPower = asu_nh3_actual_power(
+      ammoniaPowerDemand,
+      asuPowerDemand,
+      generatorActualPower
+    );
+    const electrolyserActualPower = generatorActualPower.map(
+      (_: number, i: number) => {
+        if (
+          generatorActualPower[i] - asuNh3ActualPower[i] >
+          electrolyserNominalCapacity
+        ) {
+          return electrolyserNominalCapacity;
+        } else {
+          return generatorActualPower[i] - asuNh3ActualPower[i];
+        }
+      }
+    );
+    // normal electrolyser calculation
+    let electrolyserCapacityFactors = electrolyserActualPower.map(
+      (v: number) => v / electrolyserNominalCapacity
+    );
 
     let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
     // // battery model calc
