@@ -315,15 +315,15 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
   powerplantCapacityFactors: number[],
   hoursPerYear: number,
   oversizeRatio: number,
-  elecCapacity: number,
+  electrolyserNominalCapacity: number,
   elecMaxLoad: number,
   elecMinLoad: number,
   elecOverload: number,
-  elecOverloadRecharge: number,
+  timeBetweenOverloading: number,
   batteryEnergy: number,
-  batteryHours: number,
+  batteryStorageDuration: number,
   batteryEfficiency: number,
-  batteryPower: number,
+  batteryRatedPower: number,
   battMin: number
 ): ModelHourlyOperation {
   // normal electrolyser calculation
@@ -335,11 +335,11 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
   );
 
   // overload calculation
-  if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
+  if (elecOverload > elecMaxLoad && timeBetweenOverloading > 0) {
     electrolyserCapacityFactors = calculateOverloadingModel(
       oversizeRatio,
       elecMaxLoad,
-      elecOverloadRecharge,
+      timeBetweenOverloading,
       elecOverload,
       powerplantCapacityFactors,
       electrolyserCapacityFactors
@@ -350,9 +350,9 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
   // // battery model calc
   if (batteryEnergy > 0) {
     const hours = [1, 2, 4, 8];
-    if (!hours.includes(batteryHours)) {
+    if (!hours.includes(batteryStorageDuration)) {
       throw new Error(
-        `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
+        `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryStorageDuration}`
       );
     }
 
@@ -360,17 +360,17 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
       (_: number, i: number) =>
         (powerplantCapacityFactors[i] * oversizeRatio -
           electrolyserCapacityFactors[i]) *
-        elecCapacity
+        electrolyserNominalCapacity
     );
     const battLosses = 1 - (1 - batteryEfficiency) / 2;
     netBatteryFlow = calculateNetBatteryFlow(
       oversizeRatio,
-      elecCapacity,
+      electrolyserNominalCapacity,
       excessGeneration,
       electrolyserCapacityFactors,
       elecMinLoad,
       elecMaxLoad,
-      batteryPower,
+      batteryRatedPower,
       batteryEnergy,
       battMin,
       battLosses
@@ -381,7 +381,7 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
         return (
           electrolyserCapacityFactors[i] +
           (-1 * netBatteryFlow[i] * battLosses + excessGeneration[i]) /
-            elecCapacity
+            electrolyserNominalCapacity
         );
       } else {
         return electrolyserCapacityFactors[i];
