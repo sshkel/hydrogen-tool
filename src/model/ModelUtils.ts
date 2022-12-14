@@ -311,6 +311,20 @@ export function backCalculateSolarAndWindCapacities(
   return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
 }
 
+function getExcessGeneration(
+  powerplantCapacityFactors: number[],
+  oversizeRatio: number,
+  electrolyserCapacityFactors: number[],
+  electrolyserNominalCapacity: number
+) {
+  return powerplantCapacityFactors.map(
+    (_: number, i: number) =>
+      (powerplantCapacityFactors[i] * oversizeRatio -
+        electrolyserCapacityFactors[i]) *
+      electrolyserNominalCapacity
+  );
+}
+
 export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
   powerplantCapacityFactors: number[],
   hoursPerYear: number,
@@ -356,13 +370,13 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
       );
     }
 
-    const excessGeneration = powerplantCapacityFactors.map(
-      (_: number, i: number) =>
-        (powerplantCapacityFactors[i] * oversizeRatio -
-          electrolyserCapacityFactors[i]) *
-        electrolyserNominalCapacity
+    const excessGeneration = getExcessGeneration(
+      powerplantCapacityFactors,
+      oversizeRatio,
+      electrolyserCapacityFactors,
+      electrolyserNominalCapacity
     );
-    const battLosses = 1 - (1 - batteryEfficiency) / 2;
+    const batteryLosses = 1 - (1 - batteryEfficiency) / 2;
     netBatteryFlow = calculateNetBatteryFlow(
       oversizeRatio,
       electrolyserNominalCapacity,
@@ -373,14 +387,14 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
       batteryRatedPower,
       batteryEnergy,
       battMin,
-      battLosses
+      batteryLosses
     );
     // recalculate electrolyser capacity factors using battery model
     electrolyserCapacityFactors = netBatteryFlow.map((_: number, i: number) => {
       if (netBatteryFlow[i] < 0) {
         return (
           electrolyserCapacityFactors[i] +
-          (-1 * netBatteryFlow[i] * battLosses + excessGeneration[i]) /
+          (-1 * netBatteryFlow[i] * batteryLosses + excessGeneration[i]) /
             electrolyserNominalCapacity
         );
       } else {
