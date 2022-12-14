@@ -2,7 +2,17 @@ import {
   backCalculateElectrolyserCapacity,
   backCalculateSolarnAndWindNominalCapacities,
 } from "../components/charts/basic-calculations";
-import {calculatePerYearOpex, getOpex,} from "../components/charts/opex-calculations";
+import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
+import {
+  roundToNearestInteger,
+  roundToTwoDP,
+  sales,
+} from "../components/charts/cost-functions";
+import { generateLCBreakdown } from "../components/charts/lch2-calculations";
+import {
+  calculatePerYearOpex,
+  getOpex,
+} from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
   Model,
@@ -12,22 +22,28 @@ import {
   PowerSupplyOption,
   StackReplacementType,
 } from "../types";
-import {mean, projectYears} from "../utils";
-import {CsvRow, ModelHourlyOperation, ProjectModelSummary,} from "./ModelTypes";
+import { mean, projectYears } from "../utils";
 import {
-  backCalculateSolarAndWindCapacities,
-  calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
-  calculateHydrogenProduction,
-  calculatePowerPlantCapacityFactors,
-  calculateSummary,
+  CsvRow,
+  ModelHourlyOperation,
+  ProjectModelSummary,
+} from "./ModelTypes";
+import {
   CumulativeDegradation,
   MaxDegradation,
+  backCalculateSolarAndWindCapacities,
+  calculateElectrolyserCapacityFactors,
+  calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
+  calculateHydrogenProduction,
+  calculateNetBatteryFlow,
+  calculateOverloadingModel,
+  calculatePowerPlantCapacityFactors,
+  calculateSummary,
+  getBatteryLosses,
+  getElectrolyserCapacityFactorsWithBattery,
+  getExcessGeneration,
 } from "./ModelUtils";
-import {HOURS_PER_YEAR,} from "./consts";
-
-import {getCapex, getEpcCosts} from "../components/charts/capex-calculations";
-import {roundToNearestInteger, roundToTwoDP, sales} from "../components/charts/cost-functions";
-import {generateLCBreakdown} from "../components/charts/lch2-calculations";
+import { HOURS_PER_YEAR } from "./consts";
 
 export type HydrogenData = {
   additionalAnnualCosts: number;
@@ -137,15 +153,15 @@ export class HydrogenModel implements Model {
   private readonly hoursPerYear: number;
   private readonly specCons: number;
 
-
   constructor(
-      parameters: HydrogenData,
-      solarData: CsvRow[],
-      windData: CsvRow[]
+    parameters: HydrogenData,
+    solarData: CsvRow[],
+    windData: CsvRow[]
   ) {
     this.parameters = parameters;
 
-    this.additionalTransmissionCharges = parameters.additionalTransmissionCharges ?? 0;
+    this.additionalTransmissionCharges =
+      parameters.additionalTransmissionCharges ?? 0;
     this.batteryCosts = parameters.batteryCosts ?? 0;
     this.batteryLifetime = parameters.batteryLifetime ?? 0;
     this.batteryMinCharge = parameters.batteryMinCharge ?? 0;
@@ -170,17 +186,14 @@ export class HydrogenModel implements Model {
     this.elecEff = this.electrolyserEfficiency / 100;
     this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
-    this.batteryEnergy =
-        this.batteryRatedPower * this.batteryStorageDuration;
+    this.batteryEnergy = this.batteryRatedPower * this.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.battMin = this.batteryMinCharge / 100;
     this.specCons = this.secAtNominalLoad * this.h2VolToMass;
     this.discountRate = this.parameters.discountRate / 100;
   }
 
-
   produceResults() {
-
     const {
       powerPlantType,
       solarNominalCapacity,
@@ -194,13 +207,15 @@ export class HydrogenModel implements Model {
       hydrogenProduction,
       ratedCapacityTime,
       totalOperatingTime,
-      hourlyOperations
+      hourlyOperations,
     } = this.calculateHydrogenModel(this.parameters.projectTimeline);
 
-    const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
+    const powerPlantNominalCapacity =
+      solarNominalCapacity + windNominalCapacity;
     const durationCurves = {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
-      "Electrolyser Duration Curve": hourlyOperations.electrolyserCapacityFactors,
+      "Electrolyser Duration Curve":
+        hourlyOperations.electrolyserCapacityFactors,
     };
     const hourlyCapFactors = {
       Electrolyser: hourlyOperations.electrolyserCapacityFactors,
@@ -215,28 +230,28 @@ export class HydrogenModel implements Model {
       powerPlantCAPEX,
       gridConnectionCAPEX,
     } = getCapex(
-        this.parameters.powerPlantConfiguration,
-        this.parameters.powerSupplyOption,
-        electrolyserNominalCapacity,
-        this.parameters.electrolyserReferenceCapacity,
-        this.parameters.electrolyserPurchaseCost,
-        this.parameters.electrolyserCostReductionWithScale,
-        this.parameters.electrolyserReferenceFoldIncrease,
-        powerPlantType,
-        solarNominalCapacity,
-        this.parameters.solarReferenceCapacity,
-        this.parameters.solarFarmBuildCost,
-        this.parameters.solarPVCostReductionWithScale,
-        this.parameters.solarReferenceFoldIncrease,
-        windNominalCapacity,
-        this.parameters.windReferenceCapacity,
-        this.parameters.windFarmBuildCost,
-        this.parameters.windCostReductionWithScale,
-        this.parameters.windReferenceFoldIncrease,
-        this.batteryRatedPower,
-        this.batteryStorageDuration,
-        this.batteryCosts,
-        this.gridConnectionCost
+      this.parameters.powerPlantConfiguration,
+      this.parameters.powerSupplyOption,
+      electrolyserNominalCapacity,
+      this.parameters.electrolyserReferenceCapacity,
+      this.parameters.electrolyserPurchaseCost,
+      this.parameters.electrolyserCostReductionWithScale,
+      this.parameters.electrolyserReferenceFoldIncrease,
+      powerPlantType,
+      solarNominalCapacity,
+      this.parameters.solarReferenceCapacity,
+      this.parameters.solarFarmBuildCost,
+      this.parameters.solarPVCostReductionWithScale,
+      this.parameters.solarReferenceFoldIncrease,
+      windNominalCapacity,
+      this.parameters.windReferenceCapacity,
+      this.parameters.windFarmBuildCost,
+      this.parameters.windCostReductionWithScale,
+      this.parameters.windReferenceFoldIncrease,
+      this.batteryRatedPower,
+      this.batteryStorageDuration,
+      this.batteryCosts,
+      this.gridConnectionCost
     );
 
     const {
@@ -247,18 +262,18 @@ export class HydrogenModel implements Model {
       batteryEpcCost,
       batteryLandCost,
     } = getEpcCosts(
-        electrolyserCAPEX,
-        this.parameters.electrolyserEpcCosts,
-        this.parameters.electrolyserLandProcurementCosts,
-        solarCAPEX,
-        this.parameters.solarEpcCosts,
-        this.parameters.solarLandProcurementCosts,
-        windCAPEX,
-        this.parameters.windEpcCosts,
-        this.parameters.windLandProcurementCosts,
-        batteryCAPEX,
-        this.parameters.batteryEpcCosts,
-        this.parameters.batteryLandProcurementCosts
+      electrolyserCAPEX,
+      this.parameters.electrolyserEpcCosts,
+      this.parameters.electrolyserLandProcurementCosts,
+      solarCAPEX,
+      this.parameters.solarEpcCosts,
+      this.parameters.solarLandProcurementCosts,
+      windCAPEX,
+      this.parameters.windEpcCosts,
+      this.parameters.windLandProcurementCosts,
+      batteryCAPEX,
+      this.parameters.batteryEpcCosts,
+      this.parameters.batteryLandProcurementCosts
     );
     const indirectCostBreakdown = {
       "Electrolyser EPC": electrolyserEpcCost,
@@ -270,19 +285,20 @@ export class HydrogenModel implements Model {
     };
 
     const totalCapexCost =
-        electrolyserCAPEX +
-        powerPlantCAPEX +
-        batteryCAPEX +
-        this.parameters.additionalUpfrontCosts +
-        gridConnectionCAPEX; // Cost values for sales calculation
-    const totalEpcCost = electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+      electrolyserCAPEX +
+      powerPlantCAPEX +
+      batteryCAPEX +
+      this.parameters.additionalUpfrontCosts +
+      gridConnectionCAPEX; // Cost values for sales calculation
+    const totalEpcCost =
+      electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
     const totalLandCost =
-        electrolyserLandCost + powerPlantLandCost + batteryLandCost;
+      electrolyserLandCost + powerPlantLandCost + batteryLandCost;
     const totalIndirectCosts =
-        electrolyserEpcCost +
-        electrolyserLandCost +
-        powerPlantEpcCost +
-        powerPlantLandCost;
+      electrolyserEpcCost +
+      electrolyserLandCost +
+      powerPlantEpcCost +
+      powerPlantLandCost;
 
     const capitalCostBreakdown = {
       "Electrolyser System": electrolyserCAPEX,
@@ -294,7 +310,7 @@ export class HydrogenModel implements Model {
     };
 
     const totalOperatingHours: number[] = totalOperatingTime.map(
-        (hours) => hours * HOURS_PER_YEAR
+      (hours) => hours * HOURS_PER_YEAR
     );
     const {
       electricityOpexCost,
@@ -307,37 +323,36 @@ export class HydrogenModel implements Model {
       gridConnectionOpexPerYear,
       totalOpex,
     } = getOpex(
-        this.parameters.powerPlantConfiguration,
-        this.parameters.powerSupplyOption,
-        this.parameters.stackReplacementType,
-        this.parameters.stackDegradation,
-        this.parameters.maximumDegradationBeforeReplacement,
-        this.parameters.projectTimeline,
-        totalOperatingHours,
-        this.parameters.stackLifetime,
-        this.parameters.electrolyserStackReplacement,
-        electrolyserCAPEX,
-        this.parameters.electrolyserOMCost,
-        powerPlantType,
-        this.solarOpex,
-        solarNominalCapacity,
-        this.windOpex,
-        windNominalCapacity,
-        this.batteryOMCost,
-        this.batteryRatedPower,
-        this.batteryReplacementCost,
-        batteryCAPEX,
-        this.batteryLifetime,
-        this.additionalTransmissionCharges,
-        electricityConsumed,
-        electricityConsumedByBattery,
-        this.principalPPACost,
-        this.parameters.waterSupplyCost,
-        this.parameters.waterRequirementOfElectrolyser,
-        hydrogenProduction,
-        this.parameters.additionalAnnualCosts
+      this.parameters.powerPlantConfiguration,
+      this.parameters.powerSupplyOption,
+      this.parameters.stackReplacementType,
+      this.parameters.stackDegradation,
+      this.parameters.maximumDegradationBeforeReplacement,
+      this.parameters.projectTimeline,
+      totalOperatingHours,
+      this.parameters.stackLifetime,
+      this.parameters.electrolyserStackReplacement,
+      electrolyserCAPEX,
+      this.parameters.electrolyserOMCost,
+      powerPlantType,
+      this.solarOpex,
+      solarNominalCapacity,
+      this.windOpex,
+      windNominalCapacity,
+      this.batteryOMCost,
+      this.batteryRatedPower,
+      this.batteryReplacementCost,
+      batteryCAPEX,
+      this.batteryLifetime,
+      this.additionalTransmissionCharges,
+      electricityConsumed,
+      electricityConsumedByBattery,
+      this.principalPPACost,
+      this.parameters.waterSupplyCost,
+      this.parameters.waterRequirementOfElectrolyser,
+      hydrogenProduction,
+      this.parameters.additionalAnnualCosts
     );
-
 
     const {
       electrolyserOpexPerYear,
@@ -347,17 +362,17 @@ export class HydrogenModel implements Model {
       electricityPurchaseOpexPerYear,
       additionalOpexPerYear,
     } = calculatePerYearOpex(
-        electrolyserOpexCost,
-        this.parameters.inflationRate,
-        this.parameters.projectTimeline,
-        stackReplacementCostsOverProjectLife,
-        electricityOpexCost,
-        powerPlantOpexCost,
-        this.parameters.additionalAnnualCosts,
-        this.batteryRatedPower,
-        batteryOpexCost,
-        batteryReplacementCostsOverProjectLife,
-        waterOpexCost
+      electrolyserOpexCost,
+      this.parameters.inflationRate,
+      this.parameters.projectTimeline,
+      stackReplacementCostsOverProjectLife,
+      electricityOpexCost,
+      powerPlantOpexCost,
+      this.parameters.additionalAnnualCosts,
+      this.batteryRatedPower,
+      batteryOpexCost,
+      batteryReplacementCostsOverProjectLife,
+      waterOpexCost
     );
     const operatingCosts: {
       projectTimeline: number;
@@ -374,14 +389,14 @@ export class HydrogenModel implements Model {
       },
     };
 
-    const {lch2, hydrogenProductionCost} = sales(
-        totalCapexCost,
-        totalEpcCost,
-        totalLandCost,
-        this.parameters.projectTimeline,
-        this.discountRate,
-        totalOpex,
-        hydrogenProduction
+    const { lch2, hydrogenProductionCost } = sales(
+      totalCapexCost,
+      totalEpcCost,
+      totalLandCost,
+      this.parameters.projectTimeline,
+      this.discountRate,
+      totalOpex,
+      hydrogenProduction
     );
 
     // LCH2 calculations
@@ -398,28 +413,28 @@ export class HydrogenModel implements Model {
       lcGridConnection,
       lcAdditionalCosts,
     } = generateLCBreakdown(
-        this.parameters.powerPlantConfiguration,
-        this.parameters.powerSupplyOption,
-        powerPlantCAPEX,
-        hydrogenProductionCost,
-        electrolyserCAPEX,
-        totalIndirectCosts,
-        this.parameters.projectTimeline,
-        powerPlantOpexCost,
-        electrolyserOpexCost,
-        this.parameters.additionalAnnualCosts,
-        this.discountRate,
-        batteryOpexCost,
-        batteryReplacementCostsOverProjectLife,
-        batteryCAPEX,
-        waterOpexCost,
-        this.parameters.additionalUpfrontCosts,
-        stackReplacementCostsOverProjectLife,
-        electricityConsumed,
-        electricityConsumedByBattery,
-        this.principalPPACost,
-        gridConnectionOpexPerYear,
-        gridConnectionCAPEX
+      this.parameters.powerPlantConfiguration,
+      this.parameters.powerSupplyOption,
+      powerPlantCAPEX,
+      hydrogenProductionCost,
+      electrolyserCAPEX,
+      totalIndirectCosts,
+      this.parameters.projectTimeline,
+      powerPlantOpexCost,
+      electrolyserOpexCost,
+      this.parameters.additionalAnnualCosts,
+      this.discountRate,
+      batteryOpexCost,
+      batteryReplacementCostsOverProjectLife,
+      batteryCAPEX,
+      waterOpexCost,
+      this.parameters.additionalUpfrontCosts,
+      stackReplacementCostsOverProjectLife,
+      electricityConsumed,
+      electricityConsumedByBattery,
+      this.principalPPACost,
+      gridConnectionOpexPerYear,
+      gridConnectionCAPEX
     );
 
     const lch2BreakdownData: { [key: string]: number } = {
@@ -438,26 +453,25 @@ export class HydrogenModel implements Model {
 
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
-          mean(powerPlantCapacityFactors.map((x) => x * 100))
+        mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)": roundToTwoDP(
-          mean(ratedCapacityTime.map((x) => x * 100))
-      ),
+      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)":
+        roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
       "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
-          mean(totalOperatingTime.map((x) => x * 100))
+        mean(totalOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
-          mean(electrolyserCapacityFactors.map((x) => x * 100))
+        mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
-          mean(electricityConsumed)
+        mean(electricityConsumed)
       ),
 
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
-          roundToNearestInteger(mean(electricityProduced)),
+        roundToNearestInteger(mean(electricityProduced)),
 
       "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
       "LCH2 ($/kg)": roundToTwoDP(lch2),
@@ -472,8 +486,8 @@ export class HydrogenModel implements Model {
       capitalCostBreakdown,
       operatingCosts,
       lch2BreakdownData,
-      summaryTableData
-    }
+      summaryTableData,
+    };
   }
 
   calculateHydrogenModel(projectTimeline: number) {
@@ -485,41 +499,40 @@ export class HydrogenModel implements Model {
     } = this.parameters;
 
     if (inputConfiguration === "Basic") {
-
-      const hourlyOperations = this.calculatePowerplantAndElectrolyserHourlyOperation(
+      const hourlyOperations =
+        this.calculatePowerplantAndElectrolyserHourlyOperation(
           this.parameters.solarToWindPercentage / 100,
           1 - this.parameters.solarToWindPercentage / 100,
           this.parameters.powerPlantOversizeRatio,
           // default for the first calculation
           1,
           1
-      );
+        );
 
       const hydrogenProduction = calculateHydrogenProduction(
-          hourlyOperations.electrolyserCapacityFactors,
-          this.hydOutput,
-          0,
-          this.specCons,
+        hourlyOperations.electrolyserCapacityFactors,
+        this.hydOutput,
+        0,
+        this.specCons
       );
 
       const hourlyOperationsInYearOne: ModelHourlyOperation = {
         powerplantCapacityFactors: hourlyOperations.powerplantCapacityFactors,
-        electrolyserCapacityFactors: hourlyOperations.electrolyserCapacityFactors,
+        electrolyserCapacityFactors:
+          hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
-        netBatteryFlow: hourlyOperations.netBatteryFlow
+        netBatteryFlow: hourlyOperations.netBatteryFlow,
       };
 
       const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
-          this.parameters.projectScale,
-          this.elecEff,
-          mean(hourlyOperations.electrolyserCapacityFactors),
-          this.hoursPerYear
+        this.parameters.projectScale,
+        this.elecEff,
+        mean(hourlyOperations.electrolyserCapacityFactors),
+        this.hoursPerYear
       );
 
-      const {
-        powerPlantOversizeRatio = 1,
-        solarToWindPercentage = 100,
-      } = this.parameters;
+      const { powerPlantOversizeRatio = 1, solarToWindPercentage = 100 } =
+        this.parameters;
       // back calcualte power plant type from the percentages.
       // Default to hybrid
       let powerPlantType: PowerPlantType = "Hybrid";
@@ -531,24 +544,25 @@ export class HydrogenModel implements Model {
         powerPlantType = "Wind";
       }
       const result = backCalculateSolarnAndWindNominalCapacities(
-          powerPlantOversizeRatio,
-          solarToWindPercentage,
-          electrolyserNominalCapacity
+        powerPlantOversizeRatio,
+        solarToWindPercentage,
+        electrolyserNominalCapacity
       );
 
-      const powerPlantNominalCapacity = result.solarNominalCapacity + result.windNominalCapacity;
+      const powerPlantNominalCapacity =
+        result.solarNominalCapacity + result.windNominalCapacity;
 
       const operatingOutputs = calculateSummary(
-          hourlyOperations.powerplantCapacityFactors,
-          hourlyOperations.electrolyserCapacityFactors,
-          hydrogenProduction,
-          hourlyOperations.netBatteryFlow,
-          electrolyserNominalCapacity,
-          powerPlantNominalCapacity,
-          this.kgToTonne,
-          this.hoursPerYear,
-          this.elecMaxLoad,
-          this.batteryEfficiency
+        hourlyOperations.powerplantCapacityFactors,
+        hourlyOperations.electrolyserCapacityFactors,
+        hydrogenProduction,
+        hourlyOperations.netBatteryFlow,
+        electrolyserNominalCapacity,
+        powerPlantNominalCapacity,
+        this.kgToTonne,
+        this.hoursPerYear,
+        this.elecMaxLoad,
+        this.batteryEfficiency
       );
 
       let projectSummary: ProjectModelSummary = {
@@ -563,7 +577,9 @@ export class HydrogenModel implements Model {
       };
 
       Object.keys(operatingOutputs).forEach((key) => {
-        projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
+        projectSummary[key as keyof ProjectModelSummary] = Array(
+          projectTimeline
+        ).fill(operatingOutputs[key]);
       });
 
       return {
@@ -572,66 +588,76 @@ export class HydrogenModel implements Model {
         windNominalCapacity: result.windNominalCapacity,
         electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
-        ...projectSummary
+        ...projectSummary,
       };
-
     } else if (inputConfiguration === "Advanced") {
       let windNominalCapacity: number;
       let solarNominalCapacity: number;
 
-      if (
-          this.parameters.powerCapacityConfiguration === "Oversize Ratio"
-      ) {
+      if (this.parameters.powerCapacityConfiguration === "Oversize Ratio") {
         // Generate solar and wind nominal capacitues from oversize ratios
-        let {calculatedSolarNominalCapacity, calculatedWindNominalCapacity} = backCalculateSolarAndWindCapacities(
+        let { calculatedSolarNominalCapacity, calculatedWindNominalCapacity } =
+          backCalculateSolarAndWindCapacities(
             this.parameters.powerPlantOversizeRatio,
             this.parameters.electrolyserNominalCapacity,
             this.parameters.powerPlantType,
             this.parameters.solarToWindPercentage
-        );
+          );
         solarNominalCapacity = calculatedSolarNominalCapacity;
         windNominalCapacity = calculatedWindNominalCapacity;
-      } else if (this.parameters.powerCapacityConfiguration === "Nominal Capacity") {
+      } else if (
+        this.parameters.powerCapacityConfiguration === "Nominal Capacity"
+      ) {
         solarNominalCapacity = this.parameters.solarNominalCapacity;
         windNominalCapacity = this.parameters.windNominalCapacity;
       } else {
-        throw new Error("Unknown powerCapacityConfiguration: " + this.parameters.powerCapacityConfiguration)
+        throw new Error(
+          "Unknown powerCapacityConfiguration: " +
+            this.parameters.powerCapacityConfiguration
+        );
       }
 
-      const powerPlantNominalCapacity = solarNominalCapacity + windNominalCapacity;
-      const powerPlantOversizeRatio = (solarNominalCapacity + windNominalCapacity) /
-          this.parameters.electrolyserNominalCapacity
+      const powerPlantNominalCapacity =
+        solarNominalCapacity + windNominalCapacity;
+      const powerPlantOversizeRatio =
+        (solarNominalCapacity + windNominalCapacity) /
+        this.parameters.electrolyserNominalCapacity;
 
-      const noDegradation = stackDegradation + solarDegradation + windDegradation === 0;
+      const noDegradation =
+        stackDegradation + solarDegradation + windDegradation === 0;
       if (noDegradation) {
         const year = 1;
-        const hourlyOperation = this.calculatePowerplantAndElectrolyserHourlyOperation(
+        const hourlyOperation =
+          this.calculatePowerplantAndElectrolyserHourlyOperation(
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
             powerPlantOversizeRatio,
             this.parameters.electrolyserNominalCapacity,
             year
-        );
+          );
 
         const hydrogenProduction = calculateHydrogenProduction(
-            hourlyOperation.electrolyserCapacityFactors,
-            this.hydOutput,
-            0,
-            this.specCons,
+          hourlyOperation.electrolyserCapacityFactors,
+          this.hydOutput,
+          0,
+          this.specCons
         );
 
-        const hourlyOperationsInYearOne: ModelHourlyOperation = {...hourlyOperation, hydrogenProduction};
+        const hourlyOperationsInYearOne: ModelHourlyOperation = {
+          ...hourlyOperation,
+          hydrogenProduction,
+        };
         const operatingOutputs = calculateSummary(
-            hourlyOperation.powerplantCapacityFactors,
-            hourlyOperation.electrolyserCapacityFactors,
-            hydrogenProduction,
-            hourlyOperation.netBatteryFlow,
-            this.parameters.electrolyserNominalCapacity,
-            powerPlantNominalCapacity,
-            this.kgToTonne,
-            this.hoursPerYear,
-            this.elecMaxLoad,
-            this.batteryEfficiency
+          hourlyOperation.powerplantCapacityFactors,
+          hourlyOperation.electrolyserCapacityFactors,
+          hydrogenProduction,
+          hourlyOperation.netBatteryFlow,
+          this.parameters.electrolyserNominalCapacity,
+          powerPlantNominalCapacity,
+          this.kgToTonne,
+          this.hoursPerYear,
+          this.elecMaxLoad,
+          this.batteryEfficiency
         );
 
         let projectSummary: ProjectModelSummary = {
@@ -645,64 +671,85 @@ export class HydrogenModel implements Model {
           electrolyserCapacityFactors: [],
         };
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof ProjectModelSummary] = Array(projectTimeline).fill(operatingOutputs[key]);
+          projectSummary[key as keyof ProjectModelSummary] = Array(
+            projectTimeline
+          ).fill(operatingOutputs[key]);
         });
         return {
           powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
           windNominalCapacity: windNominalCapacity,
-          electrolyserNominalCapacity: this.parameters.electrolyserNominalCapacity,
+          electrolyserNominalCapacity:
+            this.parameters.electrolyserNominalCapacity,
           hourlyOperations: hourlyOperationsInYearOne,
-          ...projectSummary
+          ...projectSummary,
         };
       }
 
       // Advanced model with degradation
       let degradationCalculator: MaxDegradation | CumulativeDegradation;
-      if (this.parameters.stackReplacementType === "Maximum Degradation Level") {
-        degradationCalculator = new MaxDegradation(this.parameters.stackDegradation, this.parameters.maximumDegradationBeforeReplacement, projectTimeline)
+      if (
+        this.parameters.stackReplacementType === "Maximum Degradation Level"
+      ) {
+        degradationCalculator = new MaxDegradation(
+          this.parameters.stackDegradation,
+          this.parameters.maximumDegradationBeforeReplacement,
+          projectTimeline
+        );
       } else {
-        degradationCalculator = new CumulativeDegradation(this.parameters.stackDegradation, this.parameters.stackLifetime)
-      }
-
-      const calculateElectrolyserOutput = (hourlyOperation: ModelHourlyOperation) => {
-        return calculateSummary(
-            hourlyOperation.powerplantCapacityFactors,
-            hourlyOperation.electrolyserCapacityFactors,
-            hourlyOperation.hydrogenProduction,
-            hourlyOperation.netBatteryFlow,
-            this.parameters.electrolyserNominalCapacity,
-            powerPlantNominalCapacity,
-            this.kgToTonne,
-            this.hoursPerYear,
-            this.elecMaxLoad,
-            this.batteryEfficiency
+        degradationCalculator = new CumulativeDegradation(
+          this.parameters.stackDegradation,
+          this.parameters.stackLifetime
         );
       }
 
-      const capFactorsByYear = projectYears(projectTimeline).map((year: number) => {
-        const hourlyOperation =
+      const calculateElectrolyserOutput = (
+        hourlyOperation: ModelHourlyOperation
+      ) => {
+        return calculateSummary(
+          hourlyOperation.powerplantCapacityFactors,
+          hourlyOperation.electrolyserCapacityFactors,
+          hourlyOperation.hydrogenProduction,
+          hourlyOperation.netBatteryFlow,
+          this.parameters.electrolyserNominalCapacity,
+          powerPlantNominalCapacity,
+          this.kgToTonne,
+          this.hoursPerYear,
+          this.elecMaxLoad,
+          this.batteryEfficiency
+        );
+      };
+
+      const capFactorsByYear = projectYears(projectTimeline).map(
+        (year: number) => {
+          const hourlyOperation =
             this.calculatePowerplantAndElectrolyserHourlyOperation(
-                solarNominalCapacity / powerPlantNominalCapacity,
-                windNominalCapacity / powerPlantNominalCapacity,
-                powerPlantOversizeRatio,
-                this.parameters.electrolyserNominalCapacity,
-                year
+              solarNominalCapacity / powerPlantNominalCapacity,
+              windNominalCapacity / powerPlantNominalCapacity,
+              powerPlantOversizeRatio,
+              this.parameters.electrolyserNominalCapacity,
+              year
             );
-        const yearlyDegradationRate = degradationCalculator.getStackDegradation(year, hourlyOperation.electrolyserCapacityFactors)
-        const hydrogenProduction = calculateHydrogenProduction(
+          const yearlyDegradationRate =
+            degradationCalculator.getStackDegradation(
+              year,
+              hourlyOperation.electrolyserCapacityFactors
+            );
+          const hydrogenProduction = calculateHydrogenProduction(
             hourlyOperation.electrolyserCapacityFactors,
             this.hydOutput,
             yearlyDegradationRate,
-            this.specCons,
-        );
-        return {...hourlyOperation, hydrogenProduction}
-      })
+            this.specCons
+          );
+          return { ...hourlyOperation, hydrogenProduction };
+        }
+      );
 
-      const hourlyOperationsInYearOne: ModelHourlyOperation = capFactorsByYear[0];
+      const hourlyOperationsInYearOne: ModelHourlyOperation =
+        capFactorsByYear[0];
 
-      const modelSummaryPerYear = capFactorsByYear.map(value => {
-        return calculateElectrolyserOutput(value)
+      const modelSummaryPerYear = capFactorsByYear.map((value) => {
+        return calculateElectrolyserOutput(value);
       });
 
       let projectSummary: ProjectModelSummary = {
@@ -718,7 +765,9 @@ export class HydrogenModel implements Model {
 
       modelSummaryPerYear.forEach((yearSummary) => {
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof ProjectModelSummary].push(yearSummary[key]);
+          projectSummary[key as keyof ProjectModelSummary].push(
+            yearSummary[key]
+          );
         });
       });
 
@@ -726,53 +775,99 @@ export class HydrogenModel implements Model {
         powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
-        electrolyserNominalCapacity: this.parameters.electrolyserNominalCapacity,
+        electrolyserNominalCapacity:
+          this.parameters.electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
-        ...projectSummary
+        ...projectSummary,
       };
     } else {
-      throw new Error("Unknown inputConfiguration: " + inputConfiguration)
+      throw new Error("Unknown inputConfiguration: " + inputConfiguration);
     }
   }
 
-
   private calculatePowerplantAndElectrolyserHourlyOperation(
-      solarRatio: number,
-      windRatio: number,
-      oversizeRatio: number,
-      electrolyserNominalCapacity: number,
-      year: number
+    solarRatio: number,
+    windRatio: number,
+    oversizeRatio: number,
+    electrolyserNominalCapacity: number,
+    year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
-        this.solarData,
-        this.windData,
-        solarRatio,
-        windRatio,
-        this.parameters.location,
-        this.parameters.solarDegradation,
-        this.parameters.windDegradation,
-        year
+      this.solarData,
+      this.windData,
+      solarRatio,
+      windRatio,
+      this.parameters.location,
+      this.parameters.solarDegradation,
+      this.parameters.windDegradation,
+      year
     );
-    const {electrolyserCapacityFactors, netBatteryFlow} = calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+
+    // normal electrolyser calculation
+    let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
+      oversizeRatio,
+      this.elecMaxLoad,
+      this.elecMinLoad,
+      powerplantCapacityFactors
+    );
+
+    // overload calculation
+    if (
+      this.elecOverload > this.elecMaxLoad &&
+      this.parameters.timeBetweenOverloading > 0
+    ) {
+      electrolyserCapacityFactors = calculateOverloadingModel(
+        oversizeRatio,
+        this.elecMaxLoad,
+        this.parameters.timeBetweenOverloading,
+        this.elecOverload,
         powerplantCapacityFactors,
-        this.hoursPerYear,
+        electrolyserCapacityFactors
+      );
+    }
+
+    let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
+    // // battery model calc
+    if (this.batteryEnergy > 0) {
+      const hours = [1, 2, 4, 8];
+      if (!hours.includes(this.batteryStorageDuration)) {
+        throw new Error(
+          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryStorageDuration}`
+        );
+      }
+      const excessGeneration = getExcessGeneration(
+        powerplantCapacityFactors,
+        oversizeRatio,
+        electrolyserCapacityFactors,
+        electrolyserNominalCapacity
+      );
+      const batteryLosses = getBatteryLosses(this.batteryEfficiency);
+      netBatteryFlow = calculateNetBatteryFlow(
         oversizeRatio,
         electrolyserNominalCapacity,
-        this.elecMaxLoad,
+        excessGeneration,
+        electrolyserCapacityFactors,
         this.elecMinLoad,
-        this.elecOverload,
-        this.parameters.timeBetweenOverloading,
-        this.batteryEnergy,
-        this.batteryStorageDuration,
-        this.batteryEfficiency,
+        this.elecMaxLoad,
         this.batteryRatedPower,
+        this.batteryEnergy,
         this.battMin,
-    );
+        batteryLosses
+      );
+      // recalculate electrolyser capacity factors using battery model
+      electrolyserCapacityFactors = getElectrolyserCapacityFactorsWithBattery(
+        netBatteryFlow,
+        electrolyserCapacityFactors,
+        batteryLosses,
+        excessGeneration,
+        electrolyserNominalCapacity
+      );
+    }
 
     return {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
-      netBatteryFlow
+      netBatteryFlow,
     };
   }
 }

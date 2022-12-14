@@ -311,7 +311,7 @@ export function backCalculateSolarAndWindCapacities(
   return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
 }
 
-function getExcessGeneration(
+export function getExcessGeneration(
   powerplantCapacityFactors: number[],
   oversizeRatio: number,
   electrolyserCapacityFactors: number[],
@@ -325,7 +325,7 @@ function getExcessGeneration(
   );
 }
 
-function getElectrolyserCapacityFactorsWithBattery(
+export function getElectrolyserCapacityFactorsWithBattery(
   netBatteryFlow: number[],
   electrolyserCapacityFactors: number[],
   batteryLosses: number,
@@ -345,7 +345,7 @@ function getElectrolyserCapacityFactorsWithBattery(
   });
 }
 
-function getBatteryLosses(batteryEfficiency: number) {
+export function getBatteryLosses(batteryEfficiency: number) {
   return 1 - (1 - batteryEfficiency) / 2;
 }
 
