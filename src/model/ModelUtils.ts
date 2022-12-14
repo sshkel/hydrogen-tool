@@ -2,11 +2,7 @@ import { backCalculatePowerPlantCapacity } from "../components/charts/basic-calc
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import { PowerPlantType, StackReplacementType } from "../types";
 import { mean, sum } from "../utils";
-import {
-  CsvRow,
-  ModelHourlyOperation,
-  ModelSummaryPerYear,
-} from "./ModelTypes";
+import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
 
 // returns powerplantCapacityFactors series
 export function calculatePowerPlantCapacityFactors(
