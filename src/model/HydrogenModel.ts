@@ -832,7 +832,7 @@ export class HydrogenModel implements Model {
       const hours = [1, 2, 4, 8];
       if (!hours.includes(this.batteryStorageDuration)) {
         throw new Error(
-          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryStorageDuration}`
+          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${this.batteryStorageDuration}`
         );
       }
       const excessGeneration = getExcessGeneration(
