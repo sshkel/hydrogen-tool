@@ -1,8 +1,12 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
+import GLOBH2E_LOGO from "../../assets/globh2e-logo.png";
+import NSW_GOV_LOGO from "../../assets/nsw-gov-logo.png";
+import NSW_OCSE_LOGO from "../../assets/nsw-ocse-logo.png";
 import { NAVY, OFF_WHITE, WHITE } from "../colors";
-import { OFFICE_OF_CHIEF_SCIENTIST } from "../logos";
+
+const LOGO_HEIGHT = 120;
 
 export default function ContactPage() {
   return (
@@ -13,6 +17,7 @@ export default function ContactPage() {
         alignItems="stretch"
         sx={{ backgroundColor: OFF_WHITE }}
         padding={12}
+        rowSpacing={4}
       >
         <Grid item xs={12}>
           <Typography
@@ -25,14 +30,25 @@ export default function ContactPage() {
           </Typography>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={4} display="flex" justifyContent="center">
           <img
-            alt="Office of NSW Chief Scientist logo"
-            src={OFFICE_OF_CHIEF_SCIENTIST}
+            alt="NSW Office of the Chief Scientist and Engineer logo"
+            src={NSW_OCSE_LOGO}
+            height={LOGO_HEIGHT}
           />
         </Grid>
+        <Grid item xs={4} display="flex" justifyContent="center">
+          <img
+            alt="NSW Government logo"
+            src={NSW_GOV_LOGO}
+            height={LOGO_HEIGHT}
+          />
+        </Grid>
+        <Grid item xs={4} display="flex" justifyContent="center">
+          <img alt="GlobH2E logo" src={GLOBH2E_LOGO} height={LOGO_HEIGHT} />
+        </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} paddingLeft={4}>
           <Typography fontSize={18} fontStyle="Nunito">
             NSW Powerfuels including Hydrogen Network
             <br />
