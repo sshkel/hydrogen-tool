@@ -33,7 +33,6 @@ import {
   MaxDegradation,
   backCalculateSolarAndWindCapacities,
   calculateElectrolyserCapacityFactors,
-  calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
   calculateOverloadingModel,

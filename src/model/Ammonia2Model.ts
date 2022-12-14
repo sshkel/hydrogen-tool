@@ -31,10 +31,15 @@ import {
 import {
   CumulativeDegradation,
   MaxDegradation,
-  calculateElectrolyserCapacityFactorsAndBatteryNetFlow,
+  calculateElectrolyserCapacityFactors,
   calculateHydrogenProduction,
+  calculateNetBatteryFlow,
+  calculateOverloadingModel,
   calculatePowerPlantCapacityFactors,
   calculateSummary,
+  getBatteryLosses,
+  getElectrolyserCapacityFactorsWithBattery,
+  getExcessGeneration,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -935,22 +940,68 @@ export class AmmoniaModel implements Model {
       this.parameters.windDegradation,
       year
     );
-    const { electrolyserCapacityFactors, netBatteryFlow } =
-      calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+
+    // normal electrolyser calculation
+    let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
+      oversizeRatio,
+      this.elecMaxLoad,
+      this.elecMinLoad,
+      powerplantCapacityFactors
+    );
+
+    // overload calculation
+    if (
+      this.elecOverload > this.elecMaxLoad &&
+      this.parameters.timeBetweenOverloading > 0
+    ) {
+      electrolyserCapacityFactors = calculateOverloadingModel(
+        oversizeRatio,
+        this.elecMaxLoad,
+        this.parameters.timeBetweenOverloading,
+        this.elecOverload,
         powerplantCapacityFactors,
-        this.hoursPerYear,
+        electrolyserCapacityFactors
+      );
+    }
+
+    let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
+    // // battery model calc
+    if (this.batteryEnergy > 0) {
+      const hours = [1, 2, 4, 8];
+      if (!hours.includes(this.batteryStorageDuration)) {
+        throw new Error(
+          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${this.batteryStorageDuration}`
+        );
+      }
+      const excessGeneration = getExcessGeneration(
+        powerplantCapacityFactors,
+        oversizeRatio,
+        electrolyserCapacityFactors,
+        electrolyserNominalCapacity
+      );
+      const batteryLosses = getBatteryLosses(this.batteryEfficiency);
+      netBatteryFlow = calculateNetBatteryFlow(
         oversizeRatio,
         electrolyserNominalCapacity,
-        this.elecMaxLoad,
+        excessGeneration,
+        electrolyserCapacityFactors,
         this.elecMinLoad,
-        this.elecOverload,
-        this.parameters.timeBetweenOverloading,
-        this.batteryEnergy,
-        this.batteryStorageDuration,
-        this.batteryEfficiency,
+        this.elecMaxLoad,
         this.batteryRatedPower,
-        this.battMin
+        this.batteryEnergy,
+        this.battMin,
+        batteryLosses
       );
+      // recalculate electrolyser capacity factors using battery model
+      electrolyserCapacityFactors = getElectrolyserCapacityFactorsWithBattery(
+        netBatteryFlow,
+        electrolyserCapacityFactors,
+        batteryLosses,
+        excessGeneration,
+        electrolyserNominalCapacity
+      );
+    }
+
     return {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
