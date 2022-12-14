@@ -325,6 +325,30 @@ function getExcessGeneration(
   );
 }
 
+function getElectrolyserCapacityFactorsWithBattery(
+  netBatteryFlow: number[],
+  electrolyserCapacityFactors: number[],
+  batteryLosses: number,
+  excessGeneration: number[],
+  electrolyserNominalCapacity: number
+) {
+  return netBatteryFlow.map((_: number, i: number) => {
+    if (netBatteryFlow[i] < 0) {
+      return (
+        electrolyserCapacityFactors[i] +
+        (-1 * netBatteryFlow[i] * batteryLosses + excessGeneration[i]) /
+          electrolyserNominalCapacity
+      );
+    } else {
+      return electrolyserCapacityFactors[i];
+    }
+  });
+}
+
+function getBatteryLosses(batteryEfficiency: number) {
+  return 1 - (1 - batteryEfficiency) / 2;
+}
+
 export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
   powerplantCapacityFactors: number[],
   hoursPerYear: number,
@@ -376,7 +400,7 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
       electrolyserCapacityFactors,
       electrolyserNominalCapacity
     );
-    const batteryLosses = 1 - (1 - batteryEfficiency) / 2;
+    const batteryLosses = getBatteryLosses(batteryEfficiency);
     netBatteryFlow = calculateNetBatteryFlow(
       oversizeRatio,
       electrolyserNominalCapacity,
@@ -390,17 +414,13 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
       batteryLosses
     );
     // recalculate electrolyser capacity factors using battery model
-    electrolyserCapacityFactors = netBatteryFlow.map((_: number, i: number) => {
-      if (netBatteryFlow[i] < 0) {
-        return (
-          electrolyserCapacityFactors[i] +
-          (-1 * netBatteryFlow[i] * batteryLosses + excessGeneration[i]) /
-            electrolyserNominalCapacity
-        );
-      } else {
-        return electrolyserCapacityFactors[i];
-      }
-    });
+    electrolyserCapacityFactors = getElectrolyserCapacityFactorsWithBattery(
+      netBatteryFlow,
+      electrolyserCapacityFactors,
+      batteryLosses,
+      excessGeneration,
+      electrolyserNominalCapacity
+    );
   }
 
   return {
