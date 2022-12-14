@@ -1,18 +1,22 @@
-import {mean, sum} from "../utils";
-import {CsvRow, ModelHourlyOperation, ModelSummaryPerYear} from "./ModelTypes";
-import {maxDegradationStackReplacementYears} from "../components/charts/opex-calculations";
-import {PowerPlantType, StackReplacementType} from "../types";
-import {backCalculatePowerPlantCapacity} from "../components/charts/basic-calculations";
+import { backCalculatePowerPlantCapacity } from "../components/charts/basic-calculations";
+import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
+import { PowerPlantType, StackReplacementType } from "../types";
+import { mean, sum } from "../utils";
+import {
+  CsvRow,
+  ModelHourlyOperation,
+  ModelSummaryPerYear,
+} from "./ModelTypes";
 
 // returns powerplantCapacityFactors series
 export function calculatePowerPlantCapacityFactors(
-    solarData: CsvRow[],
-    windData: CsvRow[],
-    solarRatio: number,
-    windRatio: number,
-    location: string,
-    solarDegradation: number = 0,
-    windDegradation: number = 0,
+  solarData: CsvRow[],
+  windData: CsvRow[],
+  solarRatio: number,
+  windRatio: number,
+  location: string,
+  solarDegradation: number = 0,
+  windDegradation: number = 0,
   year: number = 1
 ): number[] {
   // padd with zeros for zones where there is no solar data available
@@ -48,6 +52,7 @@ export function calculatePowerPlantCapacityFactors(
     );
   }
 }
+
 // returns electrolyserCapacityFactors series
 export function calculateElectrolyserCapacityFactors(
   oversizeRatio: number,
@@ -68,26 +73,22 @@ export function calculateElectrolyserCapacityFactors(
 
   return powerPlantCapacityFactors.map(calculateElectrolyser);
 }
-export function calculateBatteryModel(
+
+export function calculateNetBatteryFlow(
   oversize: number,
   elecCapacity: number,
-  powerPlantCapacityFactors: number[],
+  excessGeneration: number[],
   electrolyserCapacityFactors: number[],
-  batteryEfficiency: number,
   electrolyserMinLoad: number,
   electrolyserMaxLoad: number,
   batteryPower: number,
   batteryEnergy: number,
-  battMin: number
-): { electrolyserCapacityFactors: number[]; netBatteryFlow: number[] } {
-  const size = powerPlantCapacityFactors.length;
-  const excessGeneration = powerPlantCapacityFactors.map(
-    (_: number, i: number) =>
-      (powerPlantCapacityFactors[i] * oversize - electrolyserCapacityFactors[i]) * elecCapacity
-  );
+  battMin: number,
+  battLosses: number
+): number[] {
+  const size = excessGeneration.length;
   const batteryNetCharge = Array(size).fill(0.0);
   const batterySoc = Array(size).fill(0.0);
-  const battLosses = 1 - (1 - batteryEfficiency) / 2;
   const elecMin = electrolyserMinLoad * elecCapacity;
   const elecMax = electrolyserMaxLoad * elecCapacity;
 
@@ -148,7 +149,7 @@ export function calculateBatteryModel(
     } else if (spill === 0 && elecJustOperating) {
       //  When the stored power is enough to power the electrolyser at max capacity
       batteryNetCharge[hour] =
-        -1 * Math.min(batteryPower, ((elecMax - elecCons)) / battLosses);
+        -1 * Math.min(batteryPower, (elecMax - elecCons) / battLosses);
     } else if (spill === 0) {
       batteryNetCharge[hour] = 0;
     } else {
@@ -158,23 +159,10 @@ export function calculateBatteryModel(
     batterySoc[hour] =
       batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
   }
-  const electrolyserCfBatt = batteryNetCharge.map((_: number, i: number) => {
-    if (batteryNetCharge[i] < 0) {
-      return (
-        electrolyserCapacityFactors[i] +
-        (-1 * batteryNetCharge[i] * battLosses + excessGeneration[i]) /
-          elecCapacity
-      );
-    } else {
-      return electrolyserCapacityFactors[i];
-    }
-  });
 
-  return {
-    electrolyserCapacityFactors: electrolyserCfBatt,
-    netBatteryFlow: batteryNetCharge,
-  };
+  return batteryNetCharge;
 }
+
 export function calculateHydrogenProduction(
   electrolyserCf: number[],
   hydOutput: number,
@@ -185,6 +173,7 @@ export function calculateHydrogenProduction(
     (x: number) => (x * hydOutput * (1 - yearlyDegradationRate)) / specCons
   );
 }
+
 export function calculateOverloadingModel(
   oversize: number,
   elecMaxLoad: number,
@@ -247,13 +236,15 @@ export function calculateSummary(
   // Achieved Electrolyser Capacity Factor
   const achievedElectrolyserCf = mean(electrolyserCapacityFactors);
   // Energy in to Electrolyser [MWh/yr]
-  const energyInElectrolyser = sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
+  const energyInElectrolyser =
+    sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
   // Surplus Energy [MWh/yr]
   const surplus =
     sum(powerPlantCapacityFactors) * powerPlantNominalCapacity -
     sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
   // Hydrogen Output [t/yr]
-  const hydrogenFixed = sum(hydrogenProduction) * electrolyserNominalCapacity * kgToTonne;
+  const hydrogenFixed =
+    sum(hydrogenProduction) * electrolyserNominalCapacity * kgToTonne;
   // Total Battery Output (MWh/yr)
   const totalBatteryOutput =
     sum(netBatteryFlow.filter((num) => num < 0)) *
@@ -261,42 +252,42 @@ export function calculateSummary(
     (1 - (1 - batteryEfficiency) / 2);
 
   return {
-    powerPlantCapacityFactors:generatorCapacityFactor,
+    powerPlantCapacityFactors: generatorCapacityFactor,
     ratedCapacityTime: timeElectrolyser,
     totalOperatingTime: totalOpsTime,
     electrolyserCapacityFactors: achievedElectrolyserCf,
     electricityConsumed: energyInElectrolyser,
-    electricityProduced:surplus,
+    electricityProduced: surplus,
     electricityConsumedByBattery: totalBatteryOutput,
-    hydrogenProduction: hydrogenFixed
+    hydrogenProduction: hydrogenFixed,
   };
 }
 
 export function initialiseStackReplacementYears(
-    stackReplacementType: StackReplacementType,
-    stackDegradation: number,
-    maximumDegradationBeforeReplacement: number | undefined,
-    projectTimeline: number
+  stackReplacementType: StackReplacementType,
+  stackDegradation: number,
+  maximumDegradationBeforeReplacement: number | undefined,
+  projectTimeline: number
 ): number[] {
   if (stackReplacementType === "Maximum Degradation Level") {
     return maxDegradationStackReplacementYears(
-        stackDegradation,
-        maximumDegradationBeforeReplacement || 0,
-        projectTimeline
+      stackDegradation,
+      maximumDegradationBeforeReplacement || 0,
+      projectTimeline
     );
   }
   return [];
 }
 
 export function backCalculateSolarAndWindCapacities(
-    powerPlantOversizeRatio: number,
-    electrolyserNominalCapacity: number,
-    powerPlantType: PowerPlantType,
-    solarToWindPercentage: number
+  powerPlantOversizeRatio: number,
+  electrolyserNominalCapacity: number,
+  powerPlantType: PowerPlantType,
+  solarToWindPercentage: number
 ) {
   const powerPlantNominalCapacity = backCalculatePowerPlantCapacity(
-      powerPlantOversizeRatio,
-      electrolyserNominalCapacity
+    powerPlantOversizeRatio,
+    electrolyserNominalCapacity
   );
   let calculatedSolarNominalCapacity = 0;
   let calculatedWindNominalCapacity = 0;
@@ -313,47 +304,45 @@ export function backCalculateSolarAndWindCapacities(
 
   if (powerPlantType === "Hybrid") {
     calculatedSolarNominalCapacity =
-        powerPlantNominalCapacity *
-        (solarToWindPercentage / 100);
+      powerPlantNominalCapacity * (solarToWindPercentage / 100);
     calculatedWindNominalCapacity =
-        powerPlantNominalCapacity *
-        (1 - solarToWindPercentage / 100);
+      powerPlantNominalCapacity * (1 - solarToWindPercentage / 100);
   }
-  return {calculatedSolarNominalCapacity, calculatedWindNominalCapacity};
+  return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
 }
-export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
-    powerplantCapacityFactors: number[],
-    hoursPerYear: number,
-    oversizeRatio: number,
-    elecCapacity: number,
-    elecMaxLoad: number,
-    elecMinLoad: number,
-    elecOverload: number,
-    elecOverloadRecharge: number,
-    batteryEnergy: number,
-    batteryHours: number,
-    batteryEfficiency: number,
-    batteryPower: number,
-    battMin: number,
-): ModelHourlyOperation {
 
+export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
+  powerplantCapacityFactors: number[],
+  hoursPerYear: number,
+  oversizeRatio: number,
+  elecCapacity: number,
+  elecMaxLoad: number,
+  elecMinLoad: number,
+  elecOverload: number,
+  elecOverloadRecharge: number,
+  batteryEnergy: number,
+  batteryHours: number,
+  batteryEfficiency: number,
+  batteryPower: number,
+  battMin: number
+): ModelHourlyOperation {
   // normal electrolyser calculation
   let electrolyserCapacityFactors = calculateElectrolyserCapacityFactors(
-      oversizeRatio,
-      elecMaxLoad,
-      elecMinLoad,
-      powerplantCapacityFactors
+    oversizeRatio,
+    elecMaxLoad,
+    elecMinLoad,
+    powerplantCapacityFactors
   );
 
   // overload calculation
   if (elecOverload > elecMaxLoad && elecOverloadRecharge > 0) {
     electrolyserCapacityFactors = calculateOverloadingModel(
-        oversizeRatio,
-        elecMaxLoad,
-        elecOverloadRecharge,
-        elecOverload,
-        powerplantCapacityFactors,
-        electrolyserCapacityFactors
+      oversizeRatio,
+      elecMaxLoad,
+      elecOverloadRecharge,
+      elecOverload,
+      powerplantCapacityFactors,
+      electrolyserCapacityFactors
     );
   }
 
@@ -363,31 +352,48 @@ export function calculateElectrolyserCapacityFactorsAndBatteryNetFlow(
     const hours = [1, 2, 4, 8];
     if (!hours.includes(batteryHours)) {
       throw new Error(
-          `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
+        `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${batteryHours}`
       );
     }
-    const batteryModel = calculateBatteryModel(
-        oversizeRatio,
-        elecCapacity,
-        powerplantCapacityFactors,
-        electrolyserCapacityFactors,
-        batteryEfficiency,
-        elecMinLoad,
-        elecMaxLoad,
-        batteryPower,
-        batteryEnergy,
-        battMin
+
+    const excessGeneration = powerplantCapacityFactors.map(
+      (_: number, i: number) =>
+        (powerplantCapacityFactors[i] * oversizeRatio -
+          electrolyserCapacityFactors[i]) *
+        elecCapacity
     );
-    electrolyserCapacityFactors = batteryModel.electrolyserCapacityFactors;
-    netBatteryFlow = batteryModel.netBatteryFlow;
+    const battLosses = 1 - (1 - batteryEfficiency) / 2;
+    netBatteryFlow = calculateNetBatteryFlow(
+      oversizeRatio,
+      elecCapacity,
+      excessGeneration,
+      electrolyserCapacityFactors,
+      elecMinLoad,
+      elecMaxLoad,
+      batteryPower,
+      batteryEnergy,
+      battMin,
+      battLosses
+    );
+    // recalculate electrolyser capacity factors using battery model
+    electrolyserCapacityFactors = netBatteryFlow.map((_: number, i: number) => {
+      if (netBatteryFlow[i] < 0) {
+        return (
+          electrolyserCapacityFactors[i] +
+          (-1 * netBatteryFlow[i] * battLosses + excessGeneration[i]) /
+            elecCapacity
+        );
+      } else {
+        return electrolyserCapacityFactors[i];
+      }
+    });
   }
 
   return {
     electrolyserCapacityFactors,
-    netBatteryFlow
+    netBatteryFlow,
   };
 }
-
 
 export class MaxDegradation {
   private replacementYears: number[];
@@ -395,19 +401,20 @@ export class MaxDegradation {
   private stackDegradation: number;
 
   constructor(
-      stackDegradation: number,
-      maximumDegradationBeforeReplacement: number,
-      projectTimeline: number
+    stackDegradation: number,
+    maximumDegradationBeforeReplacement: number,
+    projectTimeline: number
   ) {
     this.stackDegradation = stackDegradation;
     this.replacementYears = maxDegradationStackReplacementYears(
-        stackDegradation,
-        maximumDegradationBeforeReplacement,
-        projectTimeline
+      stackDegradation,
+      maximumDegradationBeforeReplacement,
+      projectTimeline
     );
     this.lastStackReplacementYear = 0;
   }
-// just want the same function interface for both degradations
+
+  // just want the same function interface for both degradations
   getStackDegradation(year: number, _: number[]) {
     const power = year - 1 - this.lastStackReplacementYear;
     if (this.replacementYears.includes(year)) {
@@ -417,27 +424,22 @@ export class MaxDegradation {
   }
 }
 
-
 export class CumulativeDegradation {
   private readonly stackDegradation: number;
   private readonly stackLifeTime: number;
   private lastStackReplacementYear: number;
   private currentStackOperatingHours: number;
 
-  constructor(
-      stackDegradation: number,
-      stackLifetime: number,
-  ) {
+  constructor(stackDegradation: number, stackLifetime: number) {
     this.stackDegradation = stackDegradation;
     this.stackLifeTime = stackLifetime;
     this.currentStackOperatingHours = 0;
     this.lastStackReplacementYear = 0;
-
   }
 
   getStackDegradation(year: number, electrolyserCf: number[]) {
     this.currentStackOperatingHours += electrolyserCf.filter(
-        (e) => e > 0
+      (e) => e > 0
     ).length;
     const power = year - 1 - this.lastStackReplacementYear;
     if (this.currentStackOperatingHours >= this.stackLifeTime) {
@@ -446,6 +448,4 @@ export class CumulativeDegradation {
     }
     return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
   }
-
 }
-
