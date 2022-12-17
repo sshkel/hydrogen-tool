@@ -103,6 +103,7 @@ class DefaultInputs implements Inputs {
   ammoniaStorageOMCost = 2;
   asuPlantOMCost = 2;
   hydrogenStoragePurchaseCost = 878;
+  hydrogenStorageOMCost = 2.5;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

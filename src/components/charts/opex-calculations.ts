@@ -148,6 +148,45 @@ export function getOpex(
   };
 }
 
+export function getAmmoniaOpex(
+  hydrogenStorageCapacity: number,
+  hydrogenStoragePurchaseCost: number,
+  hydrogenStorageOMCost: number,
+  ammoniaPlantCapacity: number,
+  ammoniaStorageCapacity: number,
+  airSeparationUnitCapacity: number,
+  ammoniaSynthesisUnitCost: number,
+  ammoniaStorageCost: number,
+  airSeparationUnitCost: number,
+  ammoniaPlantOMCost: number,
+  ammoniaStorageOMCost: number,
+  asuPlantOMCost: number
+) {
+  const ammoniaSynthesisUnitOM =
+    ammoniaPlantCapacity * ammoniaSynthesisUnitCost * ammoniaPlantOMCost * 1000;
+  const ammoniaStorageUnitOM =
+    (ammoniaPlantCapacity *
+      ammoniaStorageCapacity *
+      ammoniaStorageCost *
+      ammoniaStorageOMCost *
+      1000) /
+    365;
+  const airSynthetsisUnitOM =
+    airSeparationUnitCapacity * airSeparationUnitCost * 365 * asuPlantOMCost;
+
+  const h2StorageOpexCost = roundToNearestThousand(
+    hydrogenStorageCapacity *
+      hydrogenStoragePurchaseCost *
+      hydrogenStorageOMCost
+  );
+
+  return {
+    h2StorageOpexCost,
+    ammoniaOpexCost:
+      ammoniaSynthesisUnitOM + ammoniaStorageUnitOM + airSynthetsisUnitOM,
+  };
+}
+
 export function calculatePerYearOpex(
   electrolyserOpexCost: number,
   inflationRate: number,
@@ -207,6 +246,29 @@ export function calculatePerYearOpex(
     waterOpexPerYear,
     electricityPurchaseOpexPerYear,
     additionalOpexPerYear,
+  };
+}
+
+export function calculateAmmoniaPerYearOpex(
+  h2StorageOpexCost: number,
+  ammoniaOpexCost: number,
+  inflationRate: number,
+  projectTimeline: number
+) {
+  const h2StorageOpexPerYear = getOpexPerYearInflationConstant(
+    h2StorageOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+  const ammoniaOpexPerYear = getOpexPerYearInflationConstant(
+    ammoniaOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+
+  return {
+    h2StorageOpexPerYear,
+    ammoniaOpexPerYear,
   };
 }
 

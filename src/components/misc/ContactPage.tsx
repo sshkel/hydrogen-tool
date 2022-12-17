@@ -63,7 +63,7 @@ export default function ContactPage() {
           background:
             "radial-gradient(circle at center, rgba(88,115,166,255) 1%, rgba(0,34,78,255))",
         }}
-        padding={12}
+        padding={16}
       >
         <Typography
           align="center"

@@ -32,7 +32,6 @@ export default function HomePage() {
             alt="NSW Office of the Chief Scientist and Engineer logo"
             src={NSW_OCSE_LOGO}
             height={LOGO_HEIGHT}
-            // width="310px"
           />
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="center">
@@ -40,7 +39,6 @@ export default function HomePage() {
             alt="NSW Government logo"
             src={NSW_GOV_LOGO}
             height={LOGO_HEIGHT}
-            // width="91px"
           />
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="center">
@@ -48,7 +46,6 @@ export default function HomePage() {
             alt="GlobH2E logo"
             src={GLOBH2E_LOGO}
             height={LOGO_HEIGHT}
-            // width="310px"
           />
         </Grid>
         <Grid

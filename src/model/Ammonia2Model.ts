@@ -10,7 +10,9 @@ import {
 } from "../components/charts/cost-functions";
 import { generateLCBreakdown } from "../components/charts/lch2-calculations";
 import {
+  calculateAmmoniaPerYearOpex,
   calculatePerYearOpex,
+  getAmmoniaOpex,
   getOpex,
 } from "../components/charts/opex-calculations";
 import {
@@ -41,21 +43,21 @@ import { HOURS_PER_YEAR } from "./consts";
 
 export type AmmoniaData = {
   additionalAnnualCosts: number;
-  additionalTransmissionCharges: number | undefined;
+  additionalTransmissionCharges?: number;
   additionalUpfrontCosts: number;
-  batteryCosts: number | undefined;
+  batteryCosts?: number;
   batteryEfficiency: number;
-  batteryEpcCosts: number | undefined;
-  batteryLandProcurementCosts: number | undefined;
-  batteryLifetime: number | undefined;
-  batteryMinCharge: number | undefined;
-  batteryOMCost: number | undefined;
-  batteryRatedPower: number | undefined;
-  batteryReplacementCost: number | undefined;
-  batteryStorageDuration: number | undefined;
+  batteryEpcCosts?: number;
+  batteryLandProcurementCosts?: number;
+  batteryLifetime?: number;
+  batteryMinCharge?: number;
+  batteryOMCost?: number;
+  batteryRatedPower?: number;
+  batteryReplacementCost?: number;
+  batteryStorageDuration?: number;
   discountRate: number;
   electrolyserCostReductionWithScale: number;
-  electrolyserEfficiency: number | undefined;
+  electrolyserEfficiency?: number;
   electrolyserEpcCosts: number;
   electrolyserLandProcurementCosts: number;
   electrolyserMaximumLoad: number;
@@ -65,7 +67,7 @@ export type AmmoniaData = {
   electrolyserReferenceCapacity: number;
   electrolyserReferenceFoldIncrease: number;
   electrolyserStackReplacement: number;
-  gridConnectionCost: number | undefined;
+  gridConnectionCost?: number;
   inflationRate: number;
   inputConfiguration: InputConfiguration;
   location: string;
@@ -76,15 +78,15 @@ export type AmmoniaData = {
   powerPlantOversizeRatio: number;
   powerPlantType: PowerPlantType;
   powerSupplyOption: PowerSupplyOption;
-  principalPPACost: number | undefined;
+  principalPPACost?: number;
   projectScale: number;
   projectTimeline: number;
-  secAtNominalLoad: number | undefined;
+  secAtNominalLoad?: number;
   solarDegradation: number;
   solarEpcCosts: number;
   solarFarmBuildCost: number;
   solarLandProcurementCosts: number;
-  solarOpex: number | undefined;
+  solarOpex?: number;
   solarPVCostReductionWithScale: number;
   solarReferenceCapacity: number;
   solarReferenceFoldIncrease: number;
@@ -100,7 +102,7 @@ export type AmmoniaData = {
   windEpcCosts: number;
   windFarmBuildCost: number;
   windLandProcurementCosts: number;
-  windOpex: number | undefined;
+  windOpex?: number;
   windReferenceCapacity: number;
   windReferenceFoldIncrease: number;
 
@@ -127,6 +129,7 @@ export type AmmoniaData = {
   ammoniaStorageOMCost: number;
   asuPlantOMCost: number;
   hydrogenStoragePurchaseCost: number;
+  hydrogenStorageOMCost: number;
 };
 
 export class AmmoniaModel implements Model {
@@ -405,6 +408,21 @@ export class AmmoniaModel implements Model {
       this.parameters.additionalAnnualCosts
     );
 
+    const { h2StorageOpexCost, ammoniaOpexCost } = getAmmoniaOpex(
+      this.parameters.hydrogenStorageCapacity,
+      this.parameters.hydrogenStoragePurchaseCost,
+      this.parameters.hydrogenStorageOMCost,
+      this.parameters.ammoniaPlantCapacity,
+      this.parameters.ammoniaStorageCapacity,
+      airSeparationUnitCapacity,
+      this.parameters.ammoniaSynthesisUnitCost,
+      this.parameters.ammoniaStorageCost,
+      this.parameters.airSeparationUnitCost,
+      this.parameters.ammoniaPlantOMCost,
+      this.parameters.ammoniaStorageOMCost,
+      this.parameters.asuPlantOMCost
+    );
+
     const {
       electrolyserOpexPerYear,
       powerPlantOpexPerYear,
@@ -425,6 +443,15 @@ export class AmmoniaModel implements Model {
       batteryReplacementCostsOverProjectLife,
       waterOpexCost
     );
+
+    const { h2StorageOpexPerYear, ammoniaOpexPerYear } =
+      calculateAmmoniaPerYearOpex(
+        h2StorageOpexCost,
+        ammoniaOpexCost,
+        this.parameters.inflationRate,
+        this.parameters.projectTimeline
+      );
+
     const operatingCosts: {
       projectTimeline: number;
       costs: { [key: string]: number[] };
@@ -437,6 +464,8 @@ export class AmmoniaModel implements Model {
         "Additional Annual Costs": additionalOpexPerYear,
         "Water Costs": waterOpexPerYear,
         "Electricity Purchase": electricityPurchaseOpexPerYear,
+        "H2 Storage OPEX": h2StorageOpexPerYear,
+        "Ammonia OPEX": ammoniaOpexPerYear,
       },
     };
 
@@ -1337,7 +1366,7 @@ function calculateNH3CapFactors(
   hydrogen_storage_capacity: number, // raw input
   // ammonia plant load range
   ammonia_plant_minimum_turndown: number, // raw input %
-  // electrolyster and hydrogen storage paramteres
+  // electrolyster and hydrogen storage parameters
   // other operation factors
   minimum_hydrogen_storage: number, // %
   hydrogen_output: number,
@@ -1471,15 +1500,6 @@ function asu_nh3_capacity_factor(
   );
 }
 
-//
-// // this should be repeated for multiple years
-// function h2_storage_opex(
-//     h2_storage_opex: number, // undiscounted OPEX for h2 storage
-//     plant_year: number, // year X of operation
-//     discount_rate: number // discount rate
-// ) {
-//   return h2_storage_opex / (1 + discount_rate) ** plant_year;
-// }
 //
 // // this should be repeated for multiple years
 // function ammonia_plant_opex(

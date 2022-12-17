@@ -67,6 +67,7 @@ export const defaultInputs: { [k: string]: number } = {
   hydrogenStorageCapacity: 49_000,
   ammoniaPlantMinimumTurndown: 33,
   minimumHydrogenStorage: 10,
+  hydrogenStorageOMCost: 2.5,
 };
 
 class Defaults {
@@ -152,6 +153,7 @@ class Defaults {
       ammoniaStorageOMCost: 2,
       asuPlantOMCost: 2,
       hydrogenStoragePurchaseCost: 878,
+      hydrogenStorageOMCost: 2.5,
     };
   }
 

@@ -199,6 +199,7 @@ export interface Inputs {
   ammoniaStorageOMCost?: number;
   asuPlantOMCost?: number;
   hydrogenStoragePurchaseCost?: number;
+  hydrogenStorageOMCost?: number;
 }
 
 export interface Model {
