@@ -163,7 +163,6 @@ export class AmmoniaModel implements Model {
   private readonly elecOverload: number;
   private readonly batteryEnergy: number;
   private readonly batteryEfficiency: number;
-  private readonly battMin: number;
   // data from renewables
   private readonly solarData: CsvRow[];
   private readonly windData: CsvRow[];
@@ -182,7 +181,6 @@ export class AmmoniaModel implements Model {
       parameters.additionalTransmissionCharges ?? 0;
     this.batteryCosts = parameters.batteryCosts ?? 0;
     this.batteryLifetime = parameters.batteryLifetime ?? 0;
-    this.batteryMinCharge = parameters.batteryMinCharge ?? 0;
     this.batteryOMCost = parameters.batteryOMCost ?? 0;
     this.batteryReplacementCost = parameters.batteryReplacementCost ?? 0;
     this.batteryRatedPower = parameters.batteryRatedPower ?? 0;
@@ -207,7 +205,7 @@ export class AmmoniaModel implements Model {
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy = this.batteryRatedPower * this.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
-    this.battMin = this.batteryMinCharge / 100;
+    this.batteryMinCharge = (parameters.batteryMinCharge ?? 0) / 100;
     this.specCons = this.secAtNominalLoad * this.h2VolToMass;
     this.discountRate = this.parameters.discountRate / 100;
   }
@@ -937,7 +935,7 @@ export class AmmoniaModel implements Model {
   private calculatePowerplantAndElectrolyserHourlyOperation(
     solarRatio: number,
     windRatio: number,
-    oversizeRatio: number,
+    powerPlantOversizeRatio: number,
     electrolyserNominalCapacity: number,
     powerPlantNominalCapacity: number,
     airSeparationUnitCapacity: number,
@@ -1004,7 +1002,7 @@ export class AmmoniaModel implements Model {
       );
       const batteryLosses = getBatteryLosses(this.batteryEfficiency);
       netBatteryFlow = calculateNetBatteryFlow(
-        oversizeRatio,
+        powerPlantOversizeRatio,
         electrolyserNominalCapacity,
         excessGeneration,
         electrolyserCapacityFactors,
@@ -1012,7 +1010,7 @@ export class AmmoniaModel implements Model {
         this.elecMaxLoad,
         this.batteryRatedPower,
         this.batteryEnergy,
-        this.battMin,
+        this.batteryMinCharge,
         batteryLosses
       );
 
@@ -1285,7 +1283,7 @@ function h2_to_nh3(
     ) {
       return 0;
     }
-    throw new Error("Unsupported calculation for h2 to nh3");
+    return 0;
   });
 }
 
@@ -1301,6 +1299,7 @@ function asu_out(
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;
     }
+    // TODO check if this is okay
     throw new Error("Unsupported calculation for asu out");
   });
 }
@@ -1478,12 +1477,14 @@ function excess_generation(
   electrolyser_actual_power: number[], // electrolyser actual power MW
   asu_nh3_actual_power: number[] // asu nh3 acutal power
 ) {
-  return asu_nh3_actual_power.map(
-    (_: number, i: number) =>
-      asu_nh3_actual_power[i] -
+  return asu_nh3_actual_power.map((_: number, i: number) => {
+    const excess =
+      generator_actual_power[i] -
       electrolyser_actual_power[i] -
-      generator_actual_power[i]
-  );
+      asu_nh3_actual_power[i];
+    // TODO check if this okay, otherwise battery model throws exceptions
+    return excess > 0 ? excess : 0;
+  });
 }
 
 //
