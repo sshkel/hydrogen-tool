@@ -71,16 +71,16 @@ export function calculateElectrolyserCapacityFactors(
 }
 
 export function calculateNetBatteryFlow(
-  oversize: number,
+  powerPlantOversizeRatio: number,
   elecCapacity: number,
   excessGeneration: number[],
   electrolyserCapacityFactors: number[],
   electrolyserMinLoad: number,
   electrolyserMaxLoad: number,
-  batteryPower: number,
+  batteryRatedPower: number,
   batteryEnergy: number,
-  battMin: number,
-  battLosses: number
+  batteryMinCharge: number,
+  batteryLosses: number
 ): number[] {
   const size = excessGeneration.length;
   const batteryNetCharge = Array(size).fill(0.0);
@@ -89,8 +89,8 @@ export function calculateNetBatteryFlow(
   const elecMax = electrolyserMaxLoad * elecCapacity;
 
   batteryNetCharge[0] = Math.min(
-    batteryPower,
-    excessGeneration[0] * battLosses
+    batteryRatedPower,
+    excessGeneration[0] * batteryLosses
   );
   batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
   // check for off by 1 error
@@ -99,7 +99,10 @@ export function calculateNetBatteryFlow(
     const spill = excessGeneration[hour];
     const elecCons = electrolyserCapacityFactors[hour] * elecCapacity;
     const battDischargePotential =
-      Math.min(batteryPower, (battSoc - battMin) * batteryEnergy) * battLosses;
+      Math.min(
+        batteryRatedPower,
+        (battSoc - batteryMinCharge) * batteryEnergy
+      ) * batteryLosses;
     const elecJustOperating =
       elecCons > 0 ||
       batteryNetCharge[hour - 1] < 0 ||
@@ -112,40 +115,44 @@ export function calculateNetBatteryFlow(
       // When the generation is insufficient alone but combined with battery power can power the electrolyser
       if (spill + battDischargePotential > elecMax) {
         batteryNetCharge[hour] =
-          -1 * Math.min(batteryPower, (elecMax - spill) / battLosses);
+          -1 * Math.min(batteryRatedPower, (elecMax - spill) / batteryLosses);
       } else {
-        batteryNetCharge[hour] = (-1 * battDischargePotential) / battLosses;
+        batteryNetCharge[hour] = (-1 * battDischargePotential) / batteryLosses;
       }
     } else if (
       spill > 0 &&
-      battSoc + (spill / batteryEnergy) * battLosses > 1
+      battSoc + (spill / batteryEnergy) * batteryLosses > 1
     ) {
       // When spilled generation is enough to completely charge the battery
       batteryNetCharge[hour] = Math.min(
-        batteryPower,
+        batteryRatedPower,
         Math.max(batteryEnergy * (1.0 - battSoc), 0.0)
       );
     } else if (spill > 0) {
       // Any other cases when there is spilled generation
-      batteryNetCharge[hour] = Math.min(batteryPower, spill * battLosses);
+      batteryNetCharge[hour] = Math.min(
+        batteryRatedPower,
+        spill * batteryLosses
+      );
     } else if (
       elecCons + battDischargePotential < elecMin ||
-      (spill === 0 && battSoc <= battMin)
+      (spill === 0 && battSoc <= batteryMinCharge)
     ) {
       //  generation and battery together are insufficient to power the electrolyser or there is no
       //  spilled generation and the battery is empty
       batteryNetCharge[hour] = 0;
     } else if (
       spill === 0 &&
-      elecMax - elecCons > (battSoc - battMin) * battLosses * batteryEnergy &&
+      elecMax - elecCons >
+        (battSoc - batteryMinCharge) * batteryLosses * batteryEnergy &&
       elecJustOperating
     ) {
       //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
-      batteryNetCharge[hour] = (-1 * battDischargePotential) / battLosses;
+      batteryNetCharge[hour] = (-1 * battDischargePotential) / batteryLosses;
     } else if (spill === 0 && elecJustOperating) {
       //  When the stored power is enough to power the electrolyser at max capacity
       batteryNetCharge[hour] =
-        -1 * Math.min(batteryPower, (elecMax - elecCons) / battLosses);
+        -1 * Math.min(batteryRatedPower, (elecMax - elecCons) / batteryLosses);
     } else if (spill === 0) {
       batteryNetCharge[hour] = 0;
     } else {
