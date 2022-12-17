@@ -984,6 +984,18 @@ export class AmmoniaModel implements Model {
       (v: number) => v / electrolyserNominalCapacity
     );
 
+    const asuNh3CapacityFactors = asu_nh3_capacity_factor(
+      ammoniaPowerDemand,
+      asuPowerDemand,
+      asuNh3ActualPower
+    );
+
+    const excessGeneration = excess_generation(
+      generatorActualPower,
+      electrolyserActualPower,
+      asuNh3ActualPower
+    );
+
     let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
     // // battery model calc
     if (this.batteryEnergy > 0) {
@@ -1011,6 +1023,11 @@ export class AmmoniaModel implements Model {
         this.batteryEnergy,
         this.battMin,
         batteryLosses
+      );
+
+      const asuNh3WithBatteryCf = asu_nh3_with_battery_cf(
+        asuNh3CapacityFactors,
+        netBatteryFlow
       );
       // recalculate electrolyser capacity factors using battery model
       electrolyserCapacityFactors = getElectrolyserCapacityFactorsWithBattery(
@@ -1443,6 +1460,116 @@ function hydrogen_storage_CAPEX(
 //   return air_separation_unit_capacity * (365 / 1000);
 // }
 
+//
+// // this would be repeated for multiple years
+// function ammonia_produced(
+//     nh3_produced_per_year: number, //ammonia produced in year X
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return (nh3_produced_per_year * 1000) / (1 + discount_rate) ** plant_year;
+// }
+
+// // MWh
+// // should be repeated for multiple cells
+function excess_generation(
+  generator_actual_power: number[], // generator actual power MW
+  electrolyser_actual_power: number[], // electrolyser actual power MW
+  asu_nh3_actual_power: number[] // asu nh3 acutal power
+) {
+  return asu_nh3_actual_power.map(
+    (_: number, i: number) =>
+      asu_nh3_actual_power[i] -
+      electrolyser_actual_power[i] -
+      generator_actual_power[i]
+  );
+}
+
+//
+// // %
+// // should be repeated for multiple cells
+function asu_nh3_with_battery_cf(
+  asu_nh3_capacity_factor: number[],
+  net_battery_flow: number[]
+) {
+  asu_nh3_capacity_factor.map((_: number, i: number) =>
+    asu_nh3_capacity_factor[i] < 1 && net_battery_flow[i] < 0
+      ? asu_nh3_capacity_factor[i] + (1 - asu_nh3_capacity_factor[i])
+      : asu_nh3_capacity_factor[i]
+  );
+}
+
+function asu_nh3_capacity_factor(
+  ammonia_power_demand: number, // ammonia power demand
+  asu_power_demand: number, // asu power demand
+  asu_nh3_actual_power: number[] // asu/nh3 actual power
+) {
+  return asu_nh3_actual_power.map(
+    (v: number) => v / (ammonia_power_demand + asu_power_demand)
+  );
+}
+
+//
+// // this should be repeated for multiple years
+// function h2_storage_opex(
+//     h2_storage_opex: number, // undiscounted OPEX for h2 storage
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return h2_storage_opex / (1 + discount_rate) ** plant_year;
+// }
+//
+// // this should be repeated for multiple years
+// function ammonia_plant_opex(
+//     ammonia_plant_opex: number, // undiscounted OPEX for h2 storage
+//     plant_year: number, // year X of operation
+//     discount_rate: number // discount rate
+// ) {
+//   return ammonia_plant_opex / (1 + discount_rate) ** plant_year;
+// }
+//
+// // should bre repeated for multiple years
+// function lcnh3(
+//     total_discounted_cash_flow_power_plant_capex: number, // discounted cash flow for power plant capex
+//     total_discounted_ammonia_produced: number // discounted ammonia produced
+// ) {
+//   return (
+//       total_discounted_cash_flow_power_plant_capex /
+//       total_discounted_ammonia_produced
+//   );
+// }
+//
+// // repeated for multiple cells
+// function nh3_sales(
+//     nh3_produced_per_year: number, // ammonia produces in year X
+//     retail_price_of_ammonia: number, // sale price for ammonia
+//     plant_year: number, // year X of operation
+//     discount_rate: number
+// ) {
+//   return (
+//       nh3_produced_per_year *
+//       1000 *
+//       retail_price_of_ammonia *
+//       (1 + discount_rate) ** plant_year
+//   );
+// }
+//
+// function indirect_costs(
+//     ammonia_plant_indirect_costs: number, // indirect_cost_for ammonia plant
+//     electrolyser_and_hydrogen_storage_indirect_costs: number, // indirect costs for electrolyser and h2 storage
+//     epc_costs: number, // power plant EPC costs
+//     land_procurement_cost: number, // power plant land procurement costs
+//     battery_storage_indirect_costs: number // indirect costs for battery if selected
+// ) {
+//   return (
+//       ammonia_plant_indirect_costs +
+//       electrolyser_and_hydrogen_storage_indirect_costs +
+//       epc_costs +
+//       land_procurement_cost +
+//       battery_storage_indirect_costs // TODO should be conditional
+//   );
+// }
+
 // function ammonia_synthesis_unit_OandM(
 //     ammonia_plant_capacity: number, // size of ammonia plant
 //     asu_synthesis_unit_purchase_cost: number, // cost per T for Ammoni Synthesis Unit
@@ -1516,104 +1643,3 @@ function hydrogen_storage_CAPEX(
 //   );
 // }
 //
-// function indirect_costs(
-//     ammonia_plant_indirect_costs: number, // indirect_cost_for ammonia plant
-//     electrolyser_and_hydrogen_storage_indirect_costs: number, // indirect costs for electrolyser and h2 storage
-//     epc_costs: number, // power plant EPC costs
-//     land_procurement_cost: number, // power plant land procurement costs
-//     battery_storage_indirect_costs: number // indirect costs for battery if selected
-// ) {
-//   return (
-//       ammonia_plant_indirect_costs +
-//       electrolyser_and_hydrogen_storage_indirect_costs +
-//       epc_costs +
-//       land_procurement_cost +
-//       battery_storage_indirect_costs // TODO should be conditional
-//   );
-// }
-//
-// // this would be repeated for multiple years
-// function ammonia_produced(
-//     nh3_produced_per_year: number, //ammonia produced in year X
-//     plant_year: number, // year X of operation
-//     discount_rate: number // discount rate
-// ) {
-//   return (nh3_produced_per_year * 1000) / (1 + discount_rate) ** plant_year;
-// }
-//
-// // this should be repeated for multiple years
-// function h2_storage_opex(
-//     h2_storage_opex: number, // undiscounted OPEX for h2 storage
-//     plant_year: number, // year X of operation
-//     discount_rate: number // discount rate
-// ) {
-//   return h2_storage_opex / (1 + discount_rate) ** plant_year;
-// }
-//
-// // this should be repeated for multiple years
-// function ammonia_plant_opex(
-//     ammonia_plant_opex: number, // undiscounted OPEX for h2 storage
-//     plant_year: number, // year X of operation
-//     discount_rate: number // discount rate
-// ) {
-//   return ammonia_plant_opex / (1 + discount_rate) ** plant_year;
-// }
-//
-// // should bre repeated for multiple years
-// function lcnh3(
-//     total_discounted_cash_flow_power_plant_capex: number, // discounted cash flow for power plant capex
-//     total_discounted_ammonia_produced: number // discounted ammonia produced
-// ) {
-//   return (
-//       total_discounted_cash_flow_power_plant_capex /
-//       total_discounted_ammonia_produced
-//   );
-// }
-//
-// // repeated for multiple cells
-// function nh3_sales(
-//     nh3_produced_per_year: number, // ammonia produces in year X
-//     retail_price_of_ammonia: number, // sale price for ammonia
-//     plant_year: number, // year X of operation
-//     discount_rate: number
-// ) {
-//   return (
-//       nh3_produced_per_year *
-//       1000 *
-//       retail_price_of_ammonia *
-//       (1 + discount_rate) ** plant_year
-//   );
-// }
-//
-// // MWh
-// // should be repeated for multiple cells
-// function excess_generation(
-//     generator_actual_power: number, // generator actual power MW
-//     electrolyser_actual_power: number, // electrolyser actual power MW
-//     asu_nh3_actual_power: number // asu nh3 acutal power
-// ) {
-//   return (
-//       asu_nh3_actual_power - electrolyser_actual_power - generator_actual_power
-//   );
-// }
-//
-// // %
-// // should be repeated for multiple cells
-// function asu_nh3_with_battery_cf(
-//     asu_nh3_capacity_factor: number,
-//     net_battery_flow: number
-// ) {
-//   return asu_nh3_capacity_factor < 1 && net_battery_flow < 0
-//       ? asu_nh3_capacity_factor + (1 - asu_nh3_capacity_factor)
-//       : asu_nh3_capacity_factor;
-// }
-//
-// // %
-// // should be repeated for multiple cells
-// function asu_nh3_capacity_factor(
-//     ammonia_power_demand: number, // ammonia power demand
-//     asu_power_demand: number, // asu power demand
-//     asu_nh3_actual_power: number // asu/nh3 actual power
-// ) {
-//   return asu_nh3_actual_power / (ammonia_power_demand + asu_power_demand);
-// }
