@@ -606,6 +606,7 @@ export class AmmoniaModel implements Model {
 
       const ammoniaCapacityFactors = calculateNH3CapFactors(
         hydrogenProduction,
+        1, // TODO check with Jack if this works
         this.parameters.ammoniaPlantCapacity,
         this.parameters.hydrogenStorageCapacity,
         this.parameters.ammoniaPlantMinimumTurndown / 100,
@@ -755,6 +756,7 @@ export class AmmoniaModel implements Model {
 
         const ammoniaCapacityFactors = calculateNH3CapFactors(
           hydrogenProduction,
+          electrolyserNominalCapacity,
           this.parameters.ammoniaPlantCapacity,
           this.parameters.hydrogenStorageCapacity,
           this.parameters.ammoniaPlantMinimumTurndown / 100,
@@ -873,6 +875,7 @@ export class AmmoniaModel implements Model {
           );
           const ammoniaCapacityFactors = calculateNH3CapFactors(
             hydrogenProduction,
+            electrolyserNominalCapacity,
             this.parameters.ammoniaPlantCapacity,
             this.parameters.hydrogenStorageCapacity,
             this.parameters.ammoniaPlantMinimumTurndown / 100,
@@ -1261,18 +1264,18 @@ function h2_to_nh3(
       return (hydrogen_output / 24) * 1000;
     } else if (
       mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]) <
-      hydrogen_output * 1000 * ammonia_plant_minimum_turndown
+      (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
     ) {
       return 0;
     } else if (
       mass_of_hydrogen[i] < (hydrogen_output / 24) * 1000 &&
-      mass_of_hydrogen[i] > hydrogen_storage_capacity * 0.1
+      h2_store_balance[i] > hydrogen_storage_capacity * 0.1
     ) {
       return mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]);
     } else if (
       h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
       mass_of_hydrogen[i] >
-        hydrogen_output * 1000 * ammonia_plant_minimum_turndown
+        (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
     ) {
       return mass_of_hydrogen[i];
     } else if (
@@ -1294,7 +1297,7 @@ function asu_out(
 ) {
   return h2_to_nh3.map((v: number) => {
     if (v === (hydrogen_output / 24) * 1000) {
-      return (hydrogen_output / 24) * 1000;
+      return (asu_capacity / 24) * 1000;
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;
     }
@@ -1360,7 +1363,8 @@ function h2_storage_balance(
 }
 
 function calculateNH3CapFactors(
-  mass_of_hydrogen: number[], // calculated in hydrogen
+  hydrogenProduction: number[], // calculated in hydrogen
+  electrolyserNominalCapacity: number,
   // system sizing
   ammonia_plant_capacity: number, // raw input
   hydrogen_storage_capacity: number, // raw input
@@ -1373,6 +1377,10 @@ function calculateNH3CapFactors(
   air_separation_unit_capacity: number,
   hoursPerYear: number
 ): number[] {
+  // adjust hydrogen to work for ammonia
+  const mass_of_hydrogen = hydrogenProduction.map(
+    (v) => v * electrolyserNominalCapacity
+  );
   const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output);
   const deficit_h2_result = deficit_h2(mass_of_hydrogen, hydrogen_output);
 
@@ -1382,6 +1390,7 @@ function calculateNH3CapFactors(
     hydrogen_storage_capacity,
     minimum_hydrogen_storage
   );
+
   const h2_to_nh3_result = h2_to_nh3(
     mass_of_hydrogen,
     from_h2_store,
@@ -1390,7 +1399,7 @@ function calculateNH3CapFactors(
     hydrogen_output,
     ammonia_plant_minimum_turndown
   );
-
+  // TODO does not line up at alllllllll
   const asu_out_result = asu_out(
     h2_to_nh3_result,
     hydrogen_output,
@@ -1398,11 +1407,12 @@ function calculateNH3CapFactors(
   );
 
   const nh3_unit_out_result = nh3_unit_out(asu_out_result, h2_to_nh3_result);
-  return nh3_unit_capacity_factor(
+  const nh3_unit_capacity_factors = nh3_unit_capacity_factor(
     nh3_unit_out_result,
     ammonia_plant_capacity,
     hoursPerYear
   );
+  return nh3_unit_capacity_factors;
 }
 
 function ammonia_plant_CAPEX(
