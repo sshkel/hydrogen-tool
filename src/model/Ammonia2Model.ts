@@ -720,17 +720,6 @@ export class AmmoniaModel implements Model {
           airSeparationUnitCapacity,
           year
         );
-        electrolyserCapacityFactors =
-          calculateAmmoniaElectrolyserCapacityFactors(
-            powerplantCapacityFactors,
-            netBatteryFlow,
-            electrolyserCapacityFactors,
-            this.batteryEfficiency,
-            powerPlantNominalCapacity,
-            electrolyserNominalCapacity,
-            airSeparationUnitPowerDemand,
-            ammoniaPlantPowerDemand
-          );
 
         const hydrogenProduction = calculateHydrogenProduction(
           electrolyserCapacityFactors,
@@ -845,18 +834,6 @@ export class AmmoniaModel implements Model {
             airSeparationUnitCapacity,
             year
           );
-
-          electrolyserCapacityFactors =
-            calculateAmmoniaElectrolyserCapacityFactors(
-              powerplantCapacityFactors,
-              netBatteryFlow,
-              electrolyserCapacityFactors,
-              this.batteryEfficiency,
-              powerPlantNominalCapacity,
-              electrolyserNominalCapacity,
-              airSeparationUnitPowerDemand,
-              ammoniaPlantPowerDemand
-            );
 
           const yearlyDegradationRate =
             degradationCalculator.getStackDegradation(
