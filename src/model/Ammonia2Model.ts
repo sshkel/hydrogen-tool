@@ -944,32 +944,19 @@ export class AmmoniaModel implements Model {
       asuPowerDemand,
       generatorActualPower
     );
-    const electrolyserActualPower = generatorActualPower.map(
-      (_: number, i: number) => {
-        if (
-          generatorActualPower[i] - asuNh3ActualPower[i] >
-          electrolyserNominalCapacity
-        ) {
-          return electrolyserNominalCapacity;
-        } else {
-          return generatorActualPower[i] - asuNh3ActualPower[i];
-        }
-      }
+    const electrolyserActualPower = electrolyser_actual_power(
+      electrolyserNominalCapacity,
+      generatorActualPower,
+      asuNh3ActualPower
     );
+
     // normal electrolyser calculation
     let electrolyserCapacityFactors = electrolyserActualPower.map(
       (v: number) => v / electrolyserNominalCapacity
     );
-
-    const asuNh3CapacityFactors = asu_nh3_capacity_factor(
+    let asuNh3CapacityFactors = asu_nh3_capacity_factor(
       ammoniaPowerDemand,
       asuPowerDemand,
-      asuNh3ActualPower
-    );
-
-    const excessGeneration = excess_generation(
-      generatorActualPower,
-      electrolyserActualPower,
       asuNh3ActualPower
     );
 
@@ -982,11 +969,10 @@ export class AmmoniaModel implements Model {
           `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${this.batteryStorageDuration}`
         );
       }
-      const excessGeneration = getExcessGeneration(
-        powerplantCapacityFactors,
-        oversizeRatio,
-        electrolyserCapacityFactors,
-        electrolyserNominalCapacity
+      const excessGeneration = excess_generation(
+        generatorActualPower,
+        electrolyserActualPower,
+        asuNh3ActualPower
       );
       const batteryLosses = getBatteryLosses(this.batteryEfficiency);
       netBatteryFlow = calculateNetBatteryFlow(
@@ -1002,17 +988,20 @@ export class AmmoniaModel implements Model {
         batteryLosses
       );
 
-      const asuNh3WithBatteryCf = asu_nh3_with_battery_cf(
+      asuNh3CapacityFactors = asu_nh3_with_battery_cf(
         asuNh3CapacityFactors,
         netBatteryFlow
       );
-      // recalculate electrolyser capacity factors using battery model
-      electrolyserCapacityFactors = getElectrolyserCapacityFactorsWithBattery(
+
+      electrolyserCapacityFactors = electrolyser_with_battery_capacity_factor(
         netBatteryFlow,
+        electrolyserActualPower,
+        asuNh3ActualPower,
         electrolyserCapacityFactors,
-        batteryLosses,
-        excessGeneration,
-        electrolyserNominalCapacity
+        ammoniaPowerDemand,
+        asuPowerDemand,
+        electrolyserNominalCapacity,
+        this.batteryEfficiency
       );
     }
 
@@ -1020,11 +1009,71 @@ export class AmmoniaModel implements Model {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
       netBatteryFlow,
+      asuNh3CapacityFactors,
     };
   }
 }
 
+// should be repeated for multiple cells
+// MW
+function electrolyser_actual_power(
+  nominal_electrolyser_capacity: number, // electrolyser capacity
+  generator_actual_power: number[], // generator actual power
+  asu_nh3_actual_power: number[] // ASU/NH3 actual power
+) {
+  return generator_actual_power.map((_: number, i: number) =>
+    generator_actual_power[i] - asu_nh3_actual_power[i] >
+    nominal_electrolyser_capacity
+      ? nominal_electrolyser_capacity
+      : generator_actual_power[i] - asu_nh3_actual_power[i]
+  );
+}
+
 // Functions transcribed from ammonia model
+// // will be used to calculate mass_of_hydrogen
+// function calculateAmmoniaElectrolyserCapacityFactors(
+//   generatorCapFactor: number[], // calculated in hydrogen
+//   net_battery_flow: number[], // calculated in hydrogen
+//   electrolyserCapFactor: number[], // calculated in hydrogen
+//   // round trip efficiency from hydrogen raw input
+//   batteryEfficiency: number, // %
+//   total_nominal_power_plant_capacity: number,
+//   nominal_electrolyser_capacity: number,
+//   asu_power_demand: number,
+//   ammonia_plant_power_demand: number
+// ): number[] {
+//   // if no battery is defined return as it is
+//   if (batteryEfficiency === 0) {
+//     return electrolyserCapFactor;
+//   }
+//   const generator_actual_power_result: number[] = generator_actual_power(
+//     total_nominal_power_plant_capacity,
+//     generatorCapFactor
+//   );
+//
+//   const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
+//     ammonia_plant_power_demand,
+//     asu_power_demand,
+//     generator_actual_power_result
+//   );
+//
+//   const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
+//     nominal_electrolyser_capacity,
+//     generator_actual_power_result,
+//     asu_nh3_actual_power_result
+//   );
+//
+//   return electrolyser_with_battery_capacity_factor(
+//     net_battery_flow,
+//     electrolyser_actual_power_result,
+//     asu_nh3_actual_power_result,
+//     electrolyserCapFactor,
+//     ammonia_plant_power_demand,
+//     asu_power_demand,
+//     nominal_electrolyser_capacity,
+//     batteryEfficiency
+//   );
+// }
 
 function ammonia_plant_power_demand(
   ammonia_plant_capacity: number, // size of ammonia plant
@@ -1111,21 +1160,6 @@ function generator_actual_power(
 ) {
   return generator_capacity_factor.map(
     (v: number) => total_nominal_power_plant_capacity * v
-  );
-}
-
-// should be repeated for multiple cells
-// MW
-function electrolyser_actual_power(
-  nominal_electrolyser_capacity: number, // electrolyser capacity
-  generator_actual_power: number[], // generator actual power
-  asu_nh3_actual_power: number[] // ASU/NH3 actual power
-) {
-  return generator_actual_power.map((_: number, i: number) =>
-    generator_actual_power[i] - asu_nh3_actual_power[i] >
-    nominal_electrolyser_capacity
-      ? nominal_electrolyser_capacity
-      : generator_actual_power[i] - asu_nh3_actual_power[i]
   );
 }
 
@@ -1300,51 +1334,6 @@ function h2_storage_balance(
   return { from_h2_store, h2_storage_balance_result };
 }
 
-// will be used to calculate mass_of_hydrogen
-function calculateAmmoniaElectrolyserCapacityFactors(
-  generatorCapFactor: number[], // calculated in hydrogen
-  net_battery_flow: number[], // calculated in hydrogen
-  electrolyserCapFactor: number[], // calculated in hydrogen
-  // round trip efficiency from hydrogen raw input
-  batteryEfficiency: number, // %
-  total_nominal_power_plant_capacity: number,
-  nominal_electrolyser_capacity: number,
-  asu_power_demand: number,
-  ammonia_plant_power_demand: number
-): number[] {
-  // if no battery is defined return as it is
-  if (batteryEfficiency === 0) {
-    return electrolyserCapFactor;
-  }
-  const generator_actual_power_result: number[] = generator_actual_power(
-    total_nominal_power_plant_capacity,
-    generatorCapFactor
-  );
-
-  const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
-    ammonia_plant_power_demand,
-    asu_power_demand,
-    generator_actual_power_result
-  );
-
-  const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
-    nominal_electrolyser_capacity,
-    generator_actual_power_result,
-    asu_nh3_actual_power_result
-  );
-
-  return electrolyser_with_battery_capacity_factor(
-    net_battery_flow,
-    electrolyser_actual_power_result,
-    asu_nh3_actual_power_result,
-    electrolyserCapFactor,
-    ammonia_plant_power_demand,
-    asu_power_demand,
-    nominal_electrolyser_capacity,
-    batteryEfficiency
-  );
-}
-
 function calculateNH3CapFactors(
   mass_of_hydrogen: number[], // calculated in hydrogen
   // system sizing
@@ -1469,7 +1458,7 @@ function asu_nh3_with_battery_cf(
   asu_nh3_capacity_factor: number[],
   net_battery_flow: number[]
 ) {
-  asu_nh3_capacity_factor.map((_: number, i: number) =>
+  return asu_nh3_capacity_factor.map((_: number, i: number) =>
     asu_nh3_capacity_factor[i] < 1 && net_battery_flow[i] < 0
       ? asu_nh3_capacity_factor[i] + (1 - asu_nh3_capacity_factor[i])
       : asu_nh3_capacity_factor[i]
