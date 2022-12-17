@@ -306,7 +306,7 @@ export function backCalculateSolarAndWindCapacities(
   }
   return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
 }
-
+// TODO recheck if all of this are used more than one place.
 export function getExcessGeneration(
   powerplantCapacityFactors: number[],
   oversizeRatio: number,

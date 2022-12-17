@@ -31,15 +31,11 @@ import {
 import {
   CumulativeDegradation,
   MaxDegradation,
-  calculateElectrolyserCapacityFactors,
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
-  calculateOverloadingModel,
   calculatePowerPlantCapacityFactors,
   calculateSummary,
   getBatteryLosses,
-  getElectrolyserCapacityFactorsWithBattery,
-  getExcessGeneration,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
