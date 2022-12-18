@@ -100,6 +100,26 @@ export interface UserInputFields {
   powerPlantConfiguration?: PowerPlantConfiguration;
   powerSupplyOption?: PowerSupplyOption;
   powerCapacityConfiguration?: PowerCapacityConfiguration;
+  // Ammonia
+  ammoniaPlantCapacity?: number;
+  ammoniaStorageCapacity?: number;
+  electrolyserSystemOversizing?: number;
+  ammoniaPlantSec?: number;
+  asuSec?: number;
+  hydrogenStorageCapacity?: number;
+  ammoniaPlantMinimumTurndown?: number;
+  minimumHydrogenStorage?: number;
+  // operating costs
+  ammoniaSynthesisUnitCost?: number;
+  ammoniaStorageCost?: number;
+  airSeparationUnitCost?: number;
+  ammoniaEpcCosts?: number;
+  ammoniaLandProcurementCosts?: number;
+  ammoniaPlantOMCost?: number;
+  ammoniaStorageOMCost?: number;
+  asuPlantOMCost?: number;
+  hydrogenStoragePurchaseCost?: number;
+  hydrogenStorageOMCost?: number;
 }
 
 export interface Inputs {
