@@ -3,11 +3,17 @@ import { mount } from "enzyme";
 import DurationCurve from "../../../components/charts/DurationCurve";
 import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
+import ammoniaSolarAmmoniaDurationCurveWithBattery from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
+import ammoniaSolarAmmoniaDurationCurve from "../../resources/ammonia-solar-ammonia-duration-curve.json";
+import ammoniaSolarElectrolyserDurationCurveWithBattery from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
+import ammoniaSolarElectrolyserDurationCurve from "../../resources/ammonia-solar-electrolyser-duration-curve.json";
+import ammoniaSolarGeneratorDurationCurveWithBattery from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
+import ammoniaSolarGeneratorDurationCurve from "../../resources/ammonia-solar-generator-duration-curve.json";
 import hybridBatteryOversizeRatioElectrolyserDurationCurve from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
 import hybridBatteryOversizeRatioGeneratorDurationCurve from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
 import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
 import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
-import { readLocalCsv } from "../../resources/loader";
+import { readLocalCsv, writeLocalFile } from "../../resources/loader";
 import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
 import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
 import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
@@ -20,6 +26,8 @@ import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electroly
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
   hybridBatteryGridOversizeRatioScenario,
+  standaloneAmmoniaSolarScenario,
+  standaloneAmmoniaSolarWithBatteryScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -40,7 +48,7 @@ describe("Working Data calculations", () => {
   });
 
   describe("Duration Curves", () => {
-    it("calculates duration curves as 8760 percentages for solar", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for solar", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -83,7 +91,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -128,7 +136,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -170,7 +178,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -213,7 +221,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -262,7 +270,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -309,7 +317,7 @@ describe("Working Data calculations", () => {
     });
   });
 
-  it("calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
+  it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
     const wrapper = mount(
       <WorkingData
         inputConfiguration="Advanced"
@@ -344,6 +352,133 @@ describe("Working Data calculations", () => {
         (val, index) => {
           expect(val).toEqual(
             hybridDegradationElectrolyserDurationCurve[index]
+          );
+        }
+      );
+
+      done();
+    }, TIMEOUT);
+  });
+
+  it("Ammonia model: calculates duration curves as 8760 percentages for solar", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        inputConfiguration="Advanced"
+        data={standaloneAmmoniaSolarScenario.data}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+        location={standaloneAmmoniaSolarScenario.location}
+      />
+    );
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const generatorDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
+
+      expect(generatorDurationCurve).toHaveLength(1);
+      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
+
+      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toEqual(ammoniaSolarGeneratorDurationCurve[index]);
+        }
+      );
+
+      const electrolyserDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+
+      expect(electrolyserDurationCurve).toHaveLength(1);
+      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            ammoniaSolarElectrolyserDurationCurve[index],
+            8
+          );
+        }
+      );
+
+      const ammoniaDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
+
+      expect(ammoniaDurationCurve).toHaveLength(1);
+      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurve[index], 8);
+        }
+      );
+
+      done();
+    }, TIMEOUT);
+  });
+
+  it("Ammonia model: calculates duration curves as 8760 percentages for solar with battery", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        inputConfiguration="Advanced"
+        data={standaloneAmmoniaSolarWithBatteryScenario.data}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+        location={standaloneAmmoniaSolarWithBatteryScenario.location}
+      />
+    );
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const generatorDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
+      // writeLocalFile(
+      //   "/Users/stanisshkel/work/hydrogen-tool/src/tests/resources/ammonia-solar-generator-duration-curve-with-battery.json",
+      //   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
+      // );
+      expect(generatorDurationCurve).toHaveLength(1);
+      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
+
+      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toEqual(
+            ammoniaSolarGeneratorDurationCurveWithBattery[index]
+          );
+        }
+      );
+
+      const electrolyserDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+      // writeLocalFile(
+      //   "/Users/stanisshkel/work/hydrogen-tool/src/tests/resources/ammonia-solar-electrolyser-duration-curve-with-battery.json",
+      //   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
+      // );
+      expect(electrolyserDurationCurve).toHaveLength(1);
+      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            ammoniaSolarElectrolyserDurationCurveWithBattery[index],
+            8
+          );
+        }
+      );
+
+      const ammoniaDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
+
+      expect(ammoniaDurationCurve).toHaveLength(1);
+      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            ammoniaSolarAmmoniaDurationCurveWithBattery[index],
+            8
           );
         }
       );

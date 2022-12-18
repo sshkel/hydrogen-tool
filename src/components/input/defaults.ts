@@ -61,7 +61,6 @@ export const defaultInputs: { [k: string]: number } = {
   // TODO work out if these default are correct for ammonia
   ammoniaPlantCapacity: 50,
   electrolyserSystemOversizing: 45,
-  renewableEnergyPlantOversizing: 182,
   ammoniaPlantSec: 0.41,
   asuSec: 0.22,
   hydrogenStorageCapacity: 49_000,
@@ -138,7 +137,6 @@ class Defaults {
       ammoniaPlantCapacity: 50,
       ammoniaStorageCapacity: 30,
       electrolyserSystemOversizing: 45,
-      renewableEnergyPlantOversizing: 182,
       ammoniaPlantSec: 0.41,
       asuSec: 0.22,
       hydrogenStorageCapacity: 49_000,

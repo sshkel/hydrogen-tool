@@ -151,7 +151,6 @@ export default function WorkingData(props: Props) {
       maximumDegradationBeforeReplacement:
         inputs.maximumDegradationBeforeReplacement,
       maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
-      powerCapacityConfiguration: inputs.powerCapacityConfiguration,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
       powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
       powerPlantType: inputs.powerPlantType,
