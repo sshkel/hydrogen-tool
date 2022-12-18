@@ -1320,8 +1320,8 @@ function nh3_unit_capacity_factor(
   ammonia_plant_capacity: number, // s1b12
   hoursPerYear: number
 ) {
-  return nh3_unit_out.map(
-    (v: number) => v / (ammonia_plant_capacity * (1_000_000 / hoursPerYear))
+  return nh3_unit_out.map((v: number) =>
+    Math.min(v / (ammonia_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
 }
 
@@ -1398,7 +1398,7 @@ function calculateNH3CapFactors(
     hydrogen_output,
     ammonia_plant_minimum_turndown
   );
-  // TODO does not line up at alllllllll
+
   const asu_out_result = asu_out(
     h2_to_nh3_result,
     hydrogen_output,
