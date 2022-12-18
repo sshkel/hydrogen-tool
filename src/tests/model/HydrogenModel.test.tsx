@@ -1,5 +1,9 @@
-import {HydrogenData, HydrogenModel} from "../../model/HydrogenModel";
-import {CsvRow, ModelSummaryPerYear, ProjectModelSummary} from "../../model/ModelTypes";
+import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
+import {
+  CsvRow,
+  ModelSummaryPerYear,
+  ProjectModelSummary,
+} from "../../model/ModelTypes";
 import outputs1 from "../resources/example1-outputs.json";
 import workingdf1 from "../resources/example1-workingdf.json";
 import outputs2 from "../resources/example2-outputs.json";
@@ -90,7 +94,7 @@ describe("Hydrogen Model", () => {
       windLandProcurementCosts: 0,
       windOpex: 0,
       windReferenceCapacity: 0,
-      windReferenceFoldIncrease: 0
+      windReferenceFoldIncrease: 0,
     };
     const model = new HydrogenModel(example1, solar, wind);
     compareToModel(model, outputs1, workingdf1);
@@ -165,7 +169,7 @@ describe("Hydrogen Model", () => {
       windLandProcurementCosts: 0,
       windOpex: 0,
       windReferenceCapacity: 0,
-      windReferenceFoldIncrease: 0
+      windReferenceFoldIncrease: 0,
     };
     const model = new HydrogenModel(example2, solar, wind);
 
@@ -241,7 +245,7 @@ describe("Hydrogen Model", () => {
       windLandProcurementCosts: 0,
       windOpex: 0,
       windReferenceCapacity: 0,
-      windReferenceFoldIncrease: 0
+      windReferenceFoldIncrease: 0,
     };
     const model = new HydrogenModel(example3, solar, wind);
     compareToModel(model, outputs3, workingdf3);
@@ -261,13 +265,14 @@ function compareToModel(
     electrolyserCapacityFactors: "Electrolyser_CF",
     hydrogenProduction: "Hydrogen_prod_fixed",
     netBatteryFlow: "Net_Battery_Flow",
-  }
-
+  };
+  // The battery model has been rewritten to match excel rather than python
+  // this will still compare to the old python model though, so we have to sacrifice precision
   Object.keys(project_output).forEach((key: string) => {
     if (Object.keys(hourlyTranslation).includes(key)) {
-      Object.values(workingdf[hourlyTranslation[key]]).forEach((x: number, i: number) =>
-
-          expect(hourly_outputs[key][i]).toBeCloseTo(x, 9)
+      Object.values(workingdf[hourlyTranslation[key]]).forEach(
+        (x: number, i: number) =>
+          expect(hourly_outputs[key][i]).toBeCloseTo(x, 2)
       );
     }
   });
@@ -280,14 +285,16 @@ function compareToModel(
     hydrogenProduction: "Hydrogen Output [t/yr]",
     powerPlantCapacityFactors: "Generator Capacity Factor",
     ratedCapacityTime: "Time Electrolyser is at its Rated Capacity",
-    electrolyserCapacityFactors: "Achieved Electrolyser Capacity Factor"
-  }
+    electrolyserCapacityFactors: "Achieved Electrolyser Capacity Factor",
+  };
 
   Object.keys(project_output).forEach((key: string) => {
-        if (Object.keys(summaryTranslations).includes(key)) {
-          // Check first year results only since no degradation
-          expect(project_output[key as keyof ProjectModelSummary][0]).toBeCloseTo(outputs[summaryTranslations[key as keyof ProjectModelSummary]], 8);
-        }
-      }
-  );
+    if (Object.keys(summaryTranslations).includes(key)) {
+      // Check first year results only since no degradation
+      expect(project_output[key as keyof ProjectModelSummary][0]).toBeCloseTo(
+        outputs[summaryTranslations[key as keyof ProjectModelSummary]],
+        2
+      );
+    }
+  });
 }

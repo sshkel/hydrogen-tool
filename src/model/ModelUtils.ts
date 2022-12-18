@@ -1,4 +1,5 @@
 import { backCalculatePowerPlantCapacity } from "../components/charts/basic-calculations";
+import { roundToEightDP } from "../components/charts/cost-functions";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import { PowerPlantType, StackReplacementType } from "../types";
 import { mean, sum } from "../utils";
@@ -70,7 +71,94 @@ export function calculateElectrolyserCapacityFactors(
   return powerPlantCapacityFactors.map(calculateElectrolyser);
 }
 
-export function calculateNetBatteryFlow(
+function batteryPower(
+  battCapacity: number,
+  battPower: number,
+  battMin: number,
+  batteryLosses: number,
+  battMax: number,
+  elecMinLoad: number,
+  elecMaxLoad: number,
+  elecCapacity: number,
+  electrolyserCapacityFactorPrev: number,
+  electroylserCapacityFactorCur: number,
+  excessEnergyCur: number,
+  netBatteryFlowPrev: number,
+  batterySocPrev: number
+): number {
+  if (battCapacity > 0) {
+    if (
+      electroylserCapacityFactorCur === 0 &&
+      excessEnergyCur +
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+          batteryLosses >
+        elecMinLoad * elecCapacity &&
+      (electrolyserCapacityFactorPrev > 0 || netBatteryFlowPrev < 0)
+    ) {
+      if (
+        excessEnergyCur +
+          Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+            batteryLosses >
+        elecMaxLoad * elecCapacity
+      ) {
+        return -Math.min(
+          battPower,
+          (elecMaxLoad * elecCapacity - excessEnergyCur) / batteryLosses
+        );
+      } else {
+        return -Math.min(battPower, (batterySocPrev - battMin) * battCapacity);
+      }
+    } else if (
+      excessEnergyCur > 0 &&
+      batterySocPrev + (excessEnergyCur / battCapacity) * batteryLosses >
+        battMax
+    ) {
+      return Math.min(
+        battPower,
+        Math.abs(battCapacity * (battMax - batterySocPrev))
+      );
+    } else if (excessEnergyCur > 0) {
+      return Math.min(battPower, excessEnergyCur * batteryLosses);
+    } else if (
+      electroylserCapacityFactorCur * elecCapacity +
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+          batteryLosses <
+      elecMinLoad * elecCapacity
+    ) {
+      return 0;
+    } else if (excessEnergyCur === 0 && batterySocPrev <= battMin) {
+      return 0;
+    } else if (
+      excessEnergyCur === 0 &&
+      (electrolyserCapacityFactorPrev > 0 ||
+        electroylserCapacityFactorCur > 0 ||
+        netBatteryFlowPrev < 0) &&
+      (elecMaxLoad - electroylserCapacityFactorCur) * elecCapacity >
+        (batterySocPrev - battMin) * batteryLosses * battCapacity
+    ) {
+      return -Math.min(battPower, (batterySocPrev - battMin) * battCapacity);
+    } else if (
+      excessEnergyCur === 0 &&
+      (electrolyserCapacityFactorPrev > 0 ||
+        electroylserCapacityFactorCur > 0 ||
+        netBatteryFlowPrev < 0)
+    ) {
+      return -Math.min(
+        battPower,
+        ((elecMaxLoad - electroylserCapacityFactorCur) * elecCapacity) /
+          batteryLosses
+      );
+    } else if (excessEnergyCur === 0) {
+      return 0;
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
+  }
+}
+
+export function calculateNetBatteryFlowPython(
   powerPlantOversizeRatio: number,
   elecCapacity: number,
   excessGeneration: number[],
@@ -158,6 +246,52 @@ export function calculateNetBatteryFlow(
     } else {
       throw new Error("Error: battery configuration not accounted for");
     }
+    //  Determine the battery state of charge based on the previous state of charge and the net change
+    batterySoc[hour] =
+      batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
+  }
+
+  return batteryNetCharge;
+}
+
+export function calculateNetBatteryFlow(
+  powerPlantOversizeRatio: number,
+  elecCapacity: number,
+  excessGeneration: number[],
+  electrolyserCapacityFactors: number[],
+  electrolyserMinLoad: number,
+  electrolyserMaxLoad: number,
+  batteryRatedPower: number,
+  batteryEnergy: number,
+  batteryMinCharge: number,
+  batteryLosses: number
+): number[] {
+  const size = excessGeneration.length;
+  const batteryNetCharge = Array(size).fill(0.0);
+  const batterySoc = Array(size).fill(0.0);
+
+  batteryNetCharge[0] = Math.min(
+    batteryRatedPower,
+    excessGeneration[0] * batteryLosses
+  );
+  batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
+  // check for off by 1 error
+  for (let hour = 1; hour < size; hour++) {
+    batteryNetCharge[hour] = batteryPower(
+      batteryEnergy,
+      batteryRatedPower,
+      batteryMinCharge,
+      batteryLosses,
+      1,
+      electrolyserMinLoad,
+      electrolyserMaxLoad,
+      elecCapacity,
+      electrolyserCapacityFactors[hour - 1],
+      electrolyserCapacityFactors[hour],
+      roundToEightDP(excessGeneration[hour]),
+      batteryNetCharge[hour - 1],
+      batterySoc[hour - 1]
+    );
     //  Determine the battery state of charge based on the previous state of charge and the net change
     batterySoc[hour] =
       batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;

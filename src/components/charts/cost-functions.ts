@@ -9,6 +9,7 @@ export const roundToNearestThousand = (n: number) =>
 export const roundToNearestInteger = (n: number) => Math.round(n) || 0;
 
 export const roundToTwoDP = (n: number) => Math.round(n * 100) / 100 || 0;
+export const roundToEightDP = (n: number) => parseFloat(n.toFixed(8)) || 0;
 
 export function sales(
   // Calculated values

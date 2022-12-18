@@ -75,7 +75,7 @@ describe("Working Data calculations", () => {
         expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
-            expect(val).toEqual(solarElectrolyserDurationCurve[index]);
+            expect(val).toBeCloseTo(solarElectrolyserDurationCurve[index], 8);
           }
         );
 
@@ -117,7 +117,10 @@ describe("Working Data calculations", () => {
         expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
-            expect(val).toEqual(solarBatteryElectrolyserDurationCurve[index]);
+            expect(val).toBeCloseTo(
+              solarBatteryElectrolyserDurationCurve[index],
+              8
+            );
           }
         );
 
@@ -248,8 +251,9 @@ describe("Working Data calculations", () => {
         expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
-            expect(val).toEqual(
-              hybridBatteryOversizeRatioElectrolyserDurationCurve[index]
+            expect(val).toBeCloseTo(
+              hybridBatteryOversizeRatioElectrolyserDurationCurve[index],
+              8
             );
           }
         );
@@ -293,7 +297,10 @@ describe("Working Data calculations", () => {
         expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
         (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
           (val, index) => {
-            expect(val).toEqual(windBatteryPPAElectrolyserDurationCurve[index]);
+            expect(val).toBeCloseTo(
+              windBatteryPPAElectrolyserDurationCurve[index],
+              8
+            );
           }
         );
 
