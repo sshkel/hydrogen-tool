@@ -1483,6 +1483,7 @@ function excess_generation(
       electrolyser_actual_power[i] -
       asu_nh3_actual_power[i];
     // TODO check if this okay, otherwise battery model throws exceptions
+    // it might've been just old battery model and the new one is fine
     return excess > 0 ? excess : 0;
   });
 }
