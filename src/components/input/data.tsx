@@ -131,11 +131,6 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Electrolyser System Oversizing",
     adornmentLabel: "%",
   },
-  renewableEnergyPlantOversizing: {
-    //done
-    title: "Renewable Energy Plant Oversizing",
-    adornmentLabel: "%",
-  },
   ammoniaPlantSec: {
     // done
     title: "Ammonia Plant SEC",

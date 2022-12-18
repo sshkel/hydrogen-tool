@@ -18,7 +18,6 @@ import {
 import {
   InputConfiguration,
   Model,
-  PowerCapacityConfiguration,
   PowerPlantConfiguration,
   PowerPlantType,
   PowerSupplyOption,
@@ -73,7 +72,6 @@ export type AmmoniaData = {
   location: string;
   maximumDegradationBeforeReplacement: number;
   maximumLoadWhenOverloading: number;
-  powerCapacityConfiguration: PowerCapacityConfiguration;
   powerPlantConfiguration: PowerPlantConfiguration;
   powerPlantOversizeRatio: number;
   powerPlantType: PowerPlantType;
