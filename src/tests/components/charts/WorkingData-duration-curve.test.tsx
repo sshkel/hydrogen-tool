@@ -3,6 +3,8 @@ import { mount } from "enzyme";
 import DurationCurve from "../../../components/charts/DurationCurve";
 import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
+import ammoniaSolarAmmoniaDurationCurveWithBattery from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
+import ammoniaSolarAmmoniaDurationCurve from "../../resources/ammonia-solar-ammonia-duration-curve.json";
 import ammoniaSolarElectrolyserDurationCurveWithBattery from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
 import ammoniaSolarElectrolyserDurationCurve from "../../resources/ammonia-solar-electrolyser-duration-curve.json";
 import ammoniaSolarGeneratorDurationCurveWithBattery from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
@@ -400,6 +402,18 @@ describe("Working Data calculations", () => {
         }
       );
 
+      const ammoniaDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
+
+      expect(ammoniaDurationCurve).toHaveLength(1);
+      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurve[index], 8);
+        }
+      );
+
       done();
     }, TIMEOUT);
   });
@@ -449,6 +463,21 @@ describe("Working Data calculations", () => {
         (val, index) => {
           expect(val).toBeCloseTo(
             ammoniaSolarElectrolyserDurationCurveWithBattery[index],
+            8
+          );
+        }
+      );
+
+      const ammoniaDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
+
+      expect(ammoniaDurationCurve).toHaveLength(1);
+      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            ammoniaSolarAmmoniaDurationCurveWithBattery[index],
             8
           );
         }
