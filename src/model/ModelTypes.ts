@@ -1,5 +1,3 @@
-import { PowerPlantType } from "../types";
-
 export type CsvRow = {
   [k: string]: number;
 };
@@ -11,7 +9,7 @@ export type ModelSummaryPerYear = {
   [k: string]: number;
 };
 
-export type ProjectModelSummary = {
+export interface ProjectModelSummary {
   electricityConsumed: number[];
   electricityProduced: number[];
   electricityConsumedByBattery: number[];
@@ -20,4 +18,11 @@ export type ProjectModelSummary = {
   powerPlantCapacityFactors: number[];
   ratedCapacityTime: number[];
   electrolyserCapacityFactors: number[];
-};
+}
+
+export interface AmmoniaProjectModelSummary extends ProjectModelSummary {
+  ammoniaCapacityFactors: number[];
+  totalAmmoniaOperatingTime: number[];
+  ammoniaRatedCapacityTime: number[];
+  ammoniaProduction: number[];
+}

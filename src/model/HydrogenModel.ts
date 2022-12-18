@@ -38,7 +38,7 @@ import {
   calculateNetBatteryFlow,
   calculateOverloadingModel,
   calculatePowerPlantCapacityFactors,
-  calculateSummary,
+  calculateSnapshotForYear,
   getBatteryLosses,
   getElectrolyserCapacityFactorsWithBattery,
   getExcessGeneration,
@@ -563,7 +563,7 @@ export class HydrogenModel implements Model {
       const powerPlantNominalCapacity =
         result.solarNominalCapacity + result.windNominalCapacity;
 
-      const operatingOutputs = calculateSummary(
+      const operatingOutputs = calculateSnapshotForYear(
         hourlyOperations.powerplantCapacityFactors,
         hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
@@ -658,7 +658,7 @@ export class HydrogenModel implements Model {
           ...hourlyOperation,
           hydrogenProduction,
         };
-        const operatingOutputs = calculateSummary(
+        const operatingOutputs = calculateSnapshotForYear(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
           hydrogenProduction,
@@ -717,7 +717,7 @@ export class HydrogenModel implements Model {
       const calculateElectrolyserOutput = (
         hourlyOperation: ModelHourlyOperation
       ) => {
-        return calculateSummary(
+        return calculateSnapshotForYear(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
           hourlyOperation.hydrogenProduction,

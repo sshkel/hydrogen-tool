@@ -26,17 +26,17 @@ import {
 } from "../types";
 import { mean, projectYears } from "../utils";
 import {
+  AmmoniaProjectModelSummary,
   CsvRow,
   ModelHourlyOperation,
-  ProjectModelSummary,
 } from "./ModelTypes";
 import {
   CumulativeDegradation,
   MaxDegradation,
+  calculateAmmoniaSnapshotForYear,
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
   calculatePowerPlantCapacityFactors,
-  calculateSummary,
   getBatteryLosses,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
@@ -225,6 +225,10 @@ export class AmmoniaModel implements Model {
       ratedCapacityTime,
       totalOperatingTime,
       hourlyOperations,
+      ammoniaCapacityFactors,
+      ammoniaProduction,
+      ammoniaRatedCapacityTime,
+      totalAmmoniaOperatingTime,
     } = this.calculateHydrogenModel(this.parameters.projectTimeline);
 
     const powerPlantNominalCapacity =
@@ -540,7 +544,7 @@ export class AmmoniaModel implements Model {
       "Grid Connection Cost": lcGridConnection,
       "Additional Costs": lcAdditionalCosts,
     };
-
+    // TODO why are we doing a map and then mean, we can just multiply by a hundie after mean
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
         mean(powerPlantCapacityFactors.map((x) => x * 100))
@@ -548,12 +552,24 @@ export class AmmoniaModel implements Model {
 
       "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)":
         roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
+
       "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
+      "Time Ammonia Plant is at Max Capacity (% of 8760 hrs/yr)": roundToTwoDP(
+        mean(ammoniaRatedCapacityTime.map((x) => x * 100))
+      ),
+
+      "Total Time Ammonia Plant is Operating (% of 8760 hrs/yr)": roundToTwoDP(
+        mean(totalAmmoniaOperatingTime.map((x) => x * 100))
+      ),
+
       "Electrolyser Capacity Factor": roundToTwoDP(
         mean(electrolyserCapacityFactors.map((x) => x * 100))
+      ),
+      "Ammonia Capacity Factor": roundToTwoDP(
+        mean(ammoniaCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
@@ -564,6 +580,9 @@ export class AmmoniaModel implements Model {
         roundToNearestInteger(mean(electricityProduced)),
 
       "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
+
+      "Ammonia Output (TPA)": roundToNearestInteger(mean(ammoniaProduction)),
+
       "LCH2 ($/kg)": roundToTwoDP(lch2),
     };
 
@@ -673,10 +692,12 @@ export class AmmoniaModel implements Model {
       const powerPlantNominalCapacity =
         result.solarNominalCapacity + result.windNominalCapacity;
 
-      const operatingOutputs = calculateSummary(
+      const operatingOutputs = calculateAmmoniaSnapshotForYear(
         hourlyOperations.powerplantCapacityFactors,
         hourlyOperations.electrolyserCapacityFactors,
+        ammoniaCapacityFactors,
         hydrogenProduction,
+        ammoniaProduction,
         hourlyOperations.netBatteryFlow,
         electrolyserNominalCapacity,
         powerPlantNominalCapacity,
@@ -686,7 +707,7 @@ export class AmmoniaModel implements Model {
         this.batteryEfficiency
       );
 
-      let projectSummary: ProjectModelSummary = {
+      let projectSummary: AmmoniaProjectModelSummary = {
         electricityConsumed: [],
         electricityProduced: [],
         electricityConsumedByBattery: [],
@@ -695,10 +716,14 @@ export class AmmoniaModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
+        ammoniaRatedCapacityTime: [],
+        totalAmmoniaOperatingTime: [],
+        ammoniaCapacityFactors: [],
+        ammoniaProduction: [],
       };
 
       Object.keys(operatingOutputs).forEach((key) => {
-        projectSummary[key as keyof ProjectModelSummary] = Array(
+        projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
           projectTimeline
         ).fill(operatingOutputs[key]);
       });
@@ -710,7 +735,6 @@ export class AmmoniaModel implements Model {
         windNominalCapacity: result.windNominalCapacity,
         electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
-        ammoniaProduction,
         ...projectSummary,
       };
     } else if (inputConfiguration === "Advanced") {
@@ -804,10 +828,12 @@ export class AmmoniaModel implements Model {
           hydrogenProduction,
           ammoniaCapacityFactors,
         };
-        const operatingOutputs = calculateSummary(
+        const operatingOutputs = calculateAmmoniaSnapshotForYear(
           powerplantCapacityFactors,
           electrolyserCapacityFactors,
+          ammoniaCapacityFactors,
           hydrogenProduction,
+          ammoniaProduction,
           netBatteryFlow,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
@@ -817,7 +843,7 @@ export class AmmoniaModel implements Model {
           this.batteryEfficiency
         );
 
-        let projectSummary: ProjectModelSummary = {
+        let projectSummary: AmmoniaProjectModelSummary = {
           electricityConsumed: [],
           electricityProduced: [],
           electricityConsumedByBattery: [],
@@ -826,9 +852,13 @@ export class AmmoniaModel implements Model {
           powerPlantCapacityFactors: [],
           ratedCapacityTime: [],
           electrolyserCapacityFactors: [],
+          ammoniaRatedCapacityTime: [],
+          totalAmmoniaOperatingTime: [],
+          ammoniaCapacityFactors: [],
+          ammoniaProduction: [],
         };
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof ProjectModelSummary] = Array(
+          projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
             projectTimeline
           ).fill(operatingOutputs[key]);
         });
@@ -839,7 +869,6 @@ export class AmmoniaModel implements Model {
           windNominalCapacity: windNominalCapacity,
           electrolyserNominalCapacity: electrolyserNominalCapacity,
           hourlyOperations: hourlyOperationsInYearOne,
-          ammoniaProduction,
           ...projectSummary,
         };
       }
@@ -864,10 +893,12 @@ export class AmmoniaModel implements Model {
       const calculateAmmoniaModelSummary = (
         hourlyOperation: ModelHourlyOperation
       ) => {
-        return calculateSummary(
+        return calculateAmmoniaSnapshotForYear(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
+          hourlyOperation.ammoniaCapacityFactors,
           hourlyOperation.hydrogenProduction,
+          hourlyOperation.ammoniaProduction,
           hourlyOperation.netBatteryFlow,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
@@ -945,7 +976,7 @@ export class AmmoniaModel implements Model {
         return calculateAmmoniaModelSummary(value);
       });
 
-      let projectSummary: ProjectModelSummary = {
+      let projectSummary: AmmoniaProjectModelSummary = {
         electricityConsumed: [],
         electricityProduced: [],
         electricityConsumedByBattery: [],
@@ -954,11 +985,15 @@ export class AmmoniaModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
+        ammoniaRatedCapacityTime: [],
+        totalAmmoniaOperatingTime: [],
+        ammoniaCapacityFactors: [],
+        ammoniaProduction: [],
       };
 
       modelSummaryPerYear.forEach((yearSummary) => {
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof ProjectModelSummary].push(
+          projectSummary[key as keyof AmmoniaProjectModelSummary].push(
             yearSummary[key]
           );
         });

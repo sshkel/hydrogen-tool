@@ -349,7 +349,7 @@ export function calculateOverloadingModel(
   return electrolyserCfoverload;
 }
 
-export function calculateSummary(
+export function calculateSnapshotForYear(
   powerPlantCapacityFactors: number[],
   electrolyserCapacityFactors: number[],
   hydrogenProduction: number[],
@@ -362,7 +362,7 @@ export function calculateSummary(
   batteryEfficiency: number
 ): ModelSummaryPerYear {
   const generatorCapacityFactor = mean(powerPlantCapacityFactors);
-  // Time Electrolyser is at its Rated Capacity"
+  // Time Electrolyser is at its Rated Capacity
   const timeElectrolyser =
     electrolyserCapacityFactors.filter((e) => e === elecMaxLoad).length /
     hoursPerYear;
@@ -397,6 +397,51 @@ export function calculateSummary(
     electricityProduced: surplus,
     electricityConsumedByBattery: totalBatteryOutput,
     hydrogenProduction: hydrogenFixed,
+  };
+}
+
+export function calculateAmmoniaSnapshotForYear(
+  powerPlantCapacityFactors: number[],
+  electrolyserCapacityFactors: number[],
+  ammoniaCapacityFactors: number[],
+  hydrogenProduction: number[],
+  ammoniaProduction: number[],
+  netBatteryFlow: number[],
+  electrolyserNominalCapacity: number,
+  powerPlantNominalCapacity: number,
+  kgToTonne: number,
+  hoursPerYear: number,
+  elecMaxLoad: number,
+  batteryEfficiency: number
+): ModelSummaryPerYear {
+  // Time Ammonia PLant is at its Rated Capacity
+  const ammoniaRatedCapacityTime =
+    ammoniaCapacityFactors.filter((a) => a === elecMaxLoad).length /
+    hoursPerYear;
+  // Total Time Ammonia Plant is Operating
+  const totalAmmoniaOpsTime =
+    ammoniaCapacityFactors.filter((a) => a > 0).length / hoursPerYear;
+  // Achieved Electrolyser Capacity Factor
+  const achievedAmmoniaCf = mean(ammoniaCapacityFactors);
+  const nh3UnitOut = sum(ammoniaProduction) / 1000;
+
+  return {
+    ...calculateSnapshotForYear(
+      powerPlantCapacityFactors,
+      electrolyserCapacityFactors,
+      hydrogenProduction,
+      netBatteryFlow,
+      electrolyserNominalCapacity,
+      powerPlantNominalCapacity,
+      kgToTonne,
+      hoursPerYear,
+      elecMaxLoad,
+      batteryEfficiency
+    ),
+    ammoniaRatedCapacityTime,
+    totalAmmoniaOperatingTime: totalAmmoniaOpsTime,
+    ammoniaCapacityFactors: achievedAmmoniaCf,
+    ammoniaProduction: nh3UnitOut,
   };
 }
 
