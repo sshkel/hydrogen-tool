@@ -36,8 +36,7 @@ export function getOpex(
   principalPPACost: number,
   waterSupplyCost: number,
   waterRequirementOfElectrolyser: number,
-  h2Produced: number[],
-  additionalAnnualCosts: number
+  h2Produced: number[]
 ) {
   const gridConnected: boolean = isGridConnected(powerPlantConfiguration);
   const ppaAgreement: boolean = isPPAAgreement(powerSupplyOption);
@@ -122,7 +121,31 @@ export function getOpex(
     (i) => waterSupplyCost * waterRequirementOfElectrolyser * h2Produced[i]
   );
 
-  const totalOpex = fillYearsArray(
+  return {
+    electricityOpexCost,
+    electrolyserOpexCost,
+    powerPlantOpexCost,
+    batteryOpexCost,
+    waterOpexCost,
+    stackReplacementCostsOverProjectLife,
+    batteryReplacementCostsOverProjectLife,
+    gridConnectionOpexPerYear,
+  };
+}
+
+export function getTotalHydrogenOpex(
+  projectTimeline: number,
+  electrolyserOpexCost: number,
+  powerPlantOpexCost: number,
+  batteryOpexCost: number,
+  electricityOpexCost: number[],
+  waterOpexCost: number[],
+  gridConnectionOpexPerYear: number[],
+  additionalAnnualCosts: number,
+  stackReplacementCostsOverProjectLife: number[],
+  batteryReplacementCostsOverProjectLife: number[]
+) {
+  return fillYearsArray(
     projectTimeline,
     (i: number) =>
       electrolyserOpexCost +
@@ -135,17 +158,37 @@ export function getOpex(
       stackReplacementCostsOverProjectLife[i] +
       batteryReplacementCostsOverProjectLife[i]
   );
-  return {
-    electricityOpexCost,
-    electrolyserOpexCost,
-    powerPlantOpexCost,
-    batteryOpexCost,
-    waterOpexCost,
-    stackReplacementCostsOverProjectLife,
-    batteryReplacementCostsOverProjectLife,
-    gridConnectionOpexPerYear,
-    totalOpex,
-  };
+}
+
+export function getTotalAmmoniaOpex(
+  projectTimeline: number,
+  electrolyserOpexCost: number,
+  powerPlantOpexCost: number,
+  batteryOpexCost: number,
+  electricityOpexCost: number[],
+  waterOpexCost: number[],
+  gridConnectionOpexPerYear: number[],
+  additionalAnnualCosts: number,
+  stackReplacementCostsOverProjectLife: number[],
+  batteryReplacementCostsOverProjectLife: number[],
+  h2StorageOpexCost: number,
+  ammoniaOpexCost: number
+) {
+  return fillYearsArray(
+    projectTimeline,
+    (i: number) =>
+      electrolyserOpexCost +
+      powerPlantOpexCost +
+      batteryOpexCost +
+      electricityOpexCost[i] +
+      waterOpexCost[i] +
+      gridConnectionOpexPerYear[i] +
+      additionalAnnualCosts +
+      stackReplacementCostsOverProjectLife[i] +
+      batteryReplacementCostsOverProjectLife[i] +
+      h2StorageOpexCost +
+      ammoniaOpexCost
+  );
 }
 
 export function getAmmoniaOpex(

@@ -193,8 +193,7 @@ describe("Opex calculations", () => {
       principalPPACost,
       waterSupplyCost,
       waterRequirementOfElectrolyser,
-      valuesForProjectLife,
-      additionalAnnualCosts
+      valuesForProjectLife
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(20));
   });
@@ -268,8 +267,7 @@ describe("Opex calculations", () => {
       principalPPACost,
       waterSupplyCost,
       waterRequirementOfElectrolyser,
-      valuesForProjectLife,
-      additionalAnnualCosts
+      valuesForProjectLife
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
   });
@@ -342,8 +340,7 @@ describe("Opex calculations", () => {
       principalPPACost,
       waterSupplyCost,
       waterRequirementOfElectrolyser,
-      valuesForProjectLife,
-      additionalAnnualCosts
+      valuesForProjectLife
     );
     expect(gridConnectionOpexPerYear).toEqual(Array(10).fill(0));
   });

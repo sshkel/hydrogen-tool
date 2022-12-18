@@ -4,9 +4,9 @@ import {
 } from "../components/charts/basic-calculations";
 import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
+  calculateH2ProductionLC,
   roundToNearestInteger,
   roundToTwoDP,
-  sales,
 } from "../components/charts/cost-functions";
 import { generateLCBreakdown } from "../components/charts/lch2-calculations";
 import {
@@ -14,6 +14,7 @@ import {
   calculatePerYearOpex,
   getAmmoniaOpex,
   getOpex,
+  getTotalAmmoniaOpex,
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
@@ -373,7 +374,6 @@ export class AmmoniaModel implements Model {
       stackReplacementCostsOverProjectLife,
       batteryReplacementCostsOverProjectLife,
       gridConnectionOpexPerYear,
-      totalOpex,
     } = getOpex(
       this.parameters.powerPlantConfiguration,
       this.parameters.powerSupplyOption,
@@ -402,8 +402,7 @@ export class AmmoniaModel implements Model {
       this.principalPPACost,
       this.parameters.waterSupplyCost,
       this.parameters.waterRequirementOfElectrolyser,
-      hydrogenProduction,
-      this.parameters.additionalAnnualCosts
+      hydrogenProduction
     );
 
     const { h2StorageOpexCost, ammoniaOpexCost } = getAmmoniaOpex(
@@ -419,6 +418,21 @@ export class AmmoniaModel implements Model {
       this.parameters.ammoniaPlantOMCost,
       this.parameters.ammoniaStorageOMCost,
       this.parameters.asuPlantOMCost
+    );
+
+    const totalOpex = getTotalAmmoniaOpex(
+      this.parameters.projectTimeline,
+      electrolyserOpexCost,
+      powerPlantOpexCost,
+      batteryOpexCost,
+      electricityOpexCost,
+      waterOpexCost,
+      gridConnectionOpexPerYear,
+      this.parameters.additionalAnnualCosts,
+      stackReplacementCostsOverProjectLife,
+      batteryReplacementCostsOverProjectLife,
+      h2StorageOpexCost,
+      ammoniaOpexCost
     );
 
     const {
@@ -467,7 +481,7 @@ export class AmmoniaModel implements Model {
       },
     };
 
-    const { lch2, hydrogenProductionCost } = sales(
+    const { lch2, hydrogenProductionCost } = calculateH2ProductionLC(
       totalCapexCost,
       totalEpcCost,
       totalLandCost,
@@ -602,15 +616,25 @@ export class AmmoniaModel implements Model {
         this.specCons
       );
 
-      const ammoniaCapacityFactors = calculateNH3CapFactors(
+      const h2ToNH3Unit = calculateH2ToNH3Unit(
         hydrogenProduction,
         1, // TODO check with Jack if this works
-        this.parameters.ammoniaPlantCapacity,
-        this.parameters.hydrogenStorageCapacity,
-        this.parameters.ammoniaPlantMinimumTurndown / 100,
-        this.parameters.minimumHydrogenStorage / 100,
         hydrogenOutput,
-        airSeparationUnitCapacity,
+        this.parameters.hydrogenStorageCapacity,
+        this.parameters.minimumHydrogenStorage / 100,
+        this.parameters.ammoniaPlantMinimumTurndown / 100
+      );
+
+      const asuOut = asu_out(
+        h2ToNH3Unit,
+        hydrogenOutput,
+        airSeparationUnitCapacity
+      );
+
+      const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
+      const ammoniaCapacityFactors = nh3_unit_capacity_factor(
+        ammoniaProduction,
+        this.parameters.ammoniaPlantCapacity,
         this.hoursPerYear
       );
 
@@ -688,6 +712,7 @@ export class AmmoniaModel implements Model {
         windNominalCapacity: result.windNominalCapacity,
         electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
+        ammoniaProduction,
         ...projectSummary,
       };
     } else if (inputConfiguration === "Advanced") {
@@ -752,15 +777,25 @@ export class AmmoniaModel implements Model {
           this.specCons
         );
 
-        const ammoniaCapacityFactors = calculateNH3CapFactors(
+        const h2ToNH3Unit = calculateH2ToNH3Unit(
           hydrogenProduction,
           electrolyserNominalCapacity,
-          this.parameters.ammoniaPlantCapacity,
-          this.parameters.hydrogenStorageCapacity,
-          this.parameters.ammoniaPlantMinimumTurndown / 100,
-          this.parameters.minimumHydrogenStorage / 100,
           hydrogenOutput,
-          airSeparationUnitCapacity,
+          this.parameters.hydrogenStorageCapacity,
+          this.parameters.minimumHydrogenStorage / 100,
+          this.parameters.ammoniaPlantMinimumTurndown / 100
+        );
+
+        const asuOut = asu_out(
+          h2ToNH3Unit,
+          hydrogenOutput,
+          airSeparationUnitCapacity
+        );
+
+        const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
+        const ammoniaCapacityFactors = nh3_unit_capacity_factor(
+          ammoniaProduction,
+          this.parameters.ammoniaPlantCapacity,
           this.hoursPerYear
         );
 
@@ -806,6 +841,7 @@ export class AmmoniaModel implements Model {
           windNominalCapacity: windNominalCapacity,
           electrolyserNominalCapacity: electrolyserNominalCapacity,
           hourlyOperations: hourlyOperationsInYearOne,
+          ammoniaProduction,
           ...projectSummary,
         };
       }
@@ -827,7 +863,7 @@ export class AmmoniaModel implements Model {
         );
       }
 
-      const calculateElectrolyserOutput = (
+      const calculateAmmoniaModelSummary = (
         hourlyOperation: ModelHourlyOperation
       ) => {
         return calculateSummary(
@@ -871,23 +907,35 @@ export class AmmoniaModel implements Model {
             yearlyDegradationRate,
             this.specCons
           );
-          const ammoniaCapacityFactors = calculateNH3CapFactors(
+          const h2ToNH3Unit = calculateH2ToNH3Unit(
             hydrogenProduction,
             electrolyserNominalCapacity,
-            this.parameters.ammoniaPlantCapacity,
-            this.parameters.hydrogenStorageCapacity,
-            this.parameters.ammoniaPlantMinimumTurndown / 100,
-            this.parameters.minimumHydrogenStorage / 100,
             hydrogenOutput,
-            airSeparationUnitCapacity,
+            this.parameters.hydrogenStorageCapacity,
+            this.parameters.minimumHydrogenStorage / 100,
+            this.parameters.ammoniaPlantMinimumTurndown / 100
+          );
+
+          const asuOut = asu_out(
+            h2ToNH3Unit,
+            hydrogenOutput,
+            airSeparationUnitCapacity
+          );
+
+          const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
+          const ammoniaCapacityFactors = nh3_unit_capacity_factor(
+            ammoniaProduction,
+            this.parameters.ammoniaPlantCapacity,
             this.hoursPerYear
           );
+
           return {
             powerplantCapacityFactors,
             electrolyserCapacityFactors,
             netBatteryFlow,
             hydrogenProduction,
             ammoniaCapacityFactors,
+            ammoniaProduction,
           };
         }
       );
@@ -896,7 +944,7 @@ export class AmmoniaModel implements Model {
         capFactorsByYear[0];
 
       const modelSummaryPerYear = capFactorsByYear.map((value) => {
-        return calculateElectrolyserOutput(value);
+        return calculateAmmoniaModelSummary(value);
       });
 
       let projectSummary: ProjectModelSummary = {
@@ -1361,21 +1409,14 @@ function h2_storage_balance(
   return { from_h2_store, h2_storage_balance_result };
 }
 
-function calculateNH3CapFactors(
-  hydrogenProduction: number[], // calculated in hydrogen
+function calculateH2ToNH3Unit(
+  hydrogenProduction: number[],
   electrolyserNominalCapacity: number,
-  // system sizing
-  ammonia_plant_capacity: number, // raw input
-  hydrogen_storage_capacity: number, // raw input
-  // ammonia plant load range
-  ammonia_plant_minimum_turndown: number, // raw input %
-  // electrolyster and hydrogen storage parameters
-  // other operation factors
-  minimum_hydrogen_storage: number, // %
   hydrogen_output: number,
-  air_separation_unit_capacity: number,
-  hoursPerYear: number
-): number[] {
+  hydrogen_storage_capacity: number,
+  minimum_hydrogen_storage: number,
+  ammonia_plant_minimum_turndown: number
+) {
   // adjust hydrogen to work for ammonia
   const mass_of_hydrogen = hydrogenProduction.map(
     (v) => v * electrolyserNominalCapacity
@@ -1398,20 +1439,7 @@ function calculateNH3CapFactors(
     hydrogen_output,
     ammonia_plant_minimum_turndown
   );
-
-  const asu_out_result = asu_out(
-    h2_to_nh3_result,
-    hydrogen_output,
-    air_separation_unit_capacity
-  );
-
-  const nh3_unit_out_result = nh3_unit_out(asu_out_result, h2_to_nh3_result);
-  const nh3_unit_capacity_factors = nh3_unit_capacity_factor(
-    nh3_unit_out_result,
-    ammonia_plant_capacity,
-    hoursPerYear
-  );
-  return nh3_unit_capacity_factors;
+  return h2_to_nh3_result;
 }
 
 function ammonia_plant_CAPEX(

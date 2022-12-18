@@ -4,14 +4,15 @@ import {
 } from "../components/charts/basic-calculations";
 import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
+  calculateH2ProductionLC,
   roundToNearestInteger,
   roundToTwoDP,
-  sales,
 } from "../components/charts/cost-functions";
 import { generateLCBreakdown } from "../components/charts/lch2-calculations";
 import {
   calculatePerYearOpex,
   getOpex,
+  getTotalHydrogenOpex,
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
@@ -320,7 +321,6 @@ export class HydrogenModel implements Model {
       stackReplacementCostsOverProjectLife,
       batteryReplacementCostsOverProjectLife,
       gridConnectionOpexPerYear,
-      totalOpex,
     } = getOpex(
       this.parameters.powerPlantConfiguration,
       this.parameters.powerSupplyOption,
@@ -349,8 +349,20 @@ export class HydrogenModel implements Model {
       this.principalPPACost,
       this.parameters.waterSupplyCost,
       this.parameters.waterRequirementOfElectrolyser,
-      hydrogenProduction,
-      this.parameters.additionalAnnualCosts
+      hydrogenProduction
+    );
+
+    const totalOpex = getTotalHydrogenOpex(
+      this.parameters.projectTimeline,
+      electrolyserOpexCost,
+      powerPlantOpexCost,
+      batteryOpexCost,
+      electricityOpexCost,
+      waterOpexCost,
+      gridConnectionOpexPerYear,
+      this.parameters.additionalAnnualCosts,
+      stackReplacementCostsOverProjectLife,
+      batteryReplacementCostsOverProjectLife
     );
 
     const {
@@ -388,7 +400,7 @@ export class HydrogenModel implements Model {
       },
     };
 
-    const { lch2, hydrogenProductionCost } = sales(
+    const { lch2, hydrogenProductionCost } = calculateH2ProductionLC(
       totalCapexCost,
       totalEpcCost,
       totalLandCost,
