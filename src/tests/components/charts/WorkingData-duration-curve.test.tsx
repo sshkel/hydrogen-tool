@@ -40,7 +40,7 @@ describe("Working Data calculations", () => {
   });
 
   describe("Duration Curves", () => {
-    it("calculates duration curves as 8760 percentages for solar", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for solar", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -83,7 +83,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for solar with battery", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for solar with battery", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -128,7 +128,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -170,7 +170,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -213,7 +213,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -262,7 +262,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
+    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
       const wrapper = mount(
         <WorkingData
           inputConfiguration="Advanced"
@@ -309,7 +309,7 @@ describe("Working Data calculations", () => {
     });
   });
 
-  it("calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
+  it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
     const wrapper = mount(
       <WorkingData
         inputConfiguration="Advanced"
