@@ -100,7 +100,7 @@ describe("Model summary", () => {
         expect(data["Power Plant Capacity Factor"]).toEqual(29.66);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
-        ).toEqual(30); // 29.49
+        ).toEqual(30);
         expect(
           data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(54.99);
@@ -221,7 +221,7 @@ describe("Model summary", () => {
         expect(data["Power Plant Capacity Factor"]).toEqual(32.52);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
-        ).toEqual(17.85); //17.51
+        ).toEqual(17.85);
         expect(
           data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(83.6);
@@ -261,7 +261,7 @@ describe("Model summary", () => {
         expect(data["Power Plant Capacity Factor"]).toEqual(32.11);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
-        ).toEqual(17.92); // 17.49
+        ).toEqual(17.92);
         expect(
           data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(78.07);
@@ -425,7 +425,7 @@ describe("Model summary", () => {
         expect(data["Power Plant Capacity Factor"]).toEqual(36.76);
         expect(
           data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
-        ).toEqual(24.06); //23.76
+        ).toEqual(24.06);
         expect(
           data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(85.88);

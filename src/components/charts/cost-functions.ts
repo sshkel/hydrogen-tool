@@ -53,6 +53,57 @@ export function calculateH2ProductionLC(
   };
 }
 
+export function calculateAmmoniaProductionLC(
+  // Calculated values
+  totalCapexCost: number,
+  totalEpcCost: number,
+  totalLandCost: number,
+  // Inputs
+  projectTimeline: number,
+  discountRate: number,
+  totalOpex: number[],
+  h2Produced: number[],
+  nh3Produced: number[]
+) {
+  const activeLife = projectTimeline + 2;
+
+  const paddedH2Produced = padArray(h2Produced);
+  const paddedTotalOpex = padArray(totalOpex);
+  const paddedNH3Produced = padArray(nh3Produced);
+
+  const totalInvestmentRequired = startup(
+    totalCapexCost + totalEpcCost + totalLandCost,
+    projectTimeline
+  );
+
+  const totalCost = fillYearsArray(
+    activeLife,
+    (i: number) => totalInvestmentRequired[i] + paddedTotalOpex[i]
+  );
+
+  const applyDiscount = getDiscountFn(discountRate, activeLife);
+
+  const totalCostWithDiscount = applyDiscount(totalCost);
+  const h2ProducedKgLCA = applyDiscount(
+    fillYearsArray(activeLife, (i: number) => paddedH2Produced[i] * 1000)
+  );
+  const nh3ProducedKgLCA = applyDiscount(
+    fillYearsArray(activeLife, (i: number) => paddedNH3Produced[i] * 1000)
+  );
+
+  const hydrogenProductionCost = sum(h2ProducedKgLCA);
+  const ammoniaProductionCost = sum(nh3ProducedKgLCA);
+  const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
+  const lcnh3 = sum(totalCostWithDiscount) / ammoniaProductionCost;
+
+  return {
+    lch2,
+    lcnh3,
+    hydrogenProductionCost,
+    ammoniaProductionCost,
+  };
+}
+
 export function getInflationFn(rate: number, years: number) {
   return (values: number[]) => {
     if (values.length !== years) {

@@ -13,7 +13,7 @@ import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 
 import SynthesisedInputs from "../../SynthesisedInput";
-import { AmmoniaData, AmmoniaModel } from "../../model/Ammonia2Model";
+import { AmmoniaData, AmmoniaModel } from "../../model/AmmoniaModel";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
 import {
