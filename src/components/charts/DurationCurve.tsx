@@ -25,6 +25,20 @@ export default function DurationCurve(props: Props) {
   };
 
   const options = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Duration of Year",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Capacity Factor",
+        },
+      },
+    },
     plugins: {
       legend: {
         display: false,

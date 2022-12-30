@@ -49,6 +49,16 @@ export default function HourlyCapacityFactors(props: Props) {
           precision: 0,
           stepSize: 50,
         },
+        title: {
+          display: true,
+          text: "Hour",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Capacity Factor",
+        },
       },
     },
     plugins: {
