@@ -5,7 +5,7 @@ import KOALA_LOGO from "../../assets/OZ-02.png";
 import QUOKKA_LOGO from "../../assets/OZ-03.png";
 import { NAVY, OFF_WHITE, WHITE } from "../colors";
 
-const LOGO_HEIGHT = 350;
+const LOGO_HEIGHT = 380;
 
 const ItemTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.h4,
@@ -17,6 +17,7 @@ const ItemText = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
   paddingLeft: theme.spacing(4),
   paddingBottom: theme.spacing(2),
+  fontSize: 16,
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({

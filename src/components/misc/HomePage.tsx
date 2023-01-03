@@ -42,11 +42,7 @@ export default function HomePage() {
           />
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="center">
-          <img
-            alt="GlobH2E logo"
-            src={GLOBH2E_LOGO}
-            height={LOGO_HEIGHT}
-          />
+          <img alt="GlobH2E logo" src={GLOBH2E_LOGO} height={LOGO_HEIGHT} />
         </Grid>
         <Grid
           item
@@ -65,7 +61,7 @@ export default function HomePage() {
             Welcome to the
           </Typography>
           <Typography
-            fontSize={40}
+            fontSize={50}
             fontStyle="Nunito"
             fontWeight="800"
             color={NAVY}
@@ -74,7 +70,7 @@ export default function HomePage() {
             NSW Powerfuel Value Chain Tool
           </Typography>
           <Typography
-            fontSize={14}
+            fontSize={18}
             fontStyle="Nunito"
             color={BLACK}
             align="center"
@@ -123,7 +119,7 @@ export default function HomePage() {
       >
         <Typography
           align="center"
-          fontSize={14}
+          fontSize={10}
           fontStyle="Nunito"
           color={WHITE}
         >
