@@ -92,6 +92,10 @@ export default function BasicAmmoniaInput() {
                 key="electrolyserPurchaseCost"
                 inputKey="electrolyserPurchaseCost"
               />,
+              <InputSlider
+                key="ammoniaPlantCapitalCost"
+                inputKey="ammoniaPlantCapitalCost"
+              />,
               <InputSelect
                 key="powerSupplyOptionSelect"
                 selectKey="powerSupplyOptionSelect"

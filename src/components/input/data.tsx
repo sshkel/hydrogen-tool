@@ -84,6 +84,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     helperText:
       "Capital cost of electrolyser including the equipment and installation costs.",
   },
+  ammoniaPlantCapitalCost: {
+    min: 900,
+    max: 14000,
+    step: 50,
+    title: "Ammonia Plant Capital Cost ($/Ton)",
+    helperText:
+      "Includes Ammonia Synthesis Unit, Air Separation Unit and Ammonia Storage Unit Costs",
+  },
   solarFarmBuildCost: {
     min: 100,
     max: 5000,

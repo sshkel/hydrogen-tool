@@ -143,15 +143,16 @@ class Defaults {
       ammoniaPlantMinimumTurndown: 33,
       minimumHydrogenStorage: 10,
       ammoniaSynthesisUnitCost: 520,
-      ammoniaStorageCost: 1370,
-      airSeparationUnitCost: 251,
+      ammoniaStorageCost: 0,
+      airSeparationUnitCost: 0,
       ammoniaEpcCosts: 0,
       ammoniaLandProcurementCosts: 0,
       ammoniaPlantOMCost: 2,
-      ammoniaStorageOMCost: 2,
-      asuPlantOMCost: 2,
+      ammoniaStorageOMCost: 0,
+      asuPlantOMCost: 0,
       hydrogenStoragePurchaseCost: 878,
       hydrogenStorageOMCost: 2.5,
+      ammoniaPlantCapitalCost: 900,
     };
   }
 

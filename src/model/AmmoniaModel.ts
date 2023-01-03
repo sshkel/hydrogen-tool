@@ -42,6 +42,7 @@ import {
 import { HOURS_PER_YEAR } from "./consts";
 
 export type AmmoniaData = {
+  ammoniaPlantCapitalCost?: number;
   additionalAnnualCosts: number;
   additionalTransmissionCharges?: number;
   additionalUpfrontCosts: number;
@@ -276,15 +277,21 @@ export class AmmoniaModel implements Model {
       this.batteryCosts,
       this.gridConnectionCost
     );
+    let ammoniaCapex = 0;
+    if (this.parameters.inputConfiguration === "Basic") {
+      ammoniaCapex =
+        this.parameters.ammoniaPlantCapitalCost! * this.parameters.projectScale;
+    } else {
+      ammoniaCapex = ammonia_plant_CAPEX(
+        this.parameters.ammoniaPlantCapacity,
+        this.parameters.ammoniaStorageCapacity,
+        airSeparationUnitCapacity,
+        this.parameters.ammoniaSynthesisUnitCost,
+        this.parameters.ammoniaStorageCost,
+        this.parameters.airSeparationUnitCost
+      );
+    }
 
-    const ammoniaCapex = ammonia_plant_CAPEX(
-      this.parameters.ammoniaPlantCapacity,
-      this.parameters.ammoniaStorageCapacity,
-      airSeparationUnitCapacity,
-      this.parameters.ammoniaSynthesisUnitCost,
-      this.parameters.ammoniaStorageCost,
-      this.parameters.airSeparationUnitCost
-    );
     const h2StorageCapex = hydrogen_storage_CAPEX(
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost

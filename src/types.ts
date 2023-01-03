@@ -213,6 +213,8 @@ export interface Inputs {
   ammoniaSynthesisUnitCost?: number;
   ammoniaStorageCost?: number;
   airSeparationUnitCost?: number;
+  // 3 things above rolled up into one for simplified
+  ammoniaPlantCapitalCost?: number;
   ammoniaEpcCosts?: number;
   ammoniaLandProcurementCosts?: number;
   ammoniaPlantOMCost?: number;

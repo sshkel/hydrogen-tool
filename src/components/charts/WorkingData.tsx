@@ -200,6 +200,7 @@ export default function WorkingData(props: Props) {
       asuPlantOMCost: inputs.asuPlantOMCost!,
       hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!,
       hydrogenStorageOMCost: inputs.hydrogenStorageOMCost!,
+      ammoniaPlantCapitalCost: inputs.ammoniaPlantCapitalCost!,
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);
