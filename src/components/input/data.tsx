@@ -133,12 +133,12 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   ammoniaPlantSec: {
     // done
-    title: "Ammonia Plant SEC",
+    title: "Ammonia Plant Specific Energy Consumption",
     adornmentLabel: "kWhe/kgNH3",
   },
   asuSec: {
     // done
-    title: "ASU SEC",
+    title: "Air Separation Unit Specific Energy Consumption",
     adornmentLabel: "kWhe/kgN2",
   },
   hydrogenStorageCapacity: {
