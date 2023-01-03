@@ -45,6 +45,22 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     helperText:
       "Electrolyser efficiency relative to 33.33 kWh/kg of H2 required.",
   },
+  electrolyserSystemOversizing: {
+    min: 0,
+    max: 100,
+    step: 2.5,
+    title: "Electrolyser System Oversizing",
+    helperText:
+      "Oversize the electrolyser to optimize excess hydrogen production for storage",
+  },
+  hydrogenStorageCapacity: {
+    min: 0,
+    max: 500_000,
+    step: 50_000,
+    title: "Hydrogen Storage Capacity",
+    helperText:
+      "Add hydrogen storage to improve ammonia production flexibility",
+  },
   powerPlantOversizeRatio: {
     min: 1,
     max: 3,

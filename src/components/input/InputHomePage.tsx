@@ -15,6 +15,7 @@ import BasicHydrogenInput from "./BasicHydrogenInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
 import AdvancedAmmoniaInput from "./ammonia/AdvancedAmmoniaInput";
+import BasicAmmoniaInput from "./ammonia/BasicAmmoniaInput";
 import { configurationTypes } from "./data";
 
 interface Props {
@@ -118,7 +119,11 @@ export default function InputHomePage(props: Props) {
           />
         </TabList>
         <TabPanel value="Basic" sx={{ background: "#F2F2F2" }}>
-          <BasicHydrogenInput />
+          {powerfuel === "hydrogen" ? (
+            <BasicHydrogenInput />
+          ) : (
+            <BasicAmmoniaInput />
+          )}
         </TabPanel>
         <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
           {powerfuel === "hydrogen" ? (
