@@ -29,9 +29,32 @@ export default function CostLineChart(props: Props) {
     },
   };
 
+  const options = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Year",
+          font: {
+            size: 20,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Annual Operating Costs(A$)",
+          font: {
+            size: 20,
+          },
+        },
+      },
+    },
+  };
+
   return (
     <div>
-      <Line title={title} data={graphData} />
+      <Line title={title} data={graphData} options={options} />
     </div>
   );
 }

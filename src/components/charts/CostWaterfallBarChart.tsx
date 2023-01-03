@@ -2,7 +2,7 @@ import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
-import { ORANGE, TEAL, addAlpha } from "../colors";
+import { BLUE, ORANGE, TEAL, addAlpha } from "../colors";
 
 interface Props {
   title: string;
@@ -52,7 +52,10 @@ export default function CostBarChart(props: Props) {
       y: {
         title: {
           display: true,
-          text: "$/yr",
+          text: "Levelised Cost ($/yr)",
+          font: {
+            size: 20,
+          },
         },
       },
     },

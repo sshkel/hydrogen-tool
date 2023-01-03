@@ -52,12 +52,18 @@ export default function HourlyCapacityFactors(props: Props) {
         title: {
           display: true,
           text: "Hour",
+          font: {
+            size: 20,
+          },
         },
       },
       y: {
         title: {
           display: true,
           text: "Capacity Factor",
+          font: {
+            size: 20,
+          },
         },
       },
     },
