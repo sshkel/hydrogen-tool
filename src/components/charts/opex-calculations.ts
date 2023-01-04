@@ -206,21 +206,25 @@ export function getAmmoniaOpex(
   asuPlantOMCost: number
 ) {
   const ammoniaSynthesisUnitOM =
-    ammoniaPlantCapacity * ammoniaSynthesisUnitCost * ammoniaPlantOMCost * 1000;
+    ((ammoniaPlantCapacity * ammoniaSynthesisUnitCost * ammoniaPlantOMCost) /
+      100) *
+    1000;
   const ammoniaStorageUnitOM =
     (ammoniaPlantCapacity *
       ammoniaStorageCapacity *
       ammoniaStorageCost *
-      ammoniaStorageOMCost *
+      (ammoniaStorageOMCost / 100) *
       1000) /
     365;
   const airSynthetsisUnitOM =
-    airSeparationUnitCapacity * airSeparationUnitCost * 365 * asuPlantOMCost;
+    (airSeparationUnitCapacity * airSeparationUnitCost * 365 * asuPlantOMCost) /
+    100;
 
   const h2StorageOpexCost = roundToNearestThousand(
-    hydrogenStorageCapacity *
+    (hydrogenStorageCapacity *
       hydrogenStoragePurchaseCost *
-      hydrogenStorageOMCost
+      hydrogenStorageOMCost) /
+      100
   );
 
   return {

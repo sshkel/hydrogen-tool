@@ -99,6 +99,39 @@ export function generateLCBreakdown(
   };
 }
 
+export function generateAmmoniaLCBreakdown(
+  h2StorageCAPEX: number,
+  ammoniaPlantCAPEX: number,
+  h2StorageOpexCost: number,
+  ammoniaPlantOpexCost: number,
+  hydrogenProductionCost: number,
+  projectTimeline: number,
+  discountRate: number
+) {
+  const lcH2StorageCAPEX = h2StorageCAPEX / hydrogenProductionCost;
+  const lcAmmoniaPlantCAPEX = ammoniaPlantCAPEX / hydrogenProductionCost;
+
+  const h2StorageOpexPerYear = Array(projectTimeline).fill(h2StorageOpexCost);
+  const ammoniaPlantOpexPerYear =
+    Array(projectTimeline).fill(ammoniaPlantOpexCost);
+
+  const calculateLevelisedCost = getLevelisedCostCalculation(
+    discountRate,
+    projectTimeline,
+    hydrogenProductionCost
+  );
+
+  const lcH2StorageOPEX = calculateLevelisedCost(h2StorageOpexPerYear);
+  const lcAmmoniaPlantOPEX = calculateLevelisedCost(ammoniaPlantOpexPerYear);
+
+  return {
+    lcH2StorageCAPEX,
+    lcAmmoniaPlantCAPEX,
+    lcH2StorageOPEX,
+    lcAmmoniaPlantOPEX,
+  };
+}
+
 function getLevelisedCostCalculation(
   discountRate: number,
   years: number,

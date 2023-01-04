@@ -6,9 +6,13 @@ import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
   calculateAmmoniaProductionLC,
   roundToNearestInteger,
+  roundToNearestThousand,
   roundToTwoDP,
 } from "../components/charts/cost-functions";
-import { generateLCBreakdown } from "../components/charts/lch2-calculations";
+import {
+  generateAmmoniaLCBreakdown,
+  generateLCBreakdown,
+} from "../components/charts/lch2-calculations";
 import {
   calculateAmmoniaPerYearOpex,
   calculatePerYearOpex,
@@ -540,12 +544,31 @@ export class AmmoniaModel implements Model {
       gridConnectionCAPEX
     );
 
+    const {
+      lcH2StorageCAPEX,
+      lcAmmoniaPlantCAPEX,
+      lcH2StorageOPEX,
+      lcAmmoniaPlantOPEX,
+    } = generateAmmoniaLCBreakdown(
+      h2StorageCapex,
+      ammoniaCapex,
+      h2StorageOpexCost,
+      ammoniaOpexCost,
+      hydrogenProductionCost,
+      this.parameters.projectTimeline,
+      this.discountRate
+    );
+
     const lch2BreakdownData: { [key: string]: number } = {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
+      "H2 Storage CAPEX": lcH2StorageCAPEX,
+      "Ammonia Plant CAPEX": lcAmmoniaPlantCAPEX,
       "Indirect Costs": lcIndirectCosts,
       "Power Plant OPEX": lcPowerPlantOPEX,
-      "Electrolyser O&M": lcElectrolyserOPEX,
+      "Electrolyser OPEX": lcElectrolyserOPEX,
+      "H2 Storage OPEX": lcH2StorageOPEX,
+      "Ammonia Plant OPEX": lcAmmoniaPlantOPEX,
       "Electricity Purchase": lcElectricityPurchase,
       "Stack Replacement": lcStackReplacement,
       "Water Cost": lcWater,
@@ -1494,10 +1517,11 @@ function ammonia_plant_CAPEX(
   ammonia_storage_purchase_cost: number, // cost per T for Ammonia Storage
   asu_purchase_cost: number // cost per T for ASU
 ) {
-  return (
+  return roundToNearestThousand(
     ammonia_plant_capacity * 1000 * ammonia_synthesis_unit_purchase_cost +
-    ((ammonia_storage_capacity * 1000) / 365) * ammonia_storage_purchase_cost +
-    asu_plant_capacity * asu_purchase_cost * 365
+      ((ammonia_storage_capacity * (ammonia_plant_capacity * 1000)) / 365) *
+        ammonia_storage_purchase_cost +
+      asu_plant_capacity * asu_purchase_cost * 365
   );
 }
 

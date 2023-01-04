@@ -243,6 +243,10 @@ export default function AdvancedHydrogenInput() {
                     inputKey="electrolyserOMCost"
                   />,
                   <InputNumberField
+                    key="hydrogenStorageOMCost"
+                    inputKey="hydrogenStorageOMCost"
+                  />,
+                  <InputNumberField
                     key="electrolyserStackReplacement"
                     inputKey="electrolyserStackReplacement"
                   />,

@@ -204,8 +204,13 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "% of CAPEX",
   },
   asuPlantOMCost: {
-    title: "ASU plant O&M",
+    title: "ASU Plant O&M",
     adornmentLabel: "% of CAPEX",
+  },
+  hydrogenStorageOMCost: {
+    title: "Hydrogen Storage O&M Cost",
+    adornmentLabel: "%/yr",
+    helperText: "% of CAPEX",
   },
   hydrogenStoragePurchaseCost: {
     title: "Hydrogen Storage Purchase Cost",
