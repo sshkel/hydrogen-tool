@@ -52,7 +52,8 @@ export default function BasicAmmoniaInput() {
                 key="electrolyserSystemOversizing"
                 inputKey="electrolyserSystemOversizing"
               />,
-              <InputSlider
+              // TODO work out why this freaks out as a slider
+              <InputNumberField
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"
               />,
