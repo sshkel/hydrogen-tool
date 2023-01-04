@@ -151,22 +151,18 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "days",
   },
   electrolyserSystemOversizing: {
-    // done
     title: "Electrolyser System Oversizing",
     adornmentLabel: "%",
   },
   ammoniaPlantSec: {
-    // done
     title: "Ammonia Plant Specific Energy Consumption",
     adornmentLabel: "kWhe/kgNH3",
   },
   asuSec: {
-    // done
     title: "Air Separation Unit Specific Energy Consumption",
     adornmentLabel: "kWhe/kgN2",
   },
   hydrogenStorageCapacity: {
-    //done
     title: "Hydrogen Storage Capacity",
     adornmentLabel: "kg",
   },
@@ -175,7 +171,6 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "%",
   },
   minimumHydrogenStorage: {
-    //done
     title: "Minimum Hydrogen Storage",
     adornmentLabel: "%",
   },
