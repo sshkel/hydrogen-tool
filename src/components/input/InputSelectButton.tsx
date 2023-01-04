@@ -36,7 +36,7 @@ function InputSelectButton(props: Props) {
   const InputCollapse = React.lazy(() => import("./InputCollapse"));
 
   return (
-    <Grid item xs={12} sx={{ marginX: 3 }}>
+    <Grid item xs={12} paddingX={3}>
       {!showCard ? (
         <div style={{ display: "flex" }}>
           <StyledButton

@@ -199,7 +199,7 @@ export class AmmoniaModel implements Model {
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
-    this.hoursPerYear = solarData.length;
+    this.hoursPerYear = solarData.length || HOURS_PER_YEAR;
 
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
@@ -332,7 +332,7 @@ export class AmmoniaModel implements Model {
     );
     const indirectCostBreakdown = {
       "Ammonia EPC": ammoniaEpcCost,
-      "Ammonia Land Cost": ammoniaLandCost,
+      "Ammonia Land": ammoniaLandCost,
       "Electrolyser EPC": electrolyserEpcCost,
       "Electrolyser Land": electrolyserLandCost,
       "Power Plant EPC": powerPlantEpcCost,
@@ -589,11 +589,10 @@ export class AmmoniaModel implements Model {
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Ammonia Plant is at Max Capacity (% of 8760 hrs/yr)": roundToTwoDP(
-        mean(ammoniaRatedCapacityTime.map((x) => x * 100))
-      ),
+      "Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)":
+        roundToTwoDP(mean(ammoniaRatedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Ammonia Plant is Operating (% of 8760 hrs/yr)": roundToTwoDP(
+      "Total Time Ammonia Plant is Operating (% of hrs/yr)": roundToTwoDP(
         mean(totalAmmoniaOperatingTime.map((x) => x * 100))
       ),
 

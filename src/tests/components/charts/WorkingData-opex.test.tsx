@@ -7,6 +7,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
+  standaloneAdvancedAmmoniaSolarScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -866,6 +867,112 @@ describe("Working Data calculations", () => {
       expect(datapoints[5]).toEqual({
         label: "Electricity Purchase",
         data: electricityPurchase,
+      });
+
+      done();
+    }, TIMEOUT);
+  });
+
+  it("calculates opex for ammonia solar", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        data={standaloneAdvancedAmmoniaSolarScenario.data}
+        location={standaloneAdvancedAmmoniaSolarScenario.location}
+        inputConfiguration={
+          standaloneAdvancedAmmoniaSolarScenario.inputConfiguration
+        }
+        loadSolar={loadNSWSolar}
+        loadWind={loadNSWWind}
+      />
+    );
+
+    const electrolyserOpex = [
+      3_068_850.0, 3_145_571.25, 3_224_210.53, 3_304_815.79, 3_387_436.19,
+      3_472_122.09, 3_558_925.15, 3_647_898.28, 3_739_095.73, 3_832_573.13,
+      3_928_387.45, 4_026_597.14, 4_127_262.07, 4_230_443.62, 73_707_369.61,
+      4_444_609.83, 4_555_725.07, 4_669_618.2, 4_786_358.66, 4_906_017.62,
+    ];
+
+    const powerPlantOpex = [
+      2724450, 2792561.25, 2862375.28, 2933934.66, 3007283.03, 3082465.11,
+      3159526.73, 3238514.9, 3319477.77, 3402464.72, 3487526.34, 3574714.49,
+      3664082.36, 3755684.42, 3849576.53, 3945815.94, 4044461.34, 4145572.87,
+      4249212.19, 4355442.5,
+    ];
+
+    const batteryOpex = new Array(20).fill(0);
+
+    const additionalAnnualCosts = new Array(20).fill(0);
+
+    const waterCosts = [
+      255782.6, 262177.16, 268731.59, 275449.88, 282336.13, 289394.53, 296629.4,
+      304045.13, 311646.26, 319437.42, 327423.35, 335608.94, 343999.16,
+      352599.14, 361414.12, 370449.47, 379710.71, 389203.47, 398933.56,
+      408906.9,
+    ];
+
+    const electricityPurchase = new Array(20).fill(0);
+
+    const h2StorageOpex = [
+      881_500.0, 903_537.5, 926_125.94, 949_279.09, 973_011.06, 997_336.34,
+      1_022_269.75, 1_047_826.49, 1_074_022.15, 1_100_872.71, 1_128_394.53,
+      1_156_604.39, 1_185_519.5, 1_215_157.49, 1_245_536.42, 1_276_674.83,
+      1_308_591.7, 1_341_306.5, 1_374_839.16, 1_409_210.14,
+    ];
+
+    const ammoniaOpex = [
+      860177.99, 881682.44, 903724.5, 926317.62, 949475.56, 973212.44,
+      997542.76, 1022481.32, 1048043.36, 1074244.44, 1101100.55, 1128628.07,
+      1156843.77, 1185764.86, 1215408.98, 1245794.21, 1276939.06, 1308862.54,
+      1341584.1, 1375123.71,
+    ];
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const opexChart = wrapper
+        .find(CostLineChart)
+        .filterWhere((e) => e.prop("title") === "Operating Costs");
+      expect(opexChart).toHaveLength(1);
+      const datapoints = opexChart.at(0).prop("datapoints");
+      expect(datapoints).toHaveLength(8);
+      expect(datapoints[0]).toEqual({
+        label: "Electrolyser OPEX",
+        data: electrolyserOpex,
+      });
+      expect(datapoints[1]).toEqual({
+        label: "Power Plant OPEX",
+        data: powerPlantOpex,
+      });
+
+      expect(datapoints[2]).toEqual({
+        label: "Battery OPEX",
+        data: batteryOpex,
+      });
+
+      expect(datapoints[3]).toEqual({
+        label: "Additional Annual Costs",
+        data: additionalAnnualCosts,
+      });
+
+      expect(datapoints[4]).toEqual({
+        label: "Water Costs",
+        data: waterCosts,
+      });
+
+      expect(datapoints[5]).toEqual({
+        label: "Electricity Purchase",
+        data: electricityPurchase,
+      });
+
+      expect(datapoints[6]).toEqual({
+        label: "H2 Storage OPEX",
+        data: h2StorageOpex,
+      });
+
+      expect(datapoints[7]).toEqual({
+        label: "Ammonia OPEX",
+        data: ammoniaOpex,
       });
 
       done();

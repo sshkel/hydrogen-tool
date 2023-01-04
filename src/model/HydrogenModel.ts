@@ -179,7 +179,7 @@ export class HydrogenModel implements Model {
     // Loaded data
     this.solarData = solarData;
     this.windData = windData;
-    this.hoursPerYear = solarData.length;
+    this.hoursPerYear = solarData.length || HOURS_PER_YEAR;
 
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;

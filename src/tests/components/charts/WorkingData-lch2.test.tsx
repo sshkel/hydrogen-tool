@@ -10,6 +10,7 @@ import {
   basicHybridPPAScenario,
   basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
+  standaloneAdvancedAmmoniaSolarScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -394,6 +395,58 @@ describe("Working Data calculations", () => {
       // lcAdditionalCosts,
       const costBreakdown = [
         0, 0.536, 0.193, 0, 0.142, 0.667, 0.109, 0.075, 0, 0, 0,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(WaterFallPane)
+          .filterWhere(
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+          );
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("items");
+
+        Object.values(datapoints).forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for ammonia solar", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneAdvancedAmmoniaSolarScenario.data}
+          location={standaloneAdvancedAmmoniaSolarScenario.location}
+          inputConfiguration={
+            standaloneAdvancedAmmoniaSolarScenario.inputConfiguration
+          }
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+        />
+      );
+
+      // lcPowerPlantCAPEX
+      // lcElectrolyserCAPEX
+      // lcH2StorageCAPEX
+      // lcAmmoniaPlantCAPEX
+      // lcIndirectCosts
+      // lcPowerPlantOPEX
+      // lcElectrolyserOPEX
+      // lcH2StorageOPEX
+      // lcAmmoniaPlantOPEX
+      // lcElectricityPurchase
+      // lcStackReplacement
+      // lcWater
+      // lcBattery
+      // lcGridConnection
+      // lcAdditionalCosts
+      const costBreakdown = [
+        4.26, 2.265, 0.81, 0.79, 0, 0.53, 0.6, 0.17, 0.17, 0, 0.328, 0.05, 0, 0,
+        0,
       ];
 
       // Sleep to wait for CSV to load and set state

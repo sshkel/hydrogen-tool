@@ -7,6 +7,7 @@ import { UserInputFields } from "../../../types";
 import {
   basicHybridPPAScenario,
   defaultInputData,
+  standaloneAdvancedAmmoniaSolarScenario,
   standaloneSolarWithBatteryScenario,
 } from "../../scenario";
 
@@ -375,6 +376,33 @@ describe("Working Data calculations", () => {
       // Indirect Cost = 224_000
       expect(dataArray["Indirect Costs"]).toEqual(224_000);
     });
+
+    it("calculates capital cost breakdown for ammonia", () => {
+      const wrapper = shallow(
+        <WorkingData
+          data={standaloneAdvancedAmmoniaSolarScenario.data}
+          inputConfiguration="Advanced"
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={standaloneAdvancedAmmoniaSolarScenario.location}
+        />
+      );
+
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const dataArray = costBreakdownChart.at(0).prop("items");
+
+      expect(dataArray["Electrolyser System"]).toEqual(119_746_000);
+      expect(dataArray["Ammonia"]).toEqual(41_960_000);
+      expect(dataArray["H2 Storage"]).toEqual(43_022_000);
+      expect(dataArray["Power Plant"]).toEqual(225_359_000);
+      expect(dataArray["Battery"]).toEqual(0);
+      expect(dataArray["Grid Connection"]).toEqual(0);
+      expect(dataArray["Additional Upfront Costs"]).toEqual(0);
+      expect(dataArray["Indirect Costs"]).toEqual(0);
+    });
   });
 
   describe("Indirect Cost Breakdown", () => {
@@ -623,6 +651,38 @@ describe("Working Data calculations", () => {
       expect(costBreakdownChart).toHaveLength(1);
 
       const chartData = costBreakdownChart.at(0).prop("items");
+      expect(chartData["Electrolyser EPC"]).toEqual(0);
+      expect(chartData["Electrolyser Land"]).toEqual(0);
+      expect(chartData["Power Plant EPC"]).toEqual(0);
+      expect(chartData["Power Plant Land"]).toEqual(0);
+      expect(chartData["Battery EPC"]).toEqual(0);
+      expect(chartData["Battery Land"]).toEqual(0);
+    });
+
+    it("calculates indirect cost breakdown for ammonia", () => {
+      const data: UserInputFields = {
+        ...standaloneAdvancedAmmoniaSolarScenario.data,
+        ammoniaEpcCosts: 1,
+        ammoniaLandProcurementCosts: 0.5,
+      };
+
+      const wrapper = shallow(
+        <WorkingData
+          data={data}
+          inputConfiguration="Advanced"
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={standaloneAdvancedAmmoniaSolarScenario.location}
+        />
+      );
+
+      const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const chartData = costBreakdownChart.at(0).prop("items");
+      expect(chartData["Ammonia EPC"]).toEqual(41_960_000);
+      expect(chartData["Ammonia Land"]).toEqual(20_980_000);
       expect(chartData["Electrolyser EPC"]).toEqual(0);
       expect(chartData["Electrolyser Land"]).toEqual(0);
       expect(chartData["Power Plant EPC"]).toEqual(0);
