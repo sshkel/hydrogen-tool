@@ -2,7 +2,6 @@ import Grid from "@mui/material/Grid";
 
 import "../../../input.css";
 import InputCard from "../InputCard";
-import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
 
@@ -56,7 +55,7 @@ export default function BasicAmmoniaInput() {
                 inputKey="electrolyserSystemOversizing"
               />,
               // TODO work out why this freaks out as a slider
-              <InputNumberField
+              <InputSlider
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"
               />,

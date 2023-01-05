@@ -150,7 +150,6 @@ export const sliderFieldDefaultInputs: DefaultInput = {
 export const numberFieldDefaultInputs: DefaultInput = {
   /******* Ammonia Parameters *******/
   ammoniaPlantCapacity: {
-    // done
     title: "Ammonia Plant Capacity",
     adornmentLabel: "kTPA",
   },
