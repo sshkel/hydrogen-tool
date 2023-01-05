@@ -642,42 +642,42 @@ export class AmmoniaModel implements Model {
       this.parameters.ammoniaPlantCapacity
     );
 
+    const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
+      this.parameters.ammoniaPlantCapacity,
+      this.parameters.ammoniaPlantSec,
+      this.hoursPerYear
+    );
+
+    const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
+      airSeparationUnitCapacity,
+      this.parameters.asuSec
+    );
+
+    const electrolyserNominalCapacity = nominal_electrolyser_capacity(
+      hydrogenOutput,
+      this.secAtNominalLoad,
+      this.parameters.electrolyserSystemOversizing / 100
+    );
+
+    const solarNominalCapacity = nominal_solar_capacity(
+      ammoniaPlantPowerDemand,
+      airSeparationUnitPowerDemand,
+      electrolyserNominalCapacity,
+      this.parameters.solarToWindPercentage / 100,
+      this.parameters.powerPlantOversizeRatio
+    );
+    const windNominalCapacity = nominal_wind_capacity(
+      ammoniaPlantPowerDemand,
+      airSeparationUnitPowerDemand,
+      electrolyserNominalCapacity,
+      1 - this.parameters.solarToWindPercentage / 100,
+      this.parameters.powerPlantOversizeRatio
+    );
+
+    const powerPlantNominalCapacity =
+      solarNominalCapacity + windNominalCapacity;
+
     if (inputConfiguration === "Basic") {
-      const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
-        this.parameters.ammoniaPlantCapacity,
-        this.parameters.ammoniaPlantSec,
-        this.hoursPerYear
-      );
-
-      const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
-        airSeparationUnitCapacity,
-        this.parameters.asuSec
-      );
-
-      const electrolyserNominalCapacity = nominal_electrolyser_capacity(
-        hydrogenOutput,
-        this.secAtNominalLoad,
-        this.parameters.electrolyserSystemOversizing / 100
-      );
-
-      const solarNominalCapacity = nominal_solar_capacity(
-        ammoniaPlantPowerDemand,
-        airSeparationUnitPowerDemand,
-        electrolyserNominalCapacity,
-        this.parameters.solarToWindPercentage / 100,
-        this.parameters.powerPlantOversizeRatio
-      );
-      const windNominalCapacity = nominal_wind_capacity(
-        ammoniaPlantPowerDemand,
-        airSeparationUnitPowerDemand,
-        electrolyserNominalCapacity,
-        1 - this.parameters.solarToWindPercentage / 100,
-        this.parameters.powerPlantOversizeRatio
-      );
-
-      const powerPlantNominalCapacity =
-        solarNominalCapacity + windNominalCapacity;
-
       const hourlyOperations =
         this.calculatePowerplantAndElectrolyserHourlyOperation(
           this.parameters.solarToWindPercentage / 100,
@@ -786,42 +786,6 @@ export class AmmoniaModel implements Model {
         ...projectSummary,
       };
     } else if (inputConfiguration === "Advanced") {
-      // ammonia
-      const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
-        this.parameters.ammoniaPlantCapacity,
-        this.parameters.ammoniaPlantSec,
-        this.hoursPerYear
-      );
-
-      const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
-        airSeparationUnitCapacity,
-        this.parameters.asuSec
-      );
-
-      const electrolyserNominalCapacity = nominal_electrolyser_capacity(
-        hydrogenOutput,
-        this.secAtNominalLoad,
-        this.parameters.electrolyserSystemOversizing / 100
-      );
-
-      const solarNominalCapacity = nominal_solar_capacity(
-        ammoniaPlantPowerDemand,
-        airSeparationUnitPowerDemand,
-        electrolyserNominalCapacity,
-        this.parameters.solarToWindPercentage / 100,
-        this.parameters.powerPlantOversizeRatio
-      );
-      const windNominalCapacity = nominal_wind_capacity(
-        ammoniaPlantPowerDemand,
-        airSeparationUnitPowerDemand,
-        electrolyserNominalCapacity,
-        1 - this.parameters.solarToWindPercentage / 100,
-        this.parameters.powerPlantOversizeRatio
-      );
-
-      const powerPlantNominalCapacity =
-        solarNominalCapacity + windNominalCapacity;
-
       const noDegradation =
         stackDegradation + solarDegradation + windDegradation === 0;
       if (noDegradation) {
