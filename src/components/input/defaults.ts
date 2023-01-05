@@ -149,7 +149,7 @@ class Defaults {
       electrolyserSystemOversizing: 45,
       ammoniaPlantSec: 0.6,
       asuSec: 0.22,
-      hydrogenStorageCapacity: 49_000,
+      hydrogenStorageCapacity: 50_000,
       ammoniaPlantMinimumTurndown: 50,
       minimumHydrogenStorage: 10,
       ammoniaSynthesisUnitCost: 0,
