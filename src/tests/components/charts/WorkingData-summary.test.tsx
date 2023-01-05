@@ -8,6 +8,7 @@ import {
   basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneAdvancedAmmoniaSolarScenario,
+  standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
   standaloneHybridWithDegradationScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
@@ -491,6 +492,60 @@ describe("Model summary", () => {
         expect(data["Ammonia Output (TPA)"]).toEqual(28_338);
         expect(data["LCH2 ($/kg)"]).toEqual(9.99);
         expect(data["LCNH3 ($/kg)"]).toEqual(1.76);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates summary of results for ammonia hybrid with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneAmmoniaHybridWithBatteryAndDegradationScenario.data}
+          location={
+            standaloneAmmoniaHybridWithBatteryAndDegradationScenario.location
+          }
+          inputConfiguration={
+            standaloneAmmoniaHybridWithBatteryAndDegradationScenario.inputConfiguration
+          }
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(SummaryOfResultsTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"]).toEqual(32.21);
+        expect(
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(39.69);
+        expect(
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
+        ).toEqual(99.8);
+        expect(
+          data["Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(93.65); // check why ammonia is mismatched
+        expect(
+          data["Total Time Ammonia Plant is Operating (% of hrs/yr)"]
+        ).toEqual(96.44);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(1037.57);
+        expect(data["Ammonia Capacity Factor"]).toEqual(95.55);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          13_344_422
+        );
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
+        ).toEqual(-12_026_316);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(256_449);
+        expect(data["Ammonia Output (TPA)"]).toEqual(95_810);
+        expect(data["LCH2 ($/kg)"]).toEqual(0.54);
+        expect(data["LCNH3 ($/kg)"]).toEqual(1.45);
 
         done();
       }, TIMEOUT);

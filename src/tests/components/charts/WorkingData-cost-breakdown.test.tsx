@@ -8,6 +8,7 @@ import {
   basicHybridPPAScenario,
   defaultInputData,
   standaloneAdvancedAmmoniaSolarScenario,
+  standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
   standaloneSolarWithBatteryScenario,
 } from "../../scenario";
 
@@ -403,6 +404,35 @@ describe("Working Data calculations", () => {
       expect(dataArray["Additional Upfront Costs"]).toEqual(0);
       expect(dataArray["Indirect Costs"]).toEqual(0);
     });
+
+    it("calculates capital cost breakdown for hybrid ammonia with battery", () => {
+      const wrapper = shallow(
+        <WorkingData
+          data={standaloneAmmoniaHybridWithBatteryAndDegradationScenario.data}
+          inputConfiguration="Advanced"
+          loadSolar={mockLoader}
+          loadWind={mockLoader}
+          location={
+            standaloneAmmoniaHybridWithBatteryAndDegradationScenario.location
+          }
+        />
+      );
+
+      const costBreakdownChart = findCapitalCostBreakdownChart(wrapper);
+
+      expect(costBreakdownChart).toHaveLength(1);
+
+      const dataArray = costBreakdownChart.at(0).prop("items");
+
+      expect(dataArray["Electrolyser System"]).toEqual(116_546_000);
+      expect(dataArray["Ammonia"]).toEqual(85_241_000);
+      expect(dataArray["H2 Storage"]).toEqual(50_000_000);
+      expect(dataArray["Power Plant"]).toEqual(581_005_000);
+      expect(dataArray["Battery"]).toEqual(4_336_000);
+      expect(dataArray["Grid Connection"]).toEqual(0);
+      expect(dataArray["Additional Upfront Costs"]).toEqual(0);
+      expect(dataArray["Indirect Costs"]).toEqual(225_544_000);
+    });
   });
 
   describe("Indirect Cost Breakdown", () => {
@@ -690,5 +720,33 @@ describe("Working Data calculations", () => {
       expect(chartData["Battery EPC"]).toEqual(0);
       expect(chartData["Battery Land"]).toEqual(0);
     });
+  });
+
+  it("calculates indirect cost breakdown for hybrid ammonia with battery", () => {
+    const wrapper = shallow(
+      <WorkingData
+        data={standaloneAmmoniaHybridWithBatteryAndDegradationScenario.data}
+        inputConfiguration="Advanced"
+        loadSolar={mockLoader}
+        loadWind={mockLoader}
+        location={
+          standaloneAmmoniaHybridWithBatteryAndDegradationScenario.location
+        }
+      />
+    );
+
+    const costBreakdownChart = findIndirectCostBreakdownChart(wrapper);
+
+    expect(costBreakdownChart).toHaveLength(1);
+
+    const chartData = costBreakdownChart.at(0).prop("items");
+    expect(chartData["Ammonia EPC"]).toEqual(0);
+    expect(chartData["Ammonia Land"]).toEqual(0);
+    expect(chartData["Electrolyser EPC"]).toEqual(49_964_000);
+    expect(chartData["Electrolyser Land"]).toEqual(9_993_000);
+    expect(chartData["Power Plant EPC"]).toEqual(137_989_000);
+    expect(chartData["Power Plant Land"]).toEqual(27_598_000);
+    expect(chartData["Battery EPC"]).toEqual(0);
+    expect(chartData["Battery Land"]).toEqual(0);
   });
 });

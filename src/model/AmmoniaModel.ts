@@ -230,7 +230,7 @@ export class AmmoniaModel implements Model {
       ammoniaProduction,
       ammoniaRatedCapacityTime,
       totalAmmoniaOperatingTime,
-    } = this.calculateHydrogenModel(this.parameters.projectTimeline);
+    } = this.calculateAmmoniaModel(this.parameters.projectTimeline);
 
     const powerPlantNominalCapacity =
       solarNominalCapacity + windNominalCapacity;
@@ -277,6 +277,7 @@ export class AmmoniaModel implements Model {
       this.batteryCosts,
       this.gridConnectionCost
     );
+
     let ammoniaCapex = 0;
     if (this.parameters.inputConfiguration === "Basic") {
       ammoniaCapex =
@@ -296,6 +297,9 @@ export class AmmoniaModel implements Model {
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost
     );
+
+    const electrolyserAndH2CAPEX = electrolyserCAPEX + h2StorageCapex;
+
     const {
       electrolyserEpcCost,
       electrolyserLandCost,
@@ -304,7 +308,7 @@ export class AmmoniaModel implements Model {
       batteryEpcCost,
       batteryLandCost,
     } = getEpcCosts(
-      electrolyserCAPEX,
+      electrolyserAndH2CAPEX,
       this.parameters.electrolyserEpcCosts,
       this.parameters.electrolyserLandProcurementCosts,
       solarCAPEX,
@@ -628,7 +632,7 @@ export class AmmoniaModel implements Model {
     };
   }
 
-  calculateHydrogenModel(projectTimeline: number) {
+  calculateAmmoniaModel(projectTimeline: number) {
     const {
       stackDegradation,
       solarDegradation,
