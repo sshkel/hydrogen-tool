@@ -1,7 +1,3 @@
-import {
-  backCalculateElectrolyserCapacity,
-  backCalculateSolarnAndWindNominalCapacities,
-} from "../components/charts/basic-calculations";
 import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
   calculateAmmoniaProductionLC,
@@ -647,16 +643,51 @@ export class AmmoniaModel implements Model {
     );
 
     if (inputConfiguration === "Basic") {
+      const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
+        this.parameters.ammoniaPlantCapacity,
+        this.parameters.ammoniaPlantSec,
+        this.hoursPerYear
+      );
+
+      const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
+        airSeparationUnitCapacity,
+        this.parameters.asuSec
+      );
+
+      const electrolyserNominalCapacity = nominal_electrolyser_capacity(
+        hydrogenOutput,
+        this.secAtNominalLoad,
+        this.parameters.electrolyserSystemOversizing / 100
+      );
+
+      const solarNominalCapacity = nominal_solar_capacity(
+        ammoniaPlantPowerDemand,
+        airSeparationUnitPowerDemand,
+        electrolyserNominalCapacity,
+        this.parameters.solarToWindPercentage / 100,
+        this.parameters.powerPlantOversizeRatio
+      );
+      const windNominalCapacity = nominal_wind_capacity(
+        ammoniaPlantPowerDemand,
+        airSeparationUnitPowerDemand,
+        electrolyserNominalCapacity,
+        1 - this.parameters.solarToWindPercentage / 100,
+        this.parameters.powerPlantOversizeRatio
+      );
+
+      const powerPlantNominalCapacity =
+        solarNominalCapacity + windNominalCapacity;
+
       const hourlyOperations =
         this.calculatePowerplantAndElectrolyserHourlyOperation(
           this.parameters.solarToWindPercentage / 100,
           1 - this.parameters.solarToWindPercentage / 100,
           this.parameters.powerPlantOversizeRatio,
           // default for the first calculation
-          1,
-          1, // TODO check with Jack if this works
-          1,
-          airSeparationUnitCapacity
+          electrolyserNominalCapacity,
+          powerPlantNominalCapacity,
+          airSeparationUnitCapacity,
+          1
         );
 
       const hydrogenProduction = calculateHydrogenProduction(
@@ -668,7 +699,7 @@ export class AmmoniaModel implements Model {
 
       const h2ToNH3Unit = calculateH2ToNH3Unit(
         hydrogenProduction,
-        1, // TODO check with Jack if this works
+        electrolyserNominalCapacity,
         hydrogenOutput,
         this.parameters.hydrogenStorageCapacity,
         this.parameters.minimumHydrogenStorage / 100,
@@ -697,15 +728,7 @@ export class AmmoniaModel implements Model {
         ammoniaCapacityFactors,
       };
 
-      const electrolyserNominalCapacity = backCalculateElectrolyserCapacity(
-        this.parameters.projectScale,
-        this.elecEff,
-        mean(hourlyOperations.electrolyserCapacityFactors),
-        this.hoursPerYear
-      );
-
-      const { powerPlantOversizeRatio = 1, solarToWindPercentage = 100 } =
-        this.parameters;
+      const { solarToWindPercentage = 100 } = this.parameters;
       // back calcualte power plant type from the percentages.
       // Default to hybrid
       let powerPlantType: PowerPlantType = "Hybrid";
@@ -716,14 +739,6 @@ export class AmmoniaModel implements Model {
       if (solarToWindPercentage === 0) {
         powerPlantType = "Wind";
       }
-      const result = backCalculateSolarnAndWindNominalCapacities(
-        powerPlantOversizeRatio,
-        solarToWindPercentage,
-        electrolyserNominalCapacity
-      );
-
-      const powerPlantNominalCapacity =
-        result.solarNominalCapacity + result.windNominalCapacity;
 
       const operatingOutputs = calculateAmmoniaSnapshotForYear(
         hourlyOperations.powerplantCapacityFactors,
@@ -764,8 +779,8 @@ export class AmmoniaModel implements Model {
       return {
         airSeparationUnitCapacity,
         powerPlantType: powerPlantType,
-        solarNominalCapacity: result.solarNominalCapacity,
-        windNominalCapacity: result.windNominalCapacity,
+        solarNominalCapacity: solarNominalCapacity,
+        windNominalCapacity: windNominalCapacity,
         electrolyserNominalCapacity: electrolyserNominalCapacity,
         hourlyOperations: hourlyOperationsInYearOne,
         ...projectSummary,

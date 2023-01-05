@@ -37,6 +37,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     helperText:
       "Hydrogen production rate. The standard is 175 ton/yr per MW of electrolyser capacity",
   },
+  ammoniaPlantCapacity: {
+    min: 50,
+    max: 1000,
+    step: 50,
+    title: "Ammonia Plant Capacity (kTPA)",
+    helperText:
+      "Small Scale Ammonia Plants: <100 kiloton/yr and Large Scale Ammonia Plants: >1,000 kiloton/yr ",
+  },
   electrolyserEfficiency: {
     min: 50,
     max: 100,

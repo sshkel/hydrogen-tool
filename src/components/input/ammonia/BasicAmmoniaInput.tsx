@@ -36,7 +36,10 @@ export default function BasicAmmoniaInput() {
           <InputCard
             title="Project Scale"
             children={[
-              <InputNumberField key="projectScale" inputKey="projectScale" />,
+              <InputSlider
+                key="ammoniaPlantCapacity"
+                inputKey="ammoniaPlantCapacity"
+              />,
             ]}
           />
         </Grid>
