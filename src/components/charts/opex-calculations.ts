@@ -55,8 +55,9 @@ export function getOpex(
           projectTimeline
         );
 
-  const electrolyserStackReplacementCost =
-    (electrolyserStackReplacement / 100) * electrolyserCAPEX;
+  const electrolyserStackReplacementCost = roundToNearestThousand(
+    (electrolyserStackReplacement / 100) * electrolyserCAPEX
+  );
 
   const electrolyserOpexCost = roundToNearestThousand(
     (electrolyserOMCost / 100) * electrolyserCAPEX

@@ -227,8 +227,6 @@ describe("Opex calculations", () => {
       windOpex = 0,
       windNominalCapacity,
 
-      additionalAnnualCosts,
-
       batteryOMCost = 0,
       batteryRatedPower = 0,
       batteryLifetime = 0,

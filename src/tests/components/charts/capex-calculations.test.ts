@@ -15,7 +15,7 @@ describe("Capex calculations", () => {
   });
 
   it("calculates battery capex", () => {
-    const capex = calculateBatteryCapex(10, 10, 10);
+    const capex = calculateBatteryCapex(10, 10);
 
     expect(capex).toEqual(100000);
   });

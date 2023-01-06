@@ -31,14 +31,13 @@ export const calculateCapex = (
 };
 
 export const calculateBatteryCapex = (
-  ratedPower: number = 0,
-  nominalCapacity: number = 0,
+  totalBatteryCapacity: number = 0,
   cost: number = 0
 ): number => {
-  if (ratedPower === 0) {
+  if (totalBatteryCapacity === 0) {
     return 0;
   }
-  const capexCost = nominalCapacity * cost * 1000;
+  const capexCost = totalBatteryCapacity * cost * 1000;
   return roundToNearestThousand(capexCost);
 };
 
@@ -105,10 +104,9 @@ export function getCapex(
 
   const powerPlantCAPEX = solarCAPEX + windCAPEX;
 
-  const batteryNominalCapacity = batteryRatedPower * batteryStorageDuration;
+  const totalBatteryCapacity = batteryRatedPower * batteryStorageDuration;
   const batteryCAPEX = calculateBatteryCapex(
-    batteryRatedPower,
-    batteryNominalCapacity,
+    totalBatteryCapacity,
     batteryCosts
   );
   const gridConnectionCAPEX =

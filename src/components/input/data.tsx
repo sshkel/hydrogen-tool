@@ -310,24 +310,24 @@ export const numberFieldDefaultInputs: DefaultInput = {
   electrolyserEpcCosts: {
     title: "EPC/Installation Costs of Electrolyser",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   electrolyserLandProcurementCosts: {
     id: "electrolyserLandProcurementCosts",
     title: "Land Procurement Cost of Electrolyser",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   // Electrolyser Operating Costs
   electrolyserOMCost: {
     title: "Electrolyser O&M",
     adornmentLabel: "%/yr",
-    helperText: "Percentage of Electrolyser Purchase Cost",
+    helperText: "% of CAPEX",
   },
   electrolyserStackReplacement: {
     title: "Electrolyser Stack Replacement",
     adornmentLabel: "%",
-    helperText: "Percentage of Electrolyser Purchase Cost",
+    helperText: "% of CAPEX",
   },
   waterSupplyCost: {
     title: "Water Consumption Cost",
@@ -404,22 +404,22 @@ export const numberFieldDefaultInputs: DefaultInput = {
   solarEpcCosts: {
     title: "EPC/Installation Costs of Solar Farm",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   solarLandProcurementCosts: {
     title: "Land Procurement Cost of Solar Farm",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   windEpcCosts: {
     title: "EPC/Installation Costs of Wind Farm",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   windLandProcurementCosts: {
     title: "Land Procurement Cost of Wind Farm",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   // Power Plant Operating Costs
   solarOpex: {
@@ -485,12 +485,12 @@ export const numberFieldDefaultInputs: DefaultInput = {
   batteryEpcCosts: {
     title: "EPC/Installation Costs of Battery",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
   batteryLandProcurementCosts: {
     title: "Land Procurement Cost of Battery",
     adornmentLabel: "%",
-    helperText: "Percentage of CAPEX",
+    helperText: "% of CAPEX",
   },
 
   // Battery Operating Costs
