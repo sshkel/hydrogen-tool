@@ -226,10 +226,10 @@ export class AmmoniaModel implements Model {
       ratedCapacityTime,
       totalOperatingTime,
       hourlyOperations,
-      methanolCapacityFactors,
-      methanolProduction,
-      methanolRatedCapacityTime,
-      totalMethanolOperatingTime,
+      ammoniaCapacityFactors,
+      ammoniaProduction,
+      ammoniaRatedCapacityTime,
+      totalAmmoniaOperatingTime,
     } = this.calculateAmmoniaModel(this.parameters.projectTimeline);
 
     const powerPlantNominalCapacity =
@@ -503,7 +503,7 @@ export class AmmoniaModel implements Model {
         this.discountRate,
         totalOpex,
         hydrogenProduction,
-        methanolProduction
+        ammoniaProduction
       );
 
     // LCH2 calculations
@@ -590,17 +590,17 @@ export class AmmoniaModel implements Model {
       ),
 
       "Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)":
-        roundToTwoDP(mean(methanolRatedCapacityTime.map((x) => x * 100))),
+        roundToTwoDP(mean(ammoniaRatedCapacityTime.map((x) => x * 100))),
 
       "Total Time Ammonia Plant is Operating (% of hrs/yr)": roundToTwoDP(
-        mean(totalMethanolOperatingTime.map((x) => x * 100))
+        mean(totalAmmoniaOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
         mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
       "Ammonia Capacity Factor": roundToTwoDP(
-        mean(methanolCapacityFactors.map((x) => x * 100))
+        mean(ammoniaCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
@@ -612,7 +612,7 @@ export class AmmoniaModel implements Model {
 
       "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
 
-      "Ammonia Output (TPA)": roundToNearestInteger(mean(methanolProduction)),
+      "Ammonia Output (TPA)": roundToNearestInteger(mean(ammoniaProduction)),
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
@@ -768,10 +768,10 @@ export class AmmoniaModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
-        methanolRatedCapacityTime: [],
-        totalMethanolOperatingTime: [],
-        methanolCapacityFactors: [],
-        methanolProduction: [],
+        ammoniaRatedCapacityTime: [],
+        totalAmmoniaOperatingTime: [],
+        ammoniaCapacityFactors: [],
+        ammoniaProduction: [],
       };
 
       Object.keys(operatingOutputs).forEach((key) => {
@@ -868,10 +868,10 @@ export class AmmoniaModel implements Model {
           powerPlantCapacityFactors: [],
           ratedCapacityTime: [],
           electrolyserCapacityFactors: [],
-          methanolRatedCapacityTime: [],
-          totalMethanolOperatingTime: [],
-          methanolCapacityFactors: [],
-          methanolProduction: [],
+          ammoniaRatedCapacityTime: [],
+          totalAmmoniaOperatingTime: [],
+          ammoniaCapacityFactors: [],
+          ammoniaProduction: [],
         };
         Object.keys(projectSummary).forEach((key) => {
           projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
@@ -1001,10 +1001,10 @@ export class AmmoniaModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
-        methanolRatedCapacityTime: [],
-        totalMethanolOperatingTime: [],
-        methanolCapacityFactors: [],
-        methanolProduction: [],
+        ammoniaRatedCapacityTime: [],
+        totalAmmoniaOperatingTime: [],
+        ammoniaCapacityFactors: [],
+        ammoniaProduction: [],
       };
 
       modelSummaryPerYear.forEach((yearSummary) => {
