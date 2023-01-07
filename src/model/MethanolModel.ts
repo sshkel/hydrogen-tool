@@ -42,7 +42,6 @@ import {
 import { HOURS_PER_YEAR } from "./consts";
 
 export type MethanolData = {
-  ammoniaPlantCapitalCost?: number;
   additionalAnnualCosts: number;
   additionalTransmissionCharges?: number;
   additionalUpfrontCosts: number;
@@ -107,26 +106,30 @@ export type MethanolData = {
   windReferenceFoldIncrease: number;
 
   //Methanol
-  carbonCaptureSec: number;
-  methanolPlantCapacity: number; // raw input done
-  methanolPlantSec: number; // raw input
+  methanolPlantCapacity: number;
   methanolStorageCapacity: number;
+  methanolPlantSec: number;
+  ccSec: number;
   methanolPlantMinimumTurndown: number;
-  electrolyserSystemOversizing: number; // raw input %
-  hydrogenStorageCapacity: number; // raw input
 
+  electrolyserSystemOversizing: number;
+  hydrogenStorageCapacity: number;
   // electrolyster and hydrogen storage paramteres
   // other operation factors
   minimumHydrogenStorage: number;
+
   // operating costs
-  ammoniaSynthesisUnitCost: number;
-  ammoniaStorageCost: number;
-  airSeparationUnitCost: number;
-  ammoniaEpcCosts: number;
-  ammoniaLandProcurementCosts: number;
-  ammoniaPlantOMCost: number;
-  ammoniaStorageOMCost: number;
-  asuPlantOMCost: number;
+  methanolPlantUnitCost: number;
+  methanolStorageCost: number;
+  methanolEpcCosts: number;
+  methanolLandProcurementCosts: number;
+  methanolPlantOMCost: number;
+  methanolStorageOMCost: number;
+
+  ccPlantCost: number;
+  ccPlantOMCost: number;
+  ccEpcCosts: number;
+  ccLandProcurementCosts: number;
   hydrogenStoragePurchaseCost: number;
   hydrogenStorageOMCost: number;
 };
@@ -280,15 +283,15 @@ export class MethanolModel implements Model {
     let ammoniaCapex = 0;
     if (this.parameters.inputConfiguration === "Basic") {
       ammoniaCapex =
-        this.parameters.ammoniaPlantCapitalCost! * this.parameters.projectScale;
+        this.parameters.methanolPlantUnitCost! * this.parameters.projectScale;
     } else {
       ammoniaCapex = ammonia_plant_CAPEX(
         this.parameters.methanolPlantCapacity,
         this.parameters.methanolStorageCapacity,
         carbonCapturePlantCapacity,
-        this.parameters.ammoniaSynthesisUnitCost,
-        this.parameters.ammoniaStorageCost,
-        this.parameters.airSeparationUnitCost
+        this.parameters.methanolPlantUnitCost,
+        this.parameters.methanolStorageCost,
+        this.parameters.ccPlantCost
       );
     }
 
@@ -322,11 +325,11 @@ export class MethanolModel implements Model {
     );
 
     const ammoniaEpcCost = ammonia_plant_epc(
-      this.parameters.ammoniaEpcCosts,
+      this.parameters.methanolEpcCosts,
       ammoniaCapex
     );
     const ammoniaLandCost = ammonia_plant_land_procurement_cost(
-      this.parameters.ammoniaLandProcurementCosts,
+      this.parameters.methanolLandProcurementCosts,
       ammoniaCapex
     );
     const indirectCostBreakdown = {
@@ -424,12 +427,12 @@ export class MethanolModel implements Model {
       this.parameters.methanolPlantCapacity,
       this.parameters.methanolStorageCapacity,
       carbonCapturePlantCapacity,
-      this.parameters.ammoniaSynthesisUnitCost,
-      this.parameters.ammoniaStorageCost,
-      this.parameters.airSeparationUnitCost,
-      this.parameters.ammoniaPlantOMCost,
-      this.parameters.ammoniaStorageOMCost,
-      this.parameters.asuPlantOMCost
+      this.parameters.methanolPlantUnitCost,
+      this.parameters.methanolStorageCost,
+      this.parameters.ccPlantCost,
+      this.parameters.methanolPlantOMCost,
+      this.parameters.methanolStorageOMCost,
+      this.parameters.ccPlantOMCost
     );
 
     const totalOpex = getTotalAmmoniaOpex(
@@ -653,7 +656,7 @@ export class MethanolModel implements Model {
 
     const co2_PowDem = this.carbon_capture_plant_power_demand(
       carbonCapturePlantCapacity,
-      this.parameters.carbonCaptureSec
+      this.parameters.ccSec
     );
 
     const electrolyserNominalCapacity = nominal_electrolyser_capacity(
@@ -1061,7 +1064,7 @@ export class MethanolModel implements Model {
 
     const co2_PowDem = this.carbon_capture_plant_power_demand(
       carbonCapturePlantCapacity,
-      this.parameters.carbonCaptureSec
+      this.parameters.ccSec
     );
 
     const electrolyserActualPower = electrolyser_actual_power(
