@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid";
 
 import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
 import InputCard from "../InputCard";
+import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 
@@ -52,6 +53,19 @@ export default function AdvancedMethanolInput() {
                     key="methanolPlantMinimumTurndown"
                     inputKey="methanolPlantMinimumTurndown"
                   />,
+                  <InputDropdownField
+                    id="carbonCaptureSource"
+                    defaultValue="Coal Power Plant"
+                    label="Carbon Capture Source"
+                    values={[
+                      "Coal Power Plant",
+                      "Steel Plant",
+                      "Cement Plant",
+                      "Fermentation Plant",
+                      "Direct Air Capture",
+                      "Steam Methane Reforming",
+                    ]}
+                  />,
                 ]}
               />,
               <InputCard
@@ -89,6 +103,11 @@ export default function AdvancedMethanolInput() {
                   <InputNumberField
                     key="methanolLandProcurementCosts"
                     inputKey="methanolLandProcurementCosts"
+                  />,
+                  <InputNumberField key="ccEpcCosts" inputKey="ccEpcCosts" />,
+                  <InputNumberField
+                    key="ccLandProcurementCosts"
+                    inputKey="ccLandProcurementCosts"
                   />,
                   <InputNumberField
                     key="methanolPlantOMCost"
