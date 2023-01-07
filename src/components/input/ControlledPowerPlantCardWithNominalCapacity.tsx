@@ -9,7 +9,7 @@ import InputSelect from "./InputSelect";
 
 const POWER_PLANT_TYPES: PowerPlantType[] = ["Solar", "Wind", "Hybrid"];
 
-export default function ControlledAmmoniaPowerPlantCard() {
+export default function ControlledPowerPlantCard() {
   const [powerPlantType, setPowerPlantType] =
     React.useState<PowerPlantType>("Solar");
 
@@ -61,9 +61,27 @@ export default function ControlledAmmoniaPowerPlantCard() {
           onCloseExpand={onSelectClose(setPowerPlantTypeExpanded)}
           buttonChildren={[
             [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
+              <InputSelect
+                key="solarPowerPlantCapacitySelect"
+                selectKey="solarPowerPlantCapacitySelect"
+                prompt="Power Plant Capacity"
+                titles={["Nominal Capacity", "Oversize Ratio"]}
+                selectClass="powerCapacityConfiguration"
+                helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
+                buttonChildren={[
+                  [
+                    <InputNumberField
+                      key="solarNominalCapacity"
+                      inputKey="solarNominalCapacity"
+                    />,
+                  ],
+                  [
+                    <InputNumberField
+                      key="powerPlantOversizeRatio"
+                      inputKey="powerPlantOversizeRatio"
+                    />,
+                  ],
+                ]}
               />,
               <InputNumberField
                 key="solarDegradation"
@@ -71,9 +89,27 @@ export default function ControlledAmmoniaPowerPlantCard() {
               />,
             ],
             [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
+              <InputSelect
+                key="windPowerPlantCapacitySelect"
+                selectKey="windPowerPlantCapacitySelect"
+                prompt="Power Plant Capacity"
+                titles={["Nominal Capacity", "Oversize Ratio"]}
+                selectClass="powerCapacityConfiguration"
+                helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+                buttonChildren={[
+                  [
+                    <InputNumberField
+                      key="windNominalCapacity"
+                      inputKey="windNominalCapacity"
+                    />,
+                  ],
+                  [
+                    <InputNumberField
+                      key="powerPlantOversizeRatio"
+                      inputKey="powerPlantOversizeRatio"
+                    />,
+                  ],
+                ]}
               />,
               <InputNumberField
                 key="windDegradation"
@@ -81,13 +117,35 @@ export default function ControlledAmmoniaPowerPlantCard() {
               />,
             ],
             [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
-              />,
-              <InputNumberField
-                key="solarToWindPercentage"
-                inputKey="solarToWindPercentage"
+              <InputSelect
+                key="hybridPowerPlantCapacitySelect"
+                selectKey="hybridPowerPlantCapacitySelect"
+                prompt="Power Plant Capacity"
+                selectClass="powerCapacityConfiguration"
+                titles={["Nominal Capacity", "Oversize Ratio"]}
+                helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
+                buttonChildren={[
+                  [
+                    <InputNumberField
+                      key="solarNominalCapacity"
+                      inputKey="solarNominalCapacity"
+                    />,
+                    <InputNumberField
+                      key="windNominalCapacity"
+                      inputKey="windNominalCapacity"
+                    />,
+                  ],
+                  [
+                    <InputNumberField
+                      key="powerPlantOversizeRatio"
+                      inputKey="powerPlantOversizeRatio"
+                    />,
+                    <InputNumberField
+                      key="solarToWindPercentage"
+                      inputKey="solarToWindPercentage"
+                    />,
+                  ],
+                ]}
               />,
               <InputNumberField
                 key="solarDegradation"

@@ -105,6 +105,19 @@ class DefaultInputs implements Inputs {
   hydrogenStoragePurchaseCost = 878;
   hydrogenStorageOMCost = 2.5;
   ammoniaPlantCapitalCost = 0;
+  // Methanol
+  methanolPlantCapacity = 365;
+  methanolStorageCapacity = 30;
+  methanolPlantSec = 0.36;
+  methanolPlantMinimumTurndown = 100;
+  methanolStorageCost = 227;
+  methanolEpcCosts = 0;
+  methanolLandProcurementCosts = 0;
+  methanolPlantOMCost = 5;
+  methanolStorageOMCost = 5;
+  ccEpcCosts = 0;
+  ccLandProcurementCosts = 0;
+  ccPlantOMCost = 5;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

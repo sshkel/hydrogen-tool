@@ -1,5 +1,36 @@
 import { DefaultInput, PowerPlantConfiguration } from "../../types";
 
+const secAtNominalLoadLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>H2</sub>
+  </p>
+);
+const ammoniaSECLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>NH3</sub>
+  </p>
+);
+const asuSECLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>N2</sub>
+  </p>
+);
+const methanolSECLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>MeOH</sub>
+  </p>
+);
+const ccSECLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>CO2</sub>
+  </p>
+);
+const methanolCostLabel = (
+  <p>
+    A$/T<sub>MeOH</sub>
+  </p>
+);
+
 export const configurationTypes = [
   "powerPlantType",
   "powerPlantConfiguration",
@@ -44,6 +75,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     title: "Ammonia Plant Capacity (kTPA)",
     helperText:
       "Small Scale Ammonia Plants: <100 kiloton/yr and Large Scale Ammonia Plants: >1,000 kiloton/yr ",
+  },
+  methanolPlantCapacity: {
+    min: 50,
+    max: 1000,
+    step: 50,
+    title: "Methanol Plant Capacity (kTPA)",
+    helperText:
+      "Small Scale Methanol Plants: <100 kiloton/yr and Large Scale Methanol Plants: >1,000 kiloton/yr ",
   },
   electrolyserEfficiency: {
     min: 50,
@@ -99,6 +138,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     title: "Ammonia Plant Capital Cost ($/Ton)",
     helperText:
       "Includes Ammonia Synthesis Unit, Air Separation Unit and Ammonia Storage Unit Costs",
+  },
+  methanolPlantUnitCost: {
+    min: 100,
+    max: 1000,
+    step: 50,
+    title: "Methanol Plant Capital Cost ($/Ton)",
+    helperText:
+      "Includes Methanol and Carbon Capture Unit, and Methanol and Carbon Capture Storage Unit Costs",
   },
   solarFarmBuildCost: {
     min: 100,
@@ -163,11 +210,11 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   ammoniaPlantSec: {
     title: "Ammonia Plant Specific Energy Consumption",
-    adornmentLabel: "kWhe/kgNH3",
+    adornmentLabel: ammoniaSECLabel,
   },
   asuSec: {
     title: "Air Separation Unit Specific Energy Consumption",
-    adornmentLabel: "kWhe/kgN2",
+    adornmentLabel: asuSECLabel,
   },
   hydrogenStorageCapacity: {
     title: "Hydrogen Storage Capacity",
@@ -184,15 +231,27 @@ export const numberFieldDefaultInputs: DefaultInput = {
   // ammonia plant operating costs
   ammoniaSynthesisUnitCost: {
     title: "Ammonia Synthesis Unit Cost",
-    adornmentLabel: "A$/TNH3",
+    adornmentLabel: (
+      <p>
+        A$/T<sub>NH3</sub>
+      </p>
+    ),
   },
   ammoniaStorageCost: {
     title: "Ammonia Storage Cost",
-    adornmentLabel: "A$/TNH3",
+    adornmentLabel: (
+      <p>
+        A$/T<sub>NH3</sub>
+      </p>
+    ),
   },
   airSeparationUnitCost: {
     title: "Air Separation Unit Cost",
-    adornmentLabel: "A$/TN2",
+    adornmentLabel: (
+      <p>
+        A$/T<sub>N2</sub>
+      </p>
+    ),
   },
   ammoniaEpcCosts: {
     title: "EPC Costs",
@@ -228,6 +287,72 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Power Plant Degradation Rate",
     adornmentLabel: "%",
   },
+  /******* Methanol Parameters *******/
+  methanolPlantCapacity: {
+    title: "Methanol Plant Capacity",
+    adornmentLabel: "kTPA",
+  },
+  methanolStorageCapacity: {
+    title: "Methanol Storage Capacity",
+    adornmentLabel: "days",
+  },
+  methanolPlantSec: {
+    title: "Methanol Plant Specific Energy Consumption",
+    adornmentLabel: methanolSECLabel,
+  },
+  ccSec: {
+    title: "Carbon Capture Unit Specific Energy Consumption",
+    adornmentLabel: ccSECLabel,
+  },
+  methanolPlantMinimumTurndown: {
+    title: "Methanol Plant Minimum Turndown",
+    adornmentLabel: "%",
+  },
+  // methanol plant operating costs
+  methanolPlantUnitCost: {
+    title: "Methanol Plant Unit Cost",
+    adornmentLabel: methanolCostLabel,
+  },
+  methanolStorageCost: {
+    title: "Methanol Storage Cost",
+    adornmentLabel: methanolCostLabel,
+  },
+  methanolEpcCosts: {
+    title: "EPC Costs",
+    adornmentLabel: "% of CAPEX",
+  },
+  methanolLandProcurementCosts: {
+    title: "Land Procurement Cost",
+    adornmentLabel: "% of CAPEX",
+  },
+  methanolPlantOMCost: {
+    title: "Methanol Plant O&M",
+    adornmentLabel: "% of CAPEX",
+  },
+  methanolStorageOMCost: {
+    title: "Methanol Storage O&M",
+    adornmentLabel: "% of CAPEX",
+  },
+  ccPlantCost: {
+    title: "Carbon Capture Plant Cost",
+    adornmentLabel: (
+      <p>
+        A$/T<sub>CO2</sub>
+      </p>
+    ),
+  },
+  ccEpcCosts: {
+    title: "EPC Costs",
+    adornmentLabel: "% of CAPEX",
+  },
+  ccLandProcurementCosts: {
+    title: "Land Procurement Cost",
+    adornmentLabel: "% of CAPEX",
+  },
+  ccPlantOMCost: {
+    title: "Carbon Capture Plant O&M",
+    adornmentLabel: "% of CAPEX",
+  },
   /******* Project Scale *******/
   projectScale: {
     min: 100,
@@ -247,7 +372,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   secAtNominalLoad: {
     id: "secAtNominalLoad",
     title: "Specific Energy Consumption at Nominal Load",
-    adornmentLabel: "kWh/kg",
+    adornmentLabel: secAtNominalLoadLabel,
   },
   waterRequirementOfElectrolyser: {
     title: "Water Requirement of Electrolyser",

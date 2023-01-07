@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 
+import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
 import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
-import ControlledAmmoniaPowerPlantCard from "./ControlledAmmoniaPowerPlantCard";
 
-export default function AdvancedHydrogenInput() {
+export default function AdvancedAmmoniaInput() {
   return (
     <Grid
       container
@@ -270,7 +270,7 @@ export default function AdvancedHydrogenInput() {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledAmmoniaPowerPlantCard />
+          <ControlledPowerPlantCard />
         </Grid>
       </Grid>
 
