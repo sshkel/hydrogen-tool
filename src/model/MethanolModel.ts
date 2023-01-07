@@ -26,8 +26,8 @@ import {
 } from "../types";
 import { mean, projectYears } from "../utils";
 import {
-  AmmoniaProjectModelSummary,
   CsvRow,
+  MethanolProjectModelSummary,
   ModelHourlyOperation,
 } from "./ModelTypes";
 import {
@@ -648,16 +648,17 @@ export class MethanolModel implements Model {
       this.parameters.methanolPlantCapacity
     );
 
-    const meOH_PowDem = methanol_plant_power_demand(
+    const methanolPlantPowerDemand = methanol_plant_power_demand(
       this.parameters.methanolPlantCapacity,
       this.parameters.methanolPlantSec,
       this.hoursPerYear
     );
 
-    const co2_PowDem = this.carbon_capture_plant_power_demand(
-      carbonCapturePlantCapacity,
-      this.parameters.ccSec
-    );
+    const carbonCapturePlantPowerDemand =
+      this.carbon_capture_plant_power_demand(
+        carbonCapturePlantCapacity,
+        this.parameters.ccSec
+      );
 
     const electrolyserNominalCapacity = nominal_electrolyser_capacity(
       hydrogenOutput,
@@ -666,15 +667,15 @@ export class MethanolModel implements Model {
     );
 
     const solarNominalCapacity = nominal_solar_capacity(
-      meOH_PowDem,
-      co2_PowDem,
+      methanolPlantPowerDemand,
+      carbonCapturePlantPowerDemand,
       electrolyserNominalCapacity,
       this.parameters.solarToWindPercentage / 100,
       this.parameters.powerPlantOversizeRatio
     );
     const windNominalCapacity = nominal_wind_capacity(
-      meOH_PowDem,
-      co2_PowDem,
+      methanolPlantPowerDemand,
+      carbonCapturePlantPowerDemand,
       electrolyserNominalCapacity,
       1 - this.parameters.solarToWindPercentage / 100,
       this.parameters.powerPlantOversizeRatio
@@ -761,7 +762,7 @@ export class MethanolModel implements Model {
         this.batteryEfficiency
       );
 
-      let projectSummary: AmmoniaProjectModelSummary = {
+      let projectSummary: MethanolProjectModelSummary = {
         electricityConsumed: [],
         electricityProduced: [],
         electricityConsumedByBattery: [],
@@ -777,7 +778,7 @@ export class MethanolModel implements Model {
       };
 
       Object.keys(operatingOutputs).forEach((key) => {
-        projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
+        projectSummary[key as keyof MethanolProjectModelSummary] = Array(
           projectTimeline
         ).fill(operatingOutputs[key]);
       });
@@ -861,7 +862,7 @@ export class MethanolModel implements Model {
           this.batteryEfficiency
         );
 
-        let projectSummary: AmmoniaProjectModelSummary = {
+        let projectSummary: MethanolProjectModelSummary = {
           electricityConsumed: [],
           electricityProduced: [],
           electricityConsumedByBattery: [],
@@ -876,7 +877,7 @@ export class MethanolModel implements Model {
           methanolProduction: [],
         };
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
+          projectSummary[key as keyof MethanolProjectModelSummary] = Array(
             projectTimeline
           ).fill(operatingOutputs[key]);
         });
@@ -994,7 +995,7 @@ export class MethanolModel implements Model {
         return calculateMethanolModelSummary(value);
       });
 
-      let projectSummary: AmmoniaProjectModelSummary = {
+      let projectSummary: MethanolProjectModelSummary = {
         electricityConsumed: [],
         electricityProduced: [],
         electricityConsumedByBattery: [],
@@ -1011,7 +1012,7 @@ export class MethanolModel implements Model {
 
       modelSummaryPerYear.forEach((yearSummary) => {
         Object.keys(projectSummary).forEach((key) => {
-          projectSummary[key as keyof AmmoniaProjectModelSummary].push(
+          projectSummary[key as keyof MethanolProjectModelSummary].push(
             yearSummary[key]
           );
         });
