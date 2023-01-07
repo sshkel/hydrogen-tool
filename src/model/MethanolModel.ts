@@ -35,7 +35,7 @@ import {
   MaxDegradation,
   calculateAmmoniaSnapshotForYear,
   calculateHydrogenProduction,
-  calculateNetBatteryFlow,
+  calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
   getBatteryLosses,
 } from "./ModelUtils";
@@ -106,16 +106,15 @@ export type MethanolData = {
   windReferenceCapacity: number;
   windReferenceFoldIncrease: number;
 
-  //Ammonia
-  ammoniaPlantCapacity: number; // raw input done
-  ammoniaStorageCapacity: number;
+  //Methanol
+  carbonCaptureSec: number;
+  methanolPlantCapacity: number; // raw input done
+  methanolPlantSec: number; // raw input
+  methanolStorageCapacity: number;
+  methanolPlantMinimumTurndown: number;
   electrolyserSystemOversizing: number; // raw input %
-
-  ammoniaPlantSec: number; // raw input
-  asuSec: number; // raw input
   hydrogenStorageCapacity: number; // raw input
 
-  ammoniaPlantMinimumTurndown: number; // raw input %
   // electrolyster and hydrogen storage paramteres
   // other operation factors
   minimumHydrogenStorage: number;
@@ -212,7 +211,7 @@ export class MethanolModel implements Model {
 
   produceResults() {
     const {
-      airSeparationUnitCapacity,
+      carbonCapturePlantCapacity,
       powerPlantType,
       solarNominalCapacity,
       windNominalCapacity,
@@ -226,11 +225,11 @@ export class MethanolModel implements Model {
       ratedCapacityTime,
       totalOperatingTime,
       hourlyOperations,
-      ammoniaCapacityFactors,
-      ammoniaProduction,
-      ammoniaRatedCapacityTime,
-      totalAmmoniaOperatingTime,
-    } = this.calculateAmmoniaModel(this.parameters.projectTimeline);
+      methanolCapacityFactors,
+      methanolProduction,
+      methanolRatedCapacityTime,
+      totalMethanolOperatingTime,
+    } = this.calculateMethanolModel(this.parameters.projectTimeline);
 
     const powerPlantNominalCapacity =
       solarNominalCapacity + windNominalCapacity;
@@ -238,12 +237,12 @@ export class MethanolModel implements Model {
       "Power Plant Duration Curve": hourlyOperations.powerplantCapacityFactors,
       "Electrolyser Duration Curve":
         hourlyOperations.electrolyserCapacityFactors,
-      "Ammonia Duration Curve": hourlyOperations.ammoniaCapacityFactors,
+      "Methanol Duration Curve": hourlyOperations.methanolCapacityFactors,
     };
     const hourlyCapFactors = {
       Electrolyser: hourlyOperations.electrolyserCapacityFactors,
       "Power Plant": hourlyOperations.powerplantCapacityFactors,
-      Ammonia: hourlyOperations.ammoniaCapacityFactors,
+      Methanol: hourlyOperations.methanolCapacityFactors,
     };
 
     const {
@@ -284,9 +283,9 @@ export class MethanolModel implements Model {
         this.parameters.ammoniaPlantCapitalCost! * this.parameters.projectScale;
     } else {
       ammoniaCapex = ammonia_plant_CAPEX(
-        this.parameters.ammoniaPlantCapacity,
-        this.parameters.ammoniaStorageCapacity,
-        airSeparationUnitCapacity,
+        this.parameters.methanolPlantCapacity,
+        this.parameters.methanolStorageCapacity,
+        carbonCapturePlantCapacity,
         this.parameters.ammoniaSynthesisUnitCost,
         this.parameters.ammoniaStorageCost,
         this.parameters.airSeparationUnitCost
@@ -422,9 +421,9 @@ export class MethanolModel implements Model {
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost,
       this.parameters.hydrogenStorageOMCost,
-      this.parameters.ammoniaPlantCapacity,
-      this.parameters.ammoniaStorageCapacity,
-      airSeparationUnitCapacity,
+      this.parameters.methanolPlantCapacity,
+      this.parameters.methanolStorageCapacity,
+      carbonCapturePlantCapacity,
       this.parameters.ammoniaSynthesisUnitCost,
       this.parameters.ammoniaStorageCost,
       this.parameters.airSeparationUnitCost,
@@ -503,7 +502,7 @@ export class MethanolModel implements Model {
         this.discountRate,
         totalOpex,
         hydrogenProduction,
-        ammoniaProduction
+        methanolProduction
       );
 
     // LCH2 calculations
@@ -590,17 +589,17 @@ export class MethanolModel implements Model {
       ),
 
       "Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)":
-        roundToTwoDP(mean(ammoniaRatedCapacityTime.map((x) => x * 100))),
+        roundToTwoDP(mean(methanolRatedCapacityTime.map((x) => x * 100))),
 
       "Total Time Ammonia Plant is Operating (% of hrs/yr)": roundToTwoDP(
-        mean(totalAmmoniaOperatingTime.map((x) => x * 100))
+        mean(totalMethanolOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
         mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
       "Ammonia Capacity Factor": roundToTwoDP(
-        mean(ammoniaCapacityFactors.map((x) => x * 100))
+        mean(methanolCapacityFactors.map((x) => x * 100))
       ),
 
       "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
@@ -612,7 +611,7 @@ export class MethanolModel implements Model {
 
       "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
 
-      "Ammonia Output (TPA)": roundToNearestInteger(mean(ammoniaProduction)),
+      "Ammonia Output (TPA)": roundToNearestInteger(mean(methanolProduction)),
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
@@ -632,29 +631,29 @@ export class MethanolModel implements Model {
     };
   }
 
-  calculateAmmoniaModel(projectTimeline: number) {
+  calculateMethanolModel(projectTimeline: number) {
     const {
       stackDegradation,
       solarDegradation,
       windDegradation,
       inputConfiguration,
     } = this.parameters;
-    const airSeparationUnitCapacity = air_separation_unit_capacity(
-      this.parameters.ammoniaPlantCapacity
+    const carbonCapturePlantCapacity = carbon_capture_plant_capacity(
+      this.parameters.methanolPlantCapacity
     );
     const hydrogenOutput = hydrogen_output(
-      this.parameters.ammoniaPlantCapacity
+      this.parameters.methanolPlantCapacity
     );
 
-    const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
-      this.parameters.ammoniaPlantCapacity,
-      this.parameters.ammoniaPlantSec,
+    const meOH_PowDem = methanol_plant_power_demand(
+      this.parameters.methanolPlantCapacity,
+      this.parameters.methanolPlantSec,
       this.hoursPerYear
     );
 
-    const airSeparationUnitPowerDemand = air_separation_unit_power_demand(
-      airSeparationUnitCapacity,
-      this.parameters.asuSec
+    const co2_PowDem = this.carbon_capture_plant_power_demand(
+      carbonCapturePlantCapacity,
+      this.parameters.carbonCaptureSec
     );
 
     const electrolyserNominalCapacity = nominal_electrolyser_capacity(
@@ -664,15 +663,15 @@ export class MethanolModel implements Model {
     );
 
     const solarNominalCapacity = nominal_solar_capacity(
-      ammoniaPlantPowerDemand,
-      airSeparationUnitPowerDemand,
+      meOH_PowDem,
+      co2_PowDem,
       electrolyserNominalCapacity,
       this.parameters.solarToWindPercentage / 100,
       this.parameters.powerPlantOversizeRatio
     );
     const windNominalCapacity = nominal_wind_capacity(
-      ammoniaPlantPowerDemand,
-      airSeparationUnitPowerDemand,
+      meOH_PowDem,
+      co2_PowDem,
       electrolyserNominalCapacity,
       1 - this.parameters.solarToWindPercentage / 100,
       this.parameters.powerPlantOversizeRatio
@@ -690,7 +689,7 @@ export class MethanolModel implements Model {
           // default for the first calculation
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
-          airSeparationUnitCapacity,
+          carbonCapturePlantCapacity,
           1
         );
 
@@ -701,25 +700,25 @@ export class MethanolModel implements Model {
         this.specCons
       );
 
-      const h2ToNH3Unit = calculateH2ToNH3Unit(
+      const h2ToMeOhUnit = calculateH2ToMeOhUnit(
         hydrogenProduction,
         electrolyserNominalCapacity,
         hydrogenOutput,
         this.parameters.hydrogenStorageCapacity,
         this.parameters.minimumHydrogenStorage / 100,
-        this.parameters.ammoniaPlantMinimumTurndown / 100
+        this.parameters.methanolPlantMinimumTurndown / 100
       );
 
-      const asuOut = asu_out(
-        h2ToNH3Unit,
+      const ccOut = cc_out(
+        h2ToMeOhUnit,
         hydrogenOutput,
-        airSeparationUnitCapacity
+        carbonCapturePlantCapacity
       );
 
-      const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
-      const ammoniaCapacityFactors = nh3_unit_capacity_factor(
-        ammoniaProduction,
-        this.parameters.ammoniaPlantCapacity,
+      const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+      const methanolCapacityFactors = meOh_unit_capacity_factor(
+        methanolProduction,
+        this.parameters.methanolPlantCapacity,
         this.hoursPerYear
       );
 
@@ -729,7 +728,7 @@ export class MethanolModel implements Model {
           hourlyOperations.electrolyserCapacityFactors,
         hydrogenProduction,
         netBatteryFlow: hourlyOperations.netBatteryFlow,
-        ammoniaCapacityFactors,
+        methanolCapacityFactors: methanolCapacityFactors,
       };
 
       const { solarToWindPercentage = 100 } = this.parameters;
@@ -747,9 +746,9 @@ export class MethanolModel implements Model {
       const operatingOutputs = calculateAmmoniaSnapshotForYear(
         hourlyOperations.powerplantCapacityFactors,
         hourlyOperations.electrolyserCapacityFactors,
-        ammoniaCapacityFactors,
+        methanolCapacityFactors,
         hydrogenProduction,
-        ammoniaProduction,
+        methanolProduction,
         hourlyOperations.netBatteryFlow,
         electrolyserNominalCapacity,
         powerPlantNominalCapacity,
@@ -768,10 +767,10 @@ export class MethanolModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
-        ammoniaRatedCapacityTime: [],
-        totalAmmoniaOperatingTime: [],
-        ammoniaCapacityFactors: [],
-        ammoniaProduction: [],
+        methanolRatedCapacityTime: [],
+        totalMethanolOperatingTime: [],
+        methanolCapacityFactors: [],
+        methanolProduction: [],
       };
 
       Object.keys(operatingOutputs).forEach((key) => {
@@ -781,7 +780,7 @@ export class MethanolModel implements Model {
       });
 
       return {
-        airSeparationUnitCapacity,
+        carbonCapturePlantCapacity,
         powerPlantType: powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
@@ -804,7 +803,7 @@ export class MethanolModel implements Model {
           this.parameters.powerPlantOversizeRatio,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
-          airSeparationUnitCapacity,
+          carbonCapturePlantCapacity,
           year
         );
 
@@ -815,25 +814,25 @@ export class MethanolModel implements Model {
           this.specCons
         );
 
-        const h2ToNH3Unit = calculateH2ToNH3Unit(
+        const h2ToMeOhUnit = calculateH2ToMeOhUnit(
           hydrogenProduction,
           electrolyserNominalCapacity,
           hydrogenOutput,
           this.parameters.hydrogenStorageCapacity,
           this.parameters.minimumHydrogenStorage / 100,
-          this.parameters.ammoniaPlantMinimumTurndown / 100
+          this.parameters.methanolPlantMinimumTurndown / 100
         );
 
-        const asuOut = asu_out(
-          h2ToNH3Unit,
+        const ccOut = cc_out(
+          h2ToMeOhUnit,
           hydrogenOutput,
-          airSeparationUnitCapacity
+          carbonCapturePlantCapacity
         );
 
-        const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
-        const ammoniaCapacityFactors = nh3_unit_capacity_factor(
-          ammoniaProduction,
-          this.parameters.ammoniaPlantCapacity,
+        const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+        const methanolCapacityFactors = meOh_unit_capacity_factor(
+          methanolProduction,
+          this.parameters.methanolPlantCapacity,
           this.hoursPerYear
         );
 
@@ -842,14 +841,14 @@ export class MethanolModel implements Model {
           electrolyserCapacityFactors,
           netBatteryFlow,
           hydrogenProduction,
-          ammoniaCapacityFactors,
+          methanolCapacityFactors,
         };
         const operatingOutputs = calculateAmmoniaSnapshotForYear(
           powerplantCapacityFactors,
           electrolyserCapacityFactors,
-          ammoniaCapacityFactors,
+          methanolCapacityFactors,
           hydrogenProduction,
-          ammoniaProduction,
+          methanolProduction,
           netBatteryFlow,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
@@ -868,10 +867,10 @@ export class MethanolModel implements Model {
           powerPlantCapacityFactors: [],
           ratedCapacityTime: [],
           electrolyserCapacityFactors: [],
-          ammoniaRatedCapacityTime: [],
-          totalAmmoniaOperatingTime: [],
-          ammoniaCapacityFactors: [],
-          ammoniaProduction: [],
+          methanolRatedCapacityTime: [],
+          totalMethanolOperatingTime: [],
+          methanolCapacityFactors: [],
+          methanolProduction: [],
         };
         Object.keys(projectSummary).forEach((key) => {
           projectSummary[key as keyof AmmoniaProjectModelSummary] = Array(
@@ -879,7 +878,7 @@ export class MethanolModel implements Model {
           ).fill(operatingOutputs[key]);
         });
         return {
-          airSeparationUnitCapacity,
+          carbonCapturePlantCapacity,
           powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
           windNominalCapacity: windNominalCapacity,
@@ -906,15 +905,15 @@ export class MethanolModel implements Model {
         );
       }
 
-      const calculateAmmoniaModelSummary = (
+      const calculateMethanolModelSummary = (
         hourlyOperation: ModelHourlyOperation
       ) => {
         return calculateAmmoniaSnapshotForYear(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
-          hourlyOperation.ammoniaCapacityFactors,
+          hourlyOperation.methanolCapacityFactors,
           hourlyOperation.hydrogenProduction,
-          hourlyOperation.ammoniaProduction,
+          hourlyOperation.methanolProduction,
           hourlyOperation.netBatteryFlow,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
@@ -937,7 +936,7 @@ export class MethanolModel implements Model {
             this.parameters.powerPlantOversizeRatio,
             electrolyserNominalCapacity,
             powerPlantNominalCapacity,
-            airSeparationUnitCapacity,
+            carbonCapturePlantCapacity,
             year
           );
 
@@ -952,25 +951,25 @@ export class MethanolModel implements Model {
             yearlyDegradationRate,
             this.specCons
           );
-          const h2ToNH3Unit = calculateH2ToNH3Unit(
+          const h2ToMeOhUnit = calculateH2ToMeOhUnit(
             hydrogenProduction,
             electrolyserNominalCapacity,
             hydrogenOutput,
             this.parameters.hydrogenStorageCapacity,
             this.parameters.minimumHydrogenStorage / 100,
-            this.parameters.ammoniaPlantMinimumTurndown / 100
+            this.parameters.methanolPlantMinimumTurndown / 100
           );
 
-          const asuOut = asu_out(
-            h2ToNH3Unit,
+          const ccOut = cc_out(
+            h2ToMeOhUnit,
             hydrogenOutput,
-            airSeparationUnitCapacity
+            carbonCapturePlantCapacity
           );
 
-          const ammoniaProduction = nh3_unit_out(asuOut, h2ToNH3Unit);
-          const ammoniaCapacityFactors = nh3_unit_capacity_factor(
-            ammoniaProduction,
-            this.parameters.ammoniaPlantCapacity,
+          const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+          const methanolCapacityFactors = meOh_unit_capacity_factor(
+            methanolProduction,
+            this.parameters.methanolPlantCapacity,
             this.hoursPerYear
           );
 
@@ -979,8 +978,8 @@ export class MethanolModel implements Model {
             electrolyserCapacityFactors,
             netBatteryFlow,
             hydrogenProduction,
-            ammoniaCapacityFactors,
-            ammoniaProduction,
+            methanolCapacityFactors,
+            methanolProduction,
           };
         }
       );
@@ -989,7 +988,7 @@ export class MethanolModel implements Model {
         capFactorsByYear[0];
 
       const modelSummaryPerYear = capFactorsByYear.map((value) => {
-        return calculateAmmoniaModelSummary(value);
+        return calculateMethanolModelSummary(value);
       });
 
       let projectSummary: AmmoniaProjectModelSummary = {
@@ -1001,10 +1000,10 @@ export class MethanolModel implements Model {
         powerPlantCapacityFactors: [],
         ratedCapacityTime: [],
         electrolyserCapacityFactors: [],
-        ammoniaRatedCapacityTime: [],
-        totalAmmoniaOperatingTime: [],
-        ammoniaCapacityFactors: [],
-        ammoniaProduction: [],
+        methanolRatedCapacityTime: [],
+        totalMethanolOperatingTime: [],
+        methanolCapacityFactors: [],
+        methanolProduction: [],
       };
 
       modelSummaryPerYear.forEach((yearSummary) => {
@@ -1016,7 +1015,7 @@ export class MethanolModel implements Model {
       });
 
       return {
-        airSeparationUnitCapacity,
+        carbonCapturePlantCapacity,
         powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
         windNominalCapacity: windNominalCapacity,
@@ -1035,7 +1034,7 @@ export class MethanolModel implements Model {
     powerPlantOversizeRatio: number,
     electrolyserNominalCapacity: number,
     powerPlantNominalCapacity: number,
-    airSeparationUnitCapacity: number,
+    carbonCapturePlantCapacity: number,
     year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
@@ -1053,34 +1052,41 @@ export class MethanolModel implements Model {
       powerPlantNominalCapacity,
       powerplantCapacityFactors
     );
-    const ammoniaPowerDemand = ammonia_plant_power_demand(
-      this.parameters.ammoniaPlantCapacity,
-      this.parameters.ammoniaPlantSec,
+
+    const meOH_PowDem = methanol_plant_power_demand(
+      this.parameters.methanolPlantCapacity,
+      this.parameters.methanolPlantSec,
       this.hoursPerYear
     );
-    const asuPowerDemand = air_separation_unit_power_demand(
-      airSeparationUnitCapacity,
-      this.parameters.asuSec
+
+    const co2_PowDem = this.carbon_capture_plant_power_demand(
+      carbonCapturePlantCapacity,
+      this.parameters.carbonCaptureSec
     );
-    const asuNh3ActualPower = asu_nh3_actual_power(
-      ammoniaPowerDemand,
-      asuPowerDemand,
-      generatorActualPower
-    );
+
     const electrolyserActualPower = electrolyser_actual_power(
       electrolyserNominalCapacity,
       generatorActualPower,
-      asuNh3ActualPower
+      co2_PowDem,
+      meOH_PowDem
     );
 
     // normal electrolyser calculation
     let electrolyserCapacityFactors = electrolyserActualPower.map(
       (v: number) => v / electrolyserNominalCapacity
     );
-    let asuNh3CapacityFactors = asu_nh3_capacity_factor(
-      ammoniaPowerDemand,
-      asuPowerDemand,
-      asuNh3ActualPower
+
+    const meOH_Cc_actual_power = generatorActualPower.map(
+      (generatorActualPower: number) => {
+        if (generatorActualPower > co2_PowDem + meOH_PowDem) {
+          return co2_PowDem + meOH_PowDem;
+        } else {
+          return 0;
+        }
+      }
+    );
+    let methanolCapacityFactors = meOH_Cc_actual_power.map(
+      (v: number) => v / co2_PowDem + meOH_PowDem
     );
 
     let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
@@ -1095,36 +1101,24 @@ export class MethanolModel implements Model {
       const excessGeneration = excess_generation(
         generatorActualPower,
         electrolyserActualPower,
-        asuNh3ActualPower
+        meOH_Cc_actual_power
       );
       const batteryLosses = getBatteryLosses(this.batteryEfficiency);
-      netBatteryFlow = calculateNetBatteryFlow(
-        powerPlantOversizeRatio,
-        electrolyserNominalCapacity,
+      netBatteryFlow = calculateNetBatteryFlowMeth(
         excessGeneration,
-        electrolyserCapacityFactors,
-        this.elecMinLoad,
-        this.elecMaxLoad,
         this.batteryRatedPower,
         this.batteryEnergy,
         this.batteryMinCharge,
-        batteryLosses
+        batteryLosses,
+        co2_PowDem,
+        meOH_PowDem,
+        generatorActualPower,
+        this.parameters.methanolPlantMinimumTurndown
       );
-
-      asuNh3CapacityFactors = asu_nh3_with_battery_cf(
-        asuNh3CapacityFactors,
+      // with battery
+      methanolCapacityFactors = meOh_cc_with_battery_cf(
+        methanolCapacityFactors,
         netBatteryFlow
-      );
-
-      electrolyserCapacityFactors = electrolyser_with_battery_capacity_factor(
-        netBatteryFlow,
-        electrolyserActualPower,
-        asuNh3ActualPower,
-        electrolyserCapacityFactors,
-        ammoniaPowerDemand,
-        asuPowerDemand,
-        electrolyserNominalCapacity,
-        this.batteryEfficiency
       );
     }
 
@@ -1132,8 +1126,15 @@ export class MethanolModel implements Model {
       powerplantCapacityFactors,
       electrolyserCapacityFactors,
       netBatteryFlow,
-      asuNh3CapacityFactors,
+      methanolCapacityFactors,
     };
+  }
+
+  private carbon_capture_plant_power_demand(
+    carbonCapturePlantCapacity: number,
+    carbonCaptureSec: number
+  ) {
+    return (carbonCapturePlantCapacity / 24) * carbonCaptureSec;
   }
 }
 
@@ -1142,85 +1143,33 @@ export class MethanolModel implements Model {
 function electrolyser_actual_power(
   nominal_electrolyser_capacity: number, // electrolyser capacity
   generator_actual_power: number[], // generator actual power
-  asu_nh3_actual_power: number[] // ASU/NH3 actual power
+  co2_PowDem: number,
+  meOH_PowDem: number
 ) {
   return generator_actual_power.map((_: number, i: number) =>
-    generator_actual_power[i] - asu_nh3_actual_power[i] >
+    generator_actual_power[i] - (co2_PowDem + meOH_PowDem) >
     nominal_electrolyser_capacity
       ? nominal_electrolyser_capacity
-      : generator_actual_power[i] - asu_nh3_actual_power[i]
+      : Math.max(generator_actual_power[i] - (co2_PowDem + meOH_PowDem), 0)
   );
 }
 
-// Functions transcribed from ammonia model
-// // will be used to calculate mass_of_hydrogen
-// function calculateAmmoniaElectrolyserCapacityFactors(
-//   generatorCapFactor: number[], // calculated in hydrogen
-//   net_battery_flow: number[], // calculated in hydrogen
-//   electrolyserCapFactor: number[], // calculated in hydrogen
-//   // round trip efficiency from hydrogen raw input
-//   batteryEfficiency: number, // %
-//   total_nominal_power_plant_capacity: number,
-//   nominal_electrolyser_capacity: number,
-//   asu_power_demand: number,
-//   ammonia_plant_power_demand: number
-// ): number[] {
-//   // if no battery is defined return as it is
-//   if (batteryEfficiency === 0) {
-//     return electrolyserCapFactor;
-//   }
-//   const generator_actual_power_result: number[] = generator_actual_power(
-//     total_nominal_power_plant_capacity,
-//     generatorCapFactor
-//   );
-//
-//   const asu_nh3_actual_power_result: number[] = asu_nh3_actual_power(
-//     ammonia_plant_power_demand,
-//     asu_power_demand,
-//     generator_actual_power_result
-//   );
-//
-//   const electrolyser_actual_power_result: number[] = electrolyser_actual_power(
-//     nominal_electrolyser_capacity,
-//     generator_actual_power_result,
-//     asu_nh3_actual_power_result
-//   );
-//
-//   return electrolyser_with_battery_capacity_factor(
-//     net_battery_flow,
-//     electrolyser_actual_power_result,
-//     asu_nh3_actual_power_result,
-//     electrolyserCapFactor,
-//     ammonia_plant_power_demand,
-//     asu_power_demand,
-//     nominal_electrolyser_capacity,
-//     batteryEfficiency
-//   );
-// }
-
-function ammonia_plant_power_demand(
-  ammonia_plant_capacity: number, // size of ammonia plant
-  ammonia_plant_sec: number, // electricity required to produce 1 kg of ammonia
+function methanol_plant_power_demand(
+  methanol_plant_capacity: number, // size of ammonia plant
+  methanol_plant_sec: number, // electricity required to produce 1 kg of ammonia
   hoursPerYear: number
 ) {
   return (
-    (ammonia_plant_capacity / hoursPerYear) *
+    (methanol_plant_capacity / hoursPerYear) *
     1_000_000 *
-    (ammonia_plant_sec / 1000)
+    (methanol_plant_sec / 1000)
   );
 }
 
-function air_separation_unit_capacity(
-  ammonia_plant_capacity: number // size of ammonia plant
+function carbon_capture_plant_capacity(
+  methanol_plant_capacity: number // size of ammonia plant
 ) {
-  return ((ammonia_plant_capacity * 1000) / 365) * (28.134 / 34.181);
-}
-
-function air_separation_unit_power_demand(
-  air_separation_unit_capacity: number, // size of air separation unit
-  asu_sec: number // electricity required to produce 1kg of Nitrogen
-) {
-  return (air_separation_unit_capacity / 24) * asu_sec;
+  return (((methanol_plant_capacity * 1000) / 365) * (44.01 / 32.04)) / 0.95;
 }
 
 function hydrogen_output(
@@ -1243,16 +1192,14 @@ function nominal_electrolyser_capacity(
 
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
 function nominal_solar_capacity(
-  ammonia_plant_power_demand: number, // power required for ammonia plant
-  air_separation_unit_power_demand: number, // power required for ASU
+  meOH_PowDem: number,
+  co2_PowDem: number,
   nominal_electrolyser_capacity: number, // Power required for Electrolyser
   hybrid_generator_split: number, // % of hybrid plant made up of solar
   renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
 ) {
   return (
-    (ammonia_plant_power_demand +
-      air_separation_unit_power_demand +
-      nominal_electrolyser_capacity) *
+    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
     (1 + renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
@@ -1260,16 +1207,14 @@ function nominal_solar_capacity(
 
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
 function nominal_wind_capacity(
-  ammonia_plant_power_demand: number, // power required for ammonia plant
-  air_separation_unit_power_demand: number, // power required for ASU
+  meOH_PowDem: number,
+  co2_PowDem: number,
   nominal_electrolyser_capacity: number, // Power required for Electrolyser
   hybrid_generator_split: number, // % of hybrid plant made up of solar
   renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
 ) {
   return (
-    (ammonia_plant_power_demand +
-      air_separation_unit_power_demand +
-      nominal_electrolyser_capacity) *
+    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
     (1 + renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
@@ -1284,45 +1229,6 @@ function generator_actual_power(
   return generator_capacity_factor.map(
     (v: number) => total_nominal_power_plant_capacity * v
   );
-}
-
-// should be repeated for multiple cells
-function asu_nh3_actual_power(
-  ammonia_power_demand: number, // ammonia power demand
-  asu_power_demand: number, // asu power demand
-  generator_actual_power: number[] // generator actual power
-): number[] {
-  return generator_actual_power.map((v: number) =>
-    v > ammonia_power_demand + asu_power_demand
-      ? ammonia_power_demand + asu_power_demand
-      : v
-  );
-}
-
-// %
-// should be repeated for multiple cells
-function electrolyser_with_battery_capacity_factor(
-  net_battery_flow: number[],
-  electrolyser_actual_power: number[],
-  asu_nh3_actual_power: number[],
-  electrolyser_capacity_factor: number[],
-  ammonia_power_demand: number,
-  asu_power_demand: number,
-  electrolyser_capacity: number,
-  battery_efficiency: number
-): number[] {
-  return net_battery_flow.map((_: number, i: number) => {
-    if (net_battery_flow[i] < 0) {
-      return (
-        electrolyser_actual_power[i] +
-        -1 * net_battery_flow[i] * (1 - (1 - battery_efficiency) / 2) -
-        (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i]) /
-          electrolyser_capacity
-      );
-    }
-
-    return electrolyser_capacity_factor[i];
-  });
 }
 
 // should be repeated for multiple cells
@@ -1385,40 +1291,40 @@ function h2_to_nh3(
 }
 
 // should be repeated for multiple cells
-function asu_out(
-  h2_to_nh3: number[], // v20
+function cc_out(
+  h2_to_meoh: number[], // v20
   hydrogen_output: number, // s1b16
-  asu_capacity: number // s1b14
+  cc_capacity: number // s1b14
 ) {
-  return h2_to_nh3.map((v: number) => {
+  return h2_to_meoh.map((v: number) => {
     if (v === (hydrogen_output / 24) * 1000) {
-      return (asu_capacity / 24) * 1000;
+      return (cc_capacity / 24) * 1000;
     } else if (v < (hydrogen_output / 24) * 1000) {
-      return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;
+      return (v / ((hydrogen_output / 24) * 1000)) * (cc_capacity / 24) * 1000;
     }
     // TODO check if this is okay
-    throw new Error("Unsupported calculation for asu out");
+    throw new Error("Unsupported calculation for cc out");
   });
 }
 
 // should be repeated for multiple cells
-function nh3_unit_out(
-  asu_out: number[], // w20
-  h2_to_nh3: number[] // v20
+function meOh_unit_out(
+  cc_out: number[], // w20
+  h2_to_meOh: number[] // v20
 ) {
-  return asu_out.map((_: number, i: number) =>
-    asu_out[i] > 0 ? h2_to_nh3[i] + asu_out[i] : 0
+  return cc_out.map((_: number, i: number) =>
+    cc_out[i] > 0 ? h2_to_meOh[i] + cc_out[i] : 0
   );
 }
 
 // should be repeated for multiple cells
-function nh3_unit_capacity_factor(
-  nh3_unit_out: number[], // x20
-  ammonia_plant_capacity: number, // s1b12
+function meOh_unit_capacity_factor(
+  meOh_unit_out: number[], // x20
+  methanol_plant_capacity: number, // s1b12
   hoursPerYear: number
 ) {
-  return nh3_unit_out.map((v: number) =>
-    Math.min(v / (ammonia_plant_capacity * (1_000_000 / hoursPerYear)), 1)
+  return meOh_unit_out.map((v: number) =>
+    Math.min(v / (methanol_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
 }
 
@@ -1458,13 +1364,13 @@ function h2_storage_balance(
   return { from_h2_store, h2_storage_balance_result };
 }
 
-function calculateH2ToNH3Unit(
+function calculateH2ToMeOhUnit(
   hydrogenProduction: number[],
   electrolyserNominalCapacity: number,
   hydrogen_output: number,
   hydrogen_storage_capacity: number,
   minimum_hydrogen_storage: number,
-  ammonia_plant_minimum_turndown: number
+  methanol_plant_minimum_turndown: number
 ) {
   // adjust hydrogen to work for ammonia
   const mass_of_hydrogen = hydrogenProduction.map(
@@ -1486,7 +1392,7 @@ function calculateH2ToNH3Unit(
     h2_storage_balance_result,
     hydrogen_storage_capacity,
     hydrogen_output,
-    ammonia_plant_minimum_turndown
+    methanol_plant_minimum_turndown
   );
   return h2_to_nh3_result;
 }
@@ -1533,13 +1439,13 @@ function hydrogen_storage_CAPEX(
 function excess_generation(
   generator_actual_power: number[], // generator actual power MW
   electrolyser_actual_power: number[], // electrolyser actual power MW
-  asu_nh3_actual_power: number[] // asu nh3 acutal power
+  meOh_cc_actual_power: number[] // asu nh3 acutal power
 ) {
-  return asu_nh3_actual_power.map((_: number, i: number) => {
+  return meOh_cc_actual_power.map((_: number, i: number) => {
     const excess =
       generator_actual_power[i] -
       electrolyser_actual_power[i] -
-      asu_nh3_actual_power[i];
+      meOh_cc_actual_power[i];
     // TODO check if this okay, otherwise battery model throws exceptions
     // it might've been just old battery model and the new one is fine
     return excess > 0 ? excess : 0;
@@ -1549,23 +1455,13 @@ function excess_generation(
 //
 // // %
 // // should be repeated for multiple cells
-function asu_nh3_with_battery_cf(
-  asu_nh3_capacity_factor: number[],
+function meOh_cc_with_battery_cf(
+  meOh_cc_capacity_factor: number[],
   net_battery_flow: number[]
 ) {
-  return asu_nh3_capacity_factor.map((_: number, i: number) =>
-    asu_nh3_capacity_factor[i] < 1 && net_battery_flow[i] < 0
-      ? asu_nh3_capacity_factor[i] + (1 - asu_nh3_capacity_factor[i])
-      : asu_nh3_capacity_factor[i]
-  );
-}
-
-function asu_nh3_capacity_factor(
-  ammonia_power_demand: number, // ammonia power demand
-  asu_power_demand: number, // asu power demand
-  asu_nh3_actual_power: number[] // asu/nh3 actual power
-) {
-  return asu_nh3_actual_power.map(
-    (v: number) => v / (ammonia_power_demand + asu_power_demand)
+  return meOh_cc_capacity_factor.map((_: number, i: number) =>
+    meOh_cc_capacity_factor[i] < 1 && net_battery_flow[i] < 0
+      ? meOh_cc_capacity_factor[i] + (1 - meOh_cc_capacity_factor[i])
+      : meOh_cc_capacity_factor[i]
   );
 }

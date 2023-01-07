@@ -158,6 +158,60 @@ function batteryPower(
   }
 }
 
+function batteryPowerMeth(
+  co2_PowDem: number,
+  meOH_PowDem: number,
+  battPower: number,
+  excessGenerationCurr: number,
+  generatorActualPowerCurr: number,
+  batterySocPrev: number,
+  methanolPlantMinimumTurndown: number,
+  battMin: number,
+  battCapacity: number,
+  battMax: number,
+  batteryLosses: number
+) {
+  if (battCapacity > 0) {
+    if (
+      generatorActualPowerCurr <
+        (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown &&
+      excessGenerationCurr +
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+          batteryLosses >
+        (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown
+    ) {
+      return (
+        excessGenerationCurr -
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity)
+      );
+    } else if (
+      excessGenerationCurr > 0 &&
+      batterySocPrev + (excessGenerationCurr / battCapacity) * batteryLosses >
+        battMax
+    ) {
+      return Math.min(
+        battPower,
+        Math.abs(battCapacity * (battMax - batterySocPrev))
+      );
+    } else if (excessGenerationCurr > 0) {
+      return Math.min(battPower, excessGenerationCurr * batteryLosses);
+    } else if (
+      generatorActualPowerCurr +
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+          batteryLosses <
+      (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown
+    ) {
+      return 0;
+    } else if (excessGenerationCurr === 0 && batterySocPrev <= battMin) {
+      return 0;
+    } else if (excessGenerationCurr === 0) {
+      return 0;
+    }
+  } else {
+    return 0;
+  }
+}
+
 export function calculateNetBatteryFlowPython(
   powerPlantOversizeRatio: number,
   elecCapacity: number,
@@ -246,6 +300,49 @@ export function calculateNetBatteryFlowPython(
     } else {
       throw new Error("Error: battery configuration not accounted for");
     }
+    //  Determine the battery state of charge based on the previous state of charge and the net change
+    batterySoc[hour] =
+      batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;
+  }
+
+  return batteryNetCharge;
+}
+
+export function calculateNetBatteryFlowMeth(
+  excessGeneration: number[],
+  batteryRatedPower: number,
+  batteryEnergy: number,
+  batteryMinCharge: number,
+  batteryLosses: number,
+  co2_PowDem: number,
+  meOH_PowDem: number,
+  generatorActualPower: number[],
+  methanolPlantMinimumTurnDown: number
+): number[] {
+  const size = excessGeneration.length;
+  const batteryNetCharge = Array(size).fill(0.0);
+  const batterySoc = Array(size).fill(0.0);
+
+  batteryNetCharge[0] = Math.min(
+    batteryRatedPower,
+    excessGeneration[0] * batteryLosses
+  );
+  batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
+  // check for off by 1 error
+  for (let hour = 1; hour < size; hour++) {
+    batteryNetCharge[hour] = batteryPowerMeth(
+      co2_PowDem,
+      meOH_PowDem,
+      batteryRatedPower,
+      roundToEightDP(excessGeneration[hour]),
+      generatorActualPower[hour],
+      batterySoc[hour - 1],
+      methanolPlantMinimumTurnDown,
+      batteryMinCharge,
+      batteryEnergy,
+      1,
+      batteryLosses
+    );
     //  Determine the battery state of charge based on the previous state of charge and the net change
     batterySoc[hour] =
       batterySoc[hour - 1] + batteryNetCharge[hour] / batteryEnergy;

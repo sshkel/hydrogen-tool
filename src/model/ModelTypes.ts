@@ -21,8 +21,8 @@ export interface ProjectModelSummary {
 }
 
 export interface AmmoniaProjectModelSummary extends ProjectModelSummary {
-  ammoniaCapacityFactors: number[];
-  totalAmmoniaOperatingTime: number[];
-  ammoniaRatedCapacityTime: number[];
-  ammoniaProduction: number[];
+  methanolCapacityFactors: number[];
+  totalMethanolOperatingTime: number[];
+  methanolRatedCapacityTime: number[];
+  methanolProduction: number[];
 }
