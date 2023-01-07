@@ -120,10 +120,27 @@ export interface UserInputFields {
   asuPlantOMCost?: number;
   hydrogenStoragePurchaseCost?: number;
   hydrogenStorageOMCost?: number;
+  // Methanol
+  ccLandProcurementCosts?: number;
+  ccEpcCosts?: number;
+  ccPlantCost?: number;
+  ccPlantOMCost?: number;
+  methanolStorageOMCost?: number;
+  methanolPlantOMCost?: number;
+  methanolLandProcurementCosts?: number;
+  methanolEpcCosts?: number;
+  methanolStorageCost?: number;
+  methanolPlantUnitCost?: number;
+  methanolPlantMinimumTurndown?: number;
+  methanolPlantSec?: number;
+  ccSec?: number;
+  methanolStorageCapacity?: number;
+  methanolPlantCapacity?: number;
 }
 
 export interface Inputs {
   // Electrolyser
+
   electrolyserNominalCapacity: number;
   electrolyserReferenceCapacity: number;
   electrolyserEfficiency?: number;
@@ -222,6 +239,23 @@ export interface Inputs {
   asuPlantOMCost?: number;
   hydrogenStoragePurchaseCost?: number;
   hydrogenStorageOMCost?: number;
+
+  // Methanol
+  ccLandProcurementCosts?: number;
+  ccEpcCosts?: number;
+  ccPlantCost?: number;
+  ccPlantOMCost?: number;
+  methanolStorageOMCost?: number;
+  methanolPlantOMCost?: number;
+  methanolLandProcurementCosts?: number;
+  methanolEpcCosts?: number;
+  methanolStorageCost?: number;
+  methanolPlantUnitCost?: number;
+  methanolPlantMinimumTurndown?: number;
+  methanolPlantSec?: number;
+  ccSec?: number;
+  methanolStorageCapacity?: number;
+  methanolPlantCapacity?: number;
 }
 
 export interface Model {
