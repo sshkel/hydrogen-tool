@@ -107,7 +107,7 @@ export default function InputSlider({ inputKey }: Props) {
           onChange={handleInputChange}
           onBlur={handleBlur}
           required
-          sx={{ width: "5rem" }}
+          sx={{ width: "6rem" }}
           inputProps={{
             inputMode: "numeric",
             pattern: "/^d*.?d*$/",

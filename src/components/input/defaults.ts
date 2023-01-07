@@ -2,12 +2,7 @@ class Defaults {
   private defaultInputs: { [k: string]: number };
 
   constructor() {
-    const savedData =
-      localStorage.getItem("savedData") !== null
-        ? JSON.parse(localStorage.getItem("savedData")!)
-        : undefined;
-
-    this.defaultInputs = savedData || {
+    const defaults = {
       electrolyserNominalCapacity: 10,
       secAtNominalLoad: 50,
       electrolyserEfficiency: 50,
@@ -87,7 +82,33 @@ class Defaults {
       hydrogenStoragePurchaseCost: 0,
       hydrogenStorageOMCost: 0,
       ammoniaPlantCapitalCost: 900,
+      // TODO work out if these default are correct for ammonia
+      methanolPlantCapacity: 350,
+      methanolPlantUnitCost: 250,
+      methanolStorageCapacity: 30,
+      methanolPlantSec: 0.36,
+      methanolPlantMinimumTurndown: 100,
+      methanolStorageCost: 227,
+      methanolEpcCosts: 0,
+      methanolLandProcurementCosts: 0,
+      methanolPlantOMCost: 5,
+      methanolStorageOMCost: 5,
+      ccSec: 0.86,
+      ccPlantCost: 420,
+      ccEpcCosts: 0,
+      ccLandProcurementCosts: 0,
+      ccPlantOMCost: 5,
     };
+
+    if (localStorage.getItem("savedData") !== null) {
+      const savedData = JSON.parse(localStorage.getItem("savedData")!);
+      this.defaultInputs = {
+        ...defaults,
+        savedData,
+      };
+    } else {
+      this.defaultInputs = defaults;
+    }
   }
 
   get(key: string) {

@@ -17,10 +17,32 @@ import InputTab from "./InputTab";
 import AdvancedAmmoniaInput from "./ammonia/AdvancedAmmoniaInput";
 import BasicAmmoniaInput from "./ammonia/BasicAmmoniaInput";
 import { configurationTypes } from "./data";
+import AdvancedMethanolInput from "./methanol/AdvancedMethanolInput";
+import BasicMethanolInput from "./methanol/BasicMethanolInput";
 
 interface Props {
   setInputConfiguration: (config: InputConfiguration) => void;
   setState: (obj: any) => void;
+}
+
+function getBasicInputs(powerfuel: string): JSX.Element {
+  if (powerfuel === "ammonia") {
+    return <BasicAmmoniaInput />;
+  }
+  if (powerfuel === "methanol") {
+    return <BasicMethanolInput />;
+  }
+  return <BasicHydrogenInput />;
+}
+
+function getAdvancedInputs(powerfuel: string): JSX.Element {
+  if (powerfuel === "ammonia") {
+    return <AdvancedAmmoniaInput />;
+  }
+  if (powerfuel === "methanol") {
+    return <AdvancedMethanolInput />;
+  }
+  return <AdvancedHydrogenInput />;
 }
 
 export default function InputHomePage(props: Props) {
@@ -119,18 +141,10 @@ export default function InputHomePage(props: Props) {
           />
         </TabList>
         <TabPanel value="Basic" sx={{ background: "#F2F2F2" }}>
-          {powerfuel === "hydrogen" ? (
-            <BasicHydrogenInput />
-          ) : (
-            <BasicAmmoniaInput />
-          )}
+          {getBasicInputs(powerfuel)}
         </TabPanel>
         <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
-          {powerfuel === "hydrogen" ? (
-            <AdvancedHydrogenInput />
-          ) : (
-            <AdvancedAmmoniaInput />
-          )}
+          {getAdvancedInputs(powerfuel)}
         </TabPanel>
       </TabContext>
     </Box>

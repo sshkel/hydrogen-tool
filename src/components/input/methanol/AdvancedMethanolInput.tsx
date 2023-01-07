@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 
-import ControlledPowerPlantCard from "./ControlledPowerPlantCardWithNominalCapacity";
-import InputCard from "./InputCard";
-import InputNumberField from "./InputNumberField";
-import InputSelect from "./InputSelect";
+import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
+import InputCard from "../InputCard";
+import InputNumberField from "../InputNumberField";
+import InputSelect from "../InputSelect";
 
-export default function AdvancedHydrogenInput() {
+export default function AdvancedMethanolInput() {
   return (
     <Grid
       container
@@ -32,11 +32,88 @@ export default function AdvancedHydrogenInput() {
       >
         <Grid item>
           <InputCard
-            title="Electrolyser Parameters"
+            title="Methanol Parameters"
+            children={[
+              <InputCard
+                subtitle
+                mountOnEnter
+                key="methanolPlantCapacity"
+                title="Methanol Plant Capacity"
+                children={[
+                  <InputNumberField
+                    key="methanolPlantCapacity"
+                    inputKey="methanolPlantCapacity"
+                  />,
+                  <InputNumberField
+                    key="methanolStorageCapacity"
+                    inputKey="methanolStorageCapacity"
+                  />,
+                  <InputNumberField
+                    key="methanolPlantMinimumTurndown"
+                    inputKey="methanolPlantMinimumTurndown"
+                  />,
+                ]}
+              />,
+              <InputCard
+                subtitle
+                mountOnEnter
+                key="methanolPlantSec"
+                title="Methanol Plant SEC"
+                children={[
+                  <InputNumberField
+                    key="methanolPlantSec"
+                    inputKey="methanolPlantSec"
+                  />,
+                  <InputNumberField key="ccSec" inputKey="ccSec" />,
+                ]}
+              />,
+              <InputCard
+                subtitle
+                mountOnEnter
+                key="methanolCapitalAndOperatingCosts"
+                title="Methanol Capital and Operating Costs"
+                children={[
+                  <InputNumberField
+                    key="methanolPlantUnitCost"
+                    inputKey="methanolPlantUnitCost"
+                  />,
+                  <InputNumberField
+                    key="methanolStorageCost"
+                    inputKey="methanolStorageCost"
+                  />,
+                  <InputNumberField key="ccPlantCost" inputKey="ccPlantCost" />,
+                  <InputNumberField
+                    key="methanolEpcCosts"
+                    inputKey="methanolEpcCosts"
+                  />,
+                  <InputNumberField
+                    key="methanolLandProcurementCosts"
+                    inputKey="methanolLandProcurementCosts"
+                  />,
+                  <InputNumberField
+                    key="methanolPlantOMCost"
+                    inputKey="methanolPlantOMCost"
+                  />,
+                  <InputNumberField
+                    key="methanolStorageOMCost"
+                    inputKey="methanolStorageOMCost"
+                  />,
+                  <InputNumberField
+                    key="ccPlantOMCost"
+                    inputKey="ccPlantOMCost"
+                  />,
+                ]}
+              />,
+            ]}
+          />
+        </Grid>
+        <Grid item>
+          <InputCard
+            title="Electrolyser & Hydrogen Parameters"
             children={[
               <InputNumberField
-                key="electrolyserNominalCapacity"
-                inputKey="electrolyserNominalCapacity"
+                key="electrolyserSystemOversizing"
+                inputKey="electrolyserSystemOversizing"
               />,
               <InputCard
                 subtitle
@@ -111,6 +188,22 @@ export default function AdvancedHydrogenInput() {
               <InputCard
                 subtitle
                 mountOnEnter
+                key="hydrogenStorage"
+                title="Hydrogen Storage"
+                children={[
+                  <InputNumberField
+                    key="hydrogenStorageCapacity"
+                    inputKey="hydrogenStorageCapacity"
+                  />,
+                  <InputNumberField
+                    key="minimumHydrogenStorage"
+                    inputKey="minimumHydrogenStorage"
+                  />,
+                ]}
+              />,
+              <InputCard
+                subtitle
+                mountOnEnter
                 key="electrolyserCapitialAndOperatingCosts"
                 title="Electrolyser Capital and Operating Costs"
                 children={[
@@ -131,6 +224,10 @@ export default function AdvancedHydrogenInput() {
                     inputKey="electrolyserReferenceFoldIncrease"
                   />,
                   <InputNumberField
+                    key="hydrogenStoragePurchaseCost"
+                    inputKey="hydrogenStoragePurchaseCost"
+                  />,
+                  <InputNumberField
                     key="electrolyserEpcCosts"
                     inputKey="electrolyserEpcCosts"
                   />,
@@ -141,6 +238,10 @@ export default function AdvancedHydrogenInput() {
                   <InputNumberField
                     key="electrolyserOMCost"
                     inputKey="electrolyserOMCost"
+                  />,
+                  <InputNumberField
+                    key="hydrogenStorageOMCost"
+                    inputKey="hydrogenStorageOMCost"
                   />,
                   <InputNumberField
                     key="electrolyserStackReplacement"

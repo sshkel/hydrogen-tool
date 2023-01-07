@@ -47,6 +47,9 @@ interface Props {
 }
 
 function InputNumberField({ inputKey }: Props) {
+  if (!numberFieldDefaultInputs[inputKey]) {
+    throw new Error(`${inputKey} is not a valid key for defaults`);
+  }
   const {
     title,
     id = inputKey,
