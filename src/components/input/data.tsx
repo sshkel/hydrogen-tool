@@ -318,11 +318,11 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: methanolCostLabel,
   },
   methanolEpcCosts: {
-    title: "EPC Costs",
+    title: "Methanol EPC Costs",
     adornmentLabel: "% of CAPEX",
   },
   methanolLandProcurementCosts: {
-    title: "Land Procurement Cost",
+    title: "Methanol Land Procurement Cost",
     adornmentLabel: "% of CAPEX",
   },
   methanolPlantOMCost: {
@@ -342,11 +342,11 @@ export const numberFieldDefaultInputs: DefaultInput = {
     ),
   },
   ccEpcCosts: {
-    title: "EPC Costs",
+    title: "Carbon Capture EPC Costs",
     adornmentLabel: "% of CAPEX",
   },
   ccLandProcurementCosts: {
-    title: "Land Procurement Cost",
+    title: "Carbon Capture Land Procurement Cost",
     adornmentLabel: "% of CAPEX",
   },
   ccPlantOMCost: {
