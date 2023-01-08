@@ -25,6 +25,10 @@ const findIndirectCostBreakdownChart = (wrapper: ShallowWrapper) =>
     .filterWhere((e) => e.prop("title") === "Indirect Cost Breakdown");
 
 describe("Working Data calculations", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   describe("Capital Cost Breakdown", () => {
     it("calculates electrolyser CAPEX as expected", () => {
       const data: UserInputFields = {
