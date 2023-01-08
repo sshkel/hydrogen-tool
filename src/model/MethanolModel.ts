@@ -33,8 +33,8 @@ import {
 import {
   CumulativeDegradation,
   MaxDegradation,
-  calculateAmmoniaSnapshotForYear,
   calculateHydrogenProduction,
+  calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
   getBatteryLosses,
@@ -765,7 +765,7 @@ export class MethanolModel implements Model {
         powerPlantType = "Wind";
       }
 
-      const operatingOutputs = calculateAmmoniaSnapshotForYear(
+      const operatingOutputs = calculateMethanolSnapshotForYear(
         hourlyOperations.powerplantCapacityFactors,
         hourlyOperations.electrolyserCapacityFactors,
         methanolCapacityFactors,
@@ -865,7 +865,7 @@ export class MethanolModel implements Model {
           hydrogenProduction,
           methanolCapacityFactors,
         };
-        const operatingOutputs = calculateAmmoniaSnapshotForYear(
+        const operatingOutputs = calculateMethanolSnapshotForYear(
           powerplantCapacityFactors,
           electrolyserCapacityFactors,
           methanolCapacityFactors,
@@ -930,7 +930,7 @@ export class MethanolModel implements Model {
       const calculateMethanolModelSummary = (
         hourlyOperation: ModelHourlyOperation
       ) => {
-        return calculateAmmoniaSnapshotForYear(
+        return calculateMethanolSnapshotForYear(
           hourlyOperation.powerplantCapacityFactors,
           hourlyOperation.electrolyserCapacityFactors,
           hourlyOperation.methanolCapacityFactors,
