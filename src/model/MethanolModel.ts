@@ -381,7 +381,7 @@ export class MethanolModel implements Model {
       totalEpcCost + totalLandCost - batteryEpcCost - batteryLandCost;
 
     const capitalCostBreakdown = {
-      Ammonia: methanolCapex,
+      Methanol: methanolCapex,
       "Carbon Capture": ccCapex,
       "H2 Storage": h2StorageCapex,
       "Electrolyser System": electrolyserCAPEX,
@@ -1202,8 +1202,8 @@ function electrolyser_actual_power(
 }
 
 function methanol_plant_power_demand(
-  methanol_plant_capacity: number, // size of ammonia plant
-  methanol_plant_sec: number, // electricity required to produce 1 kg of ammonia
+  methanol_plant_capacity: number, // size of methanol plant
+  methanol_plant_sec: number, // electricity required to produce 1 kg of methanol
   hoursPerYear: number
 ) {
   return (
@@ -1413,7 +1413,7 @@ function calculateH2ToMeOhUnit(
   minimum_hydrogen_storage: number,
   methanol_plant_minimum_turndown: number
 ) {
-  // adjust hydrogen to work for ammonia
+  // adjust hydrogen to work for methanol
   const mass_of_hydrogen = hydrogenProduction.map(
     (v) => v * electrolyserNominalCapacity
   );
