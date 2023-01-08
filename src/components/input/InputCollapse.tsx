@@ -9,13 +9,7 @@ interface Props {
 }
 
 export default function InputCollapse(props: Props) {
-  const {
-    expanded,
-    timeout = "auto",
-    mountOnEnter = false,
-    unmountOnExit = false,
-    children,
-  } = props;
+  const { expanded, timeout = "auto", unmountOnExit = false, children } = props;
   return (
     <Collapse
       in={expanded}
