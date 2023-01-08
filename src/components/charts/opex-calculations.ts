@@ -161,7 +161,7 @@ export function getTotalHydrogenOpex(
   );
 }
 
-export function getTotalAmmoniaOpex(
+export function getTotalP2XOpex(
   projectTimeline: number,
   electrolyserOpexCost: number,
   powerPlantOpexCost: number,
@@ -173,7 +173,7 @@ export function getTotalAmmoniaOpex(
   stackReplacementCostsOverProjectLife: number[],
   batteryReplacementCostsOverProjectLife: number[],
   h2StorageOpexCost: number,
-  ammoniaOpexCost: number
+  p2XOpexCost: number
 ) {
   return fillYearsArray(
     projectTimeline,
@@ -188,37 +188,40 @@ export function getTotalAmmoniaOpex(
       stackReplacementCostsOverProjectLife[i] +
       batteryReplacementCostsOverProjectLife[i] +
       h2StorageOpexCost +
-      ammoniaOpexCost
+      p2XOpexCost
   );
 }
 
-export function getAmmoniaOpex(
+export function getP2XOpex(
   hydrogenStorageCapacity: number,
   hydrogenStoragePurchaseCost: number,
   hydrogenStorageOMCost: number,
-  ammoniaPlantCapacity: number,
-  ammoniaStorageCapacity: number,
-  airSeparationUnitCapacity: number,
-  ammoniaSynthesisUnitCost: number,
-  ammoniaStorageCost: number,
-  airSeparationUnitCost: number,
-  ammoniaPlantOMCost: number,
-  ammoniaStorageOMCost: number,
-  asuPlantOMCost: number
+  plantCapacity: number,
+  storageCapacity: number,
+  secondaryUnitCapacity: number,
+  synthesisUnitPurchaseCost: number,
+  storagePurchaseCost: number,
+  secondaryUnitPurchaseCost: number,
+  plantOMCostPercentage: number,
+  storageOMCostPercentage: number,
+  secondaryUnitPlantOMCostPercentage: number
 ) {
-  const ammoniaSynthesisUnitOM =
-    ((ammoniaPlantCapacity * ammoniaSynthesisUnitCost * ammoniaPlantOMCost) /
+  const plantOpexCost =
+    ((plantCapacity * synthesisUnitPurchaseCost * plantOMCostPercentage) /
       100) *
     1000;
-  const ammoniaStorageUnitOM =
-    (ammoniaPlantCapacity *
-      ammoniaStorageCapacity *
-      ammoniaStorageCost *
-      (ammoniaStorageOMCost / 100) *
+  const storageUnitOpexCost =
+    (plantCapacity *
+      storageCapacity *
+      storagePurchaseCost *
+      (storageOMCostPercentage / 100) *
       1000) /
     365;
-  const airSynthetsisUnitOM =
-    (airSeparationUnitCapacity * airSeparationUnitCost * 365 * asuPlantOMCost) /
+  const secondaryUnitOpexCost =
+    (secondaryUnitCapacity *
+      secondaryUnitPurchaseCost *
+      365 *
+      secondaryUnitPlantOMCostPercentage) /
     100;
 
   const h2StorageOpexCost = roundToNearestThousand(
@@ -230,8 +233,9 @@ export function getAmmoniaOpex(
 
   return {
     h2StorageOpexCost,
-    ammoniaOpexCost:
-      ammoniaSynthesisUnitOM + ammoniaStorageUnitOM + airSynthetsisUnitOM,
+    plantOpexCost,
+    storageUnitOpexCost,
+    secondaryUnitOpexCost,
   };
 }
 
@@ -317,6 +321,36 @@ export function calculateAmmoniaPerYearOpex(
   return {
     h2StorageOpexPerYear,
     ammoniaOpexPerYear,
+  };
+}
+
+export function calculateMethanolPerYearOpex(
+  h2StorageOpexCost: number,
+  methanolOpexCost: number,
+  ccOpexCost: number,
+  inflationRate: number,
+  projectTimeline: number
+) {
+  const h2StorageOpexPerYear = getOpexPerYearInflationConstant(
+    h2StorageOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+  const methanolOpexPerYear = getOpexPerYearInflationConstant(
+    methanolOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+  const ccOpexPerYear = getOpexPerYearInflationConstant(
+    ccOpexCost,
+    inflationRate,
+    projectTimeline
+  );
+
+  return {
+    h2StorageOpexPerYear,
+    methanolOpexPerYear,
+    ccOpexPerYear,
   };
 }
 

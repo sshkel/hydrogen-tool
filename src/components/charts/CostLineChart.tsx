@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
 import { checkLength } from "../../utils";
-import { colors } from "../colors";
+import { costLineColors } from "../colors";
 
 interface Props {
   title: string;
@@ -19,8 +19,8 @@ export default function CostLineChart(props: Props) {
     labels: [...Array(projectTimeline).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
       ...point,
-      backgroundColor: colors[index],
-      borderColor: colors[index],
+      backgroundColor: costLineColors[index],
+      borderColor: costLineColors[index],
     })),
     options: {
       ticks: {

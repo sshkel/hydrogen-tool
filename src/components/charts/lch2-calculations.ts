@@ -99,7 +99,7 @@ export function generateLCBreakdown(
   };
 }
 
-export function generateAmmoniaLCBreakdown(
+export function generateAmmoniaLCH2Breakdown(
   h2StorageCAPEX: number,
   ammoniaPlantCAPEX: number,
   h2StorageOpexCost: number,
@@ -129,6 +129,47 @@ export function generateAmmoniaLCBreakdown(
     lcAmmoniaPlantCAPEX,
     lcH2StorageOPEX,
     lcAmmoniaPlantOPEX,
+  };
+}
+
+export function generateMethanolLCH2Breakdown(
+  h2StorageCAPEX: number,
+  methanolPlantCAPEX: number,
+  ccCAPEX: number,
+  h2StorageOpexCost: number,
+  methanolPlantOpexCost: number,
+  ccOpexCost: number,
+  hydrogenProductionCost: number,
+  projectTimeline: number,
+  discountRate: number
+) {
+  const lcH2StorageCAPEX = h2StorageCAPEX / hydrogenProductionCost;
+  const lcMethanolPlantCAPEX = methanolPlantCAPEX / hydrogenProductionCost;
+  const lcCarbonCaptureCAPEX = ccCAPEX / hydrogenProductionCost;
+
+  const h2StorageOpexPerYear = Array(projectTimeline).fill(h2StorageOpexCost);
+  const methanolPlantOpexPerYear = Array(projectTimeline).fill(
+    methanolPlantOpexCost
+  );
+  const ccOpexPerYear = Array(projectTimeline).fill(ccOpexCost);
+
+  const calculateLevelisedCost = getLevelisedCostCalculation(
+    discountRate,
+    projectTimeline,
+    hydrogenProductionCost
+  );
+
+  const lcH2StorageOPEX = calculateLevelisedCost(h2StorageOpexPerYear);
+  const lcMethanolPlantOPEX = calculateLevelisedCost(methanolPlantOpexPerYear);
+  const lcCarbonCaptureOPEX = calculateLevelisedCost(ccOpexPerYear);
+
+  return {
+    lcH2StorageCAPEX,
+    lcMethanolPlantCAPEX,
+    lcCarbonCaptureCAPEX,
+    lcH2StorageOPEX,
+    lcMethanolPlantOPEX,
+    lcCarbonCaptureOPEX,
   };
 }
 

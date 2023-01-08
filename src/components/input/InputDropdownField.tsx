@@ -66,6 +66,10 @@ export default function InputDropdownField(props: Props) {
               backgroundColor: OFF_WHITE,
               "&& .Mui-selected": {
                 backgroundColor: ORANGE,
+
+                "&:hover": {
+                  backgroundColor: ORANGE,
+                },
               },
             },
           },
@@ -74,13 +78,6 @@ export default function InputDropdownField(props: Props) {
               backgroundColor: ORANGE,
               color: "white",
               "&.Mui-focusVisible": { background: ORANGE },
-
-              // Override hover colour for selected items
-              "&:hover": {
-                "&& fieldset": {
-                  backgroundColor: ORANGE,
-                },
-              },
             },
           },
         }}
