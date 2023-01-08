@@ -108,6 +108,7 @@ class DefaultInputs implements Inputs {
   // Methanol
   methanolPlantCapacity = 365;
   methanolStorageCapacity = 30;
+  methanolPlantUnitCost = 250;
   methanolPlantSec = 0.36;
   methanolPlantMinimumTurndown = 100;
   methanolStorageCost = 227;
@@ -115,9 +116,11 @@ class DefaultInputs implements Inputs {
   methanolLandProcurementCosts = 0;
   methanolPlantOMCost = 5;
   methanolStorageOMCost = 5;
+  ccSec = 0.86;
   ccEpcCosts = 0;
   ccLandProcurementCosts = 0;
   ccPlantOMCost = 5;
+  ccPlantCost = 420;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {
@@ -127,6 +130,9 @@ export default class SynthesisedInputs extends DefaultInputs {
     let sanitisedUserInputFields: any = { ...userInputs };
 
     Object.keys(sanitisedUserInputFields).forEach((key) => {
+      if (savedData[key] === undefined) {
+        delete savedData[key];
+      }
       if (sanitisedUserInputFields[key] === undefined) {
         delete sanitisedUserInputFields[key];
       }

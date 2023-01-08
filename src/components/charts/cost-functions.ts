@@ -53,7 +53,7 @@ export function calculateH2ProductionLC(
   };
 }
 
-export function calculateAmmoniaProductionLC(
+export function calculateP2XProductionLC(
   // Calculated values
   totalCapexCost: number,
   totalEpcCost: number,
@@ -63,13 +63,13 @@ export function calculateAmmoniaProductionLC(
   discountRate: number,
   totalOpex: number[],
   h2Produced: number[],
-  nh3Produced: number[]
+  p2xProduced: number[]
 ) {
   const activeLife = projectTimeline + 2;
 
   const paddedH2Produced = padArray(h2Produced);
   const paddedTotalOpex = padArray(totalOpex);
-  const paddedNH3Produced = padArray(nh3Produced);
+  const paddedP2xProduced = padArray(p2xProduced);
 
   const totalInvestmentRequired = startup(
     totalCapexCost + totalEpcCost + totalLandCost,
@@ -87,20 +87,20 @@ export function calculateAmmoniaProductionLC(
   const h2ProducedKgLCA = applyDiscount(
     fillYearsArray(activeLife, (i: number) => paddedH2Produced[i] * 1000)
   );
-  const nh3ProducedKgLCA = applyDiscount(
-    fillYearsArray(activeLife, (i: number) => paddedNH3Produced[i] * 1000)
+  const p2xProducedKgLCA = applyDiscount(
+    fillYearsArray(activeLife, (i: number) => paddedP2xProduced[i] * 1000)
   );
 
   const hydrogenProductionCost = sum(h2ProducedKgLCA);
-  const ammoniaProductionCost = sum(nh3ProducedKgLCA);
+  const p2xProductionCost = sum(p2xProducedKgLCA);
   const lch2 = sum(totalCostWithDiscount) / hydrogenProductionCost;
-  const lcnh3 = sum(totalCostWithDiscount) / ammoniaProductionCost;
+  const lcP2x = sum(totalCostWithDiscount) / p2xProductionCost;
 
   return {
     lch2,
-    lcnh3,
+    lcP2x,
     hydrogenProductionCost,
-    ammoniaProductionCost,
+    p2xProductionCost,
   };
 }
 

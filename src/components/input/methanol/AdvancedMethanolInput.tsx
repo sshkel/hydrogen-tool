@@ -55,6 +55,7 @@ export default function AdvancedMethanolInput() {
                   />,
                   <InputDropdownField
                     id="carbonCaptureSource"
+                    key="carbonCaptureSource"
                     defaultValue="Coal Power Plant"
                     label="Carbon Capture Source"
                     values={[

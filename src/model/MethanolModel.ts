@@ -1,20 +1,20 @@
 import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
-  calculateAmmoniaProductionLC,
+  calculateP2XProductionLC,
   roundToNearestInteger,
   roundToNearestThousand,
   roundToTwoDP,
 } from "../components/charts/cost-functions";
 import {
-  generateAmmoniaLCBreakdown,
   generateLCBreakdown,
+  generateMethanolLCH2Breakdown,
 } from "../components/charts/lch2-calculations";
 import {
-  calculateAmmoniaPerYearOpex,
+  calculateMethanolPerYearOpex,
   calculatePerYearOpex,
-  getAmmoniaOpex,
   getOpex,
-  getTotalAmmoniaOpex,
+  getP2XOpex,
+  getTotalP2XOpex,
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
@@ -435,7 +435,12 @@ export class MethanolModel implements Model {
       hydrogenProduction
     );
 
-    const { h2StorageOpexCost, ammoniaOpexCost } = getAmmoniaOpex(
+    const {
+      h2StorageOpexCost,
+      plantOpexCost,
+      storageUnitOpexCost,
+      secondaryUnitOpexCost: ccOpexCost,
+    } = getP2XOpex(
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost,
       this.parameters.hydrogenStorageOMCost,
@@ -450,7 +455,9 @@ export class MethanolModel implements Model {
       this.parameters.ccPlantOMCost
     );
 
-    const totalOpex = getTotalAmmoniaOpex(
+    const methanolOpexCost = plantOpexCost + storageUnitOpexCost;
+
+    const totalOpex = getTotalP2XOpex(
       this.parameters.projectTimeline,
       electrolyserOpexCost,
       powerPlantOpexCost,
@@ -462,7 +469,7 @@ export class MethanolModel implements Model {
       stackReplacementCostsOverProjectLife,
       batteryReplacementCostsOverProjectLife,
       h2StorageOpexCost,
-      ammoniaOpexCost
+      methanolOpexCost + ccOpexCost
     );
 
     const {
@@ -486,10 +493,11 @@ export class MethanolModel implements Model {
       waterOpexCost
     );
 
-    const { h2StorageOpexPerYear, ammoniaOpexPerYear } =
-      calculateAmmoniaPerYearOpex(
+    const { h2StorageOpexPerYear, methanolOpexPerYear, ccOpexPerYear } =
+      calculateMethanolPerYearOpex(
         h2StorageOpexCost,
-        ammoniaOpexCost,
+        methanolOpexCost,
+        ccOpexCost,
         this.parameters.inflationRate,
         this.parameters.projectTimeline
       );
@@ -507,21 +515,25 @@ export class MethanolModel implements Model {
         "Water Costs": waterOpexPerYear,
         "Electricity Purchase": electricityPurchaseOpexPerYear,
         "H2 Storage OPEX": h2StorageOpexPerYear,
-        "Ammonia OPEX": ammoniaOpexPerYear,
+        "Methanol OPEX": methanolOpexPerYear,
+        "CC OPEX": ccOpexPerYear,
       },
     };
 
-    const { lch2, hydrogenProductionCost, lcnh3 } =
-      calculateAmmoniaProductionLC(
-        totalCapexCost,
-        totalEpcCost,
-        totalLandCost,
-        this.parameters.projectTimeline,
-        this.discountRate,
-        totalOpex,
-        hydrogenProduction,
-        methanolProduction
-      );
+    const {
+      lch2,
+      hydrogenProductionCost,
+      lcP2x: lcmeoh,
+    } = calculateP2XProductionLC(
+      totalCapexCost,
+      totalEpcCost,
+      totalLandCost,
+      this.parameters.projectTimeline,
+      this.discountRate,
+      totalOpex,
+      hydrogenProduction,
+      methanolProduction
+    );
 
     // LCH2 calculations
     const {
@@ -563,14 +575,18 @@ export class MethanolModel implements Model {
 
     const {
       lcH2StorageCAPEX,
-      lcAmmoniaPlantCAPEX,
+      lcMethanolPlantCAPEX,
+      lcCarbonCaptureCAPEX,
       lcH2StorageOPEX,
-      lcAmmoniaPlantOPEX,
-    } = generateAmmoniaLCBreakdown(
+      lcMethanolPlantOPEX,
+      lcCarbonCaptureOPEX,
+    } = generateMethanolLCH2Breakdown(
       h2StorageCapex,
       methanolCapex,
+      ccCapex,
       h2StorageOpexCost,
-      ammoniaOpexCost,
+      methanolOpexCost,
+      ccOpexCost,
       hydrogenProductionCost,
       this.parameters.projectTimeline,
       this.discountRate
@@ -580,12 +596,14 @@ export class MethanolModel implements Model {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "H2 Storage CAPEX": lcH2StorageCAPEX,
-      "Ammonia Plant CAPEX": lcAmmoniaPlantCAPEX,
+      "Methanol Plant CAPEX": lcMethanolPlantCAPEX,
+      "Carbon Capture CAPEX": lcCarbonCaptureCAPEX,
       "Indirect Costs": lcIndirectCosts,
       "Power Plant OPEX": lcPowerPlantOPEX,
       "Electrolyser OPEX": lcElectrolyserOPEX,
       "H2 Storage OPEX": lcH2StorageOPEX,
-      "Ammonia Plant OPEX": lcAmmoniaPlantOPEX,
+      "Methanol Plant OPEX": lcMethanolPlantOPEX,
+      "Carbon Capture OPEX": lcCarbonCaptureOPEX,
       "Electricity Purchase": lcElectricityPurchase,
       "Stack Replacement": lcStackReplacement,
       "Water Cost": lcWater,
@@ -633,7 +651,7 @@ export class MethanolModel implements Model {
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
-      "LCMeOH ($/kg)": roundToTwoDP(lcnh3),
+      "LCMeOH ($/kg)": roundToTwoDP(lcmeoh),
     };
 
     return {
@@ -1444,14 +1462,14 @@ function cc_plant_CAPEX(
 
 function getEpcIndirectCost(
   epc: number, // % of capex
-  CAPEX: number // total capex of Ammonia plant
+  CAPEX: number // total capex of Methanol plant
 ) {
   return epc * CAPEX;
 }
 
 function getLandProcurementIndirectCost(
   landProcurementCost: number, // % of capex
-  CAPEX: number // total capex of Ammonia plant
+  CAPEX: number // total capex of Methanol plant
 ) {
   return landProcurementCost * CAPEX;
 }

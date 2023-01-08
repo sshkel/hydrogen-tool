@@ -1,20 +1,20 @@
 import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
-  calculateAmmoniaProductionLC,
+  calculateP2XProductionLC,
   roundToNearestInteger,
   roundToNearestThousand,
   roundToTwoDP,
 } from "../components/charts/cost-functions";
 import {
-  generateAmmoniaLCBreakdown,
+  generateAmmoniaLCH2Breakdown,
   generateLCBreakdown,
 } from "../components/charts/lch2-calculations";
 import {
   calculateAmmoniaPerYearOpex,
   calculatePerYearOpex,
-  getAmmoniaOpex,
   getOpex,
-  getTotalAmmoniaOpex,
+  getP2XOpex,
+  getTotalP2XOpex,
 } from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
@@ -418,7 +418,12 @@ export class AmmoniaModel implements Model {
       hydrogenProduction
     );
 
-    const { h2StorageOpexCost, ammoniaOpexCost } = getAmmoniaOpex(
+    const {
+      h2StorageOpexCost,
+      plantOpexCost,
+      storageUnitOpexCost,
+      secondaryUnitOpexCost,
+    } = getP2XOpex(
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost,
       this.parameters.hydrogenStorageOMCost,
@@ -433,7 +438,10 @@ export class AmmoniaModel implements Model {
       this.parameters.asuPlantOMCost
     );
 
-    const totalOpex = getTotalAmmoniaOpex(
+    const ammoniaOpexCost =
+      plantOpexCost + storageUnitOpexCost + secondaryUnitOpexCost;
+
+    const totalOpex = getTotalP2XOpex(
       this.parameters.projectTimeline,
       electrolyserOpexCost,
       powerPlantOpexCost,
@@ -494,17 +502,20 @@ export class AmmoniaModel implements Model {
       },
     };
 
-    const { lch2, hydrogenProductionCost, lcnh3 } =
-      calculateAmmoniaProductionLC(
-        totalCapexCost,
-        totalEpcCost,
-        totalLandCost,
-        this.parameters.projectTimeline,
-        this.discountRate,
-        totalOpex,
-        hydrogenProduction,
-        ammoniaProduction
-      );
+    const {
+      lch2,
+      hydrogenProductionCost,
+      lcP2x: lcnh3,
+    } = calculateP2XProductionLC(
+      totalCapexCost,
+      totalEpcCost,
+      totalLandCost,
+      this.parameters.projectTimeline,
+      this.discountRate,
+      totalOpex,
+      hydrogenProduction,
+      ammoniaProduction
+    );
 
     // LCH2 calculations
     const {
@@ -549,7 +560,7 @@ export class AmmoniaModel implements Model {
       lcAmmoniaPlantCAPEX,
       lcH2StorageOPEX,
       lcAmmoniaPlantOPEX,
-    } = generateAmmoniaLCBreakdown(
+    } = generateAmmoniaLCH2Breakdown(
       h2StorageCapex,
       ammoniaCapex,
       h2StorageOpexCost,

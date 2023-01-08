@@ -15,7 +15,19 @@ export const colors = [
   "#577fc0", // dark blue
   "#74c8b0", // greenish
   "#F1E423", // yellow
+  "#25579A", // dark blue
   "#37a9ad0", // blackish
+];
+
+export const costLineColors = [
+  "#F4974F", // light orange
+  "#F17D23", // orange
+  "#82CDD4", // teal
+  "#74C8B0", // green
+  "#7A9AD0", // light blue
+  "#577FC0", // blue
+  "#25579A", // dark blue
+  "#17224C", // blackish
 ];
 
 export function addAlpha(color: string, opacity: number) {
