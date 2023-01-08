@@ -123,6 +123,8 @@ class DefaultInputs implements Inputs {
 export default class SynthesisedInputs extends DefaultInputs {
   constructor(userInputs: UserInputFields) {
     super();
+    const savedData = JSON.parse(localStorage.getItem("savedData") || "{}");
+
     let sanitisedUserInputFields: any = { ...userInputs };
 
     Object.keys(sanitisedUserInputFields).forEach((key) => {
@@ -131,6 +133,6 @@ export default class SynthesisedInputs extends DefaultInputs {
       }
     });
 
-    return { ...this, ...sanitisedUserInputFields };
+    return { ...this, ...savedData, ...sanitisedUserInputFields };
   }
 }

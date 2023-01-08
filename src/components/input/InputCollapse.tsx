@@ -9,15 +9,18 @@ interface Props {
 }
 
 export default function InputCollapse(props: Props) {
-  const { expanded, timeout = "auto", unmountOnExit = false, children } = props;
+  const {
+    expanded,
+    timeout = "auto",
+    unmountOnExit = false,
+    mountOnEnter = false,
+    children,
+  } = props;
   return (
     <Collapse
       in={expanded}
       timeout={timeout}
-      // This parameter was introduced to improve performance of switching between Basic/Advanced tabs
-      // After removing more input fields, this was no longer needed. Keeping just in case
-      // more fields are added and lag becomes noticeable again.
-      // mountOnEnter={mountOnEnter}
+      mountOnEnter={mountOnEnter}
       unmountOnExit={unmountOnExit}
     >
       {children}
