@@ -319,13 +319,26 @@ export function calculateNetBatteryFlowMeth(
   generatorActualPower: number[],
   methanolPlantMinimumTurnDown: number
 ): number[] {
+  //TODO Fix model running with empty params
+  if (excessGeneration.length === 0) {
+    return [];
+  }
   const size = excessGeneration.length;
   const batteryNetCharge = Array(size).fill(0.0);
   const batterySoc = Array(size).fill(0.0);
 
-  batteryNetCharge[0] = Math.min(
+  batteryNetCharge[0] = batteryPowerMeth(
+    co2_PowDem,
+    meOH_PowDem,
     batteryRatedPower,
-    excessGeneration[0] * batteryLosses
+    roundToEightDP(excessGeneration[0]),
+    generatorActualPower[0],
+    1,
+    methanolPlantMinimumTurnDown,
+    batteryMinCharge,
+    batteryEnergy,
+    1,
+    batteryLosses
   );
   batterySoc[0] = 1;
   // check for off by 1 error

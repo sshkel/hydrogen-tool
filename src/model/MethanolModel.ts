@@ -1142,7 +1142,7 @@ export class MethanolModel implements Model {
         carbonCapturePlantPowerDemand,
         methanolPlantPowerDemand,
         generatorActualPower,
-        this.parameters.methanolPlantMinimumTurndown
+        this.parameters.methanolPlantMinimumTurndown / 100
       );
       // with battery
       methanolCapacityFactors = meOh_cc_with_battery_cf(
