@@ -20,7 +20,10 @@ export default function InputCollapse(props: Props) {
     <Collapse
       in={expanded}
       timeout={timeout}
-      mountOnEnter={mountOnEnter}
+      // This parameter was introduced to improve performance of switching between Basic/Advanced tabs
+      // After removing more input fields, this was no longer needed. Keeping just in case
+      // more fields are added and lag becomes noticeable again.
+      // mountOnEnter={mountOnEnter}
       unmountOnExit={unmountOnExit}
     >
       {children}
