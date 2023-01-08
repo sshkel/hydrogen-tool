@@ -591,17 +591,17 @@ export class MethanolModel implements Model {
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)":
+      "Time Methanol Plant is at its Maximum Capacity (% of hrs/yr)":
         roundToTwoDP(mean(methanolRatedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Ammonia Plant is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Methanol Plant is Operating (% of hrs/yr)": roundToTwoDP(
         mean(totalMethanolOperatingTime.map((x) => x * 100))
       ),
 
       "Electrolyser Capacity Factor": roundToTwoDP(
         mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
-      "Ammonia Capacity Factor": roundToTwoDP(
+      "Methanol Capacity Factor": roundToTwoDP(
         mean(methanolCapacityFactors.map((x) => x * 100))
       ),
 
@@ -614,11 +614,11 @@ export class MethanolModel implements Model {
 
       "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
 
-      "Ammonia Output (TPA)": roundToNearestInteger(mean(methanolProduction)),
+      "Methanol Output (TPA)": roundToNearestInteger(mean(methanolProduction)),
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
-      "LCNH3 ($/kg)": roundToTwoDP(lcnh3),
+      "LCMeOH ($/kg)": roundToTwoDP(lcnh3),
     };
 
     return {
@@ -719,7 +719,7 @@ export class MethanolModel implements Model {
         carbonCapturePlantCapacity
       );
 
-      const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+      const methanolProduction = meOh_unit_out(ccOut);
       const methanolCapacityFactors = meOh_unit_capacity_factor(
         methanolProduction,
         this.parameters.methanolPlantCapacity,
@@ -833,7 +833,7 @@ export class MethanolModel implements Model {
           carbonCapturePlantCapacity
         );
 
-        const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+        const methanolProduction = meOh_unit_out(ccOut);
         const methanolCapacityFactors = meOh_unit_capacity_factor(
           methanolProduction,
           this.parameters.methanolPlantCapacity,
@@ -970,7 +970,7 @@ export class MethanolModel implements Model {
             carbonCapturePlantCapacity
           );
 
-          const methanolProduction = meOh_unit_out(ccOut, h2ToMeOhUnit);
+          const methanolProduction = meOh_unit_out(ccOut);
           const methanolCapacityFactors = meOh_unit_capacity_factor(
             methanolProduction,
             this.parameters.methanolPlantCapacity,
@@ -1090,7 +1090,7 @@ export class MethanolModel implements Model {
       }
     );
     let methanolCapacityFactors = meOH_Cc_actual_power.map(
-      (v: number) => v / co2_PowDem + meOH_PowDem
+      (v: number) => v / (co2_PowDem + meOH_PowDem)
     );
 
     let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
@@ -1170,16 +1170,12 @@ function methanol_plant_power_demand(
   );
 }
 
-function carbon_capture_plant_capacity(
-  methanol_plant_capacity: number // size of ammonia plant
-) {
+function carbon_capture_plant_capacity(methanol_plant_capacity: number) {
   return (((methanol_plant_capacity * 1000) / 365) * (44.01 / 32.04)) / 0.95;
 }
 
-function hydrogen_output(
-  ammonia_plant_capacity: number // size of ammonia plant
-) {
-  return ammonia_plant_capacity * (1000 / 365) * (6.047 / 34.181);
+function hydrogen_output(methanol_plant_capacity: number) {
+  return methanol_plant_capacity * (1000 / 365) * (2.016 / 32.04) * (3 / 0.95);
 }
 
 function nominal_electrolyser_capacity(
@@ -1255,21 +1251,20 @@ function deficit_h2(
   );
 }
 
-// should be repeated for multiple cells
-function h2_to_nh3(
+function h2_to_meOh(
   mass_of_hydrogen: number[], // p20
   from_h2_storage: number[], // t20
   h2_store_balance: number[], // u20
   hydrogen_storage_capacity: number, // s1b26
   hydrogen_output: number, // s1b16
-  ammonia_plant_minimum_turndown: number // s1b36
+  methanol_plant_minimum_turndown: number // s1b36
 ): number[] {
   return mass_of_hydrogen.map((_: number, i: number) => {
     if (mass_of_hydrogen[i] >= (hydrogen_output / 24) * 1000) {
       return (hydrogen_output / 24) * 1000;
     } else if (
       mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]) <
-      (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
+      (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
     ) {
       return 0;
     } else if (
@@ -1280,13 +1275,13 @@ function h2_to_nh3(
     } else if (
       h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
       mass_of_hydrogen[i] >
-        (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
+        (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
     ) {
       return mass_of_hydrogen[i];
     } else if (
       h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
       mass_of_hydrogen[i] <
-        (hydrogen_output / 24) * 1000 * ammonia_plant_minimum_turndown
+        (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
     ) {
       return 0;
     }
@@ -1313,11 +1308,10 @@ function cc_out(
 
 // should be repeated for multiple cells
 function meOh_unit_out(
-  cc_out: number[], // w20
-  h2_to_meOh: number[] // v20
+  cc_out: number[] // w20
 ) {
   return cc_out.map((_: number, i: number) =>
-    cc_out[i] > 0 ? h2_to_meOh[i] + cc_out[i] : 0
+    cc_out[i] > 0 ? (cc_out[i] * 0.95 * 32.04) / 44.01 : 0
   );
 }
 
@@ -1390,7 +1384,7 @@ function calculateH2ToMeOhUnit(
     minimum_hydrogen_storage
   );
 
-  const h2_to_nh3_result = h2_to_nh3(
+  const h2_to_meoh_result = h2_to_meOh(
     mass_of_hydrogen,
     from_h2_store,
     h2_storage_balance_result,
@@ -1398,7 +1392,7 @@ function calculateH2ToMeOhUnit(
     hydrogen_output,
     methanol_plant_minimum_turndown
   );
-  return h2_to_nh3_result;
+  return h2_to_meoh_result;
 }
 
 function ammonia_plant_CAPEX(
