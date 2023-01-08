@@ -280,24 +280,27 @@ export class MethanolModel implements Model {
       this.gridConnectionCost
     );
 
-    let ammoniaCapex = 0;
+    let methanolCapex = 0;
     if (this.parameters.inputConfiguration === "Basic") {
-      ammoniaCapex =
+      methanolCapex =
         this.parameters.methanolPlantUnitCost! * this.parameters.projectScale;
     } else {
-      ammoniaCapex = ammonia_plant_CAPEX(
+      methanolCapex = methanol_plant_CAPEX(
         this.parameters.methanolPlantCapacity,
         this.parameters.methanolStorageCapacity,
-        carbonCapturePlantCapacity,
         this.parameters.methanolPlantUnitCost,
-        this.parameters.methanolStorageCost,
-        this.parameters.ccPlantCost
+        this.parameters.methanolStorageCost
       );
     }
 
     const h2StorageCapex = hydrogen_storage_CAPEX(
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost
+    );
+
+    const ccCapex = cc_plant_CAPEX(
+      carbonCapturePlantCapacity,
+      this.parameters.ccPlantCost
     );
 
     const electrolyserAndH2CAPEX = electrolyserCAPEX + h2StorageCapex;
@@ -324,17 +327,29 @@ export class MethanolModel implements Model {
       this.parameters.batteryLandProcurementCosts
     );
 
-    const ammoniaEpcCost = ammonia_plant_epc(
+    const methanolEpcCost = getEpcIndirectCost(
       this.parameters.methanolEpcCosts,
-      ammoniaCapex
+      methanolCapex
     );
-    const ammoniaLandCost = ammonia_plant_land_procurement_cost(
+    const methanolLandCost = getLandProcurementIndirectCost(
       this.parameters.methanolLandProcurementCosts,
-      ammoniaCapex
+      methanolCapex
     );
+
+    const ccEpcCost = getEpcIndirectCost(
+      this.parameters.methanolEpcCosts,
+      ccCapex
+    );
+    const ccLandCost = getLandProcurementIndirectCost(
+      this.parameters.methanolLandProcurementCosts,
+      ccCapex
+    );
+
     const indirectCostBreakdown = {
-      "Ammonia EPC": ammoniaEpcCost,
-      "Ammonia Land": ammoniaLandCost,
+      "Methanol EPC": methanolEpcCost,
+      "Methanol Land": methanolLandCost,
+      "CC EPC": ccEpcCost,
+      "CC Land": ccLandCost,
       "Electrolyser EPC": electrolyserEpcCost,
       "Electrolyser Land": electrolyserLandCost,
       "Power Plant EPC": powerPlantEpcCost,
@@ -344,7 +359,8 @@ export class MethanolModel implements Model {
     };
 
     const totalCapexCost =
-      ammoniaCapex +
+      methanolCapex +
+      ccCapex +
       h2StorageCapex +
       electrolyserCAPEX +
       powerPlantCAPEX +
@@ -352,22 +368,24 @@ export class MethanolModel implements Model {
       this.parameters.additionalUpfrontCosts +
       gridConnectionCAPEX; // Cost values for sales calculation
     const totalEpcCost =
-      ammoniaEpcCost + electrolyserEpcCost + powerPlantEpcCost + batteryEpcCost;
+      methanolEpcCost +
+      ccEpcCost +
+      electrolyserEpcCost +
+      powerPlantEpcCost +
+      batteryEpcCost;
     const totalLandCost =
-      ammoniaLandCost +
+      methanolLandCost +
+      ccLandCost +
       electrolyserLandCost +
       powerPlantLandCost +
       batteryLandCost;
+    // All existing Excel models do not include battery indirect costs as part of total
     const totalIndirectCosts =
-      ammoniaLandCost +
-      ammoniaEpcCost +
-      electrolyserEpcCost +
-      electrolyserLandCost +
-      powerPlantEpcCost +
-      powerPlantLandCost;
+      totalEpcCost + totalLandCost - batteryEpcCost - batteryLandCost;
 
     const capitalCostBreakdown = {
-      Ammonia: ammoniaCapex,
+      Ammonia: methanolCapex,
+      "Carbon Capture": ccCapex,
       "H2 Storage": h2StorageCapex,
       "Electrolyser System": electrolyserCAPEX,
       "Power Plant": powerPlantCAPEX,
@@ -553,7 +571,7 @@ export class MethanolModel implements Model {
       lcAmmoniaPlantOPEX,
     } = generateAmmoniaLCBreakdown(
       h2StorageCapex,
-      ammoniaCapex,
+      methanolCapex,
       h2StorageOpexCost,
       ammoniaOpexCost,
       hydrogenProductionCost,
@@ -1395,34 +1413,40 @@ function calculateH2ToMeOhUnit(
   return h2_to_meoh_result;
 }
 
-function ammonia_plant_CAPEX(
-  ammonia_plant_capacity: number, // size of ammonia plant
-  ammonia_storage_capacity: number, // size of ammonia storage
-  asu_plant_capacity: number, // size of asu
-  ammonia_synthesis_unit_purchase_cost: number, // cost per T ofr Ammonia Synthesis Unit
-  ammonia_storage_purchase_cost: number, // cost per T for Ammonia Storage
-  asu_purchase_cost: number // cost per T for ASU
+function methanol_plant_CAPEX(
+  methanol_plant_capacity: number, // size of methanol plant
+  methanol_storage_capacity: number, // size of methanol storage
+  methanol_synthesis_unit_purchase_cost: number, // cost per T for methanol plant
+  methanol_storage_purchase_cost: number // cost per T for methanol storage
 ) {
   return roundToNearestThousand(
-    ammonia_plant_capacity * 1000 * ammonia_synthesis_unit_purchase_cost +
-      ((ammonia_storage_capacity * (ammonia_plant_capacity * 1000)) / 365) *
-        ammonia_storage_purchase_cost +
-      asu_plant_capacity * asu_purchase_cost * 365
+    methanol_plant_capacity * 1000 * methanol_synthesis_unit_purchase_cost +
+      ((methanol_storage_capacity * (methanol_plant_capacity * 1000)) / 365) *
+        methanol_storage_purchase_cost
   );
 }
 
-function ammonia_plant_epc(
-  ammonia_plant_epc: number, // % of capex
-  ammonia_plant_CAPEX: number // total capex of Ammonia plant
+function cc_plant_CAPEX(
+  cc_plant_capacity: number, // size of cc plant
+  cc_synthesis_unit_purchase_cost: number // cost per T for carbon capture plant
 ) {
-  return ammonia_plant_epc * ammonia_plant_CAPEX;
+  return roundToNearestThousand(
+    cc_plant_capacity * 365 * cc_synthesis_unit_purchase_cost
+  );
 }
 
-function ammonia_plant_land_procurement_cost(
-  ammonia_plant_land_procurement_cost: number, // % of capex
-  ammonia_plant_CAPEX: number // total capex of Ammonia plant
+function getEpcIndirectCost(
+  epc: number, // % of capex
+  CAPEX: number // total capex of Ammonia plant
 ) {
-  return ammonia_plant_land_procurement_cost * ammonia_plant_CAPEX;
+  return epc * CAPEX;
+}
+
+function getLandProcurementIndirectCost(
+  landProcurementCost: number, // % of capex
+  CAPEX: number // total capex of Ammonia plant
+) {
+  return landProcurementCost * CAPEX;
 }
 
 function hydrogen_storage_CAPEX(

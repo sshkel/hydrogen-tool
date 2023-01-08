@@ -14,6 +14,10 @@ jest.mock("../../model/DataLoader", () => ({
 }));
 
 describe("App", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   beforeAll(() => {
     console.error = function () {};
   });

@@ -83,7 +83,6 @@ export default function InputHomePage(props: Props) {
       });
     }
 
-    localStorage.setItem("savedData", JSON.stringify(form));
     props.setState(form);
     navigate("/result");
   };

@@ -12,8 +12,8 @@ export default function InputCollapse(props: Props) {
   const {
     expanded,
     timeout = "auto",
-    mountOnEnter = false,
     unmountOnExit = false,
+    mountOnEnter = false,
     children,
   } = props;
   return (

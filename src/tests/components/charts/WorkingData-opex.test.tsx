@@ -24,6 +24,11 @@ describe("Working Data calculations", () => {
   let loadNationalWind: () => Promise<any[]>;
   let loadNSWSolar: () => Promise<any[]>;
   let loadNSWWind: () => Promise<any[]>;
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   beforeAll(() => {
     console.error = function () {};
     loadNationalSolar = async () =>

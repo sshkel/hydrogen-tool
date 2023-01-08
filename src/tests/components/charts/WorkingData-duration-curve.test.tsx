@@ -39,6 +39,11 @@ import {
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
   let loadWind: () => Promise<any[]>;
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   beforeAll(() => {
     console.error = function () {};
     loadSolar = async () =>
