@@ -327,7 +327,7 @@ export function calculateNetBatteryFlowMeth(
     batteryRatedPower,
     excessGeneration[0] * batteryLosses
   );
-  batterySoc[0] = batteryNetCharge[0] / batteryEnergy;
+  batterySoc[0] = 1;
   // check for off by 1 error
   for (let hour = 1; hour < size; hour++) {
     batteryNetCharge[hour] = batteryPowerMeth(

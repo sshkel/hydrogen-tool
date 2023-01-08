@@ -310,10 +310,6 @@ export default function AdvancedMethanolInput() {
                 title="Battery Capacity"
                 children={[
                   <InputNumberField
-                    key="batteryRatedPower"
-                    inputKey="batteryRatedPower"
-                  />,
-                  <InputNumberField
                     key="batteryStorageDuration"
                     inputKey="batteryStorageDuration"
                   />,
