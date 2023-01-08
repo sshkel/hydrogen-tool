@@ -220,7 +220,6 @@ export default function WorkingData(props: Props) {
       batteryLifetime: inputs.batteryLifetime,
       batteryMinCharge: inputs.batteryMinCharge,
       batteryOMCost: inputs.batteryOMCost,
-      batteryRatedPower: inputs.batteryRatedPower,
       batteryReplacementCost: inputs.batteryReplacementCost,
       batteryStorageDuration: inputs.batteryStorageDuration,
       discountRate: inputs.discountRate,

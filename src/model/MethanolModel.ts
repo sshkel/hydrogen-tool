@@ -52,7 +52,6 @@ export type MethanolData = {
   batteryLifetime?: number;
   batteryMinCharge?: number;
   batteryOMCost?: number;
-  batteryRatedPower?: number;
   batteryReplacementCost?: number;
   batteryStorageDuration?: number;
   discountRate: number;
@@ -151,7 +150,6 @@ export class MethanolModel implements Model {
   private readonly gridConnectionCost: number;
   private readonly batteryOMCost: number;
   private readonly batteryReplacementCost: number;
-  private readonly batteryRatedPower: number;
   private readonly batteryStorageDuration: number;
   private readonly electrolyserEfficiency: number;
   private readonly secAtNominalLoad: number;
@@ -163,7 +161,6 @@ export class MethanolModel implements Model {
   private readonly hydOutput: number;
   private readonly parameters: MethanolData;
   private readonly elecOverload: number;
-  private readonly batteryEnergy: number;
   private readonly batteryEfficiency: number;
   // data from renewables
   private readonly solarData: CsvRow[];
@@ -185,7 +182,7 @@ export class MethanolModel implements Model {
     this.batteryLifetime = parameters.batteryLifetime ?? 0;
     this.batteryOMCost = parameters.batteryOMCost ?? 0;
     this.batteryReplacementCost = parameters.batteryReplacementCost ?? 0;
-    this.batteryRatedPower = parameters.batteryRatedPower ?? 0;
+    // this.batteryRatedPower = parameters.batteryRatedPower ?? 0;
     this.batteryStorageDuration = parameters.batteryStorageDuration ?? 0;
     this.electrolyserEfficiency = parameters.electrolyserEfficiency ?? 0;
     this.gridConnectionCost = parameters.gridConnectionCost ?? 0;
@@ -205,7 +202,6 @@ export class MethanolModel implements Model {
     // TODO check if this should be replaced by the other calculation.
     this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
-    this.batteryEnergy = this.batteryRatedPower * this.batteryStorageDuration;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.batteryMinCharge = (parameters.batteryMinCharge ?? 0) / 100;
     this.specCons = this.secAtNominalLoad * this.h2VolToMass;
@@ -214,6 +210,7 @@ export class MethanolModel implements Model {
 
   produceResults() {
     const {
+      batteryRatedPower,
       carbonCapturePlantCapacity,
       powerPlantType,
       solarNominalCapacity,
@@ -274,7 +271,7 @@ export class MethanolModel implements Model {
       this.parameters.windFarmBuildCost,
       this.parameters.windCostReductionWithScale,
       this.parameters.windReferenceFoldIncrease,
-      this.batteryRatedPower,
+      batteryRatedPower,
       this.batteryStorageDuration,
       this.batteryCosts,
       this.gridConnectionCost
@@ -425,7 +422,7 @@ export class MethanolModel implements Model {
       this.windOpex,
       windNominalCapacity,
       this.batteryOMCost,
-      this.batteryRatedPower,
+      batteryRatedPower,
       this.batteryReplacementCost,
       batteryCAPEX,
       this.batteryLifetime,
@@ -483,7 +480,7 @@ export class MethanolModel implements Model {
       electricityOpexCost,
       powerPlantOpexCost,
       this.parameters.additionalAnnualCosts,
-      this.batteryRatedPower,
+      batteryRatedPower,
       batteryOpexCost,
       batteryReplacementCostsOverProjectLife,
       waterOpexCost
@@ -701,6 +698,11 @@ export class MethanolModel implements Model {
 
     const powerPlantNominalCapacity =
       solarNominalCapacity + windNominalCapacity;
+    let batteryRatedPower = 0;
+    if (this.batteryStorageDuration > 0) {
+      batteryRatedPower =
+        methanolPlantPowerDemand + carbonCapturePlantPowerDemand;
+    }
 
     if (inputConfiguration === "Basic") {
       const hourlyOperations =
@@ -711,7 +713,9 @@ export class MethanolModel implements Model {
           // default for the first calculation
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
-          carbonCapturePlantCapacity,
+          methanolPlantPowerDemand,
+          carbonCapturePlantPowerDemand,
+          batteryRatedPower,
           1
         );
 
@@ -802,6 +806,7 @@ export class MethanolModel implements Model {
       });
 
       return {
+        batteryRatedPower,
         carbonCapturePlantCapacity,
         powerPlantType: powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
@@ -825,7 +830,9 @@ export class MethanolModel implements Model {
           this.parameters.powerPlantOversizeRatio,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
-          carbonCapturePlantCapacity,
+          methanolPlantPowerDemand,
+          carbonCapturePlantPowerDemand,
+          batteryRatedPower,
           year
         );
 
@@ -900,6 +907,7 @@ export class MethanolModel implements Model {
           ).fill(operatingOutputs[key]);
         });
         return {
+          batteryRatedPower,
           carbonCapturePlantCapacity,
           powerPlantType: this.parameters.powerPlantType,
           solarNominalCapacity: solarNominalCapacity,
@@ -958,7 +966,9 @@ export class MethanolModel implements Model {
             this.parameters.powerPlantOversizeRatio,
             electrolyserNominalCapacity,
             powerPlantNominalCapacity,
-            carbonCapturePlantCapacity,
+            methanolPlantPowerDemand,
+            carbonCapturePlantPowerDemand,
+            batteryRatedPower,
             year
           );
 
@@ -1037,6 +1047,7 @@ export class MethanolModel implements Model {
       });
 
       return {
+        batteryRatedPower,
         carbonCapturePlantCapacity,
         powerPlantType: this.parameters.powerPlantType,
         solarNominalCapacity: solarNominalCapacity,
@@ -1056,7 +1067,9 @@ export class MethanolModel implements Model {
     powerPlantOversizeRatio: number,
     electrolyserNominalCapacity: number,
     powerPlantNominalCapacity: number,
-    carbonCapturePlantCapacity: number,
+    methanolPlantPowerDemand: number,
+    carbonCapturePlantPowerDemand: number,
+    batteryRatedPower: number,
     year: number
   ): ModelHourlyOperation {
     const powerplantCapacityFactors = calculatePowerPlantCapacityFactors(
@@ -1075,22 +1088,11 @@ export class MethanolModel implements Model {
       powerplantCapacityFactors
     );
 
-    const meOH_PowDem = methanol_plant_power_demand(
-      this.parameters.methanolPlantCapacity,
-      this.parameters.methanolPlantSec,
-      this.hoursPerYear
-    );
-
-    const co2_PowDem = this.carbon_capture_plant_power_demand(
-      carbonCapturePlantCapacity,
-      this.parameters.ccSec
-    );
-
     const electrolyserActualPower = electrolyser_actual_power(
       electrolyserNominalCapacity,
       generatorActualPower,
-      co2_PowDem,
-      meOH_PowDem
+      carbonCapturePlantPowerDemand,
+      methanolPlantPowerDemand
     );
 
     // normal electrolyser calculation
@@ -1100,26 +1102,31 @@ export class MethanolModel implements Model {
 
     const meOH_Cc_actual_power = generatorActualPower.map(
       (generatorActualPower: number) => {
-        if (generatorActualPower > co2_PowDem + meOH_PowDem) {
-          return co2_PowDem + meOH_PowDem;
+        if (
+          generatorActualPower >
+          carbonCapturePlantPowerDemand + methanolPlantPowerDemand
+        ) {
+          return carbonCapturePlantPowerDemand + methanolPlantPowerDemand;
         } else {
           return 0;
         }
       }
     );
     let methanolCapacityFactors = meOH_Cc_actual_power.map(
-      (v: number) => v / (co2_PowDem + meOH_PowDem)
+      (v: number) =>
+        v / (carbonCapturePlantPowerDemand + methanolPlantPowerDemand)
     );
 
     let netBatteryFlow: number[] = new Array(this.hoursPerYear).fill(0);
-    // // battery model calc
-    if (this.batteryEnergy > 0) {
+    // battery model calc
+    if (this.batteryStorageDuration > 0) {
       const hours = [1, 2, 4, 8];
       if (!hours.includes(this.batteryStorageDuration)) {
         throw new Error(
           `Battery storage length not valid. Please enter one of 1, 2, 4 or 8. Current value is ${this.batteryStorageDuration}`
         );
       }
+      const batteryEnergy = batteryRatedPower * this.batteryStorageDuration;
       const excessGeneration = excess_generation(
         generatorActualPower,
         electrolyserActualPower,
@@ -1128,12 +1135,12 @@ export class MethanolModel implements Model {
       const batteryLosses = getBatteryLosses(this.batteryEfficiency);
       netBatteryFlow = calculateNetBatteryFlowMeth(
         excessGeneration,
-        this.batteryRatedPower,
-        this.batteryEnergy,
+        batteryRatedPower,
+        batteryEnergy,
         this.batteryMinCharge,
         batteryLosses,
-        co2_PowDem,
-        meOH_PowDem,
+        carbonCapturePlantPowerDemand,
+        methanolPlantPowerDemand,
         generatorActualPower,
         this.parameters.methanolPlantMinimumTurndown
       );
