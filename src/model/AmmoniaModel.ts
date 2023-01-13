@@ -1188,7 +1188,7 @@ function hydrogen_output(
 ) {
   return ammonia_plant_capacity * (1000 / 365) * (6.047 / 34.181);
 }
-
+// TODO lots of these functions can be simplified like methanol and methane
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
 function nominal_solar_capacity(
   ammonia_plant_power_demand: number, // power required for ammonia plant
