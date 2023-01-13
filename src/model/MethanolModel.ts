@@ -7,10 +7,10 @@ import {
 } from "../components/charts/cost-functions";
 import {
   generateLCBreakdown,
-  generateMethanolLCH2Breakdown,
+  generateMeLCH2Breakdown,
 } from "../components/charts/lch2-calculations";
 import {
-  calculateMethanolPerYearOpex,
+  calculateMePerYearOpex,
   calculatePerYearOpex,
   getOpex,
   getP2XOpex,
@@ -38,11 +38,16 @@ import {
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
+  cc_plant_CAPEX,
   electrolyser_actual_power_meX,
   excess_generation,
   generator_actual_power,
   getBatteryLosses,
+  getEpcIndirectCost,
+  getLandProcurementIndirectCost,
+  hydrogen_storage_CAPEX,
   meXCapacityFactorsWithBattery,
+  me_plant_CAPEX,
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
@@ -289,7 +294,7 @@ export class MethanolModel implements Model {
       methanolCapex =
         this.parameters.methanolPlantUnitCost! * this.parameters.projectScale;
     } else {
-      methanolCapex = methanol_plant_CAPEX(
+      methanolCapex = me_plant_CAPEX(
         this.parameters.methanolPlantCapacity,
         this.parameters.methanolStorageCapacity,
         this.parameters.methanolPlantUnitCost,
@@ -500,8 +505,8 @@ export class MethanolModel implements Model {
       waterOpexCost
     );
 
-    const { h2StorageOpexPerYear, methanolOpexPerYear, ccOpexPerYear } =
-      calculateMethanolPerYearOpex(
+    const { h2StorageOpexPerYear, meOpexPerYear, ccOpexPerYear } =
+      calculateMePerYearOpex(
         h2StorageOpexCost,
         methanolOpexCost,
         ccOpexCost,
@@ -522,7 +527,7 @@ export class MethanolModel implements Model {
         "Water Costs": waterOpexPerYear,
         "Electricity Purchase": electricityPurchaseOpexPerYear,
         "H2 Storage OPEX": h2StorageOpexPerYear,
-        "Methanol OPEX": methanolOpexPerYear,
+        "Methanol OPEX": meOpexPerYear,
         "CC OPEX": ccOpexPerYear,
       },
     };
@@ -582,12 +587,12 @@ export class MethanolModel implements Model {
 
     const {
       lcH2StorageCAPEX,
-      lcMethanolPlantCAPEX,
+      lcMePlantCAPEX,
       lcCarbonCaptureCAPEX,
       lcH2StorageOPEX,
-      lcMethanolPlantOPEX,
+      lcMePlantOPEX,
       lcCarbonCaptureOPEX,
-    } = generateMethanolLCH2Breakdown(
+    } = generateMeLCH2Breakdown(
       h2StorageCapex,
       methanolCapex,
       ccCapex,
@@ -603,13 +608,13 @@ export class MethanolModel implements Model {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "H2 Storage CAPEX": lcH2StorageCAPEX,
-      "Methanol Plant CAPEX": lcMethanolPlantCAPEX,
+      "Methanol Plant CAPEX": lcMePlantCAPEX,
       "Carbon Capture CAPEX": lcCarbonCaptureCAPEX,
       "Indirect Costs": lcIndirectCosts,
       "Power Plant OPEX": lcPowerPlantOPEX,
       "Electrolyser OPEX": lcElectrolyserOPEX,
       "H2 Storage OPEX": lcH2StorageOPEX,
-      "Methanol Plant OPEX": lcMethanolPlantOPEX,
+      "Methanol Plant OPEX": lcMePlantOPEX,
       "Carbon Capture OPEX": lcCarbonCaptureOPEX,
       "Electricity Purchase": lcElectricityPurchase,
       "Stack Replacement": lcStackReplacement,
@@ -1265,47 +1270,4 @@ function meOh_unit_capacity_factor(
   return meOh_unit_out.map((v: number) =>
     Math.min(v / (methanol_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
-}
-
-function methanol_plant_CAPEX(
-  methanol_plant_capacity: number, // size of methanol plant
-  methanol_storage_capacity: number, // size of methanol storage
-  methanol_synthesis_unit_purchase_cost: number, // cost per T for methanol plant
-  methanol_storage_purchase_cost: number // cost per T for methanol storage
-) {
-  return roundToNearestThousand(
-    methanol_plant_capacity * 1000 * methanol_synthesis_unit_purchase_cost +
-      ((methanol_storage_capacity * (methanol_plant_capacity * 1000)) / 365) *
-        methanol_storage_purchase_cost
-  );
-}
-
-function cc_plant_CAPEX(
-  cc_plant_capacity: number, // size of cc plant
-  cc_synthesis_unit_purchase_cost: number // cost per T for carbon capture plant
-) {
-  return roundToNearestThousand(
-    cc_plant_capacity * 365 * cc_synthesis_unit_purchase_cost
-  );
-}
-
-function getEpcIndirectCost(
-  epc: number, // % of capex
-  CAPEX: number // total capex of Methanol plant
-) {
-  return epc * CAPEX;
-}
-
-function getLandProcurementIndirectCost(
-  landProcurementCost: number, // % of capex
-  CAPEX: number // total capex of Methanol plant
-) {
-  return landProcurementCost * CAPEX;
-}
-
-function hydrogen_storage_CAPEX(
-  hydrogen_storage_capacity: number, // size of hydrogen storage tank
-  hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
-) {
-  return hydrogen_storage_capacity * hydrogen_storage_purchase_cost;
 }

@@ -324,9 +324,9 @@ export function calculateAmmoniaPerYearOpex(
   };
 }
 
-export function calculateMethanolPerYearOpex(
+export function calculateMePerYearOpex(
   h2StorageOpexCost: number,
-  methanolOpexCost: number,
+  meOpexCost: number,
   ccOpexCost: number,
   inflationRate: number,
   projectTimeline: number
@@ -336,8 +336,8 @@ export function calculateMethanolPerYearOpex(
     inflationRate,
     projectTimeline
   );
-  const methanolOpexPerYear = getOpexPerYearInflationConstant(
-    methanolOpexCost,
+  const meOpexPerYear = getOpexPerYearInflationConstant(
+    meOpexCost,
     inflationRate,
     projectTimeline
   );
@@ -349,37 +349,7 @@ export function calculateMethanolPerYearOpex(
 
   return {
     h2StorageOpexPerYear,
-    methanolOpexPerYear,
-    ccOpexPerYear,
-  };
-}
-
-export function calculateMethanePerYearOpex(
-  h2StorageOpexCost: number,
-  methaneOpexCost: number,
-  ccOpexCost: number,
-  inflationRate: number,
-  projectTimeline: number
-) {
-  const h2StorageOpexPerYear = getOpexPerYearInflationConstant(
-    h2StorageOpexCost,
-    inflationRate,
-    projectTimeline
-  );
-  const methaneOpexPerYear = getOpexPerYearInflationConstant(
-    methaneOpexCost,
-    inflationRate,
-    projectTimeline
-  );
-  const ccOpexPerYear = getOpexPerYearInflationConstant(
-    ccOpexCost,
-    inflationRate,
-    projectTimeline
-  );
-
-  return {
-    h2StorageOpexPerYear,
-    methaneOpexPerYear,
+    meOpexPerYear,
     ccOpexPerYear,
   };
 }

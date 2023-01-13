@@ -1,5 +1,8 @@
 import { backCalculatePowerPlantCapacity } from "../components/charts/basic-calculations";
-import { roundToEightDP } from "../components/charts/cost-functions";
+import {
+  roundToEightDP,
+  roundToNearestThousand,
+} from "../components/charts/cost-functions";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import { PowerPlantType, StackReplacementType } from "../types";
 import { mean, sum } from "../utils";
@@ -986,4 +989,47 @@ export function powerfuel_plant_power_demand(
   hoursPerYear: number
 ) {
   return (plant_capacity / hoursPerYear) * 1_000_000 * (plant_sec / 1000);
+}
+
+export function cc_plant_CAPEX(
+  cc_plant_capacity: number, // size of cc plant
+  cc_synthesis_unit_purchase_cost: number // cost per T for carbon capture plant
+) {
+  return roundToNearestThousand(
+    cc_plant_capacity * 365 * cc_synthesis_unit_purchase_cost
+  );
+}
+
+export function getEpcIndirectCost(
+  epc: number, // % of capex
+  CAPEX: number // total capex of Methane plant
+) {
+  return epc * CAPEX;
+}
+
+export function getLandProcurementIndirectCost(
+  landProcurementCost: number, // % of capex
+  CAPEX: number // total capex of Methane plant
+) {
+  return landProcurementCost * CAPEX;
+}
+
+export function hydrogen_storage_CAPEX(
+  hydrogen_storage_capacity: number, // size of hydrogen storage tank
+  hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
+) {
+  return hydrogen_storage_capacity * hydrogen_storage_purchase_cost;
+}
+
+export function me_plant_CAPEX(
+  methane_plant_capacity: number, // size of methane plant
+  methane_storage_capacity: number, // size of methane storage
+  methane_synthesis_unit_purchase_cost: number, // cost per T for methane plant
+  methane_storage_purchase_cost: number // cost per T for methane storage
+) {
+  return roundToNearestThousand(
+    methane_plant_capacity * 1000 * methane_synthesis_unit_purchase_cost +
+      ((methane_storage_capacity * (methane_plant_capacity * 1000)) / 365) *
+        methane_storage_purchase_cost
+  );
 }
