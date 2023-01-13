@@ -759,7 +759,7 @@ export class MethaneModel implements Model {
         carbonCapturePlantCapacity
       );
 
-      const methaneProduction = meOh_unit_out(ccOut);
+      const methaneProduction = sng_unit_out(ccOut);
       const methaneCapacityFactors = meOh_unit_capacity_factor(
         methaneProduction,
         this.parameters.methanePlantCapacity,
@@ -876,7 +876,7 @@ export class MethaneModel implements Model {
           carbonCapturePlantCapacity
         );
 
-        const methaneProduction = meOh_unit_out(ccOut);
+        const methaneProduction = sng_unit_out(ccOut);
         const methaneCapacityFactors = meOh_unit_capacity_factor(
           methaneProduction,
           this.parameters.methanePlantCapacity,
@@ -1016,7 +1016,7 @@ export class MethaneModel implements Model {
             carbonCapturePlantCapacity
           );
 
-          const methaneProduction = meOh_unit_out(ccOut);
+          const methaneProduction = sng_unit_out(ccOut);
           const methaneCapacityFactors = meOh_unit_capacity_factor(
             methaneProduction,
             this.parameters.methanePlantCapacity,
@@ -1185,40 +1185,51 @@ export class MethaneModel implements Model {
   }
 }
 
+function carbon_capture_plant_capacity(methane_plant_capacity: number) {
+  return (((methane_plant_capacity * 1000) / 365) * (44.01 / 16.04)) / 0.95;
+}
+
+function hydrogen_output(methane_plant_capacity: number) {
+  return methane_plant_capacity * (1000 / 365) * (2.016 / 16.04) * (4 / 0.95);
+}
+
+function sng_unit_out(
+  cc_out: number[] // w20
+) {
+  return cc_out.map((_: number, i: number) =>
+    cc_out[i] > 0 ? (cc_out[i] * 0.95 * 16.04) / 44.01 : 0
+  );
+}
+
+// Should be the same in methanol
 // should be repeated for multiple cells
 // MW
 function electrolyser_actual_power(
   nominal_electrolyser_capacity: number, // electrolyser capacity
   generator_actual_power: number[], // generator actual power
-  co2_PowDem: number,
-  meOH_PowDem: number
+  carbonCapturePowerDemand: number,
+  mePowerDemand: number
 ) {
   return generator_actual_power.map((_: number, i: number) =>
-    generator_actual_power[i] - (co2_PowDem + meOH_PowDem) >
+    generator_actual_power[i] - (carbonCapturePowerDemand + mePowerDemand) >
     nominal_electrolyser_capacity
       ? nominal_electrolyser_capacity
-      : Math.max(generator_actual_power[i] - (co2_PowDem + meOH_PowDem), 0)
+      : Math.max(
+          generator_actual_power[i] -
+            (carbonCapturePowerDemand + mePowerDemand),
+          0
+        )
   );
 }
 
 function methane_plant_power_demand(
-  methane_plant_capacity: number, // size of methane plant
+  me_plant_capacity: number, // size of methane plant
   methane_plant_sec: number, // electricity required to produce 1 kg of methane
   hoursPerYear: number
 ) {
   return (
-    (methane_plant_capacity / hoursPerYear) *
-    1_000_000 *
-    (methane_plant_sec / 1000)
+    (me_plant_capacity / hoursPerYear) * 1_000_000 * (methane_plant_sec / 1000)
   );
-}
-
-function carbon_capture_plant_capacity(methane_plant_capacity: number) {
-  return (((methane_plant_capacity * 1000) / 365) * (44.01 / 32.04)) / 0.95;
-}
-
-function hydrogen_output(methane_plant_capacity: number) {
-  return methane_plant_capacity * (1000 / 365) * (2.016 / 32.04) * (3 / 0.95);
 }
 
 function nominal_electrolyser_capacity(
@@ -1347,15 +1358,6 @@ function cc_out(
     // TODO check if this is okay
     throw new Error("Unsupported calculation for cc out");
   });
-}
-
-// should be repeated for multiple cells
-function meOh_unit_out(
-  cc_out: number[] // w20
-) {
-  return cc_out.map((_: number, i: number) =>
-    cc_out[i] > 0 ? (cc_out[i] * 0.95 * 32.04) / 44.01 : 0
-  );
 }
 
 // should be repeated for multiple cells
