@@ -961,3 +961,21 @@ export function generator_actual_power(
     (v: number) => total_nominal_power_plant_capacity * v
   );
 }
+
+export function electrolyser_actual_power_meX(
+  nominal_electrolyser_capacity: number, // electrolyser capacity
+  generator_actual_power: number[], // generator actual power
+  carbonCapturePowerDemand: number,
+  mePowerDemand: number
+) {
+  return generator_actual_power.map((_: number, i: number) =>
+    generator_actual_power[i] - (carbonCapturePowerDemand + mePowerDemand) >
+    nominal_electrolyser_capacity
+      ? nominal_electrolyser_capacity
+      : Math.max(
+          generator_actual_power[i] -
+            (carbonCapturePowerDemand + mePowerDemand),
+          0
+        )
+  );
+}

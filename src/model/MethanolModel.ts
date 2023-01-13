@@ -38,6 +38,7 @@ import {
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
+  electrolyser_actual_power_meX,
   excess_generation,
   generator_actual_power,
   getBatteryLosses,
@@ -1111,7 +1112,7 @@ export class MethanolModel implements Model {
       powerplantCapacityFactors
     );
 
-    const electrolyserActualPower = electrolyser_actual_power(
+    const electrolyserActualPower = electrolyser_actual_power_meX(
       electrolyserNominalCapacity,
       generatorActualPower,
       carbonCapturePlantPowerDemand,
@@ -1188,22 +1189,6 @@ export class MethanolModel implements Model {
   ) {
     return (carbonCapturePlantCapacity / 24) * carbonCaptureSec;
   }
-}
-
-// should be repeated for multiple cells
-// MW
-function electrolyser_actual_power(
-  nominal_electrolyser_capacity: number, // electrolyser capacity
-  generator_actual_power: number[], // generator actual power
-  co2_PowDem: number,
-  meOH_PowDem: number
-) {
-  return generator_actual_power.map((_: number, i: number) =>
-    generator_actual_power[i] - (co2_PowDem + meOH_PowDem) >
-    nominal_electrolyser_capacity
-      ? nominal_electrolyser_capacity
-      : Math.max(generator_actual_power[i] - (co2_PowDem + meOH_PowDem), 0)
-  );
 }
 
 function methanol_plant_power_demand(
