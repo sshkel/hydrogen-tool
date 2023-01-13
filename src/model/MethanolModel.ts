@@ -2,7 +2,6 @@ import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
 import {
   calculateP2XProductionLC,
   roundToNearestInteger,
-  roundToNearestThousand,
   roundToTwoDP,
 } from "../components/charts/cost-functions";
 import {
