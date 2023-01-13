@@ -979,3 +979,11 @@ export function electrolyser_actual_power_meX(
         )
   );
 }
+
+export function powerfuel_plant_power_demand(
+  plant_capacity: number, // size of methanol plant
+  plant_sec: number, // electricity required to produce 1 kg of methanol
+  hoursPerYear: number
+) {
+  return (plant_capacity / hoursPerYear) * 1_000_000 * (plant_sec / 1000);
+}

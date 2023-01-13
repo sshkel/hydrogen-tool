@@ -44,6 +44,7 @@ import {
   getBatteryLosses,
   meXCapacityFactorsWithBattery,
   nominal_electrolyser_capacity,
+  powerfuel_plant_power_demand,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -687,7 +688,7 @@ export class MethanolModel implements Model {
       this.parameters.methanolPlantCapacity
     );
 
-    const methanolPlantPowerDemand = methanol_plant_power_demand(
+    const methanolPlantPowerDemand = powerfuel_plant_power_demand(
       this.parameters.methanolPlantCapacity,
       this.parameters.methanolPlantSec,
       this.hoursPerYear
@@ -1189,18 +1190,6 @@ export class MethanolModel implements Model {
   ) {
     return (carbonCapturePlantCapacity / 24) * carbonCaptureSec;
   }
-}
-
-function methanol_plant_power_demand(
-  methanol_plant_capacity: number, // size of methanol plant
-  methanol_plant_sec: number, // electricity required to produce 1 kg of methanol
-  hoursPerYear: number
-) {
-  return (
-    (methanol_plant_capacity / hoursPerYear) *
-    1_000_000 *
-    (methanol_plant_sec / 1000)
-  );
 }
 
 function carbon_capture_plant_capacity(methanol_plant_capacity: number) {

@@ -42,6 +42,7 @@ import {
   generator_actual_power,
   getBatteryLosses,
   nominal_electrolyser_capacity,
+  powerfuel_plant_power_demand,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -661,7 +662,7 @@ export class AmmoniaModel implements Model {
       this.parameters.ammoniaPlantCapacity
     );
 
-    const ammoniaPlantPowerDemand = ammonia_plant_power_demand(
+    const ammoniaPlantPowerDemand = powerfuel_plant_power_demand(
       this.parameters.ammoniaPlantCapacity,
       this.parameters.ammoniaPlantSec,
       this.hoursPerYear
@@ -1068,7 +1069,7 @@ export class AmmoniaModel implements Model {
       powerPlantNominalCapacity,
       powerplantCapacityFactors
     );
-    const ammoniaPowerDemand = ammonia_plant_power_demand(
+    const ammoniaPowerDemand = powerfuel_plant_power_demand(
       this.parameters.ammoniaPlantCapacity,
       this.parameters.ammoniaPlantSec,
       this.hoursPerYear
@@ -1164,18 +1165,6 @@ function electrolyser_actual_power(
     nominal_electrolyser_capacity
       ? nominal_electrolyser_capacity
       : generator_actual_power[i] - asu_nh3_actual_power[i]
-  );
-}
-
-function ammonia_plant_power_demand(
-  ammonia_plant_capacity: number, // size of ammonia plant
-  ammonia_plant_sec: number, // electricity required to produce 1 kg of ammonia
-  hoursPerYear: number
-) {
-  return (
-    (ammonia_plant_capacity / hoursPerYear) *
-    1_000_000 *
-    (ammonia_plant_sec / 1000)
   );
 }
 

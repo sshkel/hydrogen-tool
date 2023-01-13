@@ -44,6 +44,7 @@ import {
   getBatteryLosses,
   meXCapacityFactorsWithBattery,
   nominal_electrolyser_capacity,
+  powerfuel_plant_power_demand,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -687,7 +688,7 @@ export class MethaneModel implements Model {
       this.parameters.methanePlantCapacity
     );
 
-    const methanePlantPowerDemand = methane_plant_power_demand(
+    const methanePlantPowerDemand = powerfuel_plant_power_demand(
       this.parameters.methanePlantCapacity,
       this.parameters.methanePlantSec,
       this.hoursPerYear
@@ -1204,16 +1205,6 @@ function sng_unit_out(
 ) {
   return cc_out.map((_: number, i: number) =>
     cc_out[i] > 0 ? (cc_out[i] * 0.95 * 16.04) / 44.01 : 0
-  );
-}
-
-function methane_plant_power_demand(
-  me_plant_capacity: number, // size of methane plant
-  methane_plant_sec: number, // electricity required to produce 1 kg of methane
-  hoursPerYear: number
-) {
-  return (
-    (me_plant_capacity / hoursPerYear) * 1_000_000 * (methane_plant_sec / 1000)
   );
 }
 
