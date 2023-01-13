@@ -121,6 +121,17 @@ class DefaultInputs implements Inputs {
   ccLandProcurementCosts = 0;
   ccPlantOMCost = 5;
   ccPlantCost = 420;
+  // Methane
+  methanePlantCapacity = 365;
+  methaneStorageCapacity = 30;
+  methanePlantUnitCost = 250;
+  methanePlantSec = 0.36;
+  methanePlantMinimumTurndown = 100;
+  methaneStorageCost = 227;
+  methaneEpcCosts = 0;
+  methaneLandProcurementCosts = 0;
+  methanePlantOMCost = 5;
+  methaneStorageOMCost = 5;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

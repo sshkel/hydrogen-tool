@@ -82,7 +82,7 @@ class Defaults {
       hydrogenStoragePurchaseCost: 0,
       hydrogenStorageOMCost: 0,
       ammoniaPlantCapitalCost: 900,
-      // TODO work out if these default are correct for ammonia
+      // TODO work out if these default are correct for methanol
       methanolPlantCapacity: 350,
       methanolPlantUnitCost: 250,
       methanolStorageCapacity: 30,
@@ -98,6 +98,17 @@ class Defaults {
       ccEpcCosts: 0,
       ccLandProcurementCosts: 0,
       ccPlantOMCost: 5,
+      // TODO work out if these default are correct for methane
+      methanePlantCapacity: 350,
+      methanePlantUnitCost: 250,
+      methaneStorageCapacity: 30,
+      methanePlantSec: 0.36,
+      methanePlantMinimumTurndown: 100,
+      methaneStorageCost: 227,
+      methaneEpcCosts: 0,
+      methaneLandProcurementCosts: 0,
+      methanePlantOMCost: 5,
+      methaneStorageOMCost: 5,
     };
 
     if (localStorage.getItem("savedData") !== null) {

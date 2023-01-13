@@ -219,6 +219,15 @@ export function ZonePopover(props: Props) {
               />
             </Grid>
           ) : null}
+          {localStorage.getItem("methanol") !== null ? (
+            <Grid item xs={2}>
+              <PowerfuelPathwayCard
+                onClick={() => startDesign("methane")}
+                title="Methane"
+                subheader="Integrated hydrogen production, carbon sourcing and conversion into methane"
+              />
+            </Grid>
+          ) : null}
         </Grid>
       </CardContent>
     </SideCard>

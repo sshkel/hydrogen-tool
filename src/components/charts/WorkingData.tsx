@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import SynthesisedInputs from "../../SynthesisedInput";
 import { AmmoniaData, AmmoniaModel } from "../../model/AmmoniaModel";
 import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
+import { MethaneData, MethaneModel } from "../../model/MethaneModel";
 import { MethanolData, MethanolModel } from "../../model/MethanolModel";
 import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
 import {
@@ -297,6 +298,98 @@ export default function WorkingData(props: Props) {
     };
 
     model = new MethanolModel(dataModel, state.solarData, state.windData);
+  } else if (props.data.powerfuel === "methane") {
+    const dataModel: MethaneData = {
+      inputConfiguration: inputConfiguration,
+      location: location,
+      projectScale: projectScale,
+      additionalAnnualCosts: inputs.additionalAnnualCosts,
+      additionalTransmissionCharges: inputs.additionalTransmissionCharges,
+      additionalUpfrontCosts: inputs.additionalUpfrontCosts,
+      batteryCosts: inputs.batteryCosts,
+      batteryEfficiency: inputs.batteryEfficiency,
+      batteryEpcCosts: inputs.batteryEpcCosts,
+      batteryLandProcurementCosts: inputs.batteryLandProcurementCosts,
+      batteryLifetime: inputs.batteryLifetime,
+      batteryMinCharge: inputs.batteryMinCharge,
+      batteryOMCost: inputs.batteryOMCost,
+      batteryReplacementCost: inputs.batteryReplacementCost,
+      batteryStorageDuration: inputs.batteryStorageDuration,
+      discountRate: inputs.discountRate,
+      electrolyserCostReductionWithScale:
+        inputs.electrolyserCostReductionWithScale,
+      electrolyserEfficiency: inputs.electrolyserEfficiency,
+      electrolyserEpcCosts: inputs.electrolyserEpcCosts,
+      electrolyserLandProcurementCosts: inputs.electrolyserLandProcurementCosts,
+      electrolyserMaximumLoad: inputs.electrolyserMaximumLoad,
+      electrolyserMinimumLoad: inputs.electrolyserMinimumLoad,
+      electrolyserOMCost: inputs.electrolyserOMCost,
+      electrolyserPurchaseCost: inputs.electrolyserPurchaseCost,
+      electrolyserReferenceCapacity: inputs.electrolyserReferenceCapacity,
+      electrolyserReferenceFoldIncrease:
+        inputs.electrolyserReferenceFoldIncrease,
+      electrolyserStackReplacement: inputs.electrolyserStackReplacement,
+      gridConnectionCost: inputs.gridConnectionCost,
+      inflationRate: inputs.inflationRate,
+      maximumDegradationBeforeReplacement:
+        inputs.maximumDegradationBeforeReplacement,
+      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
+      powerPlantConfiguration: inputs.powerPlantConfiguration,
+      powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
+      powerPlantType: inputs.powerPlantType,
+      powerSupplyOption: inputs.powerSupplyOption,
+      principalPPACost: inputs.principalPPACost,
+      projectTimeline: inputs.projectTimeline,
+      secAtNominalLoad: inputs.secAtNominalLoad,
+      solarDegradation: inputs.solarDegradation,
+      solarEpcCosts: inputs.solarEpcCosts,
+      solarFarmBuildCost: inputs.solarFarmBuildCost,
+      solarLandProcurementCosts: inputs.solarLandProcurementCosts,
+      solarOpex: inputs.solarOpex,
+      solarPVCostReductionWithScale: inputs.solarPVCostReductionWithScale,
+      solarReferenceCapacity: inputs.solarReferenceCapacity,
+      solarReferenceFoldIncrease: inputs.solarReferenceFoldIncrease,
+      solarToWindPercentage: inputs.solarToWindPercentage,
+      stackDegradation: inputs.stackDegradation,
+      stackLifetime: inputs.stackLifetime,
+      stackReplacementType: inputs.stackReplacementType,
+      timeBetweenOverloading: inputs.timeBetweenOverloading,
+      waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
+      waterSupplyCost: inputs.waterSupplyCost,
+      windDegradation: inputs.windDegradation,
+      windEpcCosts: inputs.windEpcCosts,
+      windFarmBuildCost: inputs.windFarmBuildCost,
+      windLandProcurementCosts: inputs.windLandProcurementCosts,
+      windOpex: inputs.windOpex,
+      windReferenceCapacity: inputs.windReferenceCapacity,
+      windReferenceFoldIncrease: inputs.windReferenceFoldIncrease,
+      windCostReductionWithScale: inputs.windCostReductionWithScale,
+      electrolyserSystemOversizing: inputs.electrolyserSystemOversizing!,
+
+      methanePlantCapacity: inputs.methanePlantCapacity!,
+      methaneStorageCapacity: inputs.methaneStorageCapacity!,
+      methanePlantSec: inputs.methanePlantSec!,
+      methanePlantMinimumTurndown: inputs.methanePlantMinimumTurndown!,
+      methanePlantUnitCost: inputs.methanePlantUnitCost!,
+      methaneStorageCost: inputs.methaneStorageCost!,
+      methaneEpcCosts: inputs.methaneEpcCosts!,
+      methaneLandProcurementCosts: inputs.methaneLandProcurementCosts!,
+      methanePlantOMCost: inputs.methanePlantOMCost!,
+      methaneStorageOMCost: inputs.methaneStorageOMCost!,
+
+      ccSec: inputs.ccSec!,
+      ccPlantCost: inputs.ccPlantCost!,
+      ccEpcCosts: inputs.ccEpcCosts!,
+      ccLandProcurementCosts: inputs.ccLandProcurementCosts!,
+      ccPlantOMCost: inputs.ccPlantOMCost!,
+
+      minimumHydrogenStorage: inputs.minimumHydrogenStorage!,
+      hydrogenStorageCapacity: inputs.hydrogenStorageCapacity!,
+      hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!,
+      hydrogenStorageOMCost: inputs.hydrogenStorageOMCost!,
+    };
+
+    model = new MethaneModel(dataModel, state.solarData, state.windData);
   } else {
     const dataModel: HydrogenData = {
       inputConfiguration: inputConfiguration,

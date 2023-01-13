@@ -30,6 +30,18 @@ const methanolCostLabel = (
     A$/T<sub>MeOH</sub>
   </p>
 );
+// TODO check that labels are correct, I yolod theme
+const methaneSECLabel = (
+  <p>
+    kWh<sub>e</sub>/kg<sub>SNG</sub>
+  </p>
+);
+
+const methaneCostLabel = (
+  <p>
+    A$/T<sub>SNG</sub>
+  </p>
+);
 
 export const configurationTypes = [
   "powerPlantType",
@@ -83,6 +95,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     title: "Methanol Plant Capacity (kTPA)",
     helperText:
       "Small Scale Methanol Plants: <100 kiloton/yr and Large Scale Methanol Plants: >1,000 kiloton/yr ",
+  },
+  methanePlantCapacity: {
+    min: 50,
+    max: 1000,
+    step: 50,
+    title: "Methane Plant Capacity (kTPA)",
+    helperText:
+      "Small Scale Methane Plants: <100 kiloton/yr and Large Scale Methane Plants: >1,000 kiloton/yr ",
   },
   electrolyserEfficiency: {
     min: 50,
@@ -146,6 +166,14 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     title: "Methanol Plant Capital Cost ($/Ton)",
     helperText:
       "Includes Methanol and Carbon Capture Unit, and Methanol and Carbon Capture Storage Unit Costs",
+  },
+  methanePlantUnitCost: {
+    min: 100,
+    max: 1000,
+    step: 50,
+    title: "Methane Plant Capital Cost ($/Ton)",
+    helperText:
+      "Includes Methane and Carbon Capture Unit, and Methane and Carbon Capture Storage Unit Costs",
   },
   solarFarmBuildCost: {
     min: 100,
@@ -300,10 +328,6 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Methanol Plant Specific Energy Consumption",
     adornmentLabel: methanolSECLabel,
   },
-  ccSec: {
-    title: "Carbon Capture Unit Specific Energy Consumption",
-    adornmentLabel: ccSECLabel,
-  },
   methanolPlantMinimumTurndown: {
     title: "Methanol Plant Minimum Turndown",
     adornmentLabel: "%",
@@ -333,6 +357,10 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Methanol Storage O&M",
     adornmentLabel: "% of CAPEX",
   },
+  ccSec: {
+    title: "Carbon Capture Unit Specific Energy Consumption",
+    adornmentLabel: ccSECLabel,
+  },
   ccPlantCost: {
     title: "Carbon Capture Plant Cost",
     adornmentLabel: (
@@ -351,6 +379,49 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   ccPlantOMCost: {
     title: "Carbon Capture Plant O&M",
+    adornmentLabel: "% of CAPEX",
+  },
+
+  /****** Methane params ******/
+  methanePlantCapacity: {
+    title: "Methane Plant Capacity",
+    adornmentLabel: "kTPA",
+  },
+  methaneStorageCapacity: {
+    title: "Methane Storage Capacity",
+    adornmentLabel: "days",
+  },
+  methanePlantSec: {
+    title: "Methane Plant Specific Energy Consumption",
+    adornmentLabel: methaneSECLabel,
+  },
+  methanePlantMinimumTurndown: {
+    title: "Methane Plant Minimum Turndown",
+    adornmentLabel: "%",
+  },
+  // methane plant operating costs
+  methanePlantUnitCost: {
+    title: "Methane Plant Unit Cost",
+    adornmentLabel: methaneCostLabel,
+  },
+  methaneStorageCost: {
+    title: "Methane Storage Cost",
+    adornmentLabel: methaneCostLabel,
+  },
+  methaneEpcCosts: {
+    title: "Methane EPC Costs",
+    adornmentLabel: "% of CAPEX",
+  },
+  methaneLandProcurementCosts: {
+    title: "Methane Land Procurement Cost",
+    adornmentLabel: "% of CAPEX",
+  },
+  methanePlantOMCost: {
+    title: "Methane Plant O&M",
+    adornmentLabel: "% of CAPEX",
+  },
+  methaneStorageOMCost: {
+    title: "Methane Storage O&M",
     adornmentLabel: "% of CAPEX",
   },
   /******* Project Scale *******/

@@ -320,7 +320,7 @@ export function calculateNetBatteryFlowMeth(
   co2_PowDem: number,
   meOH_PowDem: number,
   generatorActualPower: number[],
-  methanolPlantMinimumTurnDown: number
+  mePlantMinimumTurnDown: number
 ): number[] {
   //TODO Fix model running with empty params
   if (excessGeneration.length === 0) {
@@ -337,7 +337,7 @@ export function calculateNetBatteryFlowMeth(
     roundToEightDP(excessGeneration[0]),
     generatorActualPower[0],
     1,
-    methanolPlantMinimumTurnDown,
+    mePlantMinimumTurnDown,
     batteryMinCharge,
     batteryEnergy,
     1,
@@ -353,7 +353,7 @@ export function calculateNetBatteryFlowMeth(
       roundToEightDP(excessGeneration[hour]),
       generatorActualPower[hour],
       batterySoc[hour - 1],
-      methanolPlantMinimumTurnDown,
+      mePlantMinimumTurnDown,
       batteryMinCharge,
       batteryEnergy,
       1,

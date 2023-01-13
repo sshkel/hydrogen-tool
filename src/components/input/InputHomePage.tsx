@@ -17,6 +17,8 @@ import InputTab from "./InputTab";
 import AdvancedAmmoniaInput from "./ammonia/AdvancedAmmoniaInput";
 import BasicAmmoniaInput from "./ammonia/BasicAmmoniaInput";
 import { configurationTypes } from "./data";
+import AdvancedMethaneInput from "./methane/AdvancedMethaneInput";
+import BasicMethaneInput from "./methane/BasicMethaneInput";
 import AdvancedMethanolInput from "./methanol/AdvancedMethanolInput";
 import BasicMethanolInput from "./methanol/BasicMethanolInput";
 
@@ -32,6 +34,9 @@ function getBasicInputs(powerfuel: string): JSX.Element {
   if (powerfuel === "methanol") {
     return <BasicMethanolInput />;
   }
+  if (powerfuel === "methane") {
+    return <BasicMethaneInput />;
+  }
   return <BasicHydrogenInput />;
 }
 
@@ -41,6 +46,9 @@ function getAdvancedInputs(powerfuel: string): JSX.Element {
   }
   if (powerfuel === "methanol") {
     return <AdvancedMethanolInput />;
+  }
+  if (powerfuel === "methane") {
+    return <AdvancedMethaneInput />;
   }
   return <AdvancedHydrogenInput />;
 }

@@ -245,6 +245,7 @@ export interface Inputs {
   ccEpcCosts?: number;
   ccPlantCost?: number;
   ccPlantOMCost?: number;
+  ccSec?: number;
   methanolStorageOMCost?: number;
   methanolPlantOMCost?: number;
   methanolLandProcurementCosts?: number;
@@ -253,9 +254,20 @@ export interface Inputs {
   methanolPlantUnitCost?: number;
   methanolPlantMinimumTurndown?: number;
   methanolPlantSec?: number;
-  ccSec?: number;
   methanolStorageCapacity?: number;
   methanolPlantCapacity?: number;
+
+  // Methane
+  methaneStorageOMCost?: number;
+  methanePlantOMCost?: number;
+  methaneLandProcurementCosts?: number;
+  methaneEpcCosts?: number;
+  methaneStorageCost?: number;
+  methanePlantUnitCost?: number;
+  methanePlantMinimumTurndown?: number;
+  methanePlantSec?: number;
+  methaneStorageCapacity?: number;
+  methanePlantCapacity?: number;
 }
 
 export interface Model {
