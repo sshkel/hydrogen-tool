@@ -600,6 +600,51 @@ export function calculateMethanolSnapshotForYear(
   };
 }
 
+export function calculateMethaneSnapshotForYear(
+  powerPlantCapacityFactors: number[],
+  electrolyserCapacityFactors: number[],
+  methaneCapacityFactors: number[],
+  hydrogenProduction: number[],
+  methaneProduction: number[],
+  netBatteryFlow: number[],
+  electrolyserNominalCapacity: number,
+  powerPlantNominalCapacity: number,
+  kgToTonne: number,
+  hoursPerYear: number,
+  elecMaxLoad: number,
+  batteryEfficiency: number
+): ModelSummaryPerYear {
+  // Time Ammonia PLant is at its Rated Capacity
+  const methaneRatedCapacityTime =
+    methaneCapacityFactors.filter((a) => a === elecMaxLoad).length /
+    hoursPerYear;
+  // Total Time Ammonia Plant is Operating
+  const totalMethaneOpsTime =
+    methaneCapacityFactors.filter((a) => a > 0).length / hoursPerYear;
+  // Achieved Electrolyser Capacity Factor
+  const achievedMethaneCf = mean(methaneCapacityFactors);
+  const meOhUnitOut = sum(methaneProduction) / 1000;
+
+  return {
+    ...calculateSnapshotForYear(
+      powerPlantCapacityFactors,
+      electrolyserCapacityFactors,
+      hydrogenProduction,
+      netBatteryFlow,
+      electrolyserNominalCapacity,
+      powerPlantNominalCapacity,
+      kgToTonne,
+      hoursPerYear,
+      elecMaxLoad,
+      batteryEfficiency
+    ),
+    methaneRatedCapacityTime: methaneRatedCapacityTime,
+    totalMethaneOperatingTime: totalMethaneOpsTime,
+    methaneCapacityFactors: achievedMethaneCf,
+    methaneProduction: meOhUnitOut,
+  };
+}
+
 export function initialiseStackReplacementYears(
   stackReplacementType: StackReplacementType,
   stackDegradation: number,

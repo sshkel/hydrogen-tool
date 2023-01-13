@@ -32,3 +32,10 @@ export interface MethanolProjectModelSummary extends ProjectModelSummary {
   methanolRatedCapacityTime: number[];
   methanolProduction: number[];
 }
+
+export interface MethaneProjectModelSummary extends ProjectModelSummary {
+  methaneCapacityFactors: number[];
+  totalMethaneOperatingTime: number[];
+  methaneRatedCapacityTime: number[];
+  methaneProduction: number[];
+}
