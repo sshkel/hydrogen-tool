@@ -1022,14 +1022,40 @@ export function hydrogen_storage_CAPEX(
 }
 
 export function me_plant_CAPEX(
-  methane_plant_capacity: number, // size of methane plant
-  methane_storage_capacity: number, // size of methane storage
-  methane_synthesis_unit_purchase_cost: number, // cost per T for methane plant
-  methane_storage_purchase_cost: number // cost per T for methane storage
+  me_plant_capacity: number, // size of methane plant
+  me_storage_capacity: number, // size of methane storage
+  me_synthesis_unit_purchase_cost: number, // cost per T for methane plant
+  me_storage_purchase_cost: number // cost per T for methane storage
 ) {
   return roundToNearestThousand(
-    methane_plant_capacity * 1000 * methane_synthesis_unit_purchase_cost +
-      ((methane_storage_capacity * (methane_plant_capacity * 1000)) / 365) *
-        methane_storage_purchase_cost
+    me_plant_capacity * 1000 * me_synthesis_unit_purchase_cost +
+      ((me_storage_capacity * (me_plant_capacity * 1000)) / 365) *
+        me_storage_purchase_cost
+  );
+}
+
+export function cc_out(
+  h2_to_me: number[], // v20
+  hydrogen_output: number, // s1b16
+  cc_capacity: number // s1b14
+) {
+  return h2_to_me.map((v: number) => {
+    if (v === (hydrogen_output / 24) * 1000) {
+      return (cc_capacity / 24) * 1000;
+    } else if (v < (hydrogen_output / 24) * 1000) {
+      return (v / ((hydrogen_output / 24) * 1000)) * (cc_capacity / 24) * 1000;
+    }
+    // TODO check if this is okay
+    throw new Error("Unsupported calculation for cc out");
+  });
+}
+
+export function me_unit_capacity_factor(
+  me_unit_out: number[], // x20
+  me_plant_capacity: number, // s1b12
+  hoursPerYear: number
+) {
+  return me_unit_out.map((v: number) =>
+    Math.min(v / (me_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
 }

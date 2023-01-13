@@ -38,6 +38,7 @@ import {
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
+  cc_out,
   cc_plant_CAPEX,
   electrolyser_actual_power_meX,
   excess_generation,
@@ -48,6 +49,7 @@ import {
   hydrogen_storage_CAPEX,
   meXCapacityFactorsWithBattery,
   me_plant_CAPEX,
+  me_unit_capacity_factor,
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
@@ -772,7 +774,7 @@ export class MethanolModel implements Model {
       );
 
       const methanolProduction = meOh_unit_out(ccOut);
-      const methanolCapacityFactors = meOh_unit_capacity_factor(
+      const methanolCapacityFactors = me_unit_capacity_factor(
         methanolProduction,
         this.parameters.methanolPlantCapacity,
         this.hoursPerYear
@@ -889,7 +891,7 @@ export class MethanolModel implements Model {
         );
 
         const methanolProduction = meOh_unit_out(ccOut);
-        const methanolCapacityFactors = meOh_unit_capacity_factor(
+        const methanolCapacityFactors = me_unit_capacity_factor(
           methanolProduction,
           this.parameters.methanolPlantCapacity,
           this.hoursPerYear
@@ -1029,7 +1031,7 @@ export class MethanolModel implements Model {
           );
 
           const methanolProduction = meOh_unit_out(ccOut);
-          const methanolCapacityFactors = meOh_unit_capacity_factor(
+          const methanolCapacityFactors = me_unit_capacity_factor(
             methanolProduction,
             this.parameters.methanolPlantCapacity,
             this.hoursPerYear
@@ -1236,38 +1238,10 @@ function nominal_wind_capacity(
 }
 
 // should be repeated for multiple cells
-function cc_out(
-  h2_to_meoh: number[], // v20
-  hydrogen_output: number, // s1b16
-  cc_capacity: number // s1b14
-) {
-  return h2_to_meoh.map((v: number) => {
-    if (v === (hydrogen_output / 24) * 1000) {
-      return (cc_capacity / 24) * 1000;
-    } else if (v < (hydrogen_output / 24) * 1000) {
-      return (v / ((hydrogen_output / 24) * 1000)) * (cc_capacity / 24) * 1000;
-    }
-    // TODO check if this is okay
-    throw new Error("Unsupported calculation for cc out");
-  });
-}
-
-// should be repeated for multiple cells
 function meOh_unit_out(
   cc_out: number[] // w20
 ) {
   return cc_out.map((_: number, i: number) =>
     cc_out[i] > 0 ? (cc_out[i] * 0.95 * 32.04) / 44.01 : 0
-  );
-}
-
-// should be repeated for multiple cells
-function meOh_unit_capacity_factor(
-  meOh_unit_out: number[], // x20
-  methanol_plant_capacity: number, // s1b12
-  hoursPerYear: number
-) {
-  return meOh_unit_out.map((v: number) =>
-    Math.min(v / (methanol_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
 }
