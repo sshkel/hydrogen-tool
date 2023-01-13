@@ -38,6 +38,7 @@ import {
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
+  capacityFactorsWithBattery,
   cc_out,
   cc_plant_CAPEX,
   electrolyser_actual_power_meX,
@@ -47,7 +48,6 @@ import {
   getEpcIndirectCost,
   getLandProcurementIndirectCost,
   hydrogen_storage_CAPEX,
-  meXCapacityFactorsWithBattery,
   me_plant_CAPEX,
   me_unit_capacity_factor,
   nominal_electrolyser_capacity,
@@ -1179,7 +1179,7 @@ export class MethanolModel implements Model {
         this.parameters.methanolPlantMinimumTurndown / 100
       );
       // with battery
-      methanolCapacityFactors = meXCapacityFactorsWithBattery(
+      methanolCapacityFactors = capacityFactorsWithBattery(
         methanolCapacityFactors,
         netBatteryFlow
       );

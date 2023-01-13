@@ -38,9 +38,11 @@ import {
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
   calculatePowerPlantCapacityFactors,
+  capacityFactorsWithBattery,
   excess_generation,
   generator_actual_power,
   getBatteryLosses,
+  hydrogen_storage_CAPEX,
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
@@ -1127,7 +1129,7 @@ export class AmmoniaModel implements Model {
         batteryLosses
       );
 
-      asuNh3CapacityFactors = asu_nh3_with_battery_cf(
+      asuNh3CapacityFactors = capacityFactorsWithBattery(
         asuNh3CapacityFactors,
         netBatteryFlow
       );
@@ -1326,25 +1328,6 @@ function ammonia_plant_land_procurement_cost(
   ammonia_plant_CAPEX: number // total capex of Ammonia plant
 ) {
   return ammonia_plant_land_procurement_cost * ammonia_plant_CAPEX;
-}
-
-function hydrogen_storage_CAPEX(
-  hydrogen_storage_capacity: number, // size of hydrogen storage tank
-  hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
-) {
-  return hydrogen_storage_capacity * hydrogen_storage_purchase_cost;
-}
-
-// // should be repeated for multiple cells
-function asu_nh3_with_battery_cf(
-  asu_nh3_capacity_factor: number[],
-  net_battery_flow: number[]
-) {
-  return asu_nh3_capacity_factor.map((_: number, i: number) =>
-    asu_nh3_capacity_factor[i] < 1 && net_battery_flow[i] < 0
-      ? asu_nh3_capacity_factor[i] + (1 - asu_nh3_capacity_factor[i])
-      : asu_nh3_capacity_factor[i]
-  );
 }
 
 function asu_nh3_capacity_factor(
