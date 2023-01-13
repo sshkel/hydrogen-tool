@@ -666,7 +666,7 @@ export class MethaneModel implements Model {
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
-      "LCMeOH ($/kg)": roundToTwoDP(lcmeoh),
+      "LCSNG ($/kg)": roundToTwoDP(lcmeoh),
     };
 
     return {

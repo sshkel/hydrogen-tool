@@ -1269,7 +1269,7 @@ function asu_out(
   asu_capacity: number // s1b14
 ) {
   return h2_to_nh3.map((v: number) => {
-    if (v === (hydrogen_output / 24) * 1000) {
+    if (Math.abs(v - (hydrogen_output / 24) * 1000) < 0.001) {
       return (asu_capacity / 24) * 1000;
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;

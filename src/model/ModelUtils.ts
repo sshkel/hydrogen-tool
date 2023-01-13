@@ -1040,7 +1040,7 @@ export function cc_out(
   cc_capacity: number // s1b14
 ) {
   return h2_to_me.map((v: number) => {
-    if (v === (hydrogen_output / 24) * 1000) {
+    if (Math.abs(v - (hydrogen_output / 24) * 1000) < 0.001) {
       return (cc_capacity / 24) * 1000;
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (cc_capacity / 24) * 1000;
