@@ -33,6 +33,7 @@ import {
 import {
   CumulativeDegradation,
   MaxDegradation,
+  calculateH2ToPowerfuelUnit,
   calculateHydrogenProduction,
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
@@ -747,7 +748,7 @@ export class MethanolModel implements Model {
         this.specCons
       );
 
-      const h2ToMeOhUnit = calculateH2ToMeOhUnit(
+      const h2ToMeOhUnit = calculateH2ToPowerfuelUnit(
         hydrogenProduction,
         electrolyserNominalCapacity,
         hydrogenOutput,
@@ -864,7 +865,7 @@ export class MethanolModel implements Model {
           this.specCons
         );
 
-        const h2ToMeOhUnit = calculateH2ToMeOhUnit(
+        const h2ToMeOhUnit = calculateH2ToPowerfuelUnit(
           hydrogenProduction,
           electrolyserNominalCapacity,
           hydrogenOutput,
@@ -1004,7 +1005,7 @@ export class MethanolModel implements Model {
             yearlyDegradationRate,
             this.specCons
           );
-          const h2ToMeOhUnit = calculateH2ToMeOhUnit(
+          const h2ToMeOhUnit = calculateH2ToPowerfuelUnit(
             hydrogenProduction,
             electrolyserNominalCapacity,
             hydrogenOutput,
@@ -1266,64 +1267,6 @@ function generator_actual_power(
 }
 
 // should be repeated for multiple cells
-function excess_h2(
-  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
-  hydrogen_output: number
-) {
-  return mass_of_hydrogen.map((v: number) =>
-    v > (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
-  );
-}
-
-// should be repeated for multiple cells
-function deficit_h2(
-  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
-  hydrogen_output: number
-) {
-  return mass_of_hydrogen.map((v: number) =>
-    v < (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
-  );
-}
-
-function h2_to_meOh(
-  mass_of_hydrogen: number[], // p20
-  from_h2_storage: number[], // t20
-  h2_store_balance: number[], // u20
-  hydrogen_storage_capacity: number, // s1b26
-  hydrogen_output: number, // s1b16
-  methanol_plant_minimum_turndown: number // s1b36
-): number[] {
-  return mass_of_hydrogen.map((_: number, i: number) => {
-    if (mass_of_hydrogen[i] >= (hydrogen_output / 24) * 1000) {
-      return (hydrogen_output / 24) * 1000;
-    } else if (
-      mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]) <
-      (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
-    ) {
-      return 0;
-    } else if (
-      mass_of_hydrogen[i] < (hydrogen_output / 24) * 1000 &&
-      h2_store_balance[i] > hydrogen_storage_capacity * 0.1
-    ) {
-      return mass_of_hydrogen[i] + Math.abs(from_h2_storage[i]);
-    } else if (
-      h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
-      mass_of_hydrogen[i] >
-        (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
-    ) {
-      return mass_of_hydrogen[i];
-    } else if (
-      h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
-      mass_of_hydrogen[i] <
-        (hydrogen_output / 24) * 1000 * methanol_plant_minimum_turndown
-    ) {
-      return 0;
-    }
-    return 0;
-  });
-}
-
-// should be repeated for multiple cells
 function cc_out(
   h2_to_meoh: number[], // v20
   hydrogen_output: number, // s1b16
@@ -1358,75 +1301,6 @@ function meOh_unit_capacity_factor(
   return meOh_unit_out.map((v: number) =>
     Math.min(v / (methanol_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
-}
-
-function h2_storage_balance(
-  deficit_h2: number[],
-  excess_h2: number[],
-  hydrogen_storage_capacity: number,
-  minimum_hydrogen_storage_percentage: number
-) {
-  const size = deficit_h2.length;
-  const h2_storage_balance_result = Array(size).fill(0);
-  const from_h2_store = Array(size).fill(0);
-  const to_h2_store = Array(size).fill(0);
-
-  for (let i = 0; i < size; i++) {
-    if (i === 0) {
-      from_h2_store[i] = deficit_h2[i] < 0 ? deficit_h2[i] : 0;
-      to_h2_store[i] = excess_h2[i] > 0 ? excess_h2[i] : 0;
-      h2_storage_balance_result[i] =
-        to_h2_store[i] + from_h2_store[i] + hydrogen_storage_capacity;
-    } else {
-      from_h2_store[i] =
-        h2_storage_balance_result[i - 1] + deficit_h2[i] >
-          hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
-        deficit_h2[i] < 0
-          ? deficit_h2[i]
-          : 0;
-      to_h2_store[i] =
-        h2_storage_balance_result[i - 1] + excess_h2[i] <
-          hydrogen_storage_capacity && excess_h2[i] > 0
-          ? excess_h2[i]
-          : 0;
-      h2_storage_balance_result[i] =
-        to_h2_store[i] + from_h2_store[i] + h2_storage_balance_result[i - 1];
-    }
-  }
-  return { from_h2_store, h2_storage_balance_result };
-}
-
-function calculateH2ToMeOhUnit(
-  hydrogenProduction: number[],
-  electrolyserNominalCapacity: number,
-  hydrogen_output: number,
-  hydrogen_storage_capacity: number,
-  minimum_hydrogen_storage: number,
-  methanol_plant_minimum_turndown: number
-) {
-  // adjust hydrogen to work for methanol
-  const mass_of_hydrogen = hydrogenProduction.map(
-    (v) => v * electrolyserNominalCapacity
-  );
-  const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output);
-  const deficit_h2_result = deficit_h2(mass_of_hydrogen, hydrogen_output);
-
-  const { from_h2_store, h2_storage_balance_result } = h2_storage_balance(
-    deficit_h2_result,
-    excess_h2_result,
-    hydrogen_storage_capacity,
-    minimum_hydrogen_storage
-  );
-
-  const h2_to_meoh_result = h2_to_meOh(
-    mass_of_hydrogen,
-    from_h2_store,
-    h2_storage_balance_result,
-    hydrogen_storage_capacity,
-    hydrogen_output,
-    methanol_plant_minimum_turndown
-  );
-  return h2_to_meoh_result;
 }
 
 function methanol_plant_CAPEX(
