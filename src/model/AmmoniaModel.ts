@@ -37,6 +37,7 @@ import {
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
   calculatePowerPlantCapacityFactors,
+  excess_generation,
   getBatteryLosses,
   nominal_electrolyser_capacity,
 } from "./ModelUtils";
@@ -1547,24 +1548,6 @@ function hydrogen_storage_CAPEX(
 // ) {
 //   return (nh3_produced_per_year * 1000) / (1 + discount_rate) ** plant_year;
 // }
-
-// // MWh
-// // should be repeated for multiple cells
-function excess_generation(
-  generator_actual_power: number[], // generator actual power MW
-  electrolyser_actual_power: number[], // electrolyser actual power MW
-  asu_nh3_actual_power: number[] // asu nh3 acutal power
-) {
-  return asu_nh3_actual_power.map((_: number, i: number) => {
-    const excess =
-      generator_actual_power[i] -
-      electrolyser_actual_power[i] -
-      asu_nh3_actual_power[i];
-    // TODO check if this okay, otherwise battery model throws exceptions
-    // it might've been just old battery model and the new one is fine
-    return excess > 0 ? excess : 0;
-  });
-}
 
 //
 // // %
