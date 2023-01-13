@@ -38,6 +38,7 @@ import {
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
   getBatteryLosses,
+  nominal_electrolyser_capacity,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -1219,18 +1220,6 @@ function carbon_capture_plant_capacity(methanol_plant_capacity: number) {
 
 function hydrogen_output(methanol_plant_capacity: number) {
   return methanol_plant_capacity * (1000 / 365) * (2.016 / 32.04) * (3 / 0.95);
-}
-
-function nominal_electrolyser_capacity(
-  hydrogen_output: number, // quantity of Hydrogen required per day
-  sec_at_nominal_load: number, // amount of electricity required to produce 1kg of hydrogen
-  electrolyser_system_oversizing: number // % electrolyser is oversized against minimum required
-) {
-  return (
-    (hydrogen_output / 24) *
-    sec_at_nominal_load *
-    (1 + electrolyser_system_oversizing)
-  );
 }
 
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1

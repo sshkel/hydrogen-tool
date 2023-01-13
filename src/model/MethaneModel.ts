@@ -38,6 +38,7 @@ import {
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
   getBatteryLosses,
+  nominal_electrolyser_capacity,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -1229,18 +1230,6 @@ function methane_plant_power_demand(
 ) {
   return (
     (me_plant_capacity / hoursPerYear) * 1_000_000 * (methane_plant_sec / 1000)
-  );
-}
-
-function nominal_electrolyser_capacity(
-  hydrogen_output: number, // quantity of Hydrogen required per day
-  sec_at_nominal_load: number, // amount of electricity required to produce 1kg of hydrogen
-  electrolyser_system_oversizing: number // % electrolyser is oversized against minimum required
-) {
-  return (
-    (hydrogen_output / 24) *
-    sec_at_nominal_load *
-    (1 + electrolyser_system_oversizing)
   );
 }
 

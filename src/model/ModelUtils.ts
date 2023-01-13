@@ -785,3 +785,15 @@ export class CumulativeDegradation {
     return 1 - 1 / (1 + this.stackDegradation / 100) ** power;
   }
 }
+
+export function nominal_electrolyser_capacity(
+  hydrogen_output: number, // quantity of Hydrogen required per day
+  sec_at_nominal_load: number, // amount of electricity required to produce 1kg of hydrogen
+  electrolyser_system_oversizing: number // % electrolyser is oversized against minimum required
+) {
+  return (
+    (hydrogen_output / 24) *
+    sec_at_nominal_load *
+    (1 + electrolyser_system_oversizing)
+  );
+}

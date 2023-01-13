@@ -38,6 +38,7 @@ import {
   calculateNetBatteryFlow,
   calculatePowerPlantCapacityFactors,
   getBatteryLosses,
+  nominal_electrolyser_capacity,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
 
@@ -1238,18 +1239,6 @@ function hydrogen_output(
   ammonia_plant_capacity: number // size of ammonia plant
 ) {
   return ammonia_plant_capacity * (1000 / 365) * (6.047 / 34.181);
-}
-
-function nominal_electrolyser_capacity(
-  hydrogen_output: number, // quantity of Hydrogen required per day
-  sec_at_nominal_load: number, // amount of electricity required to produce 1kg of hydrogen
-  electrolyser_system_oversizing: number // % electrolyser is oversized against minimum required
-) {
-  return (
-    (hydrogen_output / 24) *
-    sec_at_nominal_load *
-    (1 + electrolyser_system_oversizing)
-  );
 }
 
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
