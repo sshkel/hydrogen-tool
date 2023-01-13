@@ -39,6 +39,7 @@ import {
   calculatePowerPlantCapacityFactors,
   excess_generation,
   getBatteryLosses,
+  meXCapacityFactorsWithBattery,
   nominal_electrolyser_capacity,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
@@ -1165,7 +1166,7 @@ export class MethaneModel implements Model {
         this.parameters.methanePlantMinimumTurndown / 100
       );
       // with battery
-      methaneCapacityFactors = meOh_cc_with_battery_cf(
+      methaneCapacityFactors = meXCapacityFactorsWithBattery(
         methaneCapacityFactors,
         netBatteryFlow
       );
@@ -1471,18 +1472,4 @@ function hydrogen_storage_CAPEX(
   hydrogen_storage_purchase_cost: number // Cost per kg for Hydrogen Storage
 ) {
   return hydrogen_storage_capacity * hydrogen_storage_purchase_cost;
-}
-
-//
-// // %
-// // should be repeated for multiple cells
-function meOh_cc_with_battery_cf(
-  meOh_cc_capacity_factor: number[],
-  net_battery_flow: number[]
-) {
-  return meOh_cc_capacity_factor.map((_: number, i: number) =>
-    meOh_cc_capacity_factor[i] < 1 && net_battery_flow[i] < 0
-      ? meOh_cc_capacity_factor[i] + (1 - meOh_cc_capacity_factor[i])
-      : meOh_cc_capacity_factor[i]
-  );
 }

@@ -815,3 +815,14 @@ export function excess_generation(
     return excess > 0 ? excess : 0;
   });
 }
+
+export function meXCapacityFactorsWithBattery(
+  me_capacity_factor: number[],
+  net_battery_flow: number[]
+) {
+  return me_capacity_factor.map((_: number, i: number) =>
+    me_capacity_factor[i] < 1 && net_battery_flow[i] < 0
+      ? me_capacity_factor[i] + (1 - me_capacity_factor[i])
+      : me_capacity_factor[i]
+  );
+}
