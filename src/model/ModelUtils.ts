@@ -952,3 +952,12 @@ export function calculateH2ToPowerfuelUnit(
     plant_minimum_turndown
   );
 }
+
+export function generator_actual_power(
+  total_nominal_power_plant_capacity: number, // total power plant size
+  generator_capacity_factor: number[] // generator capacity factor
+) {
+  return generator_capacity_factor.map(
+    (v: number) => total_nominal_power_plant_capacity * v
+  );
+}

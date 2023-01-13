@@ -39,6 +39,7 @@ import {
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
   excess_generation,
+  generator_actual_power,
   getBatteryLosses,
   meXCapacityFactorsWithBattery,
   nominal_electrolyser_capacity,
@@ -1263,17 +1264,6 @@ function nominal_wind_capacity(
     (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
     (1 + renewable_energy_plant_oversizing) *
     hybrid_generator_split
-  );
-}
-
-// should be repeated for multiple cells
-// MW
-function generator_actual_power(
-  total_nominal_power_plant_capacity: number, // total power plant size
-  generator_capacity_factor: number[] // generator capacity factor
-) {
-  return generator_capacity_factor.map(
-    (v: number) => total_nominal_power_plant_capacity * v
   );
 }
 
