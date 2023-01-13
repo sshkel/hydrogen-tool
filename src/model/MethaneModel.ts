@@ -51,6 +51,8 @@ import {
   me_plant_CAPEX,
   me_unit_capacity_factor,
   nominal_electrolyser_capacity,
+  nominal_solar_capacity,
+  nominal_wind_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
@@ -1212,35 +1214,5 @@ function sng_unit_out(
 ) {
   return cc_out.map((_: number, i: number) =>
     cc_out[i] > 0 ? (cc_out[i] * 0.95 * 16.04) / 44.01 : 0
-  );
-}
-
-// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
-function nominal_solar_capacity(
-  meOH_PowDem: number,
-  co2_PowDem: number,
-  nominal_electrolyser_capacity: number, // Power required for Electrolyser
-  hybrid_generator_split: number, // % of hybrid plant made up of solar
-  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
-) {
-  return (
-    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
-    hybrid_generator_split
-  );
-}
-
-// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
-function nominal_wind_capacity(
-  meOH_PowDem: number,
-  co2_PowDem: number,
-  nominal_electrolyser_capacity: number, // Power required for Electrolyser
-  hybrid_generator_split: number, // % of hybrid plant made up of solar
-  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
-) {
-  return (
-    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
-    hybrid_generator_split
   );
 }

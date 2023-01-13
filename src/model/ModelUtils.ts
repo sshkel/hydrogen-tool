@@ -1059,3 +1059,33 @@ export function me_unit_capacity_factor(
     Math.min(v / (me_plant_capacity * (1_000_000 / hoursPerYear)), 1)
   );
 }
+
+// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
+export function nominal_solar_capacity(
+  meOH_PowDem: number,
+  co2_PowDem: number,
+  nominal_electrolyser_capacity: number, // Power required for Electrolyser
+  hybrid_generator_split: number, // % of hybrid plant made up of solar
+  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
+) {
+  return (
+    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
+    (1 + renewable_energy_plant_oversizing) *
+    hybrid_generator_split
+  );
+}
+
+// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
+export function nominal_wind_capacity(
+  meOH_PowDem: number,
+  co2_PowDem: number,
+  nominal_electrolyser_capacity: number, // Power required for Electrolyser
+  hybrid_generator_split: number, // % of hybrid plant made up of solar
+  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
+) {
+  return (
+    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
+    (1 + renewable_energy_plant_oversizing) *
+    hybrid_generator_split
+  );
+}

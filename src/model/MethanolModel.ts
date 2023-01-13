@@ -51,6 +51,8 @@ import {
   me_plant_CAPEX,
   me_unit_capacity_factor,
   nominal_electrolyser_capacity,
+  nominal_solar_capacity,
+  nominal_wind_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
 import { HOURS_PER_YEAR } from "./consts";
@@ -1205,36 +1207,6 @@ function carbon_capture_plant_capacity(methanol_plant_capacity: number) {
 
 function hydrogen_output(methanol_plant_capacity: number) {
   return methanol_plant_capacity * (1000 / 365) * (2.016 / 32.04) * (3 / 0.95);
-}
-
-// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
-function nominal_solar_capacity(
-  meOH_PowDem: number,
-  co2_PowDem: number,
-  nominal_electrolyser_capacity: number, // Power required for Electrolyser
-  hybrid_generator_split: number, // % of hybrid plant made up of solar
-  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
-) {
-  return (
-    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
-    hybrid_generator_split
-  );
-}
-
-// if hybrid we multiply by the split otherwise we leave it out or we can make it 1
-function nominal_wind_capacity(
-  meOH_PowDem: number,
-  co2_PowDem: number,
-  nominal_electrolyser_capacity: number, // Power required for Electrolyser
-  hybrid_generator_split: number, // % of hybrid plant made up of solar
-  renewable_energy_plant_oversizing: number // % oversizing of renewable energy plant
-) {
-  return (
-    (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
-    hybrid_generator_split
-  );
 }
 
 // should be repeated for multiple cells
