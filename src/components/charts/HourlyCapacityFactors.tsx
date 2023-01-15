@@ -1,6 +1,11 @@
+import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded";
+import ZoomOutRoundedIcon from "@mui/icons-material/ZoomOutRounded";
+import { Grid } from "@mui/material";
+import Button from "@mui/material/Button";
 import { Chart as ChartJS } from "chart.js";
 import "chart.js/auto";
 import zoomPlugin from "chartjs-plugin-zoom";
+import { useRef } from "react";
 import { Line } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
@@ -13,6 +18,19 @@ interface Props {
 }
 
 export default function HourlyCapacityFactors(props: Props) {
+  const chartRef = useRef(null);
+  const resetZoom = () => {
+    // @ts-ignore
+    chartRef.current.resetZoom();
+  };
+  const zoomIn = () => {
+    // @ts-ignore
+    chartRef.current.zoom(1.1);
+  };
+  const zoomOut = () => {
+    // @ts-ignore
+    chartRef.current.zoom(0.9);
+  };
   // randomly sample for demo until we fix and have zoom in functionality
   // https://youtube.com/clip/UgkxlUpRBGgl1xSjlEPyATuGK1_Eaqu50GxV
   const { datapoints } = props;
@@ -83,6 +101,7 @@ export default function HourlyCapacityFactors(props: Props) {
           wheel: {
             enabled: true,
             speed: 0.2,
+            modifierKey: "ctrl",
           },
           mode: "x",
         },
@@ -92,7 +111,25 @@ export default function HourlyCapacityFactors(props: Props) {
 
   return (
     <div>
-      <Line data={graphData} options={options} />
+      <Line data={graphData} options={options} ref={chartRef} />
+
+      <Grid container direction={"row-reverse"}>
+        {/*<Grid item>*/}
+        {/*  <Button onClick={resetZoom} variant="contained">*/}
+        {/*    Reset*/}
+        {/*  </Button>*/}
+        {/*</Grid>*/}
+        <Grid item>
+          <Button onClick={zoomOut} variant="contained">
+            <ZoomOutRoundedIcon />
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button onClick={zoomIn} variant="contained">
+            <ZoomInRoundedIcon />
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 }
