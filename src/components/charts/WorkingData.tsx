@@ -485,48 +485,44 @@ export default function WorkingData(props: Props) {
           )}
         </Grid>
         <Grid item>
-          <Grid container className="outside results box" wrap="nowrap">
-            <Grid
-              container
-              item
-              direction="column"
-              className="summary and cost breakdown"
-            >
-              <Grid item xs>
-                {SummaryOfResultsPane(results.summaryTableData)}
-              </Grid>
-              <Grid container item>
-                <Grid item xs={6}>
-                  <DoughnutPane
-                    title="Capital Cost Breakdown"
-                    items={results.capitalCostBreakdown}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <DoughnutPane
-                    title="Indirect Cost Breakdown"
-                    items={results.indirectCostBreakdown}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container item>
-              <Grid
-                container
-                item
-                direction="column"
-                className="curves and lch2"
-                justifyContent={"space-between"}
-              >
-                <Grid container item className="duration curves">
-                  {DurationCurves(results.durationCurves)}
-                </Grid>
-                <Grid item>{Lch2BreakdownPane(results.lch2BreakdownData)}</Grid>
-              </Grid>
+          <Grid
+            container
+            item
+            direction="column"
+            className="summary and cost breakdown"
+          >
+            <Grid item xs>
+              {SummaryOfResultsPane(results.summaryTableData)}
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>{OperatingCostsPane(results.operatingCosts)}</Grid>
+        <Grid container className="duration curves" wrap="nowrap">
+          {DurationCurves(results.durationCurves)}
+        </Grid>
+
+        <Grid container item wrap="nowrap">
+          <Grid item xs={6}>
+            <DoughnutPane
+              title="Capital Cost Breakdown"
+              items={results.capitalCostBreakdown}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <DoughnutPane
+              title="Indirect Cost Breakdown"
+              items={results.indirectCostBreakdown}
+            />
+          </Grid>
+        </Grid>
+        <Grid container item xs={6}>
+          <Grid item xs={6}>
+            {OperatingCostsPane(results.operatingCosts)}
+          </Grid>
+          <Grid item xs={6}>
+            {Lch2BreakdownPane(results.lch2BreakdownData)}
+          </Grid>
+        </Grid>
+
         <Grid item>{HourlyCapacityFactorsPane(results.hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
@@ -745,7 +741,7 @@ export function DoughnutPane(data: DoughnutPaneData) {
       />
       <CardContent
         sx={{
-          height: "55vh",
+          height: "50vh",
           paddingTop: 0,
         }}
       >
