@@ -114,19 +114,19 @@ export default function HourlyCapacityFactors(props: Props) {
       <Line data={graphData} options={options} ref={chartRef} />
 
       <Grid container direction={"row-reverse"}>
-        {/*<Grid item>*/}
-        {/*  <Button onClick={resetZoom} variant="contained">*/}
-        {/*    Reset*/}
-        {/*  </Button>*/}
-        {/*</Grid>*/}
         <Grid item>
-          <Button onClick={zoomOut} variant="contained">
-            <ZoomOutRoundedIcon />
+          <Button onClick={resetZoom} variant="contained">
+            Reset
           </Button>
         </Grid>
         <Grid item>
           <Button onClick={zoomIn} variant="contained">
             <ZoomInRoundedIcon />
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button onClick={zoomOut} variant="contained">
+            <ZoomOutRoundedIcon />
           </Button>
         </Grid>
       </Grid>
