@@ -18,7 +18,10 @@ export default function CostLineChart(props: Props) {
   const graphData = {
     labels: [...Array(projectTimeline).keys()].map((i) => i + 1),
     datasets: datapoints.map((point, index) => ({
-      ...point,
+      ...{
+        ...point,
+        data: point.data.map((point) => point / 1_000_000),
+      },
       backgroundColor: costLineColors[index],
       borderColor: costLineColors[index],
     })),
@@ -43,7 +46,7 @@ export default function CostLineChart(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Annual Operating Costs(A$)",
+          text: "Annual Operating Costs(A$MM)",
           font: {
             size: 20,
           },
