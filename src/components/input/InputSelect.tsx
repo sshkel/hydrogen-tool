@@ -42,7 +42,7 @@ export default function InputSelectField(props: Props) {
   };
 
   return (
-    <Grid container paddingLeft={0.5}>
+    <Grid item paddingLeft={1} paddingTop={1} paddingBottom={2}>
       <InputTitle title={prompt} helperText={helperText} />
       {titles.map((text, index) => (
         <InputSelectButton
