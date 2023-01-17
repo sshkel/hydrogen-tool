@@ -78,7 +78,7 @@ export default function HourlyCapacityFactors(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Capacity Factor",
+          text: "Capacity Factor (%)",
           font: {
             size: 20,
           },

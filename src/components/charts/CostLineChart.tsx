@@ -46,7 +46,7 @@ export default function CostLineChart(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Annual Operating Costs(A$MM)",
+          text: "Annual Operating Costs (A$MM)",
           font: {
             size: 20,
           },

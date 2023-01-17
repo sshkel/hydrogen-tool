@@ -29,13 +29,13 @@ export default function DurationCurve(props: Props) {
       x: {
         title: {
           display: true,
-          text: "Duration of Year",
+          text: "Duration of Year (hrs)",
         },
       },
       y: {
         title: {
           display: true,
-          text: "Capacity Factor",
+          text: "Capacity Factor (%)",
         },
       },
     },

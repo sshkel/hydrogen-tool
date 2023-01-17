@@ -52,7 +52,7 @@ export default function CostBarChart(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Levelised Cost ($/yr)",
+          text: "Levelised Cost (A$/yr)",
           font: {
             size: 20,
           },

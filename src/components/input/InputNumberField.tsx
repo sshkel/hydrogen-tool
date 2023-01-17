@@ -77,7 +77,9 @@ function InputNumberField({ inputKey }: Props) {
   });
 
   const valueText: string | undefined =
-    min && max ? "Value: " + min + " - " + max : undefined;
+    min !== undefined && max !== undefined
+      ? "Value: " + min + " - " + max
+      : undefined;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(
@@ -114,8 +116,9 @@ function InputNumberField({ inputKey }: Props) {
           }}
           inputProps={{
             step: step,
-            min: min,
-            max: max,
+            // Removing to prevent over-validating text number inputs
+            // min: min,
+            // max: max,
             pattern: "/^d*.?d*$/",
           }}
           sx={sx}
