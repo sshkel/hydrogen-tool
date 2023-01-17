@@ -57,19 +57,21 @@ export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
   const { powerfuel = "hydrogen" } = useParams();
   const [tab, setTab] = React.useState("Basic");
+  const { setInputConfiguration } = props;
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
     if (newTab === "Basic" || newTab === "Advanced") {
-      props.setInputConfiguration(newTab);
+      setInputConfiguration(newTab);
     }
     setTab(newTab);
   };
 
   useEffect(() => {
+    console.log("Heyo");
     // Use Basic tab by default on initial home page render only
     // TODO: Should add test for this
-    props.setInputConfiguration("Basic");
-  }, []);
+    setInputConfiguration("Basic");
+  }, [setInputConfiguration]);
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
