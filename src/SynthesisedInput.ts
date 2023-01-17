@@ -1,4 +1,5 @@
 import {
+  InputConfiguration,
   Inputs,
   PowerCapacityConfiguration,
   PowerPlantConfiguration,
@@ -135,10 +136,18 @@ class DefaultInputs implements Inputs {
 }
 
 export default class SynthesisedInputs extends DefaultInputs {
-  constructor(userInputs: UserInputFields) {
+  constructor(
+    userInputs: UserInputFields,
+    inputConfiguration: InputConfiguration
+  ) {
     super();
-    const savedData = JSON.parse(localStorage.getItem("savedData") || "{}");
+    let savedData = JSON.parse(localStorage.getItem("savedData") || "{}");
     let sanitisedUserInputFields: any = { ...userInputs };
+
+    if (savedData["inputConfiguration"] !== inputConfiguration) {
+      // Don't read from local storage if configuration does not match
+      savedData = {};
+    }
 
     Object.keys(sanitisedUserInputFields).forEach((key) => {
       if (savedData[key] === undefined) {
@@ -149,7 +158,12 @@ export default class SynthesisedInputs extends DefaultInputs {
       }
     });
 
-    const form = { ...this, ...savedData, ...sanitisedUserInputFields };
+    const form = {
+      inputConfiguration: inputConfiguration,
+      ...this,
+      ...savedData,
+      ...sanitisedUserInputFields,
+    };
     localStorage.setItem("savedData", JSON.stringify(form));
 
     return form;
