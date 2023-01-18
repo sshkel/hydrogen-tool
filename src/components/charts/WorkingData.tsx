@@ -475,7 +475,7 @@ export default function WorkingData(props: Props) {
       <Grid
         container
         direction="column"
-        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4 }}
+        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4, paddingX: 8 }}
       >
         <Grid item>
           {KeyInputsPane(

@@ -60,10 +60,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const StyledListItem = styled(ListItem)({
-  height: "64px",
+  height: 48,
   // hover states
   "& .MuiListItemButton-root:hover": {
-    height: "64px",
+    height: 48,
+    backgroundColor: "#2C55D1",
   },
 });
 

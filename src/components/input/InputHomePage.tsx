@@ -67,7 +67,6 @@ export default function InputHomePage(props: Props) {
   };
 
   useEffect(() => {
-    console.log("Heyo");
     // Use Basic tab by default on initial home page render only
     // TODO: Should add test for this
     setInputConfiguration("Basic");
