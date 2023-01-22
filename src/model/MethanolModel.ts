@@ -37,6 +37,7 @@ import {
   calculateMethanolSnapshotForYear,
   calculateNetBatteryFlowMeth,
   calculatePowerPlantCapacityFactors,
+  calculateSolarToWindRatio,
   capacityFactorsWithBattery,
   cc_out,
   cc_plant_CAPEX,
@@ -713,19 +714,22 @@ export class MethanolModel implements Model {
       this.secAtNominalLoad,
       this.parameters.electrolyserSystemOversizing / 100
     );
-
+    const { solarRatio, windRatio } = calculateSolarToWindRatio(
+      this.parameters.powerPlantType,
+      this.parameters.solarToWindPercentage
+    );
     const solarNominalCapacity = nominal_solar_capacity(
       methanolPlantPowerDemand,
       carbonCapturePlantPowerDemand,
       electrolyserNominalCapacity,
-      this.parameters.solarToWindPercentage / 100,
+      solarRatio,
       this.parameters.powerPlantOversizeRatio
     );
     const windNominalCapacity = nominal_wind_capacity(
       methanolPlantPowerDemand,
       carbonCapturePlantPowerDemand,
       electrolyserNominalCapacity,
-      1 - this.parameters.solarToWindPercentage / 100,
+      windRatio,
       this.parameters.powerPlantOversizeRatio
     );
 

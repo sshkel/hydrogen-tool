@@ -1089,3 +1089,18 @@ export function nominal_wind_capacity(
     hybrid_generator_split
   );
 }
+
+export function calculateSolarToWindRatio(
+  powerPlantType: PowerPlantType,
+  solarToWindPercentage: number
+) {
+  if (powerPlantType === "Solar") {
+    return { solarRatio: 1, windRatio: 0 };
+  } else if (powerPlantType === "Wind") {
+    return { solarRatio: 0, windRatio: 1 };
+  }
+  return {
+    solarRatio: solarToWindPercentage / 100,
+    windRatio: 1 - solarToWindPercentage / 100,
+  };
+}

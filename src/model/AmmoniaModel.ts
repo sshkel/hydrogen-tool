@@ -38,6 +38,7 @@ import {
   calculateHydrogenProduction,
   calculateNetBatteryFlow,
   calculatePowerPlantCapacityFactors,
+  calculateSolarToWindRatio,
   capacityFactorsWithBattery,
   excess_generation,
   generator_actual_power,
@@ -681,18 +682,23 @@ export class AmmoniaModel implements Model {
       this.parameters.electrolyserSystemOversizing / 100
     );
 
+    const { solarRatio, windRatio } = calculateSolarToWindRatio(
+      this.parameters.powerPlantType,
+      this.parameters.solarToWindPercentage
+    );
+
     const solarNominalCapacity = nominal_solar_capacity(
       ammoniaPlantPowerDemand,
       airSeparationUnitPowerDemand,
       electrolyserNominalCapacity,
-      this.parameters.solarToWindPercentage / 100,
+      solarRatio,
       this.parameters.powerPlantOversizeRatio
     );
     const windNominalCapacity = nominal_wind_capacity(
       ammoniaPlantPowerDemand,
       airSeparationUnitPowerDemand,
       electrolyserNominalCapacity,
-      1 - this.parameters.solarToWindPercentage / 100,
+      windRatio,
       this.parameters.powerPlantOversizeRatio
     );
 
