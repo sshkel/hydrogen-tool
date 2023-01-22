@@ -1,3 +1,4 @@
+import RestoreRoundedIcon from "@mui/icons-material/RestoreRounded";
 import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded";
 import ZoomOutRoundedIcon from "@mui/icons-material/ZoomOutRounded";
 import { Grid } from "@mui/material";
@@ -78,7 +79,7 @@ export default function HourlyCapacityFactors(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Capacity Factor",
+          text: "Capacity Factor (%)",
           font: {
             size: 20,
           },
@@ -113,20 +114,30 @@ export default function HourlyCapacityFactors(props: Props) {
     <div>
       <Line data={graphData} options={options} ref={chartRef} />
 
-      <Grid container direction={"row-reverse"}>
+      <Grid container direction="row-reverse" spacing={0.5}>
         <Grid item>
-          <Button onClick={resetZoom} variant="contained">
-            Reset
+          <Button
+            color="info"
+            size="small"
+            onClick={resetZoom}
+            variant="outlined"
+          >
+            <RestoreRoundedIcon fontSize="small" />
           </Button>
         </Grid>
         <Grid item>
-          <Button onClick={zoomIn} variant="contained">
-            <ZoomInRoundedIcon />
+          <Button color="info" size="small" onClick={zoomIn} variant="outlined">
+            <ZoomInRoundedIcon fontSize="small" />
           </Button>
         </Grid>
         <Grid item>
-          <Button onClick={zoomOut} variant="contained">
-            <ZoomOutRoundedIcon />
+          <Button
+            color="info"
+            size="small"
+            onClick={zoomOut}
+            variant="outlined"
+          >
+            <ZoomOutRoundedIcon fontSize="small" />
           </Button>
         </Grid>
       </Grid>

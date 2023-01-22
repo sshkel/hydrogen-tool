@@ -22,7 +22,7 @@ function generateId(i: number, suffix: string) {
 export default function SummaryOfResultsTable(props: Props) {
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="summary-of-results">
+      <Table aria-label="summary-of-results" size="small">
         <TableBody>
           {Object.keys(props.data).map((k: string, i: number) => (
             <TableRow key={k}>

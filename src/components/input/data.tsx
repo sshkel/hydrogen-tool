@@ -438,35 +438,54 @@ export const numberFieldDefaultInputs: DefaultInput = {
   electrolyserNominalCapacity: {
     title: "Electrolyser System Capacity",
     adornmentLabel: "MW",
+    step: 50,
   },
   // Electrolyser Efficiency
   secAtNominalLoad: {
     id: "secAtNominalLoad",
     title: "Specific Energy Consumption at Nominal Load",
     adornmentLabel: secAtNominalLoadLabel,
+    step: 5,
+    min: 33.33,
+    max: 100,
   },
   waterRequirementOfElectrolyser: {
     title: "Water Requirement of Electrolyser",
     adornmentLabel: "L/kg",
     helperText:
       "Water consumed per kg of hydrogen produced - independent of load.",
+    min: 9,
+    max: 50,
+    step: 5,
   },
   // Electrolyser Load Range
   electrolyserMaximumLoad: {
     title: "Electrolyser Maximum Load",
     adornmentLabel: "%",
+    step: 5,
+    min: 90,
+    max: 100,
   },
   electrolyserMinimumLoad: {
     title: "Electrolyser Minimum Load",
     adornmentLabel: "%",
+    step: 2.5,
+    min: 0,
+    max: 15,
   },
   maximumLoadWhenOverloading: {
     title: "Maximum Load When Overloading",
     adornmentLabel: "%",
+    step: 5,
+    min: 100,
+    max: 150,
   },
   timeBetweenOverloading: {
     title: "Time Between Overloading",
     adornmentLabel: "hrs",
+    min: 0,
+    max: 24,
+    step: 4,
   },
   // Electrolyser Stack Replacement
   stackDegradation: {
@@ -479,55 +498,83 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "hrs",
     helperText:
       "Cumulative hours of operation before stack replacement is due.",
+    step: 5000,
+    min: 60000,
+    max: 150000,
   },
   maximumDegradationBeforeReplacement: {
     title: "Maximum Degradation Rate",
     adornmentLabel: "%",
     helperText: "Maximum allowable degradation before stack must be replaced.",
+    step: 1,
+    min: 1,
+    max: 15,
   },
   // Electrolyser Capital and Operating Cost
   // Electrolyser Equipment Costs
   electrolyserReferenceCapacity: {
     title: "Reference Electrolyser Scale",
     adornmentLabel: "kW",
+    step: 500,
   },
   electrolyserPurchaseCost: {
     title: "Electrolyser System Purchase Cost",
     adornmentLabel: "$/kW",
+    step: 250,
   },
   electrolyserCostReductionWithScale: {
     title: "Electrolyser Cost Reduction with Scale",
     adornmentLabel: "%",
+    step: 1,
+    helperText: "Cost reduction due to economies of scale",
   },
   electrolyserReferenceFoldIncrease: {
     title: "Reference Fold Increase",
+    step: 5,
+    helperText:
+      "Cost reduction occurs for every specified fold increase in capacity vs. reference scale",
   },
   // Electrolyser System Installation Costs
   electrolyserEpcCosts: {
     title: "EPC/Installation Costs of Electrolyser",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   electrolyserLandProcurementCosts: {
     id: "electrolyserLandProcurementCosts",
     title: "Land Procurement Cost of Electrolyser",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   // Electrolyser Operating Costs
   electrolyserOMCost: {
     title: "Electrolyser O&M",
     adornmentLabel: "%/yr",
     helperText: "% of CAPEX",
+    step: 2.5,
+    min: 2.5,
+    max: 10,
   },
   electrolyserStackReplacement: {
     title: "Electrolyser Stack Replacement",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 10,
+    min: 10,
+    max: 50,
   },
   waterSupplyCost: {
     title: "Water Consumption Cost",
     adornmentLabel: "$/kL",
+    step: 1,
+    min: 1,
+    max: 20,
   },
   /******* Power Plant Parameters *******/
   // Power Plant Capacity
@@ -535,114 +582,157 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Nominal Solar Capacity",
     adornmentLabel: "MW",
     helperText: "Rated capacity of solar farm",
+    step: 50,
   },
   windNominalCapacity: {
     title: "Nominal Wind Capacity",
     adornmentLabel: "MW",
     helperText: "Rated capacity of wind farm",
+    step: 50,
   },
   powerPlantOversizeRatio: {
     title: "Power Plant Oversize Ratio",
+    step: 0.5,
+    min: 0,
+    max: 3,
   },
   solarToWindPercentage: {
     title: "Solar to Wind Capacity Ratio",
     adornmentLabel: "%",
+    step: 5,
+    min: 0,
+    max: 100,
   },
   // Power Plant Efficiency
   solarDegradation: {
     title: "Solar Degradation Rate",
     adornmentLabel: "%",
     helperText: "Decrease in solar farm output per year",
+    step: 1,
+    min: 0,
+    max: 10,
   },
   windDegradation: {
     title: "Wind Degradation Rate",
     adornmentLabel: "%",
     helperText: "Decrease in wind farm output per year",
+    step: 1,
+    min: 0,
+    max: 10,
   },
   // Power Plant Capital and Operating Costs
   // Power Plant Equipment Costs
   solarFarmBuildCost: {
     title: "Solar Farm Build Cost",
     adornmentLabel: "$/kW",
+    step: 250,
   },
   solarReferenceCapacity: {
     title: "Reference Capacity of Solar Farm",
     adornmentLabel: "kW",
+    step: 500,
   },
   solarPVCostReductionWithScale: {
     title: "Solar Farm Cost Reduction with Scale",
     adornmentLabel: "%",
+    step: 1,
   },
   solarReferenceFoldIncrease: {
     id: "solarReferenceFoldIncrease",
     title: "Solar Farm Reference Fold Increase",
     helperText:
       "Minimum # of fold increase in solar farm capacity for capital cost reduction due to the above economies of scale",
+    step: 5,
   },
   windFarmBuildCost: {
     title: "Wind Farm Build Cost",
     adornmentLabel: "$/kW",
+    step: 250,
   },
   windReferenceCapacity: {
     title: "Reference Capacity of Wind Farm",
     adornmentLabel: "kW",
+    step: 500,
   },
   windCostReductionWithScale: {
     title: "Wind Farm Cost Reduction with Scale",
     adornmentLabel: "%",
+    step: 1,
   },
   windReferenceFoldIncrease: {
     title: "Wind Farm Reference Fold Increase",
     helperText:
       "Minimum # of fold increase in wind farm capacity for capital cost reduction due to the above economies of scale",
+    step: 5,
   },
   // Power Plant Installation Costs
   solarEpcCosts: {
     title: "EPC/Installation Costs of Solar Farm",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   solarLandProcurementCosts: {
     title: "Land Procurement Cost of Solar Farm",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   windEpcCosts: {
     title: "EPC/Installation Costs of Wind Farm",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   windLandProcurementCosts: {
     title: "Land Procurement Cost of Wind Farm",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   // Power Plant Operating Costs
   solarOpex: {
     title: "Solar Farm O&M Cost",
     adornmentLabel: "$/MW/yr",
+    step: 1000,
   },
   windOpex: {
     title: "Wind Farm O&M Cost",
     adornmentLabel: "$/MW/yr",
+    step: 1000,
   },
   // PPA Costs
   principalPPACost: {
     title: "Principal PPA Cost",
     adornmentLabel: "$/MWh",
     helperText: "Fixed price for electricity bought from the grid.",
+    step: 10,
+    min: 0,
+    max: 1000,
   },
   // Grid Connection Costs
   gridConnectionCost: {
     title: "Grid Connection Costs",
     adornmentLabel: "$",
     helperText: "Capital cost for transmission connection",
+    step: 10000,
   },
   additionalTransmissionCharges: {
     title: "Grid Usage Charges",
     adornmentLabel: "$/MWh",
     helperText:
       "Any additional charges for using grid services, e.g. Transmission Use of System (TUOS) Charges.",
+    step: 5,
+    min: 0,
+    max: 100,
   },
   /******* BatteryParameters *******/
   // Battery Capacity
@@ -651,42 +741,62 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "MW",
     helperText:
       "Rated power capacity of the battery. Sets a limit on how much the battery can charge/ discharge instantaneously.",
+    step: 10,
   },
   batteryStorageDuration: {
     title: "Battery Storage Duration",
     adornmentLabel: "hr",
     helperText:
       "Number of hours that the battery takes to charge/discharge at its max power level.",
+    step: 2,
+    min: 0,
+    max: 8,
   },
   // Battery Performance
   batteryEfficiency: {
     title: "Round Trip Efficiency",
     adornmentLabel: "%",
+    step: 10,
+    min: 50,
+    max: 100,
   },
   batteryMinCharge: {
     title: "Battery Minimum State of Charge",
     adornmentLabel: "%",
+    step: 5,
+    min: 0,
+    max: 20,
   },
   batteryLifetime: {
     title: "Battery Lifetime",
     adornmentLabel: "years",
+    step: 1,
+    min: 0,
+    max: 20,
   },
   // Battery Capital and Operating Costs
   // Battery System Equipment Costs
   batteryCosts: {
     title: "Cost of Battery",
     adornmentLabel: "$/kWh",
+    step: 250,
   },
   // Battery System Installation Costs
   batteryEpcCosts: {
     title: "EPC/Installation Costs of Battery",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
   batteryLandProcurementCosts: {
     title: "Land Procurement Cost of Battery",
     adornmentLabel: "%",
     helperText: "% of CAPEX",
+    step: 5,
+    min: 0,
+    max: 50,
   },
 
   // Battery Operating Costs
@@ -694,12 +804,18 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Battery O&M Costs",
     adornmentLabel: "$/MW/yr",
     helperText: "Fixed & Variable O&M",
+    step: 500,
+    min: 500,
+    max: 15000,
   },
   batteryReplacementCost: {
     title: "Replacement Cost",
     adornmentLabel: "%",
     helperText:
       "Percentage of CAPEX. Cost of battery replacement is incured as additional operating cost in each year the battery lifetime is achieved.",
+    step: 10,
+    min: 0,
+    max: 100,
   },
   // /******* Additional Costs *******/
   // Additional Upfront/Operating Costs
@@ -708,25 +824,31 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "$",
     helperText:
       "Any other additional costs to include as a once off in the LCH2 calculation.",
+    step: 50000,
   },
   additionalAnnualCosts: {
     title: "Additional Annual Costs",
     adornmentLabel: "$/yr",
     helperText:
       "Any other additional costs to include as an annual cost in the LCH2 calculation.",
+    step: 50000,
   },
   // Financing Parameters
   projectTimeline: {
     title: "Project Timeline",
     adornmentLabel: "yrs",
-    min: 1,
+    min: 10,
     max: 50,
+    step: 5,
     helperText:
       "Length of time that project is operational. Same for both power plant and electrolyser.",
   },
   discountRate: {
     title: "Discount Rate",
     adornmentLabel: "% p.a.",
+    min: 5,
+    max: 15,
+    step: 1,
     helperText:
       "Discount rate for NPV analysis and LCH2. Required rate of return based on similar investments.",
   },
@@ -734,5 +856,6 @@ export const numberFieldDefaultInputs: DefaultInput = {
   inflationRate: {
     title: "Inflation Rate",
     adornmentLabel: "% p.a.",
+    step: 0.1,
   },
 };

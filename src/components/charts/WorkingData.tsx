@@ -111,7 +111,7 @@ export default function WorkingData(props: Props) {
     data: { projectScale = 0 },
   } = props;
 
-  let inputs: Inputs = new SynthesisedInputs(props.data);
+  let inputs: Inputs = new SynthesisedInputs(props.data, inputConfiguration);
 
   const location = props.location;
 
@@ -475,7 +475,7 @@ export default function WorkingData(props: Props) {
       <Grid
         container
         direction="column"
-        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4 }}
+        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4, paddingX: 8 }}
       >
         <Grid item>
           {KeyInputsPane(

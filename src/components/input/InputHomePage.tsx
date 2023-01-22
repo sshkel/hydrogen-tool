@@ -4,7 +4,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import "../../input.css";
@@ -57,13 +57,20 @@ export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
   const { powerfuel = "hydrogen" } = useParams();
   const [tab, setTab] = React.useState("Basic");
+  const { setInputConfiguration } = props;
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
     if (newTab === "Basic" || newTab === "Advanced") {
-      props.setInputConfiguration(newTab);
+      setInputConfiguration(newTab);
     }
     setTab(newTab);
   };
+
+  useEffect(() => {
+    // Use Basic tab by default on initial home page render only
+    // TODO: Should add test for this
+    setInputConfiguration("Basic");
+  }, [setInputConfiguration]);
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
