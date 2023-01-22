@@ -426,11 +426,11 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   /******* Project Scale *******/
   projectScale: {
-    min: 100,
-    max: 1_000_000,
-    step: 100,
+    min: 0.1,
+    max: 1_000,
+    step: 0.1,
     title: "Project Scale",
-    adornmentLabel: "tonnes/yr",
+    adornmentLabel: "kTPA",
   },
 
   /******* Electrolyser Parameters *******/
@@ -439,6 +439,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Electrolyser System Capacity",
     adornmentLabel: "MW",
     step: 50,
+    min: 0,
   },
   // Electrolyser Efficiency
   secAtNominalLoad: {
@@ -516,21 +517,25 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Reference Electrolyser Scale",
     adornmentLabel: "kW",
     step: 500,
+    min: 1000,
   },
   electrolyserPurchaseCost: {
     title: "Electrolyser System Purchase Cost",
     adornmentLabel: "$/kW",
     step: 250,
+    min: 250,
   },
   electrolyserCostReductionWithScale: {
     title: "Electrolyser Cost Reduction with Scale",
     adornmentLabel: "%",
     step: 1,
+    min: 0,
     helperText: "Cost reduction due to economies of scale",
   },
   electrolyserReferenceFoldIncrease: {
     title: "Reference Fold Increase",
     step: 5,
+    min: 0,
     helperText:
       "Cost reduction occurs for every specified fold increase in capacity vs. reference scale",
   },
@@ -583,12 +588,14 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "MW",
     helperText: "Rated capacity of solar farm",
     step: 50,
+    min: 0,
   },
   windNominalCapacity: {
     title: "Nominal Wind Capacity",
     adornmentLabel: "MW",
     helperText: "Rated capacity of wind farm",
     step: 50,
+    min: 0,
   },
   powerPlantOversizeRatio: {
     title: "Power Plant Oversize Ratio",
@@ -626,16 +633,19 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Solar Farm Build Cost",
     adornmentLabel: "$/kW",
     step: 250,
+    min: 250,
   },
   solarReferenceCapacity: {
     title: "Reference Capacity of Solar Farm",
     adornmentLabel: "kW",
     step: 500,
+    min: 1000,
   },
   solarPVCostReductionWithScale: {
     title: "Solar Farm Cost Reduction with Scale",
     adornmentLabel: "%",
     step: 1,
+    min: 0,
   },
   solarReferenceFoldIncrease: {
     id: "solarReferenceFoldIncrease",
@@ -643,27 +653,32 @@ export const numberFieldDefaultInputs: DefaultInput = {
     helperText:
       "Minimum # of fold increase in solar farm capacity for capital cost reduction due to the above economies of scale",
     step: 5,
+    min: 0,
   },
   windFarmBuildCost: {
     title: "Wind Farm Build Cost",
     adornmentLabel: "$/kW",
     step: 250,
+    min: 250,
   },
   windReferenceCapacity: {
     title: "Reference Capacity of Wind Farm",
     adornmentLabel: "kW",
     step: 500,
+    min: 1000,
   },
   windCostReductionWithScale: {
     title: "Wind Farm Cost Reduction with Scale",
     adornmentLabel: "%",
     step: 1,
+    min: 0,
   },
   windReferenceFoldIncrease: {
     title: "Wind Farm Reference Fold Increase",
     helperText:
       "Minimum # of fold increase in wind farm capacity for capital cost reduction due to the above economies of scale",
     step: 5,
+    min: 0,
   },
   // Power Plant Installation Costs
   solarEpcCosts: {
@@ -703,11 +718,13 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Solar Farm O&M Cost",
     adornmentLabel: "$/MW/yr",
     step: 1000,
+    min: 5000,
   },
   windOpex: {
     title: "Wind Farm O&M Cost",
     adornmentLabel: "$/MW/yr",
     step: 1000,
+    min: 5000,
   },
   // PPA Costs
   principalPPACost: {
@@ -724,6 +741,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     adornmentLabel: "$",
     helperText: "Capital cost for transmission connection",
     step: 10000,
+    min: 0,
   },
   additionalTransmissionCharges: {
     title: "Grid Usage Charges",
@@ -742,6 +760,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     helperText:
       "Rated power capacity of the battery. Sets a limit on how much the battery can charge/ discharge instantaneously.",
     step: 10,
+    min: 0,
   },
   batteryStorageDuration: {
     title: "Battery Storage Duration",
@@ -780,6 +799,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Cost of Battery",
     adornmentLabel: "$/kWh",
     step: 250,
+    min: 250,
   },
   // Battery System Installation Costs
   batteryEpcCosts: {
@@ -825,6 +845,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     helperText:
       "Any other additional costs to include as a once off in the LCH2 calculation.",
     step: 50000,
+    min: 0,
   },
   additionalAnnualCosts: {
     title: "Additional Annual Costs",
@@ -832,6 +853,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     helperText:
       "Any other additional costs to include as an annual cost in the LCH2 calculation.",
     step: 50000,
+    min: 0,
   },
   // Financing Parameters
   projectTimeline: {

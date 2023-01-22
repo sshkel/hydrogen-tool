@@ -41,7 +41,7 @@ describe("Working Data calculations", () => {
   let loadWind: () => Promise<any[]>;
 
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   beforeAll(() => {

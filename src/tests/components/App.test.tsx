@@ -15,7 +15,7 @@ jest.mock("../../model/DataLoader", () => ({
 
 describe("App", () => {
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   beforeAll(() => {

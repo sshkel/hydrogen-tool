@@ -28,7 +28,7 @@ describe("Working Data calculations", () => {
   let loadNSWWind: () => Promise<any[]>;
 
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   beforeAll(() => {

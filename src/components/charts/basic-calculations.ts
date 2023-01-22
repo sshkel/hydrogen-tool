@@ -1,7 +1,7 @@
 export function backCalculateSolarnAndWindNominalCapacities(
-    powerPlantOversizeRatio: number,
-    solarToWindPercentage: number,
-    electrolyserNominalCapacity: number
+  powerPlantOversizeRatio: number,
+  solarToWindPercentage: number,
+  electrolyserNominalCapacity: number
 ) {
   const powerPlantNominalCapacity =
     powerPlantOversizeRatio * electrolyserNominalCapacity;
@@ -19,13 +19,14 @@ export function backCalculateSolarnAndWindNominalCapacities(
 }
 
 export function backCalculateElectrolyserCapacity(
-  projectScale: number,
+  projectScale: number, // kTPA
   electrolyserEfficiency: number, // value should be a decimal
   electrolyserCf: number,
   hoursPerYear: number // in theory should always be 8760, but we have leap years
 ): number {
   return (
     projectScale *
+    1000 *
     1000 *
     33.33 *
     (1 / electrolyserEfficiency) *
