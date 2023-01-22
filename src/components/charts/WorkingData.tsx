@@ -496,6 +496,14 @@ export default function WorkingData(props: Props) {
             </Grid>
           </Grid>
         </Grid>
+        <Grid container item xs={6}>
+          <Grid item xs={6}>
+            {OperatingCostsPane(results.operatingCosts)}
+          </Grid>
+          <Grid item xs={6}>
+            {Lch2BreakdownPane(results.lch2BreakdownData)}
+          </Grid>
+        </Grid>
         <Grid container className="duration curves" wrap="nowrap">
           {DurationCurves(results.durationCurves)}
         </Grid>
@@ -514,15 +522,6 @@ export default function WorkingData(props: Props) {
             />
           </Grid>
         </Grid>
-        <Grid container item xs={6}>
-          <Grid item xs={6}>
-            {OperatingCostsPane(results.operatingCosts)}
-          </Grid>
-          <Grid item xs={6}>
-            {Lch2BreakdownPane(results.lch2BreakdownData)}
-          </Grid>
-        </Grid>
-
         <Grid item>{HourlyCapacityFactorsPane(results.hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
