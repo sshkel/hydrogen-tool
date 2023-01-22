@@ -66,18 +66,18 @@ const StyledCard = styled(Card)(({ theme }) => ({
 // setup default fonts for the charts
 Chart.defaults.font.family = "Nunito";
 
-function powerfuelToLCTitle(powerfuel: string): string {
+function powerfuelToFormula(powerfuel: string): string {
   if (powerfuel === "hydrogen") {
-    return "LCH2";
+    return "H2";
   }
   if (powerfuel === "ammonia") {
-    return "LCNH3";
+    return "NH3";
   }
   if (powerfuel === "methanol") {
-    return "LCMeOH";
+    return "MeOH";
   }
   if (powerfuel === "methane") {
-    return "LCSNG";
+    return "SNG";
   }
 
   return "";
@@ -775,6 +775,7 @@ type WaterfallPaneData = {
   title: string;
   label: string;
   items: { [key: string]: number };
+  formula: string;
 };
 
 export function WaterFallPane(data: WaterfallPaneData) {
@@ -810,6 +811,7 @@ export function WaterFallPane(data: WaterfallPaneData) {
           title={data.title}
           labels={labels}
           datapoints={datapoints}
+          formula={data.formula}
         />
       </CardContent>
     </StyledCard>
@@ -822,10 +824,13 @@ function LcBreakdownPane(
 ) {
   return (
     <WaterFallPane
-      title={`Breakdown of Cost Components in ${powerfuelToLCTitle(powerfuel)}`}
+      title={`Breakdown of Cost Components in LC${powerfuelToFormula(
+        powerfuel
+      )}`}
       label={`Breakdown of Cost Components in Levelised Cost of ${
         powerfuel.charAt(0).toLocaleUpperCase() + powerfuel.slice(1)
       }`}
+      formula={powerfuelToFormula(powerfuel)}
       items={lcBreakdownData}
     />
   );
