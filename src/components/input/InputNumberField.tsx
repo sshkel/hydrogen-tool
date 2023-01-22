@@ -91,9 +91,9 @@ function InputNumberField({ inputKey }: Props) {
   const handleBlur = () => {
     if (value === "") {
       setValue(defaultValue);
-    } else if (min && value < min) {
+    } else if (min !== undefined && Number(value) < min) {
       setValue(min);
-    } else if (max && value > max) {
+    } else if (max !== undefined && Number(value) > max) {
       setValue(max);
     }
   };

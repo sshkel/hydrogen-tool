@@ -511,8 +511,8 @@ export class AmmoniaModel implements Model {
 
     const {
       lch2,
-      hydrogenProductionCost,
       lcP2x: lcnh3,
+      p2xProductionCost: ammoniaProductionCost,
     } = calculateP2XProductionLC(
       totalCapexCost,
       totalEpcCost,
@@ -541,7 +541,7 @@ export class AmmoniaModel implements Model {
       this.parameters.powerPlantConfiguration,
       this.parameters.powerSupplyOption,
       powerPlantCAPEX,
-      hydrogenProductionCost,
+      ammoniaProductionCost,
       electrolyserCAPEX,
       totalIndirectCosts,
       this.parameters.projectTimeline,
@@ -572,12 +572,12 @@ export class AmmoniaModel implements Model {
       ammoniaCapex,
       h2StorageOpexCost,
       ammoniaOpexCost,
-      hydrogenProductionCost,
+      ammoniaProductionCost,
       this.parameters.projectTimeline,
       this.discountRate
     );
 
-    const lch2BreakdownData: { [key: string]: number } = {
+    const lcBreakdownData: { [key: string]: number } = {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "H2 Storage CAPEX": lcH2StorageCAPEX,
@@ -645,7 +645,7 @@ export class AmmoniaModel implements Model {
       indirectCostBreakdown,
       capitalCostBreakdown,
       operatingCosts,
-      lch2BreakdownData,
+      lcBreakdownData,
       summaryTableData,
     };
   }

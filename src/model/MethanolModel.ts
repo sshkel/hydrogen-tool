@@ -6,7 +6,7 @@ import {
 } from "../components/charts/cost-functions";
 import {
   generateLCBreakdown,
-  generateMeLCH2Breakdown,
+  generateMeLCH2Breakdown as generateMeOHLCBreakdown,
 } from "../components/charts/lch2-calculations";
 import {
   calculateMePerYearOpex,
@@ -537,8 +537,8 @@ export class MethanolModel implements Model {
 
     const {
       lch2,
-      hydrogenProductionCost,
       lcP2x: lcmeoh,
+      p2xProductionCost: methanolProductionCost,
     } = calculateP2XProductionLC(
       totalCapexCost,
       totalEpcCost,
@@ -567,7 +567,7 @@ export class MethanolModel implements Model {
       this.parameters.powerPlantConfiguration,
       this.parameters.powerSupplyOption,
       powerPlantCAPEX,
-      hydrogenProductionCost,
+      methanolProductionCost,
       electrolyserCAPEX,
       totalIndirectCosts,
       this.parameters.projectTimeline,
@@ -595,19 +595,19 @@ export class MethanolModel implements Model {
       lcH2StorageOPEX,
       lcMePlantOPEX,
       lcCarbonCaptureOPEX,
-    } = generateMeLCH2Breakdown(
+    } = generateMeOHLCBreakdown(
       h2StorageCapex,
       methanolCapex,
       ccCapex,
       h2StorageOpexCost,
       methanolOpexCost,
       ccOpexCost,
-      hydrogenProductionCost,
+      methanolProductionCost,
       this.parameters.projectTimeline,
       this.discountRate
     );
 
-    const lch2BreakdownData: { [key: string]: number } = {
+    const lcBreakdownData: { [key: string]: number } = {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "H2 Storage CAPEX": lcH2StorageCAPEX,
@@ -677,7 +677,7 @@ export class MethanolModel implements Model {
       indirectCostBreakdown,
       capitalCostBreakdown,
       operatingCosts,
-      lch2BreakdownData,
+      lcBreakdownData,
       summaryTableData,
     };
   }
