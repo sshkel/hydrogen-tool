@@ -5,7 +5,11 @@ import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 
-export default function AdvancedAmmoniaInput() {
+interface Props {
+  location: string;
+}
+
+export default function AdvancedAmmoniaInput(props: Props) {
   return (
     <Grid
       container
@@ -270,7 +274,7 @@ export default function AdvancedAmmoniaInput() {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledPowerPlantCard />
+          <ControlledPowerPlantCard location={props.location} />
         </Grid>
       </Grid>
 

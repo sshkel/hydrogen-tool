@@ -71,6 +71,7 @@ function App() {
                   <InputHomePage
                     setState={setState}
                     setInputConfiguration={setInputConfiguration}
+                    location={location!}
                   />
                 }
               />

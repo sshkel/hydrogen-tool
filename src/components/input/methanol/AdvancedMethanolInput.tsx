@@ -6,7 +6,11 @@ import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 
-export default function AdvancedMethanolInput() {
+interface Props {
+  location: string;
+}
+
+export default function AdvancedMethanolInput(props: Props) {
   return (
     <Grid
       container
@@ -287,7 +291,7 @@ export default function AdvancedMethanolInput() {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledPowerPlantCard />
+          <ControlledPowerPlantCard location={props.location} />
         </Grid>
       </Grid>
 

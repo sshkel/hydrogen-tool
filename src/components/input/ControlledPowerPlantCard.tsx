@@ -1,17 +1,22 @@
 import React from "react";
 
 import { PowerPlantType } from "../../types";
+import { isOffshore } from "../../utils";
 import ControlledInputSelect from "./ControlledInputSelect";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 
-const POWER_PLANT_TYPES: PowerPlantType[] = ["Solar", "Wind", "Hybrid"];
+const POWER_PLANT_TYPES: PowerPlantType[] = ["Wind", "Solar", "Hybrid"];
 
-export default function ControlledAmmoniaPowerPlantCard() {
+interface Props {
+  location: string;
+}
+
+export default function ControlledAmmoniaPowerPlantCard(props: Props) {
   const [powerPlantType, setPowerPlantType] =
-    React.useState<PowerPlantType>("Solar");
+    React.useState<PowerPlantType>("Wind");
 
   const [powerPlantTypeSelectedIndex, setPowerPlantTypeSelectedIndex] =
     React.useState<number>(0);
@@ -41,6 +46,54 @@ export default function ControlledAmmoniaPowerPlantCard() {
   const isNotSolar = () => powerPlantType === "Wind";
   const isNotWind = () => powerPlantType === "Solar";
 
+  function getPowerPlantCards() {
+    if (isOffshore(props.location)) {
+      return [
+        [
+          <InputNumberField
+            key="powerPlantOversizeRatio"
+            inputKey="powerPlantOversizeRatio"
+          />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+        ],
+      ];
+    } else {
+      return [
+        [
+          <InputNumberField
+            key="powerPlantOversizeRatio"
+            inputKey="powerPlantOversizeRatio"
+          />,
+          <InputNumberField
+            key="solarDegradation"
+            inputKey="solarDegradation"
+          />,
+        ],
+        [
+          <InputNumberField
+            key="powerPlantOversizeRatio"
+            inputKey="powerPlantOversizeRatio"
+          />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+        ],
+        [
+          <InputNumberField
+            key="powerPlantOversizeRatio"
+            inputKey="powerPlantOversizeRatio"
+          />,
+          <InputNumberField
+            key="solarToWindPercentage"
+            inputKey="solarToWindPercentage"
+          />,
+          <InputNumberField
+            key="solarDegradation"
+            inputKey="solarDegradation"
+          />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+        ],
+      ];
+    }
+  }
   return (
     <InputCard
       title="Power Plant Parameters"
@@ -49,7 +102,7 @@ export default function ControlledAmmoniaPowerPlantCard() {
           key="powerPlantType"
           selectKey="powerPlantType"
           prompt="Power Plant Type"
-          titles={POWER_PLANT_TYPES}
+          titles={isOffshore(props.location) ? ["Wind"] : POWER_PLANT_TYPES}
           selectClass="powerPlantType"
           selectedIndex={powerPlantTypeSelectedIndex}
           expanded={powerPlantTypeExpanded}
@@ -59,46 +112,7 @@ export default function ControlledAmmoniaPowerPlantCard() {
             setPowerPlantType
           )}
           onCloseExpand={onSelectClose(setPowerPlantTypeExpanded)}
-          buttonChildren={[
-            [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
-              />,
-              <InputNumberField
-                key="solarDegradation"
-                inputKey="solarDegradation"
-              />,
-            ],
-            [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
-              />,
-              <InputNumberField
-                key="windDegradation"
-                inputKey="windDegradation"
-              />,
-            ],
-            [
-              <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
-              />,
-              <InputNumberField
-                key="solarToWindPercentage"
-                inputKey="solarToWindPercentage"
-              />,
-              <InputNumberField
-                key="solarDegradation"
-                inputKey="solarDegradation"
-              />,
-              <InputNumberField
-                key="windDegradation"
-                inputKey="windDegradation"
-              />,
-            ],
-          ]}
+          buttonChildren={getPowerPlantCards()}
         />,
         <InputSelect
           key="powerPlantConfigurationSelect"

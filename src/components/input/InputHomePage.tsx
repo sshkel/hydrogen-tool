@@ -25,35 +25,35 @@ import BasicMethanolInput from "./methanol/BasicMethanolInput";
 interface Props {
   setInputConfiguration: (config: InputConfiguration) => void;
   setState: (obj: any) => void;
-}
-
-function getBasicInputs(powerfuel: string): JSX.Element {
-  if (powerfuel === "ammonia") {
-    return <BasicAmmoniaInput />;
-  }
-  if (powerfuel === "methanol") {
-    return <BasicMethanolInput />;
-  }
-  if (powerfuel === "methane") {
-    return <BasicMethaneInput />;
-  }
-  return <BasicHydrogenInput />;
-}
-
-function getAdvancedInputs(powerfuel: string): JSX.Element {
-  if (powerfuel === "ammonia") {
-    return <AdvancedAmmoniaInput />;
-  }
-  if (powerfuel === "methanol") {
-    return <AdvancedMethanolInput />;
-  }
-  if (powerfuel === "methane") {
-    return <AdvancedMethaneInput />;
-  }
-  return <AdvancedHydrogenInput />;
+  location: string;
 }
 
 export default function InputHomePage(props: Props) {
+  function getBasicInputs(powerfuel: string): JSX.Element {
+    if (powerfuel === "ammonia") {
+      return <BasicAmmoniaInput />;
+    }
+    if (powerfuel === "methanol") {
+      return <BasicMethanolInput />;
+    }
+    if (powerfuel === "methane") {
+      return <BasicMethaneInput />;
+    }
+    return <BasicHydrogenInput />;
+  }
+
+  function getAdvancedInputs(powerfuel: string): JSX.Element {
+    if (powerfuel === "ammonia") {
+      return <AdvancedAmmoniaInput location={props.location} />;
+    }
+    if (powerfuel === "methanol") {
+      return <AdvancedMethanolInput location={props.location} />;
+    }
+    if (powerfuel === "methane") {
+      return <AdvancedMethaneInput location={props.location} />;
+    }
+    return <AdvancedHydrogenInput location={props.location} />;
+  }
   const navigate = useNavigate();
   const { powerfuel = "hydrogen" } = useParams();
   const [tab, setTab] = React.useState("Basic");

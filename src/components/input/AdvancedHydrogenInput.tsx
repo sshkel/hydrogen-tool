@@ -5,7 +5,10 @@ import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 
-export default function AdvancedHydrogenInput() {
+interface Props {
+  location: string;
+}
+export default function AdvancedHydrogenInput(props: Props) {
   return (
     <Grid
       container
@@ -166,7 +169,7 @@ export default function AdvancedHydrogenInput() {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledPowerPlantCard />
+          <ControlledPowerPlantCard location={props.location} />
         </Grid>
       </Grid>
 

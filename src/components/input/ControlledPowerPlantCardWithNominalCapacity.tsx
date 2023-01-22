@@ -1,17 +1,22 @@
 import React from "react";
 
 import { PowerPlantType } from "../../types";
+import { isOffshore } from "../../utils";
 import ControlledInputSelect from "./ControlledInputSelect";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
 
-const POWER_PLANT_TYPES: PowerPlantType[] = ["Solar", "Wind", "Hybrid"];
+const POWER_PLANT_TYPES: PowerPlantType[] = ["Wind", "Solar", "Hybrid"];
 
-export default function ControlledPowerPlantCard() {
+interface Props {
+  location: string;
+}
+
+export default function ControlledPowerPlantCard(props: Props) {
   const [powerPlantType, setPowerPlantType] =
-    React.useState<PowerPlantType>("Solar");
+    React.useState<PowerPlantType>("Wind");
 
   const [powerPlantTypeSelectedIndex, setPowerPlantTypeSelectedIndex] =
     React.useState<number>(0);
@@ -41,6 +46,127 @@ export default function ControlledPowerPlantCard() {
   const isNotSolar = () => powerPlantType === "Wind";
   const isNotWind = () => powerPlantType === "Solar";
 
+  function getPowerPlantCards() {
+    return [
+      isOffshore(props.location)
+        ? [
+            <InputSelect
+              key="windPowerPlantCapacitySelect"
+              selectKey="windPowerPlantCapacitySelect"
+              prompt="Power Plant Capacity"
+              titles={["Nominal Capacity", "Oversize Ratio"]}
+              selectClass="powerCapacityConfiguration"
+              helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+              buttonChildren={[
+                [
+                  <InputNumberField
+                    key="windNominalCapacity"
+                    inputKey="windNominalCapacity"
+                  />,
+                ],
+                [
+                  <InputNumberField
+                    key="powerPlantOversizeRatio"
+                    inputKey="powerPlantOversizeRatio"
+                  />,
+                ],
+              ]}
+            />,
+            <InputNumberField
+              key="windDegradation"
+              inputKey="windDegradation"
+            />,
+          ]
+        : [
+            <InputSelect
+              key="solarPowerPlantCapacitySelect"
+              selectKey="solarPowerPlantCapacitySelect"
+              prompt="Power Plant Capacity"
+              titles={["Nominal Capacity", "Oversize Ratio"]}
+              selectClass="powerCapacityConfiguration"
+              helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
+              buttonChildren={[
+                [
+                  <InputNumberField
+                    key="solarNominalCapacity"
+                    inputKey="solarNominalCapacity"
+                  />,
+                ],
+                [
+                  <InputNumberField
+                    key="powerPlantOversizeRatio"
+                    inputKey="powerPlantOversizeRatio"
+                  />,
+                ],
+              ]}
+            />,
+            <InputNumberField
+              key="solarDegradation"
+              inputKey="solarDegradation"
+            />,
+          ],
+      [
+        <InputSelect
+          key="windPowerPlantCapacitySelect"
+          selectKey="windPowerPlantCapacitySelect"
+          prompt="Power Plant Capacity"
+          titles={["Nominal Capacity", "Oversize Ratio"]}
+          selectClass="powerCapacityConfiguration"
+          helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+          buttonChildren={[
+            [
+              <InputNumberField
+                key="windNominalCapacity"
+                inputKey="windNominalCapacity"
+              />,
+            ],
+            [
+              <InputNumberField
+                key="powerPlantOversizeRatio"
+                inputKey="powerPlantOversizeRatio"
+              />,
+            ],
+          ]}
+        />,
+        <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+      ],
+      [
+        <InputSelect
+          key="hybridPowerPlantCapacitySelect"
+          selectKey="hybridPowerPlantCapacitySelect"
+          prompt="Power Plant Capacity"
+          selectClass="powerCapacityConfiguration"
+          titles={["Nominal Capacity", "Oversize Ratio"]}
+          helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
+          buttonChildren={[
+            [
+              <InputNumberField
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
+              />,
+              <InputNumberField
+                key="windNominalCapacity"
+                inputKey="windNominalCapacity"
+              />,
+            ],
+            [
+              <InputNumberField
+                key="powerPlantOversizeRatio"
+                inputKey="powerPlantOversizeRatio"
+              />,
+              <InputNumberField
+                key="solarToWindPercentage"
+                inputKey="solarToWindPercentage"
+              />,
+            ],
+          ]}
+        />,
+        <InputNumberField key="solarDegradation" inputKey="solarDegradation" />,
+        <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+      ],
+    ];
+  }
+
   return (
     <InputCard
       title="Power Plant Parameters"
@@ -49,7 +175,7 @@ export default function ControlledPowerPlantCard() {
           key="powerPlantType"
           selectKey="powerPlantType"
           prompt="Power Plant Type"
-          titles={POWER_PLANT_TYPES}
+          titles={isOffshore(props.location) ? ["Wind"] : POWER_PLANT_TYPES}
           selectClass="powerPlantType"
           selectedIndex={powerPlantTypeSelectedIndex}
           expanded={powerPlantTypeExpanded}
@@ -59,104 +185,7 @@ export default function ControlledPowerPlantCard() {
             setPowerPlantType
           )}
           onCloseExpand={onSelectClose(setPowerPlantTypeExpanded)}
-          buttonChildren={[
-            [
-              <InputSelect
-                key="solarPowerPlantCapacitySelect"
-                selectKey="solarPowerPlantCapacitySelect"
-                prompt="Power Plant Capacity"
-                titles={["Nominal Capacity", "Oversize Ratio"]}
-                selectClass="powerCapacityConfiguration"
-                helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
-                buttonChildren={[
-                  [
-                    <InputNumberField
-                      key="solarNominalCapacity"
-                      inputKey="solarNominalCapacity"
-                    />,
-                  ],
-                  [
-                    <InputNumberField
-                      key="powerPlantOversizeRatio"
-                      inputKey="powerPlantOversizeRatio"
-                    />,
-                  ],
-                ]}
-              />,
-              <InputNumberField
-                key="solarDegradation"
-                inputKey="solarDegradation"
-              />,
-            ],
-            [
-              <InputSelect
-                key="windPowerPlantCapacitySelect"
-                selectKey="windPowerPlantCapacitySelect"
-                prompt="Power Plant Capacity"
-                titles={["Nominal Capacity", "Oversize Ratio"]}
-                selectClass="powerCapacityConfiguration"
-                helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
-                buttonChildren={[
-                  [
-                    <InputNumberField
-                      key="windNominalCapacity"
-                      inputKey="windNominalCapacity"
-                    />,
-                  ],
-                  [
-                    <InputNumberField
-                      key="powerPlantOversizeRatio"
-                      inputKey="powerPlantOversizeRatio"
-                    />,
-                  ],
-                ]}
-              />,
-              <InputNumberField
-                key="windDegradation"
-                inputKey="windDegradation"
-              />,
-            ],
-            [
-              <InputSelect
-                key="hybridPowerPlantCapacitySelect"
-                selectKey="hybridPowerPlantCapacitySelect"
-                prompt="Power Plant Capacity"
-                selectClass="powerCapacityConfiguration"
-                titles={["Nominal Capacity", "Oversize Ratio"]}
-                helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
-                buttonChildren={[
-                  [
-                    <InputNumberField
-                      key="solarNominalCapacity"
-                      inputKey="solarNominalCapacity"
-                    />,
-                    <InputNumberField
-                      key="windNominalCapacity"
-                      inputKey="windNominalCapacity"
-                    />,
-                  ],
-                  [
-                    <InputNumberField
-                      key="powerPlantOversizeRatio"
-                      inputKey="powerPlantOversizeRatio"
-                    />,
-                    <InputNumberField
-                      key="solarToWindPercentage"
-                      inputKey="solarToWindPercentage"
-                    />,
-                  ],
-                ]}
-              />,
-              <InputNumberField
-                key="solarDegradation"
-                inputKey="solarDegradation"
-              />,
-              <InputNumberField
-                key="windDegradation"
-                inputKey="windDegradation"
-              />,
-            ],
-          ]}
+          buttonChildren={getPowerPlantCards()}
         />,
         <InputSelect
           key="powerPlantConfigurationSelect"

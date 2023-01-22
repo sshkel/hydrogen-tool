@@ -8,7 +8,11 @@ describe("InputHomePage", () => {
     const setState = jest.fn();
     const { container, getByText } = render(
       <MemoryRouter>
-        <InputHomePage setState={setState} setInputConfiguration={jest.fn()} />
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z1"}
+        />
       </MemoryRouter>
     );
 
@@ -43,6 +47,7 @@ describe("InputHomePage", () => {
         <InputHomePage
           setState={jest.fn()}
           setInputConfiguration={setInputConfiguration}
+          location={"Z1"}
         />
       </MemoryRouter>
     );
@@ -56,7 +61,11 @@ describe("InputHomePage", () => {
     const setState = jest.fn();
     const { container, getByText } = render(
       <MemoryRouter>
-        <InputHomePage setState={setState} setInputConfiguration={jest.fn()} />
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z1"}
+        />
       </MemoryRouter>
     );
 
@@ -97,7 +106,11 @@ describe("InputHomePage", () => {
     const setState = jest.fn();
     const { container, getByText, getByLabelText } = render(
       <MemoryRouter>
-        <InputHomePage setState={setState} setInputConfiguration={jest.fn()} />
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z1"}
+        />
       </MemoryRouter>
     );
 

@@ -1,4 +1,5 @@
-import {ChartData} from "./types";
+import { zoneInfo } from "./components/map/ZoneInfo";
+import { ChartData } from "./types";
 
 export const nameToId = (key: string) => key.replace(/\s+/g, "-").toLowerCase();
 
@@ -36,7 +37,7 @@ export function checkLength(datapoints: ChartData[], projectTimeline: number) {
   datapoints.forEach((p) => {
     if (p.data.length !== projectTimeline) {
       throw new Error(
-          `Invalid size of ${p.data.length} for ${p.label}. Should be ${projectTimeline}. Data is ${p.data}`
+        `Invalid size of ${p.data.length} for ${p.label}. Should be ${projectTimeline}. Data is ${p.data}`
       );
     }
   });
@@ -47,4 +48,11 @@ export function sum(arr: number[]): number {
 
 export function mean(arr: number[]): number {
   return sum(arr) / arr.length || 0;
+}
+
+export function isOffshore(zone: string) {
+  type ObjectKey = keyof typeof zoneInfo;
+  const zoneKey = zone as ObjectKey;
+  // TODO find a better way to check for offshore location
+  return zoneInfo[zoneKey].solarCapFactor === "-%";
 }
