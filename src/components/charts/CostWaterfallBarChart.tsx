@@ -8,10 +8,11 @@ interface Props {
   title: string;
   labels: string[];
   datapoints: ChartData[];
+  formula: string;
 }
 
 export default function CostBarChart(props: Props) {
-  const { title, labels, datapoints } = props;
+  const { title, labels, datapoints, formula } = props;
   const transformedPoints = datapoints.map((ds: ChartData) => {
     return {
       ...ds,
@@ -52,7 +53,7 @@ export default function CostBarChart(props: Props) {
       y: {
         title: {
           display: true,
-          text: "Levelised Cost (A$/yr)",
+          text: `Levelised Cost (A$/kg${formula})`,
           font: {
             size: 20,
           },
