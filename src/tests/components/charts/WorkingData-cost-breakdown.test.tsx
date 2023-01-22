@@ -26,7 +26,7 @@ const findIndirectCostBreakdownChart = (wrapper: ShallowWrapper) =>
 
 describe("Working Data calculations", () => {
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   describe("Capital Cost Breakdown", () => {

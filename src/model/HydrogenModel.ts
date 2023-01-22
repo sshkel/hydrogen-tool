@@ -448,7 +448,7 @@ export class HydrogenModel implements Model {
       gridConnectionCAPEX
     );
 
-    const lch2BreakdownData: { [key: string]: number } = {
+    const lcBreakdownData: { [key: string]: number } = {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "Indirect Costs": lcIndirectCosts,
@@ -496,7 +496,7 @@ export class HydrogenModel implements Model {
       indirectCostBreakdown,
       capitalCostBreakdown,
       operatingCosts,
-      lch2BreakdownData,
+      lcBreakdownData,
       summaryTableData,
     };
   }

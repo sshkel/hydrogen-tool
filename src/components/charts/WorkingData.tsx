@@ -36,7 +36,6 @@ import SummaryOfResultsTable from "./SummaryOfResultsTable";
 import { roundToNearestInteger } from "./cost-functions";
 
 export interface Props {
-  powerfuel?: string;
   location?: string;
   data?: UserInputFields;
   inputConfiguration: InputConfiguration;
@@ -66,6 +65,23 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 // setup default fonts for the charts
 Chart.defaults.font.family = "Nunito";
+
+function powerfuelToLCTitle(powerfuel: string): string {
+  if (powerfuel === "hydrogen") {
+    return "LCH2";
+  }
+  if (powerfuel === "ammonia") {
+    return "LCNH3";
+  }
+  if (powerfuel === "methanol") {
+    return "LCMeOH";
+  }
+  if (powerfuel === "methane") {
+    return "LCSNG";
+  }
+
+  return "";
+}
 
 export default function WorkingData(props: Props) {
   const [state, setState] = useState<DownloadedData>({
@@ -108,7 +124,7 @@ export default function WorkingData(props: Props) {
 
   const {
     inputConfiguration,
-    data: { projectScale = 0 },
+    data: { projectScale = 0, powerfuel = "hydrogen" },
   } = props;
 
   let inputs: Inputs = new SynthesisedInputs(props.data, inputConfiguration);
@@ -116,7 +132,7 @@ export default function WorkingData(props: Props) {
   const location = props.location;
 
   let model: Model;
-  if (props.data.powerfuel === "ammonia") {
+  if (powerfuel === "ammonia") {
     const dataModel: AmmoniaData = {
       inputConfiguration: inputConfiguration,
       location: location,
@@ -206,7 +222,7 @@ export default function WorkingData(props: Props) {
     };
 
     model = new AmmoniaModel(dataModel, state.solarData, state.windData);
-  } else if (props.data.powerfuel === "methanol") {
+  } else if (powerfuel === "methanol") {
     const dataModel: MethanolData = {
       inputConfiguration: inputConfiguration,
       location: location,
@@ -298,7 +314,7 @@ export default function WorkingData(props: Props) {
     };
 
     model = new MethanolModel(dataModel, state.solarData, state.windData);
-  } else if (props.data.powerfuel === "methane") {
+  } else if (powerfuel === "methane") {
     const dataModel: MethaneData = {
       inputConfiguration: inputConfiguration,
       location: location,
@@ -496,14 +512,6 @@ export default function WorkingData(props: Props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container item xs={6}>
-          <Grid item xs={6}>
-            {OperatingCostsPane(results.operatingCosts)}
-          </Grid>
-          <Grid item xs={6}>
-            {Lch2BreakdownPane(results.lch2BreakdownData)}
-          </Grid>
-        </Grid>
         <Grid container className="duration curves" wrap="nowrap">
           {DurationCurves(results.durationCurves)}
         </Grid>
@@ -522,6 +530,15 @@ export default function WorkingData(props: Props) {
             />
           </Grid>
         </Grid>
+        <Grid container item xs={6}>
+          <Grid item xs={6}>
+            {OperatingCostsPane(results.operatingCosts)}
+          </Grid>
+          <Grid item xs={6}>
+            {LcBreakdownPane(results.lcBreakdownData, powerfuel)}
+          </Grid>
+        </Grid>
+
         <Grid item>{HourlyCapacityFactorsPane(results.hourlyCapFactors)}</Grid>
       </Grid>
     </ThemeProvider>
@@ -799,12 +816,17 @@ export function WaterFallPane(data: WaterfallPaneData) {
   );
 }
 
-function Lch2BreakdownPane(lch2BreakdownData: { [key: string]: number }) {
+function LcBreakdownPane(
+  lcBreakdownData: { [key: string]: number },
+  powerfuel: string
+) {
   return (
     <WaterFallPane
-      title="Breakdown of Cost Components in LCH2"
-      label="Breakdown of Cost Components in Levelised Cost of Hydrogen"
-      items={lch2BreakdownData}
+      title={`Breakdown of Cost Components in ${powerfuelToLCTitle(powerfuel)}`}
+      label={`Breakdown of Cost Components in Levelised Cost of ${
+        powerfuel.charAt(0).toLocaleUpperCase() + powerfuel.slice(1)
+      }`}
+      items={lcBreakdownData}
     />
   );
 }

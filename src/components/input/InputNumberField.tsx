@@ -77,20 +77,23 @@ function InputNumberField({ inputKey }: Props) {
   });
 
   const valueText: string | undefined =
-    min !== undefined && max !== undefined
-      ? "Value: " + min + " - " + max
+    min !== undefined
+      ? "Expected Values: " +
+        min.toLocaleString("en-US") +
+        " - " +
+        (max || "∞").toLocaleString("en-US")
       : undefined;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(
-      event.target.value === "" ? defaultValue : Number(event.target.value)
-    );
+    setValue(Number(event.target.value) || "");
   };
 
   const handleBlur = () => {
-    if (min && value < min) {
+    if (value === "") {
+      setValue(defaultValue);
+    } else if (min !== undefined && Number(value) < min) {
       setValue(min);
-    } else if (max && value > max) {
+    } else if (max !== undefined && Number(value) > max) {
       setValue(max);
     }
   };

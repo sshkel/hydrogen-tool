@@ -9,7 +9,7 @@ class Defaults {
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
-      maximumLoadWhenOverloading: 0,
+      maximumLoadWhenOverloading: 100,
       timeBetweenOverloading: 0,
       stackDegradation: 0.0,
       stackLifetime: 80_000,
@@ -61,7 +61,7 @@ class Defaults {
       projectTimeline: 20,
       discountRate: 7,
       inflationRate: 2.5,
-      projectScale: 100_000,
+      projectScale: 100,
       // TODO work out if these default are correct for ammonia
       ammoniaPlantCapacity: 50,
       ammoniaStorageCapacity: 30,
@@ -111,8 +111,8 @@ class Defaults {
       methaneStorageOMCost: 5,
     };
 
-    if (localStorage.getItem("savedData") !== null) {
-      const savedData = JSON.parse(localStorage.getItem("savedData")!);
+    if (sessionStorage.getItem("savedData") !== null) {
+      const savedData = JSON.parse(sessionStorage.getItem("savedData")!);
       this.defaultInputs = {
         ...defaults,
         savedData,

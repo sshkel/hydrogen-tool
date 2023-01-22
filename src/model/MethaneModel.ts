@@ -6,7 +6,7 @@ import {
 } from "../components/charts/cost-functions";
 import {
   generateLCBreakdown,
-  generateMeLCH2Breakdown,
+  generateMeLCH2Breakdown as generateSNGLCBreakdown,
 } from "../components/charts/lch2-calculations";
 import {
   calculateMePerYearOpex,
@@ -537,8 +537,8 @@ export class MethaneModel implements Model {
 
     const {
       lch2,
-      hydrogenProductionCost,
-      lcP2x: lcmeoh,
+      lcP2x: lcsng,
+      p2xProductionCost: methaneProductionCost,
     } = calculateP2XProductionLC(
       totalCapexCost,
       totalEpcCost,
@@ -567,7 +567,7 @@ export class MethaneModel implements Model {
       this.parameters.powerPlantConfiguration,
       this.parameters.powerSupplyOption,
       powerPlantCAPEX,
-      hydrogenProductionCost,
+      methaneProductionCost,
       electrolyserCAPEX,
       totalIndirectCosts,
       this.parameters.projectTimeline,
@@ -595,19 +595,19 @@ export class MethaneModel implements Model {
       lcH2StorageOPEX,
       lcMePlantOPEX,
       lcCarbonCaptureOPEX,
-    } = generateMeLCH2Breakdown(
+    } = generateSNGLCBreakdown(
       h2StorageCapex,
       methaneCapex,
       ccCapex,
       h2StorageOpexCost,
       methaneOpexCost,
       ccOpexCost,
-      hydrogenProductionCost,
+      methaneProductionCost,
       this.parameters.projectTimeline,
       this.discountRate
     );
 
-    const lch2BreakdownData: { [key: string]: number } = {
+    const lcBreakdownData: { [key: string]: number } = {
       "Power Plant CAPEX": lcPowerPlantCAPEX,
       "Electrolyser CAPEX": lcElectrolyserCAPEX,
       "H2 Storage CAPEX": lcH2StorageCAPEX,
@@ -666,7 +666,7 @@ export class MethaneModel implements Model {
 
       "LCH2 ($/kg)": roundToTwoDP(lch2),
 
-      "LCSNG ($/kg)": roundToTwoDP(lcmeoh),
+      "LCSNG ($/kg)": roundToTwoDP(lcsng),
     };
 
     return {
@@ -677,7 +677,7 @@ export class MethaneModel implements Model {
       indirectCostBreakdown,
       capitalCostBreakdown,
       operatingCosts,
-      lch2BreakdownData,
+      lcBreakdownData,
       summaryTableData,
     };
   }

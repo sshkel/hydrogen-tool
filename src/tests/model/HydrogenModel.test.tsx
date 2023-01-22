@@ -53,7 +53,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
-      projectScale: 10000,
+      projectScale: 10,
       // Dummy params
       additionalAnnualCosts: 0,
       additionalTransmissionCharges: 0,
@@ -127,7 +127,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
-      projectScale: 10000,
+      projectScale: 10,
       //dummy params
       // Dummy params
       additionalAnnualCosts: 0,
@@ -203,7 +203,7 @@ describe("Hydrogen Model", () => {
       inputConfiguration: "Advanced",
       powerPlantOversizeRatio: 1,
       solarToWindPercentage: 50,
-      projectScale: 10000,
+      projectScale: 10,
       //dummy params
       // Dummy params
       additionalAnnualCosts: 0,

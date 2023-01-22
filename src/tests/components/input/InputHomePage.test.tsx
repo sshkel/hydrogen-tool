@@ -26,7 +26,7 @@ describe("InputHomePage", () => {
       electrolyserPurchaseCost: 1000,
       powerPlantOversizeRatio: 2,
       powerfuel: "hydrogen",
-      projectScale: 100_000,
+      projectScale: 100,
       projectTimeline: 20,
       solarFarmBuildCost: 1200,
       solarToWindPercentage: 50,

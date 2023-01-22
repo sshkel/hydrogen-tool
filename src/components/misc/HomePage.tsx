@@ -76,17 +76,16 @@ export default function HomePage() {
             align="center"
             paddingX={10}
           >
-            The NSW Powerfuel Value Chain Tool has been developed to investigate
-            pathways to deploy Power-to-X technologies and help the NSW
-            Government’s aim to make the state a global Power-to-X innovation
-            hub. Targeting a broad range of stakeholders, the tool can be used
-            to evaluate the opportunity and potential costs of generating
-            hydrogen and a selection of key powerfuels (ammonia, methanol,
-            synthetic natural gas, and sustainable aviation fuel) using
-            renewable power sources across NSW. A key function of the tool is to
-            generate a levelized cost for hydrogen or powerfuel, which users can
-            evaluate to determine the potential for developing their own
-            projects in various locations across NSW.
+            The NSW Powerfuel Value Chain Tool is developed to investigate
+            pathways to deploy Power-to-X technologies in NSW. Targeting a wide
+            range of stakeholders, the tool can be used to evaluate the
+            opportunity and potential costs of generating hydrogen and several
+            key powerfuels (including ammonia) using renewable power sources
+            across NSW. The key function of the tool is to calculate the
+            levelised cost for hydrogen and other powerfuels, which users can
+            then evaluate the feasibility and determine the potential for
+            developing their own Power-to-X projects in various locations across
+            NSW.
           </Typography>
           <Button
             variant="contained"
@@ -104,7 +103,7 @@ export default function HomePage() {
               minWidth: "40px",
             }}
           >
-            Enter
+            Start
           </Button>
         </Grid>
       </Grid>

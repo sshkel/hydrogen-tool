@@ -141,7 +141,7 @@ export default class SynthesisedInputs extends DefaultInputs {
     inputConfiguration: InputConfiguration
   ) {
     super();
-    let savedData = JSON.parse(localStorage.getItem("savedData") || "{}");
+    let savedData = JSON.parse(sessionStorage.getItem("savedData") || "{}");
     let sanitisedUserInputFields: any = { ...userInputs };
 
     if (savedData["inputConfiguration"] !== inputConfiguration) {
@@ -164,7 +164,7 @@ export default class SynthesisedInputs extends DefaultInputs {
       ...savedData,
       ...sanitisedUserInputFields,
     };
-    localStorage.setItem("savedData", JSON.stringify(form));
+    sessionStorage.setItem("savedData", JSON.stringify(form));
 
     return form;
   }

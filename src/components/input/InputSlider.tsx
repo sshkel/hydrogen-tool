@@ -79,7 +79,11 @@ export default function InputSlider({ inputKey }: Props) {
       setValue(max);
     }
   };
-  const valueText: string = "Value: " + min + " - " + max;
+  const valueText: string =
+    "Value: " +
+    min.toLocaleString("en-US") +
+    " - " +
+    max.toLocaleString("en-US");
 
   return (
     <Grid container columnSpacing={3.5}>

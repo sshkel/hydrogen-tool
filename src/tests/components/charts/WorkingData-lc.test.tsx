@@ -28,7 +28,7 @@ describe("Working Data calculations", () => {
   let loadNSWWind: () => Promise<any[]>;
 
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   beforeAll(() => {
@@ -44,7 +44,7 @@ describe("Working Data calculations", () => {
       await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
   });
 
-  describe("LCH2", () => {
+  describe("LC", () => {
     it("calculates lch2 for solar", (done) => {
       const wrapper = mount(
         <WorkingData
@@ -421,7 +421,7 @@ describe("Working Data calculations", () => {
       }, TIMEOUT);
     });
 
-    it("calculates lch2 for ammonia solar", (done) => {
+    it("calculates lcnh3 for ammonia solar", (done) => {
       const wrapper = mount(
         <WorkingData
           data={standaloneAdvancedAmmoniaSolarScenario.data}
@@ -450,7 +450,7 @@ describe("Working Data calculations", () => {
       // lcGridConnection
       // lcAdditionalCosts
       const costBreakdown = [
-        4.26, 2.265, 0.81, 0.79, 0, 0.53, 0.6, 0.17, 0.17, 0, 0.328, 0.05, 0, 0,
+        0.75, 0.4, 0.14, 0.14, 0, 0.09, 0.11, 0.03, 0.03, 0, 0.06, 0.008, 0, 0,
         0,
       ];
 
@@ -460,11 +460,10 @@ describe("Working Data calculations", () => {
         const cashFlowChart = wrapper
           .find(WaterFallPane)
           .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCNH3"
           );
         expect(cashFlowChart).toHaveLength(1);
         const datapoints = cashFlowChart.at(0).prop("items");
-
         Object.values(datapoints).forEach((cost, i) =>
           expect(cost).toBeCloseTo(costBreakdown[i], 2)
         );
@@ -504,8 +503,8 @@ describe("Working Data calculations", () => {
       // lcGridConnection
       // lcAdditionalCosts
       const costBreakdown = [
-        0.213, 0.043, 0.018, 0.031, 0.083, 0.04, 0.011, 0.004, 0.007, 0, 0.013,
-        0.075, 0.003, 0, 0,
+        0.572, 0.115, 0.049, 0.084, 0.222, 0.102, 0.03, 0.01, 0.018, 0, 0.036,
+        0.201, 0.007, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -514,13 +513,12 @@ describe("Working Data calculations", () => {
         const cashFlowChart = wrapper
           .find(WaterFallPane)
           .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCNH3"
           );
         expect(cashFlowChart).toHaveLength(1);
         const datapoints = cashFlowChart.at(0).prop("items");
-
         Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
+          expect(cost).toBeCloseTo(costBreakdown[i], 3)
         );
 
         done();
