@@ -49,7 +49,6 @@ export function sum(arr: number[]): number {
 export function mean(arr: number[]): number {
   return sum(arr) / arr.length || 0;
 }
-
 export function isOffshore(zone: string) {
   type ObjectKey = keyof typeof zoneInfo;
   const zoneKey = zone as ObjectKey;

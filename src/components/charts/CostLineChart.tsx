@@ -39,7 +39,7 @@ export default function CostLineChart(props: Props) {
           display: true,
           text: "Year",
           font: {
-            size: 20,
+            size: 16,
           },
         },
       },
@@ -48,7 +48,7 @@ export default function CostLineChart(props: Props) {
           display: true,
           text: "Annual Operating Costs (A$MM)",
           font: {
-            size: 20,
+            size: 16,
           },
         },
       },

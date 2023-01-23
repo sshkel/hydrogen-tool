@@ -55,7 +55,7 @@ export default function CostBarChart(props: Props) {
           display: true,
           text: `Levelised Cost (A$/kg${formula})`,
           font: {
-            size: 20,
+            size: 16,
           },
         },
       },

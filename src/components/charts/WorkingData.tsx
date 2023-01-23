@@ -60,6 +60,7 @@ const ItemText = styled(Typography)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   ...theme.typography.body2,
   margin: "15px",
+  padding: "4px",
   borderRadius: "20px",
 }));
 
