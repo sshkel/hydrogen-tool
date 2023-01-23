@@ -24,7 +24,7 @@ import {
   PowerSupplyOption,
   StackReplacementType,
 } from "../types";
-import { mean, projectYears } from "../utils";
+import { isOffshore, mean, projectYears } from "../utils";
 import {
   AmmoniaProjectModelSummary,
   CsvRow,
@@ -706,10 +706,13 @@ export class AmmoniaModel implements Model {
       solarNominalCapacity + windNominalCapacity;
 
     if (inputConfiguration === "Basic") {
+      const solarToWindRatio = isOffshore(this.parameters.location)
+        ? 0
+        : this.parameters.solarToWindPercentage / 100;
       const hourlyOperations =
         this.calculatePowerplantAndElectrolyserHourlyOperation(
-          this.parameters.solarToWindPercentage / 100,
-          1 - this.parameters.solarToWindPercentage / 100,
+          solarToWindRatio,
+          1 - solarToWindRatio,
           this.parameters.powerPlantOversizeRatio,
           // default for the first calculation
           electrolyserNominalCapacity,

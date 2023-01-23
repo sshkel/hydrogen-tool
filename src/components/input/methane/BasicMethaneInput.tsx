@@ -1,11 +1,15 @@
 import Grid from "@mui/material/Grid";
 
 import "../../../input.css";
+import { isOffshore } from "../../../utils";
 import InputCard from "../InputCard";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
 
-export default function BasicMethaneInput() {
+interface Props {
+  location: string;
+}
+export default function BasicMethaneInput(props: Props) {
   return (
     <Grid
       container
@@ -65,16 +69,25 @@ export default function BasicMethaneInput() {
         <Grid item>
           <InputCard
             title="Power Plant Capacity"
-            children={[
-              <InputSlider
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
-              />,
-              <InputSlider
-                key="solarToWindPercentage"
-                inputKey="solarToWindPercentage"
-              />,
-            ]}
+            children={
+              isOffshore(props.location)
+                ? [
+                    <InputSlider
+                      key="powerPlantOversizeRatio"
+                      inputKey="powerPlantOversizeRatio"
+                    />,
+                  ]
+                : [
+                    <InputSlider
+                      key="powerPlantOversizeRatio"
+                      inputKey="powerPlantOversizeRatio"
+                    />,
+                    <InputSlider
+                      key="solarToWindPercentage"
+                      inputKey="solarToWindPercentage"
+                    />,
+                  ]
+            }
           />
         </Grid>
       </Grid>
@@ -107,16 +120,23 @@ export default function BasicMethaneInput() {
                 helperText="Select Self Build for cases in which a new power plant is built in conjunction with electrolyser. Select PPA if there is a grid connection to a power supplier."
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
                 buttonChildren={[
-                  [
-                    <InputSlider
-                      key="solarFarmBuildCost"
-                      inputKey="solarFarmBuildCost"
-                    />,
-                    <InputSlider
-                      key="windFarmBuildCost"
-                      inputKey="windFarmBuildCost"
-                    />,
-                  ],
+                  isOffshore(props.location)
+                    ? [
+                        <InputSlider
+                          key="windFarmBuildCost"
+                          inputKey="windFarmBuildCost"
+                        />,
+                      ]
+                    : [
+                        <InputSlider
+                          key="solarFarmBuildCost"
+                          inputKey="solarFarmBuildCost"
+                        />,
+                        <InputSlider
+                          key="windFarmBuildCost"
+                          inputKey="windFarmBuildCost"
+                        />,
+                      ],
                   [
                     <InputSlider
                       key="principalPPACost"

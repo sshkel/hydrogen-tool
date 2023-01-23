@@ -31,15 +31,15 @@ interface Props {
 export default function InputHomePage(props: Props) {
   function getBasicInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
-      return <BasicAmmoniaInput />;
+      return <BasicAmmoniaInput location={props.location} />;
     }
     if (powerfuel === "methanol") {
-      return <BasicMethanolInput />;
+      return <BasicMethanolInput location={props.location} />;
     }
     if (powerfuel === "methane") {
-      return <BasicMethaneInput />;
+      return <BasicMethaneInput location={props.location} />;
     }
-    return <BasicHydrogenInput />;
+    return <BasicHydrogenInput location={props.location} />;
   }
 
   function getAdvancedInputs(powerfuel: string): JSX.Element {
