@@ -7,10 +7,10 @@ import { readLocalCsv as mockReadLocalCsv } from "../resources/loader";
 jest.mock("../../model/DataLoader", () => ({
   __esModule: true,
   loadSolar: async () =>
-    await mockReadLocalCsv(__dirname + "/../resources/solar-traces.csv"),
+    await mockReadLocalCsv(__dirname + "/../resources/solar-traces-new.csv"),
   loadWind: async () =>
-    await mockReadLocalCsv(__dirname + "/../resources/wind-traces.csv"),
-  DEFAULT_LOCATION: "Central West NSW",
+    await mockReadLocalCsv(__dirname + "/../resources/wind-traces-new.csv"),
+  DEFAULT_LOCATION: "Z10",
 }));
 
 describe("App", () => {
@@ -48,11 +48,11 @@ describe("App", () => {
 
     expect(
       container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("1,220,466 MW");
+    ).toContain("1,251,548 MW");
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("2,440,931 MW");
+    ).toContain("2,503,096 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
@@ -66,14 +66,14 @@ describe("App", () => {
     ];
 
     const expectedValues: string[] = [
-      "33.79",
-      "18.06",
-      "91.19",
-      "62.35",
+      "34.15",
+      "19.95",
+      "93.69",
+      "60.8",
       "6,666,000,000",
-      "559,746,756",
+      "822,397,992",
       "100,000,000",
-      "3.83",
+      "3.93",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -134,14 +134,14 @@ describe("App", () => {
     ];
 
     const expectedValues: string[] = [
-      "28.91",
-      "0.22",
-      "45.47",
-      "28.75",
-      "25,186",
-      "139",
-      "756",
-      "4.88",
+      "26.94",
+      "2.74",
+      "43.57",
+      "26.73",
+      "23,412",
+      "184",
+      "702",
+      "3.02",
     ];
 
     const EXPECTED_RESULTS = 11;
