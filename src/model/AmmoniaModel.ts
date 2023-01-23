@@ -759,7 +759,7 @@ export class AmmoniaModel implements Model {
         ammoniaCapacityFactors,
       };
 
-      const { solarToWindPercentage = 100 } = this.parameters;
+      const { solarToWindPercentage = 0 } = this.parameters;
       // back calcualte power plant type from the percentages.
       // Default to hybrid
       let powerPlantType: PowerPlantType = "Hybrid";

@@ -545,7 +545,7 @@ export class HydrogenModel implements Model {
         this.hoursPerYear
       );
 
-      const { powerPlantOversizeRatio = 1, solarToWindPercentage = 100 } =
+      const { powerPlantOversizeRatio = 1, solarToWindPercentage = 0 } =
         this.parameters;
       // back calcualte power plant type from the percentages.
       // Default to hybrid
