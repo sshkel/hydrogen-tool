@@ -32,13 +32,13 @@ export default function CostBreakdownDoughnutChart(props: Props) {
         position: "bottom" as "bottom",
         title: {
           display: true,
-          padding: 4,
+          padding: 8,
         },
       },
       datalabels: {
         anchor: "end",
         align: "end",
-        offset: 1,
+        offset: 2,
         clip: false,
         color: "#848484",
         font: {
@@ -59,7 +59,7 @@ export default function CostBreakdownDoughnutChart(props: Props) {
       },
     },
     layout: {
-      padding: { top: 20 },
+      padding: { top: 30 },
     },
   };
 
