@@ -1,9 +1,9 @@
 import Grid from "@mui/material/Grid";
 
-import ControlledPowerPlantCard from "./ControlledPowerPlantCardWithNominalCapacity";
-import InputCard from "./InputCard";
-import InputNumberField from "./InputNumberField";
-import InputSelect from "./InputSelect";
+import ControlledPowerPlantCard from "../ControlledPowerPlantCardWithNominalCapacity";
+import InputCard from "../InputCard";
+import InputNumberField from "../InputNumberField";
+import InputSelect from "../InputSelect";
 
 interface Props {
   location: string;
