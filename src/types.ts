@@ -3,6 +3,13 @@ export type StackReplacementType =
   | "Cumulative Hours"
   | "Maximum Degradation Level";
 
+export type CarbonCaptureSource =
+  | "Direct Air Capture"
+  | "Coal Power Plant"
+  | "Steel Plant"
+  | "Cement Plant"
+  | "Fermentation Plant"
+  | "Steam Methane Reforming";
 export type PowerPlantConfiguration = "Standalone" | "Grid Connected";
 
 export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
@@ -246,6 +253,7 @@ export interface Inputs {
   ccPlantCost?: number;
   ccPlantOMCost?: number;
   ccSec?: number;
+  carbonCaptureSource?: CarbonCaptureSource;
   methanolStorageOMCost?: number;
   methanolPlantOMCost?: number;
   methanolLandProcurementCosts?: number;

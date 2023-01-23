@@ -85,6 +85,7 @@ class Defaults {
       // TODO work out if these default are correct for methanol
       methanolPlantCapacity: 350,
       methanolPlantUnitCost: 250,
+      carbonCapturePlantUnitCost: 0,
       methanolStorageCapacity: 30,
       methanolPlantSec: 0.36,
       methanolPlantMinimumTurndown: 100,

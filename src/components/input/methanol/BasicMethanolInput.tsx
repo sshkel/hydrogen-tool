@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import "../../../input.css";
 import { isOffshore } from "../../../utils";
 import InputCard from "../InputCard";
+import InputDropdownField from "../InputDropdownField";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
 
@@ -111,6 +112,20 @@ export default function BasicMethanolInput(props: Props) {
               <InputSlider
                 key="methanolPlantUnitCost"
                 inputKey="methanolPlantUnitCost"
+              />,
+              <InputDropdownField
+                id="carbonCaptureSource"
+                key="carbonCaptureSource"
+                defaultValue="Coal Power Plant"
+                label="Carbon Capture Source"
+                values={[
+                  "Coal Power Plant",
+                  "Steel Plant",
+                  "Cement Plant",
+                  "Fermentation Plant",
+                  "Direct Air Capture",
+                  "Steam Methane Reforming",
+                ]}
               />,
               <InputSelect
                 key="powerSupplyOptionSelect"

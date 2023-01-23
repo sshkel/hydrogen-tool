@@ -1,4 +1,5 @@
 import {
+  CarbonCaptureSource,
   InputConfiguration,
   Inputs,
   PowerCapacityConfiguration,
@@ -133,6 +134,7 @@ class DefaultInputs implements Inputs {
   methaneLandProcurementCosts = 0;
   methanePlantOMCost = 5;
   methaneStorageOMCost = 5;
+  carbonCaptureSource = "Fermentation Plant" as CarbonCaptureSource;
 }
 
 export default class SynthesisedInputs extends DefaultInputs {

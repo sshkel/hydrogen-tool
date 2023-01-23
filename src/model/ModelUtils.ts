@@ -4,7 +4,11 @@ import {
   roundToNearestThousand,
 } from "../components/charts/cost-functions";
 import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
-import { PowerPlantType, StackReplacementType } from "../types";
+import {
+  CarbonCaptureSource,
+  PowerPlantType,
+  StackReplacementType,
+} from "../types";
 import { mean, sum } from "../utils";
 import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
 
@@ -1103,4 +1107,23 @@ export function calculateSolarToWindRatio(
     solarRatio: solarToWindPercentage / 100,
     windRatio: 1 - solarToWindPercentage / 100,
   };
+}
+
+export function carbonCaptureSourceToPlantCost(
+  carbonCaptureSource: CarbonCaptureSource
+) {
+  if (carbonCaptureSource === "Direct Air Capture") {
+    return 1610;
+  } else if (carbonCaptureSource === "Coal Power Plant") {
+    return 420;
+  } else if (carbonCaptureSource === "Steel Plant") {
+    return 460;
+  } else if (carbonCaptureSource === "Cement Plant") {
+    return 275;
+  } else if (carbonCaptureSource === "Fermentation Plant") {
+    return 0;
+  } else if (carbonCaptureSource === "Steam Methane Reforming") {
+    return 420;
+  }
+  return 0;
 }

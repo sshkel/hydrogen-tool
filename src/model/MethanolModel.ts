@@ -16,6 +16,7 @@ import {
   getTotalP2XOpex,
 } from "../components/charts/opex-calculations";
 import {
+  CarbonCaptureSource,
   InputConfiguration,
   Model,
   PowerPlantConfiguration,
@@ -39,6 +40,7 @@ import {
   calculatePowerPlantCapacityFactors,
   calculateSolarToWindRatio,
   capacityFactorsWithBattery,
+  carbonCaptureSourceToPlantCost,
   cc_out,
   cc_plant_CAPEX,
   electrolyser_actual_power_meX,
@@ -125,6 +127,7 @@ export type MethanolData = {
   methanolStorageCapacity: number;
   methanolPlantSec: number;
   ccSec: number;
+  carbonCaptureSource?: CarbonCaptureSource;
   methanolPlantMinimumTurndown: number;
 
   electrolyserSystemOversizing: number;
@@ -313,11 +316,12 @@ export class MethanolModel implements Model {
       this.parameters.hydrogenStorageCapacity,
       this.parameters.hydrogenStoragePurchaseCost
     );
+    const ccPlantCost =
+      this.parameters.inputConfiguration === "Basic"
+        ? carbonCaptureSourceToPlantCost(this.parameters.carbonCaptureSource!)
+        : this.parameters.ccPlantCost;
 
-    const ccCapex = cc_plant_CAPEX(
-      carbonCapturePlantCapacity,
-      this.parameters.ccPlantCost
-    );
+    const ccCapex = cc_plant_CAPEX(carbonCapturePlantCapacity, ccPlantCost);
 
     const electrolyserAndH2CAPEX = electrolyserCAPEX + h2StorageCapex;
 
@@ -466,9 +470,9 @@ export class MethanolModel implements Model {
       this.parameters.methanolPlantCapacity,
       this.parameters.methanolStorageCapacity,
       carbonCapturePlantCapacity,
-      this.parameters.methanolPlantUnitCost,
+      methanolPlantUnitCost,
       this.parameters.methanolStorageCost,
-      this.parameters.ccPlantCost,
+      ccPlantCost,
       this.parameters.methanolPlantOMCost,
       this.parameters.methanolStorageOMCost,
       this.parameters.ccPlantOMCost
