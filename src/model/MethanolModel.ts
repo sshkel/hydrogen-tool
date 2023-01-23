@@ -292,19 +292,22 @@ export class MethanolModel implements Model {
       this.batteryCosts,
       this.gridConnectionCost
     );
+    const methanolPlantUnitCost =
+      this.parameters.inputConfiguration === "Basic"
+        ? (561192.63963707 *
+            Math.pow(
+              (this.parameters.methanolPlantCapacity * 1000) / 365,
+              0.745210918855445
+            )) /
+          (this.parameters.methanolPlantCapacity * 1000)
+        : this.parameters.methanolPlantUnitCost;
 
-    let methanolCapex = 0;
-    if (this.parameters.inputConfiguration === "Basic") {
-      methanolCapex =
-        this.parameters.methanolPlantUnitCost! * this.parameters.projectScale;
-    } else {
-      methanolCapex = me_plant_CAPEX(
-        this.parameters.methanolPlantCapacity,
-        this.parameters.methanolStorageCapacity,
-        this.parameters.methanolPlantUnitCost,
-        this.parameters.methanolStorageCost
-      );
-    }
+    const methanolCapex = me_plant_CAPEX(
+      this.parameters.methanolPlantCapacity,
+      this.parameters.methanolStorageCapacity,
+      methanolPlantUnitCost,
+      this.parameters.methanolStorageCost
+    );
 
     const h2StorageCapex = hydrogen_storage_CAPEX(
       this.parameters.hydrogenStorageCapacity,

@@ -293,18 +293,22 @@ export class MethaneModel implements Model {
       this.gridConnectionCost
     );
 
-    let methaneCapex = 0;
-    if (this.parameters.inputConfiguration === "Basic") {
-      methaneCapex =
-        this.parameters.methanePlantUnitCost! * this.parameters.projectScale;
-    } else {
-      methaneCapex = me_plant_CAPEX(
-        this.parameters.methanePlantCapacity,
-        this.parameters.methaneStorageCapacity,
-        this.parameters.methanePlantUnitCost,
-        this.parameters.methaneStorageCost
-      );
-    }
+    const methanePlantUnitCost =
+      this.parameters.inputConfiguration === "Basic"
+        ? (274829924.317029 *
+            Math.pow(
+              (this.parameters.methanePlantCapacity * 1000) / 365 / 2600,
+              0.67
+            )) /
+          (this.parameters.methanePlantCapacity * 1000)
+        : this.parameters.methanePlantUnitCost;
+
+    let methaneCapex = me_plant_CAPEX(
+      this.parameters.methanePlantCapacity,
+      this.parameters.methaneStorageCapacity,
+      methanePlantUnitCost,
+      this.parameters.methaneStorageCost
+    );
 
     const h2StorageCapex = hydrogen_storage_CAPEX(
       this.parameters.hydrogenStorageCapacity,
