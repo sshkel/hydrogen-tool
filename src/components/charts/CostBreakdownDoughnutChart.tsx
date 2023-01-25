@@ -7,18 +7,31 @@ import { colors } from "../colors";
 
 interface Props {
   title: string;
-  labels: string[];
-  data: number[];
+  items: { [key: string]: number };
 }
 
 export default function CostBreakdownDoughnutChart(props: Props) {
+  const sortedItems = Object.entries(props.items)
+    .sort(([, a], [, b]) => a - b)
+    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+  const labels = [];
+  const values = [];
+
+  for (const [key, val] of Object.entries(sortedItems)) {
+    if (val !== 0) {
+      labels.push(key);
+      values.push(val);
+    }
+  }
+
   const data = {
-    labels: props.labels,
+    labels: labels,
     datasets: [
       {
         label: "Cost",
         backgroundColor: colors,
-        data: props.data,
+        data: values,
       },
     ],
   };
@@ -43,6 +56,8 @@ export default function CostBreakdownDoughnutChart(props: Props) {
         color: "#848484",
         font: {
           size: 15,
+          style: "italic",
+          weight: "bold",
         },
         formatter: (val) => `$${val.toLocaleString("en-US")}`,
         // TODO: Highest index wins on overlap, investigate whether

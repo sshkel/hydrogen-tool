@@ -9,7 +9,7 @@ interface Props {
   titles: string[];
   helperText?: string;
   buttonChildren: JSX.Element[][];
-  prompt?: string;
+  prompt: string;
   selectClass?: string;
   onSelectChange?: (text: string) => void;
 }
@@ -23,10 +23,11 @@ export default function InputSelectField(props: Props) {
     titles,
     helperText,
     buttonChildren,
-    prompt = "Select one option from below",
     selectClass,
     onSelectChange,
   } = props;
+
+  const prompt = props.prompt + " (Select one option from below)";
 
   const onOpenExpand = (index: number) => {
     if (onSelectChange) {

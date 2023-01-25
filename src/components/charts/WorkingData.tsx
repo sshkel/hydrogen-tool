@@ -739,14 +739,6 @@ type DoughnutPaneData = {
 };
 
 export function DoughnutPane(data: DoughnutPaneData) {
-  const labels = [];
-  const items = [];
-  for (const [key, val] of Object.entries(data.items)) {
-    if (val !== 0) {
-      labels.push(key);
-      items.push(val);
-    }
-  }
   return (
     <StyledCard>
       <CardHeader
@@ -762,11 +754,7 @@ export function DoughnutPane(data: DoughnutPaneData) {
           paddingTop: 0,
         }}
       >
-        <CostBreakdownDoughnutChart
-          title={data.title}
-          labels={labels}
-          data={items}
-        />
+        <CostBreakdownDoughnutChart title={data.title} items={data.items} />
       </CardContent>
     </StyledCard>
   );
