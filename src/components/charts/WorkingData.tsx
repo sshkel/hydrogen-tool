@@ -137,7 +137,6 @@ export default function WorkingData(props: Props) {
     const dataModel: AmmoniaData = {
       inputConfiguration: inputConfiguration,
       location: location,
-      projectScale: projectScale,
       additionalAnnualCosts: inputs.additionalAnnualCosts,
       additionalTransmissionCharges: inputs.additionalTransmissionCharges,
       additionalUpfrontCosts: inputs.additionalUpfrontCosts,

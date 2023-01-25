@@ -134,7 +134,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 0.1,
     title: "Power Plant Oversize Ratio",
     helperText:
-      "Capacity of power plant relative to electrolyser, e.g., choosing 3 results in powe rplant being 3 times larger than the electrolyser capacity.",
+      "Capacity of power plant relative to electrolyser, e.g., choosing 3 results in powerplant being 3 times larger than the electrolyser capacity.",
   },
   solarToWindPercentage: {
     min: 0,
@@ -427,8 +427,10 @@ export const numberFieldDefaultInputs: DefaultInput = {
   /******* Project Scale *******/
   projectScale: {
     min: 0.1,
-    max: 1_000,
+    max: 100_000,
     step: 0.1,
+    helperText:
+      "Hydrogen production rate - Standard 175 ton/yr (TPA) per MW of electrolyser capacity at full load",
     title: "Project Scale",
     adornmentLabel: "kTPA",
   },

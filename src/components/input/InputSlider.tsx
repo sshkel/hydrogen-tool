@@ -80,7 +80,7 @@ export default function InputSlider({ inputKey }: Props) {
     }
   };
   const valueText: string =
-    "Value: " +
+    "Range: " +
     min.toLocaleString("en-US") +
     " - " +
     max.toLocaleString("en-US");

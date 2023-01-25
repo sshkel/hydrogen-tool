@@ -78,7 +78,7 @@ function InputNumberField({ inputKey }: Props) {
 
   const valueText: string | undefined =
     min !== undefined
-      ? "Expected Values: " +
+      ? "Range: " +
         min.toLocaleString("en-US") +
         " - " +
         (max || "∞").toLocaleString("en-US")

@@ -87,7 +87,6 @@ export type AmmoniaData = {
   powerPlantType: PowerPlantType;
   powerSupplyOption: PowerSupplyOption;
   principalPPACost?: number;
-  projectScale: number;
   projectTimeline: number;
   secAtNominalLoad?: number;
   solarDegradation: number;
@@ -289,7 +288,8 @@ export class AmmoniaModel implements Model {
     let ammoniaCapex = 0;
     if (this.parameters.inputConfiguration === "Basic") {
       ammoniaCapex =
-        this.parameters.ammoniaPlantCapitalCost! * this.parameters.projectScale;
+        this.parameters.ammoniaPlantCapitalCost! *
+        this.parameters.ammoniaPlantCapacity;
     } else {
       ammoniaCapex = ammonia_plant_CAPEX(
         this.parameters.ammoniaPlantCapacity,
