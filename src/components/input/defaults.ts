@@ -863,7 +863,7 @@ class Defaults {
       const savedData = JSON.parse(sessionStorage.getItem("savedData")!);
       this.defaultInputs = {
         ...defaults,
-        savedData,
+        ...savedData,
       };
     } else {
       this.defaultInputs = defaults;
