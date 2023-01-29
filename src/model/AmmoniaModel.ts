@@ -704,7 +704,8 @@ export class AmmoniaModel implements Model {
     if (isOffshore(this.parameters.location)) {
       if (solarNominalCapacity !== 0) {
         throw new Error(
-          "Solar nominal capacity should be zero for offshore locations"
+          "Solar nominal capacity should be zero for offshore locations. Current value:" +
+            solarNominalCapacity
         );
       }
     }

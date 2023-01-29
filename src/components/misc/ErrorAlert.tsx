@@ -1,11 +1,18 @@
 import { Alert, AlertTitle } from "@mui/material";
 
-// TODO put a download button for dumping state so we can debug this easier
-export default function ErrorAlert() {
+interface Props {
+  message: string;
+  state?: { [key: string]: any };
+}
+// TODO put the state dump behind a debug flag
+export default function ErrorAlert(props: Props) {
   return (
-    <Alert severity="error">
-      <AlertTitle>Invalid inputs</AlertTitle>
-      Electrolyser capacity was 0. Please check the inputs.
-    </Alert>
+    <div>
+      <Alert severity="error">
+        <AlertTitle>Oops, something went wrong</AlertTitle>
+        {props.message}
+        <pre>{JSON.stringify(props.state, null, 2)}</pre>
+      </Alert>
+    </div>
   );
 }

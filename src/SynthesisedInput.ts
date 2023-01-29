@@ -43,7 +43,7 @@ class DefaultInputs implements Inputs {
 
   // Power Plant
   powerPlantConfiguration = "Standalone" as PowerPlantConfiguration;
-  powerPlantType = "Hybrid" as PowerPlantType;
+  powerPlantType = "Wind" as PowerPlantType;
   powerSupplyOption = "Self Build" as PowerSupplyOption;
   powerCapacityConfiguration = "Oversize Ratio" as PowerCapacityConfiguration;
   powerPlantOversizeRatio = 1;
