@@ -50,6 +50,11 @@ export function mean(arr: number[]): number {
   return sum(arr) / arr.length || 0;
 }
 export function isOffshore(zone: string) {
+  if (!Object.keys(zoneInfo).includes(zone)) {
+    // hacky handling for tests since we've moved from using
+    // zone names to special codes
+    return false;
+  }
   type ObjectKey = keyof typeof zoneInfo;
   const zoneKey = zone as ObjectKey;
   // TODO find a better way to check for offshore location
