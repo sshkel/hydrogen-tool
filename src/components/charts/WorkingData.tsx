@@ -27,6 +27,7 @@ import {
 import DesignStepper from "../DesignStepper";
 import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
+import ErrorAlert from "../misc/ErrorAlert";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
@@ -483,67 +484,78 @@ export default function WorkingData(props: Props) {
 
     model = new HydrogenModel(dataModel, state.solarData, state.windData);
   }
-
-  const results = model.produceResults();
-
-  return (
-    <ThemeProvider theme={theme}>
-      <DesignStepper activeStep={3} />
-      <CssBaseline />
-      <Grid
-        container
-        direction="column"
-        sx={{ backgroundColor: SAPPHIRE, paddingTop: 4, paddingX: 8 }}
-      >
-        <Grid item>
-          {KeyInputsPane(
-            location,
-            results.electrolyserNominalCapacity,
-            results.powerPlantNominalCapacity
-          )}
-        </Grid>
-        <Grid item>
-          <Grid
-            container
-            item
-            direction="column"
-            className="summary and cost breakdown"
-          >
-            <Grid item xs>
-              {SummaryOfResultsPane(results.summaryTableData)}
+  try {
+    const results = model.produceResults();
+    return (
+      <ThemeProvider theme={theme}>
+        <DesignStepper activeStep={3} />
+        <CssBaseline />
+        {results.summaryTableData["Electrolyser Capacity Factor"] === 0 ? (
+          <ErrorAlert
+            message={
+              "Invalid inputs. Electrolyser capacity was 0. Please check the inputs."
+            }
+          />
+        ) : null}
+        <Grid
+          container
+          direction="column"
+          sx={{ backgroundColor: SAPPHIRE, paddingTop: 4, paddingX: 8 }}
+        >
+          <Grid item>
+            {KeyInputsPane(
+              location,
+              results.electrolyserNominalCapacity,
+              results.powerPlantNominalCapacity
+            )}
+          </Grid>
+          <Grid item>
+            <Grid
+              container
+              item
+              direction="column"
+              className="summary and cost breakdown"
+            >
+              <Grid item xs>
+                {SummaryOfResultsPane(results.summaryTableData)}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid container item xs={6}>
-          <Grid item xs={6}>
-            {OperatingCostsPane(results.operatingCosts)}
+          <Grid container item xs={6}>
+            <Grid item xs={6}>
+              {OperatingCostsPane(results.operatingCosts)}
+            </Grid>
+            <Grid item xs={6}>
+              {LcBreakdownPane(results.lcBreakdownData, powerfuel)}
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            {LcBreakdownPane(results.lcBreakdownData, powerfuel)}
+          <Grid container className="duration curves" wrap="nowrap">
+            {DurationCurves(results.durationCurves)}
           </Grid>
-        </Grid>
-        <Grid container className="duration curves" wrap="nowrap">
-          {DurationCurves(results.durationCurves)}
-        </Grid>
 
-        <Grid container item wrap="nowrap">
-          <Grid item xs={6}>
-            <DoughnutPane
-              title="Capital Cost Breakdown"
-              items={results.capitalCostBreakdown}
-            />
+          <Grid container item wrap="nowrap">
+            <Grid item xs={6}>
+              <DoughnutPane
+                title="Capital Cost Breakdown"
+                items={results.capitalCostBreakdown}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <DoughnutPane
+                title="Indirect Cost Breakdown"
+                items={results.indirectCostBreakdown}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <DoughnutPane
-              title="Indirect Cost Breakdown"
-              items={results.indirectCostBreakdown}
-            />
+          <Grid item>
+            {HourlyCapacityFactorsPane(results.hourlyCapFactors)}
           </Grid>
         </Grid>
-        <Grid item>{HourlyCapacityFactorsPane(results.hourlyCapFactors)}</Grid>
-      </Grid>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  } catch (e: any) {
+    return <ErrorAlert message={e.message} state={inputs} />;
+  }
 }
 
 function DurationCurves(durationCurves: { [key: string]: number[] }) {

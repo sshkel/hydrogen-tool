@@ -701,7 +701,14 @@ export class AmmoniaModel implements Model {
       windRatio,
       this.parameters.powerPlantOversizeRatio
     );
-
+    if (isOffshore(this.parameters.location)) {
+      if (solarNominalCapacity !== 0) {
+        throw new Error(
+          "Solar nominal capacity should be zero for offshore locations. Current value:" +
+            solarNominalCapacity
+        );
+      }
+    }
     const powerPlantNominalCapacity =
       solarNominalCapacity + windNominalCapacity;
 

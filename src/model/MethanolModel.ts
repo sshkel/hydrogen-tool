@@ -751,6 +751,15 @@ export class MethanolModel implements Model {
         methanolPlantPowerDemand + carbonCapturePlantPowerDemand;
     }
 
+    if (isOffshore(this.parameters.location)) {
+      if (solarNominalCapacity !== 0) {
+        throw new Error(
+          "Solar nominal capacity should be zero for offshore locations. Current value:" +
+            solarNominalCapacity
+        );
+      }
+    }
+
     if (inputConfiguration === "Basic") {
       const solarToWindRatio = isOffshore(this.parameters.location)
         ? 0

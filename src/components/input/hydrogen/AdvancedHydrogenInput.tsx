@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid";
 
 import ControlledPowerPlantCard from "../ControlledPowerPlantCardWithNominalCapacity";
 import InputCard from "../InputCard";
+import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 
@@ -195,9 +196,12 @@ export default function AdvancedHydrogenInput(props: Props) {
                     key="batteryRatedPower"
                     inputKey="batteryRatedPower"
                   />,
-                  <InputNumberField
+                  <InputDropdownField
+                    id="batteryStorageDuration"
                     key="batteryStorageDuration"
-                    inputKey="batteryStorageDuration"
+                    defaultValue="0"
+                    label="Battery Storage Duration"
+                    values={["0", "1", "2", "4", "8"]}
                   />,
                 ]}
               />,
