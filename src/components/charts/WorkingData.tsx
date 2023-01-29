@@ -27,6 +27,7 @@ import {
 import DesignStepper from "../DesignStepper";
 import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
+import ErrorAlert from "../misc/ErrorAlert";
 import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
 import CostLineChart from "./CostLineChart";
 import CostWaterfallBarChart from "./CostWaterfallBarChart";
@@ -490,6 +491,9 @@ export default function WorkingData(props: Props) {
     <ThemeProvider theme={theme}>
       <DesignStepper activeStep={3} />
       <CssBaseline />
+      {results.summaryTableData["Electrolyser Capacity Factor"] === 0 ? (
+        <ErrorAlert />
+      ) : null}
       <Grid
         container
         direction="column"
