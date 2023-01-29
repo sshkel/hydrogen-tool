@@ -1,4 +1,5 @@
 import "chart.js/auto";
+import dataLabelsPlugin from "chartjs-plugin-datalabels";
 import { Bar } from "react-chartjs-2";
 
 import { ChartData } from "../../types";
@@ -35,8 +36,21 @@ export default function CostBarChart(props: Props) {
     })),
   };
 
-  const options = {
+  const options: any = {
     plugins: {
+      datalabels: {
+        anchor: "end",
+        align: "end",
+        offset: 2,
+        clip: false,
+        color: "#848484",
+        font: {
+          size: 15,
+          style: "italic",
+          weight: "bold",
+        },
+        formatter: (val: number[]) => `${(val[1] - val[0]).toFixed(4)}`,
+      },
       // override label to display the length of the bar rather than coordinates
       tooltip: {
         callbacks: {
@@ -64,7 +78,12 @@ export default function CostBarChart(props: Props) {
 
   return (
     <div>
-      <Bar title={title} data={graphData} options={options} />
+      <Bar
+        title={title}
+        data={graphData}
+        options={options}
+        plugins={[dataLabelsPlugin as any]}
+      />
     </div>
   );
 }
