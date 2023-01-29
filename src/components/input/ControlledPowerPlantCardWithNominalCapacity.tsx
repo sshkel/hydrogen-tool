@@ -142,12 +142,12 @@ export default function ControlledPowerPlantCard(props: Props) {
           buttonChildren={[
             [
               <InputNumberField
-                key="solarNominalCapacity"
-                inputKey="solarNominalCapacity"
-              />,
-              <InputNumberField
                 key="windNominalCapacity"
                 inputKey="windNominalCapacity"
+              />,
+              <InputNumberField
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
               />,
             ],
             [
