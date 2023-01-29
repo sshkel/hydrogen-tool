@@ -4,6 +4,10 @@ import { MemoryRouter } from "react-router-dom";
 import InputHomePage from "../../../components/input/InputHomePage";
 
 describe("InputHomePage", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
   it("sends expected input fields for basic configuration", async () => {
     const setState = jest.fn();
     const { container, getByText } = render(

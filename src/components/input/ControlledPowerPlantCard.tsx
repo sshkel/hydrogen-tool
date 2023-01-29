@@ -85,10 +85,7 @@ export default function ControlledAmmoniaPowerPlantCard(props: Props) {
             key="solarToWindPercentage"
             inputKey="solarToWindPercentage"
           />,
-          <InputNumberField
-            key="windrDegradation"
-            inputKey="windDegradation"
-          />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
           <InputNumberField
             key="solarDegradation"
             inputKey="solarDegradation"

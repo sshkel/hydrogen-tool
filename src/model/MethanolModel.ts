@@ -1,4 +1,7 @@
-import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
+import {
+  getCapex,
+  getEpcCosts as getIndirectCosts,
+} from "../components/charts/capex-calculations";
 import {
   calculateP2XProductionLC,
   roundToNearestInteger,
@@ -332,7 +335,7 @@ export class MethanolModel implements Model {
       powerPlantLandCost,
       batteryEpcCost,
       batteryLandCost,
-    } = getEpcCosts(
+    } = getIndirectCosts(
       electrolyserAndH2CAPEX,
       this.parameters.electrolyserEpcCosts,
       this.parameters.electrolyserLandProcurementCosts,
