@@ -505,10 +505,6 @@ describe("Working Data calculations", () => {
       const generatorDurationCurve = wrapper
         .find(DurationCurve)
         .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-      // writeLocalFile(
-      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-generator-duration-curve.json",
-      //   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
-      // );
 
       expect(generatorDurationCurve).toHaveLength(1);
       expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
@@ -524,11 +520,6 @@ describe("Working Data calculations", () => {
       const electrolyserDurationCurve = wrapper
         .find(DurationCurve)
         .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-
-      // writeLocalFile(
-      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-electrolyser-duration-curve.json",
-      //   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
-      // );
 
       expect(electrolyserDurationCurve).toHaveLength(1);
       expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
@@ -547,11 +538,6 @@ describe("Working Data calculations", () => {
 
       expect(methanolDurationCurve).toHaveLength(1);
       expect(methanolDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-      // writeLocalFile(
-      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-methanol-duration-curve.json",
-      //   JSON.stringify(methanolDurationCurve.at(0).prop("data"))
-      // );
 
       (methanolDurationCurve.at(0).prop("data") as number[]).forEach(
         (val, index) => {

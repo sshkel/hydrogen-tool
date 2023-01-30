@@ -1,4 +1,3 @@
-import { DefaultInputs as defaults } from "./components/input/defaults";
 import {
   CarbonCaptureSource,
   InputConfiguration,
