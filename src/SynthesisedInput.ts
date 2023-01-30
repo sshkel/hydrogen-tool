@@ -1,3 +1,4 @@
+import { DefaultInputs as defaults } from "./components/input/defaults";
 import {
   CarbonCaptureSource,
   InputConfiguration,
@@ -162,6 +163,7 @@ export default class SynthesisedInputs extends DefaultInputs {
 
     const form = {
       inputConfiguration: inputConfiguration,
+      // ...defaults.all(),
       ...this,
       ...savedData,
       ...sanitisedUserInputFields,

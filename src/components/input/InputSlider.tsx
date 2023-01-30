@@ -46,7 +46,7 @@ export default function InputSlider({ inputKey }: Props) {
   }
 
   const { title, helperText, min = 0, max = 100, step = 10 } = data;
-  const defaultValue = DefaultInputs.get(inputKey);
+  const defaultValue = DefaultInputs.getNumber(inputKey);
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue

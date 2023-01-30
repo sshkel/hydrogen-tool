@@ -554,7 +554,19 @@ export default function WorkingData(props: Props) {
       </ThemeProvider>
     );
   } catch (e: any) {
-    return <ErrorAlert message={e.message} state={inputs} />;
+    return (
+      <ErrorAlert
+        message={e.message}
+        state={{
+          validatedInputs: inputs,
+          rawInputs: {
+            location: props.location,
+            inputConfiguration: props.inputConfiguration,
+            data: props.data,
+          },
+        }}
+      />
+    );
   }
 }
 
