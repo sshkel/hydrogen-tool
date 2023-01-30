@@ -5,6 +5,7 @@ import WorkingData from "../../../components/charts/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {
+  basicHybridPPAScenario,
   basicSolarScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneAdvancedAmmoniaSolarScenario,
@@ -314,14 +315,53 @@ describe("Model summary", () => {
           data["Total Time Electrolyser is Operating (% of hrs/yr)"]
         ).toEqual(42.67);
         expect(data["Electrolyser Capacity Factor"]).toEqual(29.29);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(3_333);
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
+        ).toEqual(462);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(100);
+        expect(data["LCH2 ($/kg)"]).toEqual(4.33);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates summary of results for hybrid PPA with basic configuration", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          inputConfiguration={basicHybridPPAScenario.inputConfiguration}
+          data={basicHybridPPAScenario.data}
+          location={basicHybridPPAScenario.location}
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(SummaryOfResultsTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"]).toEqual(38.87);
+        expect(
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(21.88);
+        expect(
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
+        ).toEqual(95.62);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(71);
         expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
-          3_333_000
+          6_666_000
         );
         expect(
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-        ).toEqual(462_102);
+        ).toEqual(633_065);
         expect(data["Hydrogen Output (t/yr)"]).toEqual(100_000);
-        expect(data["LCH2 ($/kg)"]).toEqual(3.27);
+        expect(data["LCH2 ($/kg)"]).toEqual(2.08);
 
         done();
       }, TIMEOUT);

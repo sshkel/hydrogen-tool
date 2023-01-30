@@ -256,7 +256,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakdown = [
-        1.051, 0.881, 0.695, 0.33, 0.233, 0, 0, 0.075, 0, 0, 0, 0,
+        1.441, 1.208, 0.954, 0.33, 0.32, 0, 0, 0.075, 0, 0, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
@@ -399,7 +399,7 @@ describe("Working Data calculations", () => {
       // lcGridConnection,
       // lcAdditionalCosts,
       const costBreakdown = [
-        0, 0.536, 0.193, 0, 0.142, 0.667, 0.109, 0.075, 0, 0, 0,
+        0, 0.733, 0.264, 0, 0.194, 0.667, 0.149, 0.075, 0, 0, 0,
       ];
 
       // Sleep to wait for CSV to load and set state
