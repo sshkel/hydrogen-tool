@@ -82,7 +82,7 @@ export default function CostBreakdownDoughnutChart(props: Props) {
     <Doughnut
       data={data}
       plugins={[dataLabelsPlugin as any]}
-      options={options}
+      options={options as any}
     />
   );
 }

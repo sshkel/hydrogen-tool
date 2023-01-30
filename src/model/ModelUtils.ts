@@ -1009,14 +1009,14 @@ export function getEpcIndirectCost(
   epc: number, // % of capex
   CAPEX: number // total capex of Methane plant
 ) {
-  return epc * CAPEX;
+  return (epc / 100) * CAPEX;
 }
 
 export function getLandProcurementIndirectCost(
   landProcurementCost: number, // % of capex
   CAPEX: number // total capex of Methane plant
 ) {
-  return landProcurementCost * CAPEX;
+  return (landProcurementCost / 100) * CAPEX;
 }
 
 export function hydrogen_storage_CAPEX(

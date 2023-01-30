@@ -14,6 +14,9 @@ import hybridBatteryOversizeRatioGeneratorDurationCurve from "../../resources/hy
 import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
 import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
 import { readLocalCsv, writeLocalFile } from "../../resources/loader";
+import methanolHybridBatteryElectrolyserDurationCurve from "../../resources/methanol-hybrid-battery-electrolyser-duration-curve.json";
+import methanolHybridBatteryGeneratorDurationCurve from "../../resources/methanol-hybrid-battery-generator-duration-curve.json";
+import methanolHybridBatteryMethanolDurationCurve from "../../resources/methanol-hybrid-battery-methanol-duration-curve.json";
 import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
 import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
 import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
@@ -29,6 +32,7 @@ import {
   standaloneAmmoniaSolarScenario,
   standaloneAmmoniaSolarWithBatteryScenario,
   standaloneHybridWithDegradationScenario,
+  standaloneMethanolHybridWithBatteryScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
   standaloneWindScenario,
@@ -440,10 +444,6 @@ describe("Working Data calculations", () => {
       const generatorDurationCurve = wrapper
         .find(DurationCurve)
         .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-      // writeLocalFile(
-      //   "/Users/stanisshkel/work/hydrogen-tool/src/tests/resources/ammonia-solar-generator-duration-curve-with-battery.json",
-      //   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
-      // );
       expect(generatorDurationCurve).toHaveLength(1);
       expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
 
@@ -458,10 +458,6 @@ describe("Working Data calculations", () => {
       const electrolyserDurationCurve = wrapper
         .find(DurationCurve)
         .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-      // writeLocalFile(
-      //   "/Users/stanisshkel/work/hydrogen-tool/src/tests/resources/ammonia-solar-electrolyser-duration-curve-with-battery.json",
-      //   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
-      // );
       expect(electrolyserDurationCurve).toHaveLength(1);
       expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
       (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
@@ -483,6 +479,84 @@ describe("Working Data calculations", () => {
         (val, index) => {
           expect(val).toBeCloseTo(
             ammoniaSolarAmmoniaDurationCurveWithBattery[index],
+            8
+          );
+        }
+      );
+
+      done();
+    }, TIMEOUT);
+  });
+
+  it("Methanol model: calculates duration curves as 8760 percentages for hybrid with battery", (done) => {
+    const wrapper = mount(
+      <WorkingData
+        inputConfiguration="Advanced"
+        data={standaloneMethanolHybridWithBatteryScenario.data}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+        location={"South West NSW"}
+      />
+    );
+
+    // Sleep to wait for CSV to load and set state
+    setTimeout(() => {
+      wrapper.update();
+      const generatorDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
+      // writeLocalFile(
+      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-generator-duration-curve.json",
+      //   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
+      // );
+
+      expect(generatorDurationCurve).toHaveLength(1);
+      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
+
+      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toEqual(
+            methanolHybridBatteryGeneratorDurationCurve[index]
+          );
+        }
+      );
+
+      const electrolyserDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
+
+      // writeLocalFile(
+      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-electrolyser-duration-curve.json",
+      //   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
+      // );
+
+      expect(electrolyserDurationCurve).toHaveLength(1);
+      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
+      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            methanolHybridBatteryElectrolyserDurationCurve[index],
+            8
+          );
+        }
+      );
+
+      const methanolDurationCurve = wrapper
+        .find(DurationCurve)
+        .filterWhere((e) => e.prop("title") === "Methanol Duration Curve");
+
+      expect(methanolDurationCurve).toHaveLength(1);
+      expect(methanolDurationCurve.at(0).prop("data")).toHaveLength(8760);
+
+      // writeLocalFile(
+      //   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/methanol-hybrid-battery-methanol-duration-curve.json",
+      //   JSON.stringify(methanolDurationCurve.at(0).prop("data"))
+      // );
+
+      (methanolDurationCurve.at(0).prop("data") as number[]).forEach(
+        (val, index) => {
+          expect(val).toBeCloseTo(
+            methanolHybridBatteryMethanolDurationCurve[index],
             8
           );
         }

@@ -85,7 +85,12 @@ function InputNumberField({ inputKey }: Props) {
       : undefined;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(Number(event.target.value) || "");
+    const value = event.target.value;
+    if (value === "") {
+      setValue("");
+    } else {
+      setValue(Number(event.target.value));
+    }
   };
 
   const handleBlur = () => {

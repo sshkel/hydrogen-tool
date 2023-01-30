@@ -4,6 +4,10 @@ import { MemoryRouter } from "react-router-dom";
 import InputHomePage from "../../../components/input/InputHomePage";
 
 describe("InputHomePage", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
   it("sends expected input fields for basic configuration", async () => {
     const setState = jest.fn();
     const { container, getByText } = render(
@@ -87,8 +91,8 @@ describe("InputHomePage", () => {
       powerPlantType: "Wind",
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Nominal Capacity",
-      solarNominalCapacity: 10,
-      solarDegradation: 0,
+      windNominalCapacity: 10,
+      windDegradation: 0,
       stackDegradation: 0,
       stackLifetime: 80000,
       stackReplacementType: "Cumulative Hours",

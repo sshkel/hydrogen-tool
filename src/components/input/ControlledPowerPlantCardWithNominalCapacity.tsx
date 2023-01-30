@@ -79,17 +79,17 @@ export default function ControlledPowerPlantCard(props: Props) {
           ]
         : [
             <InputSelect
-              key="solarPowerPlantCapacitySelect"
-              selectKey="solarPowerPlantCapacitySelect"
+              key="windPowerPlantCapacitySelect"
+              selectKey="windPowerPlantCapacitySelect"
               prompt="Power Plant Capacity"
               titles={["Nominal Capacity", "Oversize Ratio"]}
               selectClass="powerCapacityConfiguration"
-              helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
+              helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
               buttonChildren={[
                 [
                   <InputNumberField
-                    key="solarNominalCapacity"
-                    inputKey="solarNominalCapacity"
+                    key="windNominalCapacity"
+                    inputKey="windNominalCapacity"
                   />,
                 ],
                 [
@@ -101,23 +101,23 @@ export default function ControlledPowerPlantCard(props: Props) {
               ]}
             />,
             <InputNumberField
-              key="solarDegradation"
-              inputKey="solarDegradation"
+              key="windDegradation"
+              inputKey="windDegradation"
             />,
           ],
       [
         <InputSelect
-          key="windPowerPlantCapacitySelect"
-          selectKey="windPowerPlantCapacitySelect"
+          key="solarPowerPlantCapacitySelect"
+          selectKey="solarPowerPlantCapacitySelect"
           prompt="Power Plant Capacity"
           titles={["Nominal Capacity", "Oversize Ratio"]}
           selectClass="powerCapacityConfiguration"
-          helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+          helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
           buttonChildren={[
             [
               <InputNumberField
-                key="windNominalCapacity"
-                inputKey="windNominalCapacity"
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
               />,
             ],
             [
@@ -128,8 +128,9 @@ export default function ControlledPowerPlantCard(props: Props) {
             ],
           ]}
         />,
-        <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+        <InputNumberField key="solarDegradation" inputKey="solarDegradation" />,
       ],
+
       [
         <InputSelect
           key="hybridPowerPlantCapacitySelect"
@@ -141,12 +142,12 @@ export default function ControlledPowerPlantCard(props: Props) {
           buttonChildren={[
             [
               <InputNumberField
-                key="solarNominalCapacity"
-                inputKey="solarNominalCapacity"
-              />,
-              <InputNumberField
                 key="windNominalCapacity"
                 inputKey="windNominalCapacity"
+              />,
+              <InputNumberField
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
               />,
             ],
             [
@@ -161,8 +162,8 @@ export default function ControlledPowerPlantCard(props: Props) {
             ],
           ]}
         />,
-        <InputNumberField key="solarDegradation" inputKey="solarDegradation" />,
         <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+        <InputNumberField key="solarDegradation" inputKey="solarDegradation" />,
       ],
     ];
   }

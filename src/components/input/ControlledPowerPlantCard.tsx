@@ -64,17 +64,17 @@ export default function ControlledAmmoniaPowerPlantCard(props: Props) {
             key="powerPlantOversizeRatio"
             inputKey="powerPlantOversizeRatio"
           />,
-          <InputNumberField
-            key="solarDegradation"
-            inputKey="solarDegradation"
-          />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
         ],
         [
           <InputNumberField
             key="powerPlantOversizeRatio"
             inputKey="powerPlantOversizeRatio"
           />,
-          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
+          <InputNumberField
+            key="solarDegradation"
+            inputKey="solarDegradation"
+          />,
         ],
         [
           <InputNumberField
@@ -85,11 +85,11 @@ export default function ControlledAmmoniaPowerPlantCard(props: Props) {
             key="solarToWindPercentage"
             inputKey="solarToWindPercentage"
           />,
+          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
           <InputNumberField
             key="solarDegradation"
             inputKey="solarDegradation"
           />,
-          <InputNumberField key="windDegradation" inputKey="windDegradation" />,
         ],
       ];
     }
