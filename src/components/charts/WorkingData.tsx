@@ -490,7 +490,9 @@ export default function WorkingData(props: Props) {
       <ThemeProvider theme={theme}>
         <DesignStepper activeStep={3} />
         <CssBaseline />
-        {results.summaryTableData["Electrolyser Capacity Factor"] === 0 ? (
+        {results.summaryTableData["Electrolyser Capacity Factor"] === 0 &&
+        // TODO dirtiest of hacks to not render this on first paint, we should clean this up
+        state.solarData.length > 0 ? (
           <ErrorAlert
             message={
               "Invalid inputs. Electrolyser capacity was 0. Please check the inputs."
