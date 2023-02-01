@@ -40,7 +40,7 @@ export default function BasicAmmoniaInput(props: InputProps) {
               <InputSlider
                 key="ammoniaPlantCapacity"
                 inputKey="ammoniaPlantCapacity"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
             ]}
           />
@@ -52,18 +52,18 @@ export default function BasicAmmoniaInput(props: InputProps) {
               <InputSlider
                 key="electrolyserEfficiency"
                 inputKey="electrolyserEfficiency"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
               <InputSlider
                 key="electrolyserSystemOversizing"
                 inputKey="electrolyserSystemOversizing"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
               // TODO work out why this freaks out as a slider
               <InputSlider
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
             ]}
           />
@@ -77,19 +77,19 @@ export default function BasicAmmoniaInput(props: InputProps) {
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
-                      addValueToForm={props.formState}
+                      formState={props.formState}
                     />,
                   ]
                 : [
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
-                      addValueToForm={props.formState}
+                      formState={props.formState}
                     />,
                     <InputSlider
                       key="solarToWindPercentage"
                       inputKey="solarToWindPercentage"
-                      addValueToForm={props.formState}
+                      formState={props.formState}
                     />,
                   ]
             }
@@ -112,12 +112,12 @@ export default function BasicAmmoniaInput(props: InputProps) {
               <InputSlider
                 key="electrolyserPurchaseCost"
                 inputKey="electrolyserPurchaseCost"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
               <InputSlider
                 key="ammoniaPlantCapitalCost"
                 inputKey="ammoniaPlantCapitalCost"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
               <InputSelect
                 key="powerSupplyOptionSelect"
@@ -132,26 +132,26 @@ export default function BasicAmmoniaInput(props: InputProps) {
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
-                          addValueToForm={props.formState}
+                          formState={props.formState}
                         />,
                       ]
                     : [
                         <InputSlider
                           key="solarFarmBuildCost"
                           inputKey="solarFarmBuildCost"
-                          addValueToForm={props.formState}
+                          formState={props.formState}
                         />,
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
-                          addValueToForm={props.formState}
+                          formState={props.formState}
                         />,
                       ],
                   [
                     <InputSlider
                       key="principalPPACost"
                       inputKey="principalPPACost"
-                      addValueToForm={props.formState}
+                      formState={props.formState}
                     />,
                   ],
                 ]}
@@ -159,7 +159,7 @@ export default function BasicAmmoniaInput(props: InputProps) {
               <InputSlider
                 key="waterSupplyCost"
                 inputKey="waterSupplyCost"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
             ]}
           />
@@ -181,12 +181,12 @@ export default function BasicAmmoniaInput(props: InputProps) {
               <InputSlider
                 key="discountRate"
                 inputKey="discountRate"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
               <InputSlider
                 key="projectTimeline"
                 inputKey="projectTimeline"
-                addValueToForm={props.formState}
+                formState={props.formState}
               />,
             ]}
           />
