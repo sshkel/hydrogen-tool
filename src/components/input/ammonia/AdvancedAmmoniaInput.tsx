@@ -5,12 +5,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
+import { InputProps } from "../types";
 
-interface Props {
-  location: string;
-}
-
-export default function AdvancedAmmoniaInput(props: Props) {
+export default function AdvancedAmmoniaInput(props: InputProps) {
   return (
     <Grid
       container
@@ -48,14 +45,17 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="ammoniaPlantCapacity"
                     inputKey="ammoniaPlantCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaStorageCapacity"
                     inputKey="ammoniaStorageCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaPlantMinimumTurndown"
                     inputKey="ammoniaPlantMinimumTurndown"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -68,8 +68,13 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="ammoniaPlantSec"
                     inputKey="ammoniaPlantSec"
+                    formState={props.formState}
                   />,
-                  <InputNumberField key="asuSec" inputKey="asuSec" />,
+                  <InputNumberField
+                    key="asuSec"
+                    inputKey="asuSec"
+                    formState={props.formState}
+                  />,
                 ]}
               />,
               <InputCard
@@ -81,34 +86,42 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="ammoniaSynthesisUnitCost"
                     inputKey="ammoniaSynthesisUnitCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaStorageCost"
                     inputKey="ammoniaStorageCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="airSeparationUnitCost"
                     inputKey="airSeparationUnitCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaEpcCosts"
                     inputKey="ammoniaEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaLandProcurementCosts"
                     inputKey="ammoniaLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaPlantOMCost"
                     inputKey="ammoniaPlantOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ammoniaStorageOMCost"
                     inputKey="ammoniaStorageOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="asuPlantOMCost"
                     inputKey="asuPlantOMCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -122,6 +135,7 @@ export default function AdvancedAmmoniaInput(props: Props) {
               <InputNumberField
                 key="electrolyserSystemOversizing"
                 inputKey="electrolyserSystemOversizing"
+                formState={props.formState}
               />,
               <InputCard
                 subtitle
@@ -132,10 +146,12 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="secAtNominalLoad"
                     inputKey="secAtNominalLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterRequirementOfElectrolyser"
                     inputKey="waterRequirementOfElectrolyser"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -148,18 +164,22 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="electrolyserMaximumLoad"
                     inputKey="electrolyserMaximumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserMinimumLoad"
                     inputKey="electrolyserMinimumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="maximumLoadWhenOverloading"
                     inputKey="maximumLoadWhenOverloading"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="timeBetweenOverloading"
                     inputKey="timeBetweenOverloading"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -175,20 +195,24 @@ export default function AdvancedAmmoniaInput(props: Props) {
                     <InputNumberField
                       key="stackLifetime"
                       inputKey="stackLifetime"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                   [
                     <InputNumberField
                       key="maximumDegradationBeforeReplacement"
                       inputKey="maximumDegradationBeforeReplacement"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                 ]}
@@ -202,10 +226,12 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="hydrogenStorageCapacity"
                     inputKey="hydrogenStorageCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="minimumHydrogenStorage"
                     inputKey="minimumHydrogenStorage"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -218,46 +244,57 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="electrolyserReferenceCapacity"
                     inputKey="electrolyserReferenceCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserPurchaseCost"
                     inputKey="electrolyserPurchaseCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserCostReductionWithScale"
                     inputKey="electrolyserCostReductionWithScale"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserReferenceFoldIncrease"
                     inputKey="electrolyserReferenceFoldIncrease"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="hydrogenStoragePurchaseCost"
                     inputKey="hydrogenStoragePurchaseCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserEpcCosts"
                     inputKey="electrolyserEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserLandProcurementCosts"
                     inputKey="electrolyserLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserOMCost"
                     inputKey="electrolyserOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="hydrogenStorageOMCost"
                     inputKey="hydrogenStorageOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserStackReplacement"
                     inputKey="electrolyserStackReplacement"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterSupplyCost"
                     inputKey="waterSupplyCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -300,6 +337,7 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="batteryRatedPower"
                     inputKey="batteryRatedPower"
+                    formState={props.formState}
                   />,
                   <InputDropdownField
                     id="batteryStorageDuration"
@@ -318,14 +356,17 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="batteryEfficiency"
                     inputKey="batteryEfficiency"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryMinCharge"
                     inputKey="batteryMinCharge"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLifetime"
                     inputKey="batteryLifetime"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -337,22 +378,27 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="batteryCosts"
                     inputKey="batteryCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryEpcCosts"
                     inputKey="batteryEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLandProcurementCosts"
                     inputKey="batteryLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryOMCost"
                     inputKey="batteryOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryReplacementCost"
                     inputKey="batteryReplacementCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -373,10 +419,12 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="additionalUpfrontCosts"
                     inputKey="additionalUpfrontCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="additionalAnnualCosts"
                     inputKey="additionalAnnualCosts"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -388,10 +436,12 @@ export default function AdvancedAmmoniaInput(props: Props) {
                   <InputNumberField
                     key="projectTimeline"
                     inputKey="projectTimeline"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="discountRate"
                     inputKey="discountRate"
+                    formState={props.formState}
                   />,
                 ]}
               />,

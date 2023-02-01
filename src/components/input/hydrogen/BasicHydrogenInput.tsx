@@ -6,11 +6,9 @@ import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
+import { InputProps } from "../types";
 
-interface Props {
-  location: string;
-}
-export default function BasicHydrogenInput(props: Props) {
+export default function BasicHydrogenInput(props: InputProps) {
   return (
     <Grid
       container
@@ -40,7 +38,11 @@ export default function BasicHydrogenInput(props: Props) {
           <InputCard
             title="Project Scale"
             children={[
-              <InputNumberField key="projectScale" inputKey="projectScale" />,
+              <InputNumberField
+                key="projectScale"
+                inputKey="projectScale"
+                formState={props.formState}
+              />,
             ]}
           />
         </Grid>
@@ -51,6 +53,7 @@ export default function BasicHydrogenInput(props: Props) {
               <InputSlider
                 key="electrolyserEfficiency"
                 inputKey="electrolyserEfficiency"
+                formState={props.formState}
               />,
             ]}
           />
@@ -64,16 +67,19 @@ export default function BasicHydrogenInput(props: Props) {
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
+                      formState={props.formState}
                     />,
                   ]
                 : [
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
+                      formState={props.formState}
                     />,
                     <InputSlider
                       key="solarToWindPercentage"
                       inputKey="solarToWindPercentage"
+                      formState={props.formState}
                     />,
                   ]
             }
@@ -96,6 +102,7 @@ export default function BasicHydrogenInput(props: Props) {
               <InputSlider
                 key="electrolyserPurchaseCost"
                 inputKey="electrolyserPurchaseCost"
+                formState={props.formState}
               />,
               <InputSelect
                 key="powerSupplyOptionSelect"
@@ -110,27 +117,35 @@ export default function BasicHydrogenInput(props: Props) {
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
+                          formState={props.formState}
                         />,
                       ]
                     : [
                         <InputSlider
                           key="solarFarmBuildCost"
                           inputKey="solarFarmBuildCost"
+                          formState={props.formState}
                         />,
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
+                          formState={props.formState}
                         />,
                       ],
                   [
                     <InputSlider
                       key="principalPPACost"
                       inputKey="principalPPACost"
+                      formState={props.formState}
                     />,
                   ],
                 ]}
               />,
-              <InputSlider key="waterSupplyCost" inputKey="waterSupplyCost" />,
+              <InputSlider
+                key="waterSupplyCost"
+                inputKey="waterSupplyCost"
+                formState={props.formState}
+              />,
             ]}
           />
         </Grid>
@@ -148,8 +163,16 @@ export default function BasicHydrogenInput(props: Props) {
           <InputCard
             title="Cost Analysis"
             children={[
-              <InputSlider key="discountRate" inputKey="discountRate" />,
-              <InputSlider key="projectTimeline" inputKey="projectTimeline" />,
+              <InputSlider
+                key="discountRate"
+                inputKey="discountRate"
+                formState={props.formState}
+              />,
+              <InputSlider
+                key="projectTimeline"
+                inputKey="projectTimeline"
+                formState={props.formState}
+              />,
             ]}
           />
         </Grid>

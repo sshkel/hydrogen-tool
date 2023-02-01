@@ -29,34 +29,55 @@ interface Props {
 }
 
 export default function InputHomePage(props: Props) {
+  const navigate = useNavigate();
+  const { powerfuel = "hydrogen" } = useParams();
+  const [tab, setTab] = React.useState("Basic");
+  let formState: { [key: string]: number | string } = {};
+
   function getBasicInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
-      return <BasicAmmoniaInput location={props.location} />;
+      return (
+        <BasicAmmoniaInput location={props.location} formState={formState} />
+      );
     }
     if (powerfuel === "methanol") {
-      return <BasicMethanolInput location={props.location} />;
+      return (
+        <BasicMethanolInput location={props.location} formState={formState} />
+      );
     }
     if (powerfuel === "methane") {
-      return <BasicMethaneInput location={props.location} />;
+      return (
+        <BasicMethaneInput location={props.location} formState={formState} />
+      );
     }
-    return <BasicHydrogenInput location={props.location} />;
+    return (
+      <BasicHydrogenInput location={props.location} formState={formState} />
+    );
   }
 
   function getAdvancedInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
-      return <AdvancedAmmoniaInput location={props.location} />;
+      return (
+        <AdvancedAmmoniaInput location={props.location} formState={formState} />
+      );
     }
     if (powerfuel === "methanol") {
-      return <AdvancedMethanolInput location={props.location} />;
+      return (
+        <AdvancedMethanolInput
+          location={props.location}
+          formState={formState}
+        />
+      );
     }
     if (powerfuel === "methane") {
-      return <AdvancedMethaneInput location={props.location} />;
+      return (
+        <AdvancedMethaneInput location={props.location} formState={formState} />
+      );
     }
-    return <AdvancedHydrogenInput location={props.location} />;
+    return (
+      <AdvancedHydrogenInput location={props.location} formState={formState} />
+    );
   }
-  const navigate = useNavigate();
-  const { powerfuel = "hydrogen" } = useParams();
-  const [tab, setTab] = React.useState("Basic");
   const { setInputConfiguration } = props;
 
   const handleChange = (_: React.SyntheticEvent, newTab: string) => {
@@ -74,7 +95,7 @@ export default function InputHomePage(props: Props) {
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    let form: any = {};
+    let form: any = { ...formState };
 
     form["powerfuel"] = powerfuel;
     for (let input of e.target.getElementsByTagName("input")) {

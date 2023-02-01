@@ -44,9 +44,10 @@ const sx = {
 
 interface Props {
   inputKey: string;
+  formState?: { [key: string]: number | string };
 }
 
-function InputNumberField({ inputKey }: Props) {
+function InputNumberField({ inputKey, formState }: Props) {
   if (!numberFieldDefaultInputs[inputKey]) {
     throw new Error(`${inputKey} is not a valid key for defaults`);
   }
@@ -69,6 +70,9 @@ function InputNumberField({ inputKey }: Props) {
   useEffect(() => {
     // Capture current state on unmount and in between state change of app
     return () => {
+      if (formState) {
+        formState[inputKey] = typeof value === "number" ? value : defaultValue;
+      }
       DefaultInputs.set(
         inputKey,
         typeof value === "number" ? value : defaultValue

@@ -80,7 +80,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(12),
-      { timeout: 2000 }
+      { timeout: 1000 }
     );
     fireEvent.click(getByText(/Calculate/i));
 
@@ -131,7 +131,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 2000 }
+      { timeout: 1000 }
     );
 
     fireEvent.click(getByText(/Oversize Ratio/i));
@@ -141,7 +141,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 2000 }
+      { timeout: 1000 }
     );
 
     fireEvent.click(getByText(/Grid Connected/i));
@@ -151,8 +151,16 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(23),
-      { timeout: 2000 }
+      { timeout: 1000 }
     );
+
+    // TODO There's a bug where collapsing the power plant type expands
+    // Results in other expands in the card resetting. Trying to fix this
+    // made the experience super slow and janky.
+    // fireEvent.click(getByLabelText(/hybrid-show-more/i));
+    // await waitFor(() => expect(getByLabelText(/hybrid-show-more/i)).not, {
+    //   timeout: 1000,
+    // });
 
     fireEvent.click(getByText(/Calculate/i));
 
@@ -186,6 +194,74 @@ describe("InputHomePage", () => {
       stackDegradation: 0,
       stackLifetime: 80000,
       stackReplacementType: "Cumulative Hours",
+    });
+  });
+
+  it("sends expected input fields for basic configuration with PPA", async () => {
+    const setState = jest.fn();
+    const { container, getByText, getByLabelText } = render(
+      <MemoryRouter>
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z1"}
+        />
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('input[type="number"]').length).toEqual(
+        10
+      )
+    );
+
+    fireEvent.click(getByLabelText(/capital-&-operating-cost-show-more/i));
+
+    await waitFor(() =>
+      expect(getByText(/Power Supply Option/i)).toBeDefined()
+    );
+
+    fireEvent.click(getByText(/Power Purchase Agreement/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(9),
+      { timeout: 1000 }
+    );
+
+    // Set PPA cost of 10
+    fireEvent.change(getByLabelText(/principalPPACost/i), {
+      target: { value: 10 },
+    });
+
+    fireEvent.click(getByLabelText(/power-purchase-agreement-.*-show-more/i));
+
+    await waitFor(
+      () =>
+        expect(getByLabelText(/power-purchase-agreement-.*-show-more/i)).not,
+      {
+        timeout: 1000,
+      }
+    );
+
+    fireEvent.click(getByText(/Calculate/i));
+
+    expect(setState).toHaveBeenCalledWith({
+      discountRate: 7,
+      electrolyserEfficiency: 50,
+      electrolyserPurchaseCost: 1000,
+      powerPlantOversizeRatio: 2,
+      powerfuel: "hydrogen",
+      projectScale: 100,
+      projectTimeline: 20,
+      principalPPACost: 10,
+      powerSupplyOption: "Power Purchase Agreement (PPA)",
+      waterSupplyCost: 5,
+      solarToWindPercentage: 50,
+      solarFarmBuildCost: 1200,
+      windFarmBuildCost: 2000,
     });
   });
 });

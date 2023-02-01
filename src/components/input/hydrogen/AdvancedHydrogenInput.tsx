@@ -5,11 +5,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
+import { InputProps } from "../types";
 
-interface Props {
-  location: string;
-}
-export default function AdvancedHydrogenInput(props: Props) {
+export default function AdvancedHydrogenInput(props: InputProps) {
   return (
     <Grid
       container
@@ -41,6 +39,7 @@ export default function AdvancedHydrogenInput(props: Props) {
               <InputNumberField
                 key="electrolyserNominalCapacity"
                 inputKey="electrolyserNominalCapacity"
+                formState={props.formState}
               />,
               <InputCard
                 subtitle
@@ -51,10 +50,12 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="secAtNominalLoad"
                     inputKey="secAtNominalLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterRequirementOfElectrolyser"
                     inputKey="waterRequirementOfElectrolyser"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -67,18 +68,22 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="electrolyserMaximumLoad"
                     inputKey="electrolyserMaximumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserMinimumLoad"
                     inputKey="electrolyserMinimumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="maximumLoadWhenOverloading"
                     inputKey="maximumLoadWhenOverloading"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="timeBetweenOverloading"
                     inputKey="timeBetweenOverloading"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -94,20 +99,24 @@ export default function AdvancedHydrogenInput(props: Props) {
                     <InputNumberField
                       key="stackLifetime"
                       inputKey="stackLifetime"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                   [
                     <InputNumberField
                       key="maximumDegradationBeforeReplacement"
                       inputKey="maximumDegradationBeforeReplacement"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                 ]}
@@ -121,38 +130,47 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="electrolyserReferenceCapacity"
                     inputKey="electrolyserReferenceCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserPurchaseCost"
                     inputKey="electrolyserPurchaseCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserCostReductionWithScale"
                     inputKey="electrolyserCostReductionWithScale"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserReferenceFoldIncrease"
                     inputKey="electrolyserReferenceFoldIncrease"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserEpcCosts"
                     inputKey="electrolyserEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserLandProcurementCosts"
                     inputKey="electrolyserLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserOMCost"
                     inputKey="electrolyserOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserStackReplacement"
                     inputKey="electrolyserStackReplacement"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterSupplyCost"
                     inputKey="waterSupplyCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -195,6 +213,7 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="batteryRatedPower"
                     inputKey="batteryRatedPower"
+                    formState={props.formState}
                   />,
                   <InputDropdownField
                     id="batteryStorageDuration"
@@ -213,14 +232,17 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="batteryEfficiency"
                     inputKey="batteryEfficiency"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryMinCharge"
                     inputKey="batteryMinCharge"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLifetime"
                     inputKey="batteryLifetime"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -232,22 +254,27 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="batteryCosts"
                     inputKey="batteryCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryEpcCosts"
                     inputKey="batteryEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLandProcurementCosts"
                     inputKey="batteryLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryOMCost"
                     inputKey="batteryOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryReplacementCost"
                     inputKey="batteryReplacementCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -268,10 +295,12 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="additionalUpfrontCosts"
                     inputKey="additionalUpfrontCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="additionalAnnualCosts"
                     inputKey="additionalAnnualCosts"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -283,10 +312,12 @@ export default function AdvancedHydrogenInput(props: Props) {
                   <InputNumberField
                     key="projectTimeline"
                     inputKey="projectTimeline"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="discountRate"
                     inputKey="discountRate"
+                    formState={props.formState}
                   />,
                 ]}
               />,

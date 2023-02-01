@@ -5,11 +5,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
+import { InputProps } from "../types";
 
-interface Props {
-  location: string;
-}
-export default function AdvancedMethaneInput(props: Props) {
+export default function AdvancedMethaneInput(props: InputProps) {
   return (
     <Grid
       container

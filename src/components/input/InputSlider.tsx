@@ -12,6 +12,7 @@ import { DefaultInputs } from "./defaults";
 
 interface Props {
   inputKey: string;
+  formState?: { [key: string]: number | string };
 }
 
 const StyledSlider = styled(Slider)({
@@ -38,7 +39,7 @@ const StyledSlider = styled(Slider)({
   },
 });
 
-export default function InputSlider({ inputKey }: Props) {
+export default function InputSlider({ inputKey, formState }: Props) {
   const data = sliderFieldDefaultInputs[inputKey];
 
   if (!data) {
@@ -55,6 +56,10 @@ export default function InputSlider({ inputKey }: Props) {
   useEffect(() => {
     // Capture current state on unmount and in between state change of app
     return () => {
+      if (formState) {
+        formState[inputKey] = typeof value === "number" ? value : defaultValue;
+      }
+
       DefaultInputs.set(
         inputKey,
         typeof value === "number" ? value : defaultValue
@@ -94,7 +99,7 @@ export default function InputSlider({ inputKey }: Props) {
         <StyledSlider
           value={typeof value === "number" ? value : 0}
           onChange={handleSliderChange}
-          aria-labelledby="input-slider"
+          aria-label="input-slider"
           min={min}
           max={max}
           step={step}
@@ -118,7 +123,7 @@ export default function InputSlider({ inputKey }: Props) {
             step: step,
             min: min,
             max: max,
-            "aria-labelledby": "input-slider",
+            "aria-label": `${inputKey}-input-slider-field`,
             style: {
               textAlign: "center",
               fontSize: "0.85rem",
