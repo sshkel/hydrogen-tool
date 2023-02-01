@@ -33,6 +33,7 @@ export default function InputDropdownField(props: Props) {
         display: "flex",
         flewidth: "inherit",
         flexDirection: "column",
+        paddingLeft: 0.5,
       }}
     >
       <InputTitle id={labelId} title={label} />

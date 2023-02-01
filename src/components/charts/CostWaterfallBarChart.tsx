@@ -45,7 +45,7 @@ export default function CostBarChart(props: Props) {
         clip: false,
         color: "#848484",
         font: {
-          size: 15,
+          size: 12,
           style: "italic",
           weight: "bold",
         },

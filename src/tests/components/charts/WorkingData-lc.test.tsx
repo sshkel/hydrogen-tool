@@ -12,6 +12,7 @@ import {
   standaloneAdvancedAmmoniaSolarScenario,
   standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
   standaloneHybridWithDegradationScenario,
+  standaloneMethanolHybridWithBatteryScenario,
   standaloneSolarScenario,
   standaloneSolarWithBatteryScenario,
   standaloneSolarWithStackDegradationScenario,
@@ -514,6 +515,59 @@ describe("Working Data calculations", () => {
           .find(WaterFallPane)
           .filterWhere(
             (e) => e.prop("title") === "Breakdown of Cost Components in LCNH3"
+          );
+        expect(cashFlowChart).toHaveLength(1);
+        const datapoints = cashFlowChart.at(0).prop("items");
+        Object.values(datapoints).forEach((cost, i) =>
+          expect(cost).toBeCloseTo(costBreakdown[i], 3)
+        );
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates lch2 for methanol hybrid with battery", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={standaloneMethanolHybridWithBatteryScenario.data}
+          location={standaloneMethanolHybridWithBatteryScenario.location}
+          inputConfiguration={
+            standaloneMethanolHybridWithBatteryScenario.inputConfiguration
+          }
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+        />
+      );
+
+      // lcPowerPlantCAPEX
+      // lcElectrolyserCAPEX
+      // lcH2StorageCAPEX
+      // lcMethanolPlantCAPEX
+      // lcCCCAPEX
+      // lcIndirectCosts
+      // lcPowerPlantOPEX
+      // lcElectrolyserOPEX
+      // lcH2StorageOPEX
+      // lcMethanolPlantOPEX
+      // lcCCOPEX
+      // lcElectricityPurchase
+      // lcStackReplacement
+      // lcWater
+      // lcBattery
+      // lcGridConnection
+      // lcAdditionalCosts
+      const costBreakdown = [
+        0.6478, 0.383, 0.0112, 0.025, 0.0566, 0.3058, 0.1208, 0.1116, 0.0033,
+        0.0146, 0.033, 0, 0.1792, 0.0111, 0.1034, 0, 0,
+      ];
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const cashFlowChart = wrapper
+          .find(WaterFallPane)
+          .filterWhere(
+            (e) => e.prop("title") === "Breakdown of Cost Components in LCMeOH"
           );
         expect(cashFlowChart).toHaveLength(1);
         const datapoints = cashFlowChart.at(0).prop("items");
