@@ -11,27 +11,29 @@ interface Props {
   buttonChildren: JSX.Element[][];
   prompt: string;
   selectClass?: string;
-  onSelectChange?: (text: string) => void;
+  onSelectChange?: (index: number) => void;
+  selectedIndex?: number;
 }
 
 export default function InputSelectField(props: Props) {
-  const [expanded, setExpanded] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(0);
-
   const {
     selectKey,
     titles,
     helperText,
     buttonChildren,
     selectClass,
+    selectedIndex = 0,
     onSelectChange,
   } = props;
+
+  const [expanded, setExpanded] = React.useState<boolean>(false);
+  const [selected, setSelected] = React.useState<number>(selectedIndex);
 
   const prompt = props.prompt + " (Select one option from below)";
 
   const onOpenExpand = (index: number) => {
     if (onSelectChange) {
-      onSelectChange(titles[index]);
+      onSelectChange(index);
     }
 
     setExpanded(true);

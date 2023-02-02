@@ -127,6 +127,7 @@ describe("InputHomePage", () => {
 
     fireEvent.click(getByLabelText(/power-plant-parameters-show-more/i));
 
+    // Open hybrid panel
     await waitFor(() => expect(getByText(/Hybrid/i)).toBeDefined());
 
     fireEvent.click(getByText(/Hybrid/i));
@@ -139,6 +140,7 @@ describe("InputHomePage", () => {
       { timeout: 1000 }
     );
 
+    // Select over size ratio
     fireEvent.click(getByText(/Oversize Ratio/i));
 
     await waitFor(
@@ -159,13 +161,10 @@ describe("InputHomePage", () => {
       { timeout: 1000 }
     );
 
-    // TODO There's a bug where collapsing the power plant type expands
-    // Results in other expands in the card resetting. Trying to fix this
-    // made the experience super slow and janky.
-    // fireEvent.click(getByLabelText(/hybrid-show-more/i));
-    // await waitFor(() => expect(getByLabelText(/hybrid-show-more/i)).not, {
-    //   timeout: 1000,
-    // });
+    fireEvent.click(getByLabelText(/hybrid-show-more/i));
+    await waitFor(() => expect(getByLabelText(/hybrid-show-more/i)).not, {
+      timeout: 2000,
+    });
 
     fireEvent.click(getByText(/Calculate/i));
 
@@ -179,6 +178,7 @@ describe("InputHomePage", () => {
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantOversizeRatio: 2,
+      solarNominalCapacity: 10,
       solarEpcCosts: 30,
       solarFarmBuildCost: 1200,
       solarLandProcurementCosts: 6,
@@ -188,6 +188,7 @@ describe("InputHomePage", () => {
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
       solarDegradation: 0,
+      windNominalCapacity: 10,
       windCostReductionWithScale: 10,
       windEpcCosts: 30,
       windFarmBuildCost: 2000,

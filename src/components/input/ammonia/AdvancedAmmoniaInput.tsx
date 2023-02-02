@@ -5,9 +5,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
-import { InputProps } from "../types";
+import { InputScreenProps } from "../types";
 
-export default function AdvancedAmmoniaInput(props: InputProps) {
+export default function AdvancedAmmoniaInput(props: InputScreenProps) {
   return (
     <Grid
       container
@@ -312,7 +312,10 @@ export default function AdvancedAmmoniaInput(props: InputProps) {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledPowerPlantCard location={props.location} />
+          <ControlledPowerPlantCard
+            location={props.location}
+            formState={props.formState}
+          />
         </Grid>
       </Grid>
 

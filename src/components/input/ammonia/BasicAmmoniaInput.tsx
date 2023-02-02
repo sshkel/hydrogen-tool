@@ -5,9 +5,9 @@ import { isOffshore } from "../../../utils";
 import InputCard from "../InputCard";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
-import { InputProps } from "../types";
+import { InputScreenProps } from "../types";
 
-export default function BasicAmmoniaInput(props: InputProps) {
+export default function BasicAmmoniaInput(props: InputScreenProps) {
   return (
     <Grid
       container

@@ -6,9 +6,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
-import { InputProps } from "../types";
+import { InputScreenProps } from "../types";
 
-export default function BasicMethanolInput(props: InputProps) {
+export default function BasicMethanolInput(props: InputScreenProps) {
   return (
     <Grid
       container
@@ -41,6 +41,7 @@ export default function BasicMethanolInput(props: InputProps) {
               <InputSlider
                 key="methanolPlantCapacity"
                 inputKey="methanolPlantCapacity"
+                formState={props.formState}
               />,
             ]}
           />
@@ -52,15 +53,18 @@ export default function BasicMethanolInput(props: InputProps) {
               <InputSlider
                 key="electrolyserEfficiency"
                 inputKey="electrolyserEfficiency"
+                formState={props.formState}
               />,
               <InputSlider
                 key="electrolyserSystemOversizing"
                 inputKey="electrolyserSystemOversizing"
+                formState={props.formState}
               />,
               // TODO work out why this freaks out as a slider
               <InputSlider
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"
+                formState={props.formState}
               />,
             ]}
           />
@@ -74,16 +78,19 @@ export default function BasicMethanolInput(props: InputProps) {
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
+                      formState={props.formState}
                     />,
                   ]
                 : [
                     <InputSlider
                       key="powerPlantOversizeRatio"
                       inputKey="powerPlantOversizeRatio"
+                      formState={props.formState}
                     />,
                     <InputSlider
                       key="solarToWindPercentage"
                       inputKey="solarToWindPercentage"
+                      formState={props.formState}
                     />,
                   ]
             }
@@ -106,10 +113,12 @@ export default function BasicMethanolInput(props: InputProps) {
               <InputSlider
                 key="electrolyserPurchaseCost"
                 inputKey="electrolyserPurchaseCost"
+                formState={props.formState}
               />,
               <InputSlider
                 key="methanolPlantUnitCost"
                 inputKey="methanolPlantUnitCost"
+                formState={props.formState}
               />,
               <InputDropdownField
                 id="carbonCaptureSource"
@@ -138,27 +147,35 @@ export default function BasicMethanolInput(props: InputProps) {
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
+                          formState={props.formState}
                         />,
                       ]
                     : [
                         <InputSlider
                           key="solarFarmBuildCost"
                           inputKey="solarFarmBuildCost"
+                          formState={props.formState}
                         />,
                         <InputSlider
                           key="windFarmBuildCost"
                           inputKey="windFarmBuildCost"
+                          formState={props.formState}
                         />,
                       ],
                   [
                     <InputSlider
                       key="principalPPACost"
                       inputKey="principalPPACost"
+                      formState={props.formState}
                     />,
                   ],
                 ]}
               />,
-              <InputSlider key="waterSupplyCost" inputKey="waterSupplyCost" />,
+              <InputSlider
+                key="waterSupplyCost"
+                inputKey="waterSupplyCost"
+                formState={props.formState}
+              />,
             ]}
           />
         </Grid>
@@ -176,8 +193,16 @@ export default function BasicMethanolInput(props: InputProps) {
           <InputCard
             title="Cost Analysis"
             children={[
-              <InputSlider key="discountRate" inputKey="discountRate" />,
-              <InputSlider key="projectTimeline" inputKey="projectTimeline" />,
+              <InputSlider
+                key="discountRate"
+                inputKey="discountRate"
+                formState={props.formState}
+              />,
+              <InputSlider
+                key="projectTimeline"
+                inputKey="projectTimeline"
+                formState={props.formState}
+              />,
             ]}
           />
         </Grid>

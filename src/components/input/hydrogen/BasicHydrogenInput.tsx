@@ -6,9 +6,9 @@ import InputCard from "../InputCard";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
 import InputSlider from "../InputSlider";
-import { InputProps } from "../types";
+import { InputScreenProps } from "../types";
 
-export default function BasicHydrogenInput(props: InputProps) {
+export default function BasicHydrogenInput(props: InputScreenProps) {
   return (
     <Grid
       container

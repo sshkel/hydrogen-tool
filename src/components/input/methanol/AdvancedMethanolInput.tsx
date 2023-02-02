@@ -5,9 +5,9 @@ import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
 import InputSelect from "../InputSelect";
-import { InputProps } from "../types";
+import { InputScreenProps } from "../types";
 
-export default function AdvancedMethanolInput(props: InputProps) {
+export default function AdvancedMethanolInput(props: InputScreenProps) {
   return (
     <Grid
       container
@@ -45,14 +45,17 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="methanolPlantCapacity"
                     inputKey="methanolPlantCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolStorageCapacity"
                     inputKey="methanolStorageCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolPlantMinimumTurndown"
                     inputKey="methanolPlantMinimumTurndown"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -65,8 +68,13 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="methanolPlantSec"
                     inputKey="methanolPlantSec"
+                    formState={props.formState}
                   />,
-                  <InputNumberField key="ccSec" inputKey="ccSec" />,
+                  <InputNumberField
+                    key="ccSec"
+                    inputKey="ccSec"
+                    formState={props.formState}
+                  />,
                 ]}
               />,
               <InputCard
@@ -78,36 +86,52 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="methanolPlantUnitCost"
                     inputKey="methanolPlantUnitCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolStorageCost"
                     inputKey="methanolStorageCost"
+                    formState={props.formState}
                   />,
-                  <InputNumberField key="ccPlantCost" inputKey="ccPlantCost" />,
+                  <InputNumberField
+                    key="ccPlantCost"
+                    inputKey="ccPlantCost"
+                    formState={props.formState}
+                  />,
                   <InputNumberField
                     key="methanolEpcCosts"
                     inputKey="methanolEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolLandProcurementCosts"
                     inputKey="methanolLandProcurementCosts"
+                    formState={props.formState}
                   />,
-                  <InputNumberField key="ccEpcCosts" inputKey="ccEpcCosts" />,
+                  <InputNumberField
+                    key="ccEpcCosts"
+                    inputKey="ccEpcCosts"
+                    formState={props.formState}
+                  />,
                   <InputNumberField
                     key="ccLandProcurementCosts"
                     inputKey="ccLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolPlantOMCost"
                     inputKey="methanolPlantOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="methanolStorageOMCost"
                     inputKey="methanolStorageOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="ccPlantOMCost"
                     inputKey="ccPlantOMCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -121,6 +145,7 @@ export default function AdvancedMethanolInput(props: InputProps) {
               <InputNumberField
                 key="electrolyserSystemOversizing"
                 inputKey="electrolyserSystemOversizing"
+                formState={props.formState}
               />,
               <InputCard
                 subtitle
@@ -131,10 +156,12 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="secAtNominalLoad"
                     inputKey="secAtNominalLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterRequirementOfElectrolyser"
                     inputKey="waterRequirementOfElectrolyser"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -147,18 +174,22 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="electrolyserMaximumLoad"
                     inputKey="electrolyserMaximumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserMinimumLoad"
                     inputKey="electrolyserMinimumLoad"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="maximumLoadWhenOverloading"
                     inputKey="maximumLoadWhenOverloading"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="timeBetweenOverloading"
                     inputKey="timeBetweenOverloading"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -174,20 +205,24 @@ export default function AdvancedMethanolInput(props: InputProps) {
                     <InputNumberField
                       key="stackLifetime"
                       inputKey="stackLifetime"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                   [
                     <InputNumberField
                       key="maximumDegradationBeforeReplacement"
                       inputKey="maximumDegradationBeforeReplacement"
+                      formState={props.formState}
                     />,
                     <InputNumberField
                       key="stackDegradation"
                       inputKey="stackDegradation"
+                      formState={props.formState}
                     />,
                   ],
                 ]}
@@ -201,10 +236,12 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="hydrogenStorageCapacity"
                     inputKey="hydrogenStorageCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="minimumHydrogenStorage"
                     inputKey="minimumHydrogenStorage"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -217,46 +254,57 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="electrolyserReferenceCapacity"
                     inputKey="electrolyserReferenceCapacity"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserPurchaseCost"
                     inputKey="electrolyserPurchaseCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserCostReductionWithScale"
                     inputKey="electrolyserCostReductionWithScale"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserReferenceFoldIncrease"
                     inputKey="electrolyserReferenceFoldIncrease"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="hydrogenStoragePurchaseCost"
                     inputKey="hydrogenStoragePurchaseCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserEpcCosts"
                     inputKey="electrolyserEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserLandProcurementCosts"
                     inputKey="electrolyserLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserOMCost"
                     inputKey="electrolyserOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="hydrogenStorageOMCost"
                     inputKey="hydrogenStorageOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="electrolyserStackReplacement"
                     inputKey="electrolyserStackReplacement"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="waterSupplyCost"
                     inputKey="waterSupplyCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -274,7 +322,10 @@ export default function AdvancedMethanolInput(props: InputProps) {
         flexWrap="nowrap"
       >
         <Grid item>
-          <ControlledPowerPlantCard location={props.location} />
+          <ControlledPowerPlantCard
+            location={props.location}
+            formState={props.formState}
+          />
         </Grid>
       </Grid>
 
@@ -299,6 +350,7 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="batteryRatedPower"
                     inputKey="batteryRatedPower"
+                    formState={props.formState}
                   />,
                   <InputDropdownField
                     id="batteryStorageDuration"
@@ -317,14 +369,17 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="batteryEfficiency"
                     inputKey="batteryEfficiency"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryMinCharge"
                     inputKey="batteryMinCharge"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLifetime"
                     inputKey="batteryLifetime"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -336,22 +391,27 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="batteryCosts"
                     inputKey="batteryCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryEpcCosts"
                     inputKey="batteryEpcCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryLandProcurementCosts"
                     inputKey="batteryLandProcurementCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryOMCost"
                     inputKey="batteryOMCost"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="batteryReplacementCost"
                     inputKey="batteryReplacementCost"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -372,10 +432,12 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="additionalUpfrontCosts"
                     inputKey="additionalUpfrontCosts"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="additionalAnnualCosts"
                     inputKey="additionalAnnualCosts"
+                    formState={props.formState}
                   />,
                 ]}
               />,
@@ -387,10 +449,12 @@ export default function AdvancedMethanolInput(props: InputProps) {
                   <InputNumberField
                     key="projectTimeline"
                     inputKey="projectTimeline"
+                    formState={props.formState}
                   />,
                   <InputNumberField
                     key="discountRate"
                     inputKey="discountRate"
+                    formState={props.formState}
                   />,
                 ]}
               />,
