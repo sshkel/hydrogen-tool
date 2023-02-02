@@ -1,4 +1,9 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  queryByText,
+  render,
+  waitFor,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import InputHomePage from "../../../components/input/InputHomePage";
@@ -262,6 +267,88 @@ describe("InputHomePage", () => {
       solarToWindPercentage: 50,
       solarFarmBuildCost: 1200,
       windFarmBuildCost: 2000,
+    });
+  });
+
+  it("sends expected input fields for basic offshore", async () => {
+    const setState = jest.fn();
+    const { container, getByText } = render(
+      <MemoryRouter>
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z20"}
+        />
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('input[type="number"]').length).toEqual(
+        8
+      )
+    );
+
+    fireEvent.click(getByText(/Calculate/i));
+
+    expect(setState).toHaveBeenCalledWith({
+      discountRate: 7,
+      electrolyserEfficiency: 50,
+      electrolyserPurchaseCost: 1000,
+      powerPlantOversizeRatio: 2,
+      powerfuel: "hydrogen",
+      projectScale: 100,
+      projectTimeline: 20,
+      windFarmBuildCost: 2000,
+      powerSupplyOption: "Self Build",
+      waterSupplyCost: 5,
+    });
+  });
+
+  it("sends expected input fields for advanced offshore", async () => {
+    const setState = jest.fn();
+    const { container, getByText, queryByText } = render(
+      <MemoryRouter>
+        <InputHomePage
+          setState={setState}
+          setInputConfiguration={jest.fn()}
+          location={"Z19"}
+        />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByText(/Advanced Input/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(12),
+      { timeout: 1000 }
+    );
+
+    expect(queryByText("Hybrid")).toBeNull();
+
+    fireEvent.click(getByText(/Calculate/i));
+
+    expect(setState).toHaveBeenCalledWith({
+      electrolyserNominalCapacity: 10,
+      powerPlantConfiguration: "Standalone",
+      powerfuel: "hydrogen",
+      powerPlantType: "Wind",
+      powerSupplyOption: "Self Build",
+      powerCapacityConfiguration: "Nominal Capacity",
+      windNominalCapacity: 10,
+      windDegradation: 0,
+      stackDegradation: 0,
+      stackLifetime: 80000,
+      stackReplacementType: "Cumulative Hours",
+      windCostReductionWithScale: 10,
+      windEpcCosts: 30,
+      windFarmBuildCost: 2000,
+      windLandProcurementCosts: 6,
+      windOpex: 25000,
+      windReferenceCapacity: 1000,
+      windReferenceFoldIncrease: 10,
     });
   });
 });

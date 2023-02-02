@@ -1171,6 +1171,7 @@ export const standaloneMethanolHybridWithBatteryScenario: {
     solarOpex: 17000,
     windOpex: 25000,
     batteryStorageDuration: 8,
+    batteryRatedPower: 2,
     batteryEfficiency: 85,
     batteryMinCharge: 5,
     batteryLifetime: 10,
