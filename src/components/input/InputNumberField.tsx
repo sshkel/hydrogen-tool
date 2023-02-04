@@ -127,6 +127,7 @@ function InputNumberField({ inputKey, formState }: Props) {
             ),
           }}
           inputProps={{
+            "aria-label": `${id}-input-field`,
             step: step,
             // Removing to prevent over-validating text number inputs
             // min: min,

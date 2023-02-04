@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 
-import ControlledPowerPlantCard from "../ControlledPowerPlantCardWithNominalCapacity";
+import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
 import InputCard from "../InputCard";
 import InputDropdownField from "../InputDropdownField";
 import InputNumberField from "../InputNumberField";
@@ -191,6 +191,7 @@ export default function AdvancedHydrogenInput(props: InputScreenProps) {
           <ControlledPowerPlantCard
             location={props.location}
             formState={props.formState}
+            withNominalCapacity={true}
           />
         </Grid>
       </Grid>

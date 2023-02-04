@@ -315,6 +315,7 @@ export default function AdvancedAmmoniaInput(props: InputScreenProps) {
           <ControlledPowerPlantCard
             location={props.location}
             formState={props.formState}
+            withNominalCapacity={false}
           />
         </Grid>
       </Grid>

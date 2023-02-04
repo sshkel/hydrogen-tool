@@ -1,5 +1,5 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useNavigate } from "react-router-dom";
 
 import App from "../../components/App";
 import { readLocalCsv as mockReadLocalCsv } from "../resources/loader";

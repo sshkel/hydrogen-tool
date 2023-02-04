@@ -325,6 +325,7 @@ export default function AdvancedMethanolInput(props: InputScreenProps) {
           <ControlledPowerPlantCard
             location={props.location}
             formState={props.formState}
+            withNominalCapacity={false}
           />
         </Grid>
       </Grid>
