@@ -3,6 +3,7 @@ import React from "react";
 import { PowerPlantType } from "../../../types";
 import { isOffshore } from "../../../utils";
 import { InputScreenProps } from "../types";
+import { isNotSolar, isNotWind } from "../utils";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
@@ -228,9 +229,6 @@ function getPowerPlantCards(props: Props) {
     ];
   }
 }
-
-const isNotSolar = (powerPlantType: string) => powerPlantType === "Wind";
-const isNotWind = (powerPlantType: string) => powerPlantType === "Solar";
 
 export default function ControlledPowerPlantCard(props: Props) {
   const [powerPlantType, setPowerPlantType] =

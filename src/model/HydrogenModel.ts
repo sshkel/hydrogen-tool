@@ -14,6 +14,7 @@ import {
   getOpex,
   getTotalHydrogenOpex,
 } from "../components/charts/opex-calculations";
+import { isNotSolar, isNotWind } from "../components/input/utils";
 import {
   InputConfiguration,
   Model,
@@ -622,8 +623,12 @@ export class HydrogenModel implements Model {
       } else if (
         this.parameters.powerCapacityConfiguration === "Nominal Capacity"
       ) {
-        solarNominalCapacity = this.parameters.solarNominalCapacity;
-        windNominalCapacity = this.parameters.windNominalCapacity;
+        solarNominalCapacity = isNotSolar(this.parameters.powerPlantType)
+          ? 0
+          : this.parameters.solarNominalCapacity;
+        windNominalCapacity = isNotWind(this.parameters.powerPlantType)
+          ? 0
+          : this.parameters.windNominalCapacity;
       } else {
         throw new Error(
           "Unknown powerCapacityConfiguration: " +

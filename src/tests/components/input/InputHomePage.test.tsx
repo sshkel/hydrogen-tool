@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  queryByText,
-  render,
-  waitFor,
-} from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import InputHomePage from "../../../components/input/blocks/InputHomePage";

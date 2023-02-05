@@ -184,7 +184,8 @@ export function getDefaultInputs(
 
   // TODO: Pass in powerfuel if defaults differ for each
   inputKeys.forEach((key) => {
-    defaults[key] = savedData[key] || DEFAULT_MAP[key];
+    defaults[key] =
+      savedData[key] === undefined ? DEFAULT_MAP[key] : savedData[key];
   });
 
   return defaults;

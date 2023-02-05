@@ -6,7 +6,6 @@ import React, { useEffect } from "react";
 
 import { BLUE, GREY } from "../../colors";
 import { numberFieldDefaultInputs } from "../data";
-import { DefaultInputs } from "../defaults";
 import InputTitle from "./InputTitle";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
@@ -44,7 +43,7 @@ const sx = {
 
 interface Props {
   inputKey: string;
-  formState?: { [key: string]: number | string };
+  formState: { [key: string]: number | string };
 }
 
 function InputNumberField({ inputKey, formState }: Props) {
@@ -61,7 +60,7 @@ function InputNumberField({ inputKey, formState }: Props) {
     max,
   } = numberFieldDefaultInputs[inputKey];
 
-  const defaultValue = DefaultInputs.get(inputKey);
+  const defaultValue = formState[inputKey] || 0;
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue
@@ -70,13 +69,7 @@ function InputNumberField({ inputKey, formState }: Props) {
   useEffect(() => {
     // Capture current state on unmount and in between state change of app
     return () => {
-      if (formState) {
-        formState[inputKey] = typeof value === "number" ? value : defaultValue;
-      }
-      DefaultInputs.set(
-        inputKey,
-        typeof value === "number" ? value : defaultValue
-      );
+      formState[inputKey] = typeof value === "number" ? value : defaultValue;
     };
   });
 

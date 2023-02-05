@@ -3,7 +3,7 @@ import InputNumberField from "./InputNumberField";
 interface Props {
   inputKey: string;
   hide: boolean;
-  formState?: { [key: string]: number | string };
+  formState: { [key: string]: number | string };
 }
 
 export default function HideableInputNumberField({

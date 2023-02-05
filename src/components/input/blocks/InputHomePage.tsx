@@ -12,7 +12,8 @@ import { InputConfiguration } from "../../../types";
 import DesignStepper from "../../DesignStepper";
 import AdvancedAmmoniaInput from "../ammonia/AdvancedAmmoniaInput";
 import BasicAmmoniaInput from "../ammonia/BasicAmmoniaInput";
-import { configurationTypes } from "../data";
+import { configurationTypes, getInputKeysForConfiguration } from "../data";
+import { getDefaultInputs } from "../defaults";
 import AdvancedHydrogenInput from "../hydrogen/AdvancedHydrogenInput";
 import BasicHydrogenInput from "../hydrogen/BasicHydrogenInput";
 import AdvancedMethaneInput from "../methane/AdvancedMethaneInput";
@@ -31,8 +32,35 @@ interface Props {
 export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
   const { powerfuel = "hydrogen" } = useParams();
-  const [tab, setTab] = React.useState("Basic");
-  let formState: { [key: string]: number | string } = {};
+  const [tab, setTab] = React.useState<InputConfiguration>("Basic");
+
+  const { setInputConfiguration } = props;
+
+  useEffect(() => {
+    setInputConfiguration("Basic");
+  }, [setInputConfiguration]);
+
+  let formState: { [key: string]: number | string } = getDefaultInputs(
+    powerfuel,
+    tab,
+    getInputKeysForConfiguration(powerfuel, tab)
+  );
+
+  const setInputConfigurationAndDefaultValues = (tab: InputConfiguration) => {
+    props.setInputConfiguration(tab);
+    formState = getDefaultInputs(
+      powerfuel,
+      tab,
+      getInputKeysForConfiguration(powerfuel, tab)
+    );
+  };
+
+  const handleChange = (_: React.SyntheticEvent, newTab: string) => {
+    if (newTab === "Basic" || newTab === "Advanced") {
+      setInputConfigurationAndDefaultValues(newTab);
+      setTab(newTab);
+    }
+  };
 
   function getBasicInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
@@ -78,20 +106,6 @@ export default function InputHomePage(props: Props) {
       <AdvancedHydrogenInput location={props.location} formState={formState} />
     );
   }
-  const { setInputConfiguration } = props;
-
-  const handleChange = (_: React.SyntheticEvent, newTab: string) => {
-    if (newTab === "Basic" || newTab === "Advanced") {
-      setInputConfiguration(newTab);
-    }
-    setTab(newTab);
-  };
-
-  useEffect(() => {
-    // Use Basic tab by default on initial home page render only
-    // TODO: Should add test for this
-    setInputConfiguration("Basic");
-  }, [setInputConfiguration]);
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();

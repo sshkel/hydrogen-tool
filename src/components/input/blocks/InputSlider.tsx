@@ -7,12 +7,11 @@ import { useEffect } from "react";
 
 import { BLUE, WHITE } from "../../colors";
 import { sliderFieldDefaultInputs } from "../data";
-import { DefaultInputs } from "../defaults";
 import InputTitle from "./InputTitle";
 
 interface Props {
   inputKey: string;
-  formState?: { [key: string]: number | string };
+  formState: { [key: string]: number | string };
 }
 
 const StyledSlider = styled(Slider)({
@@ -47,7 +46,10 @@ export default function InputSlider({ inputKey, formState }: Props) {
   }
 
   const { title, helperText, min = 0, max = 100, step = 10 } = data;
-  const defaultValue = DefaultInputs.getNumber(inputKey);
+
+  const formValue = Number(formState[inputKey]);
+
+  const defaultValue = Number.isNaN(formValue) ? min : formValue;
 
   const [value, setValue] = React.useState<string | number | number[]>(
     defaultValue
@@ -56,14 +58,7 @@ export default function InputSlider({ inputKey, formState }: Props) {
   useEffect(() => {
     // Capture current state on unmount and in between state change of app
     return () => {
-      if (formState) {
-        formState[inputKey] = typeof value === "number" ? value : defaultValue;
-      }
-
-      DefaultInputs.set(
-        inputKey,
-        typeof value === "number" ? value : defaultValue
-      );
+      formState[inputKey] = typeof value === "number" ? value : defaultValue;
     };
   });
 
