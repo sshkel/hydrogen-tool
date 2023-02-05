@@ -2,10 +2,10 @@ import Grid from "@mui/material/Grid";
 
 import "../../../input.css";
 import { isOffshore } from "../../../utils";
-import InputCard from "../InputCard";
-import InputDropdownField from "../InputDropdownField";
-import InputSelect from "../InputSelect";
-import InputSlider from "../InputSlider";
+import InputCard from "../blocks/InputCard";
+import InputDropdownField from "../blocks/InputDropdownField";
+import InputSelect from "../blocks/InputSelect";
+import InputSlider from "../blocks/InputSlider";
 import { InputScreenProps } from "../types";
 
 export default function BasicMethanolInput(props: InputScreenProps) {

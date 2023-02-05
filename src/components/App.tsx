@@ -12,7 +12,7 @@ import { InputConfiguration, UserInputFields } from "../types";
 import { SideBar } from "./SideBar";
 import WorkingData from "./charts/WorkingData";
 import { BLACK, BLUE, ORANGE, WHITE } from "./colors";
-import InputHomePage from "./input/InputHomePage";
+import InputHomePage from "./input/blocks/InputHomePage";
 import Map from "./map/Map";
 import AboutPage from "./misc/AboutPage";
 import ContactPage from "./misc/ContactPage";

@@ -1,10 +1,10 @@
 import Grid from "@mui/material/Grid";
 
-import ControlledPowerPlantCard from "../ControlledPowerPlantCard";
-import InputCard from "../InputCard";
-import InputDropdownField from "../InputDropdownField";
-import InputNumberField from "../InputNumberField";
-import InputSelect from "../InputSelect";
+import ControlledPowerPlantCard from "../blocks/ControlledPowerPlantCard";
+import InputCard from "../blocks/InputCard";
+import InputDropdownField from "../blocks/InputDropdownField";
+import InputNumberField from "../blocks/InputNumberField";
+import InputSelect from "../blocks/InputSelect";
 import { InputScreenProps } from "../types";
 
 export default function AdvancedMethanolInput(props: InputScreenProps) {

@@ -5,10 +5,10 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useEffect } from "react";
 
-import { BLUE, WHITE } from "../colors";
+import { BLUE, WHITE } from "../../colors";
+import { sliderFieldDefaultInputs } from "../data";
+import { DefaultInputs } from "../defaults";
 import InputTitle from "./InputTitle";
-import { sliderFieldDefaultInputs } from "./data";
-import { DefaultInputs } from "./defaults";
 
 interface Props {
   inputKey: string;

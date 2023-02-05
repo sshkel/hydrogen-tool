@@ -3,7 +3,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 
-import { GREY, OFF_WHITE, ORANGE } from "../colors";
+import { GREY, OFF_WHITE, ORANGE } from "../../colors";
 import InputTitle from "./InputTitle";
 
 interface Props {

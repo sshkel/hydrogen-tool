@@ -6,7 +6,7 @@ import {
 } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import InputHomePage from "../../../components/input/InputHomePage";
+import InputHomePage from "../../../components/input/blocks/InputHomePage";
 
 describe("InputHomePage", () => {
   beforeEach(() => {

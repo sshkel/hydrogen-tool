@@ -1,12 +1,12 @@
 import React from "react";
 
-import { PowerPlantType } from "../../types";
-import { isOffshore } from "../../utils";
+import { PowerPlantType } from "../../../types";
+import { isOffshore } from "../../../utils";
+import { InputScreenProps } from "../types";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
 import InputSelect from "./InputSelect";
-import { InputScreenProps } from "./types";
 
 const POWER_PLANT_TYPES: PowerPlantType[] = ["Wind", "Solar", "Hybrid"];
 

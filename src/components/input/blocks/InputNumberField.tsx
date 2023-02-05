@@ -4,10 +4,10 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
 
-import { BLUE, GREY } from "../colors";
+import { BLUE, GREY } from "../../colors";
+import { numberFieldDefaultInputs } from "../data";
+import { DefaultInputs } from "../defaults";
 import InputTitle from "./InputTitle";
-import { numberFieldDefaultInputs } from "./data";
-import { DefaultInputs } from "./defaults";
 
 const StyledInputNumberField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiOutlinedInput-root": {

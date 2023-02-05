@@ -7,20 +7,20 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import "../../input.css";
-import { InputConfiguration } from "../../types";
-import DesignStepper from "../DesignStepper";
+import "../../../input.css";
+import { InputConfiguration } from "../../../types";
+import DesignStepper from "../../DesignStepper";
+import AdvancedAmmoniaInput from "../ammonia/AdvancedAmmoniaInput";
+import BasicAmmoniaInput from "../ammonia/BasicAmmoniaInput";
+import { configurationTypes } from "../data";
+import AdvancedHydrogenInput from "../hydrogen/AdvancedHydrogenInput";
+import BasicHydrogenInput from "../hydrogen/BasicHydrogenInput";
+import AdvancedMethaneInput from "../methane/AdvancedMethaneInput";
+import BasicMethaneInput from "../methane/BasicMethaneInput";
+import AdvancedMethanolInput from "../methanol/AdvancedMethanolInput";
+import BasicMethanolInput from "../methanol/BasicMethanolInput";
 import InputCalculateButton from "./InputCalculateButton";
 import InputTab from "./InputTab";
-import AdvancedAmmoniaInput from "./ammonia/AdvancedAmmoniaInput";
-import BasicAmmoniaInput from "./ammonia/BasicAmmoniaInput";
-import { configurationTypes } from "./data";
-import AdvancedHydrogenInput from "./hydrogen/AdvancedHydrogenInput";
-import BasicHydrogenInput from "./hydrogen/BasicHydrogenInput";
-import AdvancedMethaneInput from "./methane/AdvancedMethaneInput";
-import BasicMethaneInput from "./methane/BasicMethaneInput";
-import AdvancedMethanolInput from "./methanol/AdvancedMethanolInput";
-import BasicMethanolInput from "./methanol/BasicMethanolInput";
 
 interface Props {
   setInputConfiguration: (config: InputConfiguration) => void;
