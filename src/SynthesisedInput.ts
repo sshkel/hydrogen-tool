@@ -47,11 +47,11 @@ class DefaultInputs implements Inputs {
   powerSupplyOption = "Self Build" as PowerSupplyOption;
   powerCapacityConfiguration = "Oversize Ratio" as PowerCapacityConfiguration;
   powerPlantOversizeRatio = 1;
-  solarToWindPercentage = 100;
+  solarToWindPercentage = 0;
   solarNominalCapacity = 0;
   windNominalCapacity = 0;
-  solarReferenceCapacity = 10;
-  windReferenceCapacity = 10;
+  solarReferenceCapacity = 1000;
+  windReferenceCapacity = 1000;
   solarFarmBuildCost = 1200;
   windFarmBuildCost = 2000;
   solarEpcCosts = 30;

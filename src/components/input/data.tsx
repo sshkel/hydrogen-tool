@@ -77,10 +77,10 @@ export function isPowerPlantConfiguration(
 
 export const sliderFieldDefaultInputs: DefaultInput = {
   projectScale: {
-    min: 100,
-    max: 1_000_000,
-    step: 50_000,
-    title: "Project Scale (tonnes/yr)",
+    min: 0.1,
+    max: 100_000,
+    step: 100,
+    title: "Project Scale (kTPA)",
     helperText:
       "Hydrogen production rate. The standard is 175 ton/yr per MW of electrolyser capacity",
   },
@@ -432,10 +432,10 @@ export const numberFieldDefaultInputs: DefaultInput = {
   projectScale: {
     min: 0.1,
     max: 100_000,
-    step: 0.1,
+    step: 100,
     helperText:
       "Hydrogen production rate - Standard 175 ton/yr (TPA) per MW of electrolyser capacity at full load",
-    title: "Project Scale",
+    title: "Project Scale (kTPA)",
     adornmentLabel: "kTPA",
   },
 

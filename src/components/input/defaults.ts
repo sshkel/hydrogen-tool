@@ -11,9 +11,9 @@ import {
 type InputMap = { [k: string]: number | string };
 
 const DEFAULT_MAP: InputMap = {
-  electrolyserNominalCapacity: 10,
+  electrolyserNominalCapacity: 100,
   secAtNominalLoad: 50,
-  electrolyserEfficiency: 50,
+  electrolyserEfficiency: 70,
   waterRequirementOfElectrolyser: 15,
   electrolyserMaximumLoad: 100,
   electrolyserMinimumLoad: 10,
@@ -21,29 +21,29 @@ const DEFAULT_MAP: InputMap = {
   timeBetweenOverloading: 0,
   stackDegradation: 0.0,
   stackLifetime: 80_000,
-  maximumDegradationBeforeReplacement: 0,
+  maximumDegradationBeforeReplacement: 10,
   electrolyserReferenceCapacity: 1000,
-  electrolyserPurchaseCost: 1000,
-  electrolyserCostReductionWithScale: 10,
+  electrolyserPurchaseCost: 1500,
+  electrolyserCostReductionWithScale: 5,
   electrolyserReferenceFoldIncrease: 10,
   electrolyserEpcCosts: 30,
   electrolyserLandProcurementCosts: 6,
-  electrolyserOMCost: 2.5,
+  electrolyserOMCost: 3,
   electrolyserStackReplacement: 40,
   waterSupplyCost: 5,
-  solarNominalCapacity: 10,
-  windNominalCapacity: 10,
-  powerPlantOversizeRatio: 2,
-  solarToWindPercentage: 50,
+  solarNominalCapacity: 150,
+  windNominalCapacity: 150,
+  powerPlantOversizeRatio: 1.5,
+  solarToWindPercentage: 0,
   solarDegradation: 0,
   windDegradation: 0,
   solarFarmBuildCost: 1200,
   solarReferenceCapacity: 1000,
-  solarPVCostReductionWithScale: 10,
+  solarPVCostReductionWithScale: 5,
   solarReferenceFoldIncrease: 10,
   windFarmBuildCost: 2000,
   windReferenceCapacity: 1000,
-  windCostReductionWithScale: 10,
+  windCostReductionWithScale: 5,
   windReferenceFoldIncrease: 10,
   solarEpcCosts: 30,
   solarLandProcurementCosts: 6,
@@ -51,25 +51,25 @@ const DEFAULT_MAP: InputMap = {
   windLandProcurementCosts: 6,
   solarOpex: 17000,
   windOpex: 25000,
-  principalPPACost: 0,
-  gridConnectionCost: 0,
-  additionalTransmissionCharges: 0,
+  principalPPACost: 50,
+  gridConnectionCost: 1_000_000,
+  additionalTransmissionCharges: 10,
   batteryRatedPower: 0,
   batteryStorageDuration: 0,
-  batteryEfficiency: 90,
-  batteryMinCharge: 0,
+  batteryEfficiency: 85,
+  batteryMinCharge: 10,
   batteryLifetime: 10,
-  batteryCosts: 542,
+  batteryCosts: 1_000,
   batteryEpcCosts: 0,
   batteryLandProcurementCosts: 0,
-  batteryOMCost: 9717,
+  batteryOMCost: 10_000,
   batteryReplacementCost: 100,
   additionalUpfrontCosts: 0,
   additionalAnnualCosts: 0,
-  projectTimeline: 20,
+  projectTimeline: 15,
   discountRate: 7,
   inflationRate: 2.5,
-  projectScale: 100,
+  projectScale: 15,
   // TODO work out if these default are correct for ammonia
   ammoniaPlantCapacity: 50,
   ammoniaStorageCapacity: 30,
@@ -91,7 +91,7 @@ const DEFAULT_MAP: InputMap = {
   hydrogenStorageOMCost: 0,
   ammoniaPlantCapitalCost: 900,
   // TODO work out if these default are correct for methanol
-  methanolPlantCapacity: 350,
+  methanolPlantCapacity: 365,
   methanolPlantUnitCost: 250,
   carbonCapturePlantUnitCost: 0,
   methanolStorageCapacity: 30,
@@ -171,14 +171,13 @@ export function getDefaultInputs(
   // if inputConfiguration === 'Basic' and savedData.inputConfiguration === 'Advanced', drop saved state as we don't want advanced state corruping basic case
   // given powerfuel, get from saved data or fall back to map indexed by powerfuel
 
-  const sessionStoragedata: InputMap = JSON.parse(
+  const sessionStorageData: InputMap = JSON.parse(
     sessionStorage.getItem("savedData") || "{}"
   );
   const savedData: InputMap =
-    sessionStorage["inputConfiguration"] === "Advanced" &&
-    inputConfiguration === "Basic"
+    sessionStorageData["inputConfiguration"] !== inputConfiguration
       ? {}
-      : sessionStoragedata;
+      : sessionStorageData;
 
   const defaults: InputMap = {};
 

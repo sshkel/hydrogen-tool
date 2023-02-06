@@ -55,7 +55,6 @@ function InputNumberField({ inputKey, formState }: Props) {
     id = inputKey,
     helperText,
     adornmentLabel,
-    step = 0.01,
     min,
     max,
   } = numberFieldDefaultInputs[inputKey];
@@ -120,12 +119,12 @@ function InputNumberField({ inputKey, formState }: Props) {
             ),
           }}
           inputProps={{
+            inputMode: "numeric",
             "aria-label": `${id}-input-field`,
-            step: step,
+            step: "any",
             // Removing to prevent over-validating text number inputs
-            // min: min,
-            // max: max,
-            pattern: "/^d*.?d*$/",
+            min: min,
+            max: max,
           }}
           sx={sx}
           onChange={handleInputChange}
