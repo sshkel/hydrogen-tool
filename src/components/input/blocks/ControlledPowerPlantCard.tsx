@@ -1,9 +1,8 @@
 import React from "react";
 
 import { PowerPlantType } from "../../../types";
-import { isOffshore } from "../../../utils";
+import { isOffshore, isSolar, isWind } from "../../../utils";
 import { InputScreenProps } from "../types";
-import { isNotSolar, isNotWind } from "../utils";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
@@ -285,85 +284,85 @@ export default function ControlledPowerPlantCard(props: Props) {
               <HideableInputNumberField
                 key="solarFarmBuildCost"
                 inputKey="solarFarmBuildCost"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarReferenceCapacity"
                 inputKey="solarReferenceCapacity"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarPVCostReductionWithScale"
                 inputKey="solarPVCostReductionWithScale"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarReferenceFoldIncrease"
                 inputKey="solarReferenceFoldIncrease"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windFarmBuildCost"
                 inputKey="windFarmBuildCost"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windReferenceCapacity"
                 inputKey="windReferenceCapacity"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windCostReductionWithScale"
                 inputKey="windCostReductionWithScale"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windReferenceFoldIncrease"
                 inputKey="windReferenceFoldIncrease"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarEpcCosts"
                 inputKey="solarEpcCosts"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarLandProcurementCosts"
                 inputKey="solarLandProcurementCosts"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windEpcCosts"
                 inputKey="windEpcCosts"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windLandProcurementCosts"
                 inputKey="windLandProcurementCosts"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="solarOpex"
                 inputKey="solarOpex"
-                hide={isNotSolar(powerPlantType)}
+                hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
                 key="windOpex"
                 inputKey="windOpex"
-                hide={isNotWind(powerPlantType)}
+                hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
             ],

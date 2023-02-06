@@ -888,33 +888,60 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
 };
 
+function dropKeys(
+  inputKeys: string[],
+  offshore: boolean,
+  key: string
+): string[] {
+  let keys = [...inputKeys];
+  if (offshore) {
+    keys.splice(keys.indexOf(key), 1);
+  }
+  return keys;
+}
+
+function dropOffshoreKeys(inputKeys: string[], offshore: boolean): string[] {
+  return dropKeys(inputKeys, offshore, "solarToWindPercentage");
+}
+
 export function getInputKeysForConfiguration(
   powerfuel: string,
-  inputConfiguration: InputConfiguration
+  inputConfiguration: InputConfiguration,
+  offshore: boolean
 ): string[] {
   if (powerfuel === "hydrogen") {
     if (inputConfiguration === "Basic") {
-      return BASIC_HYDROGEN_INPUT_KEYS;
+      return dropOffshoreKeys(BASIC_HYDROGEN_INPUT_KEYS, offshore);
     }
-    return ADVANCED_HYDROGEN_INPUT_KEYS;
+    // Hydrogen is the only one that has the ability to input nominal capacity
+    let advancedHydrogenInputKeys = dropKeys(
+      ADVANCED_HYDROGEN_INPUT_KEYS,
+      offshore,
+      "solarToWindPercentage"
+    );
+    return dropKeys(
+      advancedHydrogenInputKeys,
+      offshore,
+      "solarNominalCapacity"
+    );
   }
   if (powerfuel === "ammonia") {
     if (inputConfiguration === "Basic") {
-      return BASIC_AMMONIA_INPUT_KEYS;
+      return dropOffshoreKeys(BASIC_AMMONIA_INPUT_KEYS, offshore);
     }
-    return ADVANCED_AMMONIA_INPUT_KEYS;
+    return dropOffshoreKeys(ADVANCED_AMMONIA_INPUT_KEYS, offshore);
   }
   if (powerfuel === "methanol") {
     if (inputConfiguration === "Basic") {
-      return BASIC_METHANOL_INPUT_KEYS;
+      return dropOffshoreKeys(BASIC_METHANOL_INPUT_KEYS, offshore);
     }
-    return ADVANCED_METHANOL_INPUT_KEYS;
+    return dropOffshoreKeys(ADVANCED_METHANOL_INPUT_KEYS, offshore);
   }
   if (powerfuel === "methane") {
     if (inputConfiguration === "Basic") {
-      return BASIC_METHANE_INPUT_KEYS;
+      return dropOffshoreKeys(BASIC_METHANE_INPUT_KEYS, offshore);
     }
-    return ADVANCED_METHANE_INPUT_KEYS;
+    return dropOffshoreKeys(ADVANCED_METHANE_INPUT_KEYS, offshore);
   }
   return [];
 }
@@ -925,7 +952,6 @@ const BASIC_HYDROGEN_INPUT_KEYS = [
   "powerPlantOversizeRatio",
   "solarToWindPercentage",
   "electrolyserPurchaseCost",
-  "windFarmBuildCost",
   "solarFarmBuildCost",
   "windFarmBuildCost",
   "principalPPACost",

@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "../../../input.css";
 import { InputConfiguration } from "../../../types";
+import { isOffshore } from "../../../utils";
 import DesignStepper from "../../DesignStepper";
 import AdvancedAmmoniaInput from "../ammonia/AdvancedAmmoniaInput";
 import BasicAmmoniaInput from "../ammonia/BasicAmmoniaInput";
@@ -33,6 +34,7 @@ export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
   const { powerfuel = "hydrogen" } = useParams();
   const [tab, setTab] = React.useState<InputConfiguration>("Basic");
+  const offshore = isOffshore(props.location);
 
   const { setInputConfiguration } = props;
 
@@ -43,7 +45,7 @@ export default function InputHomePage(props: Props) {
   let formState: { [key: string]: number | string } = getDefaultInputs(
     powerfuel,
     tab,
-    getInputKeysForConfiguration(powerfuel, tab)
+    getInputKeysForConfiguration(powerfuel, tab, offshore)
   );
 
   const setInputConfigurationAndDefaultValues = (tab: InputConfiguration) => {
@@ -51,7 +53,7 @@ export default function InputHomePage(props: Props) {
     formState = getDefaultInputs(
       powerfuel,
       tab,
-      getInputKeysForConfiguration(powerfuel, tab)
+      getInputKeysForConfiguration(powerfuel, tab, offshore)
     );
   };
 

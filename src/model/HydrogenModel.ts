@@ -14,7 +14,6 @@ import {
   getOpex,
   getTotalHydrogenOpex,
 } from "../components/charts/opex-calculations";
-import { isNotSolar, isNotWind } from "../components/input/utils";
 import {
   InputConfiguration,
   Model,
@@ -24,7 +23,7 @@ import {
   PowerSupplyOption,
   StackReplacementType,
 } from "../types";
-import { isOffshore, mean, projectYears } from "../utils";
+import { isOffshore, isSolar, isWind, mean, projectYears } from "../utils";
 import {
   CsvRow,
   ModelHourlyOperation,
@@ -623,10 +622,10 @@ export class HydrogenModel implements Model {
       } else if (
         this.parameters.powerCapacityConfiguration === "Nominal Capacity"
       ) {
-        solarNominalCapacity = isNotSolar(this.parameters.powerPlantType)
+        solarNominalCapacity = !isSolar(this.parameters.powerPlantType)
           ? 0
           : this.parameters.solarNominalCapacity;
-        windNominalCapacity = isNotWind(this.parameters.powerPlantType)
+        windNominalCapacity = !isWind(this.parameters.powerPlantType)
           ? 0
           : this.parameters.windNominalCapacity;
       } else {

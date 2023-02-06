@@ -321,7 +321,7 @@ describe("Model summary", () => {
           data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
         ).toEqual(462);
         expect(data["Hydrogen Output (t/yr)"]).toEqual(100);
-        expect(data["LCH2 ($/kg)"]).toEqual(4.33);
+        expect(data["LCH2 ($/kg)"]).toEqual(4.79);
 
         done();
       }, TIMEOUT);
