@@ -126,42 +126,6 @@ const DEFAULT_MAP: InputMap = {
   powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
 };
 
-class Defaults {
-  private defaultInputs: InputMap;
-
-  constructor() {
-    if (sessionStorage.getItem("savedData") !== null) {
-      const savedData = JSON.parse(sessionStorage.getItem("savedData")!);
-      this.defaultInputs = {
-        ...DEFAULT_MAP,
-        ...savedData,
-      };
-    } else {
-      this.defaultInputs = DEFAULT_MAP;
-    }
-  }
-
-  get(key: string): number | string {
-    return this.defaultInputs[key];
-  }
-
-  getNumber(key: string): number {
-    return this.defaultInputs[key] as number;
-  }
-
-  set(key: string, value: number | string) {
-    this.defaultInputs[key] = value;
-  }
-
-  all() {
-    return this.defaultInputs;
-  }
-}
-
-// Use as singleton given defaults are global per app context for now.
-// This should be parameterised if this ever changes per location
-export const DefaultInputs = new Defaults();
-
 export function getDefaultInputs(
   powerfuel: string,
   inputConfiguration: InputConfiguration,
@@ -174,6 +138,9 @@ export function getDefaultInputs(
   const sessionStorageData: InputMap = JSON.parse(
     sessionStorage.getItem("savedData") || "{}"
   );
+
+  // TODO: See if can improve to (sessionStorageData["inputConfiguration"] === "Advanced" &&
+  // inputConfiguration === "Basic")
   const savedData: InputMap =
     sessionStorageData["inputConfiguration"] !== inputConfiguration
       ? {}
