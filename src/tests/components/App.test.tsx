@@ -257,7 +257,7 @@ describe("App", () => {
 
     expect(content).toHaveLength(5);
 
-    // TODO: Fix bug with selected state not persisting
+    // // TODO: Fix bug with selected state not persisting
     // expect(content).toContain("Oversize Ratio");
 
     // Select oversize ratio

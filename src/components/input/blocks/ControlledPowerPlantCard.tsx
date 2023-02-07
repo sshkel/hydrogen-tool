@@ -26,6 +26,7 @@ function getPowerPlantCards(props: Props) {
             titles={["Nominal Capacity", "Oversize Ratio"]}
             selectClass="powerCapacityConfiguration"
             helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+            // formState={props.formState}
             buttonChildren={[
               [
                 <InputNumberField
@@ -60,6 +61,7 @@ function getPowerPlantCards(props: Props) {
           titles={["Nominal Capacity", "Oversize Ratio"]}
           selectClass="powerCapacityConfiguration"
           helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
+          // formState={props.formState}
           buttonChildren={[
             [
               <InputNumberField
@@ -91,6 +93,8 @@ function getPowerPlantCards(props: Props) {
           titles={["Nominal Capacity", "Oversize Ratio"]}
           selectClass="powerCapacityConfiguration"
           helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
+          // TODO Work out intended default state
+          // formState={props.formState}
           buttonChildren={[
             [
               <InputNumberField
@@ -122,6 +126,7 @@ function getPowerPlantCards(props: Props) {
           selectClass="powerCapacityConfiguration"
           titles={["Nominal Capacity", "Oversize Ratio"]}
           helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
+          // formState={props.formState}
           buttonChildren={[
             [
               <InputNumberField
@@ -250,6 +255,7 @@ export default function ControlledPowerPlantCard(props: Props) {
           onSelectChange={onSelectChange}
           buttonChildren={getPowerPlantCards(props)}
           selectedIndex={POWER_PLANT_TYPES.indexOf(powerPlantType)}
+          formState={props.formState}
         />,
         <InputSelect
           key="powerPlantConfigurationSelect"
@@ -257,6 +263,7 @@ export default function ControlledPowerPlantCard(props: Props) {
           prompt="Power Plant Configuration"
           selectClass="powerPlantConfiguration"
           titles={["Standalone", "Grid Connected"]}
+          formState={props.formState}
           buttonChildren={[
             [],
             [
@@ -279,6 +286,7 @@ export default function ControlledPowerPlantCard(props: Props) {
           prompt="Power Supply Option"
           selectClass="powerSupplyOption"
           titles={["Self Build", "Power Purchase Agreement (PPA)"]}
+          formState={props.formState}
           buttonChildren={[
             [
               <HideableInputNumberField
