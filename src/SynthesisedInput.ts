@@ -1,6 +1,5 @@
 import {
   CarbonCaptureSource,
-  InputConfiguration,
   Inputs,
   PowerCapacityConfiguration,
   PowerPlantConfiguration,
@@ -138,36 +137,20 @@ class DefaultInputs implements Inputs {
 }
 
 export default class SynthesisedInputs extends DefaultInputs {
-  constructor(
-    userInputs: UserInputFields,
-    inputConfiguration: InputConfiguration
-  ) {
+  constructor(userInputs: UserInputFields) {
     super();
-    let savedData = JSON.parse(sessionStorage.getItem("savedData") || "{}");
     let sanitisedUserInputFields: any = { ...userInputs };
 
-    if (savedData["inputConfiguration"] !== inputConfiguration) {
-      // Don't read from local storage if configuration does not match
-      savedData = {};
-    }
-
     Object.keys(sanitisedUserInputFields).forEach((key) => {
-      if (savedData[key] === undefined) {
-        delete savedData[key];
-      }
       if (sanitisedUserInputFields[key] === undefined) {
         delete sanitisedUserInputFields[key];
       }
     });
 
     const form = {
-      inputConfiguration: inputConfiguration,
-      // ...defaults.all(),
       ...this,
-      ...savedData,
       ...sanitisedUserInputFields,
     };
-    sessionStorage.setItem("savedData", JSON.stringify(form));
 
     return form;
   }

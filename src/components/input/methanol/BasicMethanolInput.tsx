@@ -60,7 +60,6 @@ export default function BasicMethanolInput(props: InputScreenProps) {
                 inputKey="electrolyserSystemOversizing"
                 formState={props.formState}
               />,
-              // TODO work out why this freaks out as a slider
               <InputSlider
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"
@@ -141,6 +140,7 @@ export default function BasicMethanolInput(props: InputScreenProps) {
                 selectClass="powerSupplyOption"
                 helperText="Select Self Build for cases in which a new power plant is built in conjunction with electrolyser. Select PPA if there is a grid connection to a power supplier."
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
+                formState={props.formState}
                 buttonChildren={[
                   isOffshore(props.location)
                     ? [

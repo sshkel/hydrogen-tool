@@ -42,6 +42,7 @@ describe("InputHomePage", () => {
       windFarmBuildCost: 2000,
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
+      inputConfiguration: "Basic",
     });
   });
 
@@ -147,6 +148,7 @@ describe("InputHomePage", () => {
       timeBetweenOverloading: 0,
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
+      inputConfiguration: "Advanced",
     });
   });
 
@@ -269,6 +271,7 @@ describe("InputHomePage", () => {
       timeBetweenOverloading: 0,
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
+      inputConfiguration: "Advanced",
     });
   });
 
@@ -337,6 +340,7 @@ describe("InputHomePage", () => {
       solarToWindPercentage: 0,
       solarFarmBuildCost: 1200,
       windFarmBuildCost: 2000,
+      inputConfiguration: "Basic",
     });
   });
 
@@ -374,6 +378,7 @@ describe("InputHomePage", () => {
       windFarmBuildCost: 2000,
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
+      inputConfiguration: "Basic",
     });
   });
 
@@ -464,6 +469,7 @@ describe("InputHomePage", () => {
       windOpex: 25000,
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
+      inputConfiguration: "Advanced",
     });
   });
 });

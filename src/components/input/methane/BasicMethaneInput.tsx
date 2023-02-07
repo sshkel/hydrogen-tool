@@ -60,7 +60,6 @@ export default function BasicMethaneInput(props: InputScreenProps) {
                 inputKey="electrolyserSystemOversizing"
                 formState={props.formState}
               />,
-              // TODO work out why this freaks out as a slider
               <InputSlider
                 key="hydrogenStorageCapacity"
                 inputKey="hydrogenStorageCapacity"

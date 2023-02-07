@@ -147,7 +147,6 @@ export function getDefaultInputs(
       : sessionStorageData;
 
   const defaults: InputMap = {};
-
   // TODO: Pass in powerfuel if defaults differ for each
   inputKeys.forEach((key) => {
     defaults[key] =

@@ -958,6 +958,7 @@ const BASIC_HYDROGEN_INPUT_KEYS = [
   "waterSupplyCost",
   "discountRate",
   "projectTimeline",
+  "powerSupplyOption",
 ];
 
 const ADVANCED_HYDROGEN_INPUT_KEYS = [
@@ -1016,6 +1017,11 @@ const ADVANCED_HYDROGEN_INPUT_KEYS = [
   "additionalAnnualCosts",
   "projectTimeline",
   "discountRate",
+  "stackReplacementType",
+  "powerCapacityConfiguration",
+  "powerPlantType",
+  "powerPlantConfiguration",
+  "powerSupplyOption",
 ];
 
 const BASIC_AMMONIA_INPUT_KEYS = [
@@ -1034,6 +1040,7 @@ const BASIC_AMMONIA_INPUT_KEYS = [
   "waterSupplyCost",
   "discountRate",
   "projectTimeline",
+  "powerSupplyOption",
 ];
 
 const ADVANCED_AMMONIA_INPUT_KEYS = [
@@ -1107,6 +1114,10 @@ const ADVANCED_AMMONIA_INPUT_KEYS = [
   "additionalAnnualCosts",
   "projectTimeline",
   "discountRate",
+  "stackReplacementType",
+  "powerPlantType",
+  "powerPlantConfiguration",
+  "powerSupplyOption",
 ];
 
 const BASIC_METHANOL_INPUT_KEYS = [
@@ -1125,6 +1136,7 @@ const BASIC_METHANOL_INPUT_KEYS = [
   "waterSupplyCost",
   "discountRate",
   "projectTimeline",
+  "powerSupplyOption",
 ];
 
 const ADVANCED_METHANOL_INPUT_KEYS = [
@@ -1200,6 +1212,10 @@ const ADVANCED_METHANOL_INPUT_KEYS = [
   "additionalAnnualCosts",
   "projectTimeline",
   "discountRate",
+  "stackReplacementType",
+  "powerPlantType",
+  "powerPlantConfiguration",
+  "powerSupplyOption",
 ];
 
 const BASIC_METHANE_INPUT_KEYS = [
@@ -1218,6 +1234,7 @@ const BASIC_METHANE_INPUT_KEYS = [
   "waterSupplyCost",
   "discountRate",
   "projectTimeline",
+  "powerSupplyOption",
 ];
 
 const ADVANCED_METHANE_INPUT_KEYS = [
@@ -1293,4 +1310,8 @@ const ADVANCED_METHANE_INPUT_KEYS = [
   "additionalAnnualCosts",
   "projectTimeline",
   "discountRate",
+  "stackReplacementType",
+  "powerPlantType",
+  "powerPlantConfiguration",
+  "powerSupplyOption",
 ];

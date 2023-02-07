@@ -114,6 +114,7 @@ export default function InputHomePage(props: Props) {
     let form: any = { ...formState };
 
     form["powerfuel"] = powerfuel;
+    form["inputConfiguration"] = tab;
     for (let input of e.target.getElementsByTagName("input")) {
       const { id, name, value } = input;
       const key = id || name;
@@ -136,6 +137,8 @@ export default function InputHomePage(props: Props) {
     }
 
     props.setState(form);
+
+    sessionStorage.setItem("savedData", JSON.stringify(form));
     navigate("/result");
   };
 

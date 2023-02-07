@@ -705,7 +705,6 @@ export const basicSolarScenario: {
   data: {
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
-    powerPlantType: "Solar",
     powerPlantOversizeRatio: 1.5,
     solarToWindPercentage: 100,
     electrolyserPurchaseCost: 1000,

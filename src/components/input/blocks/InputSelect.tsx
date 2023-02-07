@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 import * as React from "react";
+import { useEffect } from "react";
 
 import InputSelectButton from "./InputSelectButton";
 import InputTitle from "./InputTitle";
@@ -10,9 +11,10 @@ interface Props {
   helperText?: string;
   buttonChildren: JSX.Element[][];
   prompt: string;
-  selectClass?: string;
+  selectClass: string;
   onSelectChange?: (index: number) => void;
   selectedIndex?: number;
+  formState?: { [key: string]: number | string };
 }
 
 export default function InputSelectField(props: Props) {
@@ -22,12 +24,28 @@ export default function InputSelectField(props: Props) {
     helperText,
     buttonChildren,
     selectClass,
-    selectedIndex = 0,
     onSelectChange,
+    // selectedIndex = 0,
+    formState,
   } = props;
 
+  let selectedIndex = props.selectedIndex;
+  if (
+    selectedIndex === undefined &&
+    titles.indexOf(String((formState || {})[selectClass])) !== -1
+  ) {
+    selectedIndex = titles.indexOf(String((formState || {})[selectClass]));
+  }
+
   const [expanded, setExpanded] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(selectedIndex);
+  const [selected, setSelected] = React.useState<number>(selectedIndex || 0);
+
+  useEffect(() => {
+    // Capture current state on unmount and in between state change of app
+    return () => {
+      (formState || {})[selectClass] = titles[selected];
+    };
+  });
 
   const prompt = props.prompt + " (Select one option from below)";
 

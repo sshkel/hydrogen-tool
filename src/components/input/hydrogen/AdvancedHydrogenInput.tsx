@@ -94,6 +94,7 @@ export default function AdvancedHydrogenInput(props: InputScreenProps) {
                 selectClass="stackReplacementType"
                 titles={["Cumulative Hours", "Maximum Degradation Level"]}
                 helperText="Replace stack lifetime exceeds an hourly threshold or degrades past a given rate"
+                formState={props.formState}
                 buttonChildren={[
                   [
                     <InputNumberField

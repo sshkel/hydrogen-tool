@@ -111,6 +111,7 @@ export default function BasicHydrogenInput(props: InputScreenProps) {
                 selectClass="powerSupplyOption"
                 helperText="Select Self Build for cases in which a new power plant is built in conjunction with electrolyser. Select PPA if there is a grid connection to a power supplier."
                 titles={["Self Build", "Power Purchase Agreement (PPA)"]}
+                formState={props.formState}
                 buttonChildren={[
                   isOffshore(props.location)
                     ? [
