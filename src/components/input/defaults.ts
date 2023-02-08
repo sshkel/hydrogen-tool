@@ -11,12 +11,12 @@ import {
 type InputMap = { [k: string]: number | string };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const defaults = {
+const dynamicDefaults = {
   hydrogen: {
     basic: {
       projectScale: 15,
-      electrolyserPurchaseCost: 2000, // assuming this is electrolyser capital cost
-      principalPPACost: 60,
+      electrolyserPurchaseCost: 1500, // assuming this is electrolyser capital cost
+      principalPPACost: 50,
       electrolyserNominalCapacity: 100,
       secAtNominalLoad: 50,
       electrolyserEfficiency: 70,
@@ -208,9 +208,9 @@ const defaults = {
       hydrogenStoragePurchaseCost: 500,
       hydrogenStorageOMCost: 1,
       electrolyserEfficiency: 75,
-      ammoniaPlantCapitalCost: 500,
+      ammoniaPlantCapitalCost: 900,
       solarFarmBuildCost: 1200,
-      windFarmBuildCost: 1805,
+      windFarmBuildCost: 1800,
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
@@ -347,11 +347,11 @@ const defaults = {
       hydrogenStorageOMCost: 1,
       electrolyserSystemOversizing: 45,
       minimumHydrogenStorage: 10,
-      methanolPlantCapacity: 365,
+      methanolPlantCapacity: 400,
       methanolPlantSec: 0.36,
       methanolPlantMinimumTurndown: 100,
       methanolStorageCapacity: 30,
-      methanolPlantUnitCost: 265,
+      methanolPlantUnitCost: 300,
       methanolStorageCost: 227,
       methanolPlantOMCost: 5,
       methanolStorageOMCost: 0,
@@ -365,10 +365,10 @@ const defaults = {
       waterRequirementOfElectrolyser: 25,
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
-      waterSupplyCost: 2.7,
-      solarFarmBuildCost: 1020,
+      waterSupplyCost: 2.5,
+      solarFarmBuildCost: 1200,
       solarPVCostReductionWithScale: 10,
-      windFarmBuildCost: 1805,
+      windFarmBuildCost: 1800,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
       hydrogenStorageCapacity: 500_000,
@@ -430,11 +430,11 @@ const defaults = {
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
-      methanolPlantCapacity: 365,
+      methanolPlantCapacity: 400,
       methanolPlantSec: 0.36,
       methanolPlantMinimumTurndown: 100,
       methanolStorageCapacity: 30,
-      methanolPlantUnitCost: 265,
+      methanolPlantUnitCost: 300,
       methanolStorageCost: 227,
       methanolPlantOMCost: 5,
       methanolStorageOMCost: 0,
@@ -448,10 +448,10 @@ const defaults = {
       waterRequirementOfElectrolyser: 25,
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
-      waterSupplyCost: 2.7,
-      solarFarmBuildCost: 1020,
+      waterSupplyCost: 2.5,
+      solarFarmBuildCost: 1200,
       solarPVCostReductionWithScale: 10,
-      windFarmBuildCost: 1805,
+      windFarmBuildCost: 1800,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
     },
@@ -517,18 +517,16 @@ const defaults = {
       ccPlantOMCost: 5,
       ccEpcCosts: 0,
       ccLandProcurementCosts: 0,
-      methanolEpcCosts: 10,
-      methanolLandProcurementCosts: 0,
       waterRequirementOfElectrolyser: 25,
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
-      waterSupplyCost: 2.7,
-      solarFarmBuildCost: 1020,
+      waterSupplyCost: 2.5,
+      solarFarmBuildCost: 1200,
       solarPVCostReductionWithScale: 10,
-      windFarmBuildCost: 1805,
+      windFarmBuildCost: 1800,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
-      methanePlantCapacity: 365,
+      methanePlantCapacity: 400,
       methanePlantSec: 0.51,
       methanePlantMinimumTurndown: 100,
       methaneStorageCapacity: 30,
@@ -594,15 +592,6 @@ const defaults = {
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
-      // Methanol advanced
-      methanolPlantCapacity: 365,
-      methanolPlantSec: 0.36,
-      methanolPlantMinimumTurndown: 100,
-      methanolStorageCapacity: 30,
-      methanolPlantUnitCost: 265,
-      methanolStorageCost: 227,
-      methanolPlantOMCost: 5,
-      methanolStorageOMCost: 0,
       ccSec: 0.86,
       ccPlantCost: 1610,
       ccPlantOMCost: 5,
@@ -613,15 +602,15 @@ const defaults = {
       waterRequirementOfElectrolyser: 25,
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
-      waterSupplyCost: 2.7,
+      waterSupplyCost: 2.5,
 
-      solarFarmBuildCost: 1020,
+      solarFarmBuildCost: 1200,
       solarPVCostReductionWithScale: 10,
 
-      windFarmBuildCost: 1805,
+      windFarmBuildCost: 1800,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
-      methanePlantCapacity: 365,
+      methanePlantCapacity: 400,
       methanePlantSec: 0.51,
       methanePlantMinimumTurndown: 100,
       methaneStorageCapacity: 30,
@@ -768,11 +757,18 @@ export function getDefaultInputs(
       ? {}
       : sessionStorageData;
 
+  type ObjectKey = keyof typeof dynamicDefaults;
+  const typedPowerfuel = powerfuel as ObjectKey;
+  const powerfuelDefaults: InputMap =
+    inputConfiguration === "Basic"
+      ? dynamicDefaults[typedPowerfuel]["basic"]
+      : dynamicDefaults[typedPowerfuel]["advanced"];
+
   const defaults: InputMap = {};
   // TODO: Pass in powerfuel if defaults differ for each
   inputKeys.forEach((key) => {
     defaults[key] =
-      savedData[key] === undefined ? DEFAULT_MAP[key] : savedData[key];
+      savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];
   });
 
   return defaults;
