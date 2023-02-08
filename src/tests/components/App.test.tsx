@@ -181,8 +181,8 @@ describe("App", () => {
       { timeout: 1000 }
     );
 
-    // Select over size ratio
-    fireEvent.click(getByText(/Oversize Ratio/i));
+    // Select nominal capacity
+    fireEvent.click(getByText(/Nominal Capacity/i));
 
     await waitFor(
       () =>
@@ -192,14 +192,14 @@ describe("App", () => {
       { timeout: 1000 }
     );
 
-    // Set oversize ratio to 1.5
-    fireEvent.change(getByLabelText(/powerPlantOversizeRatio/i), {
-      target: { value: 1.5 },
+    // Set solar nominal capacity to 200
+    fireEvent.change(getByLabelText(/solarNominalCapacity/i), {
+      target: { value: 200 },
     });
 
-    // Set capacity ratio to 75%
-    fireEvent.change(getByLabelText(/solarToWindPercentage/i), {
-      target: { value: 75 },
+    // Set capacity ratio to 300
+    fireEvent.change(getByLabelText(/windNominalCapacity/i), {
+      target: { value: 300 },
     });
 
     fireEvent.click(getByText(/Calculate/i));
@@ -257,11 +257,12 @@ describe("App", () => {
 
     expect(content).toHaveLength(5);
 
-    // // TODO: Fix bug with selected state not persisting
-    // expect(content).toContain("Oversize Ratio");
+    expect(content).toContain("Nominal Capacity");
 
-    // Select oversize ratio
-    fireEvent.click(getByTextRefreshed(/Oversize Ratio/i));
+    // Select nominal capacity
+    fireEvent.click(
+      getByLabelTextRefreshed(/powerPlantConfigurationSelect-1/i)
+    );
 
     await waitFor(
       () =>
@@ -272,12 +273,12 @@ describe("App", () => {
     );
 
     expect(
-      (getByLabelTextRefreshed(/powerPlantOversizeRatio/i) as any).value
-    ).toEqual("1.5");
+      (getByLabelTextRefreshed(/solarNominalCapacity/i) as any).value
+    ).toEqual("200");
 
     expect(
-      (getByLabelTextRefreshed(/solarToWindPercentage/i) as any).value
-    ).toEqual("75");
+      (getByLabelTextRefreshed(/windNominalCapacity/i) as any).value
+    ).toEqual("300");
   });
 
   // TODO: Re-add this once we figure out defaults for methanol

@@ -67,6 +67,7 @@ export default function InputSelectField(props: Props) {
       <InputTitle title={prompt} helperText={helperText} />
       {titles.map((text, index) => (
         <InputSelectButton
+          id={selectKey ? `${selectKey}-${index}` : undefined}
           key={selectKey ? `${selectKey}-${index}` : undefined}
           text={text}
           index={index}

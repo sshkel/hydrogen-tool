@@ -23,22 +23,22 @@ function getPowerPlantCards(props: Props) {
             key="windPowerPlantCapacitySelect"
             selectKey="windPowerPlantCapacitySelect"
             prompt="Power Plant Capacity"
-            titles={["Nominal Capacity", "Oversize Ratio"]}
+            titles={["Oversize Ratio", "Nominal Capacity"]}
             selectClass="powerCapacityConfiguration"
             helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
-            // formState={props.formState}
+            formState={props.formState}
             buttonChildren={[
               [
                 <InputNumberField
-                  key="windNominalCapacity"
-                  inputKey="windNominalCapacity"
+                  key="powerPlantOversizeRatio"
+                  inputKey="powerPlantOversizeRatio"
                   formState={props.formState}
                 />,
               ],
               [
                 <InputNumberField
-                  key="powerPlantOversizeRatio"
-                  inputKey="powerPlantOversizeRatio"
+                  key="windNominalCapacity"
+                  inputKey="windNominalCapacity"
                   formState={props.formState}
                 />,
               ],
@@ -58,22 +58,22 @@ function getPowerPlantCards(props: Props) {
           key="windPowerPlantCapacitySelect"
           selectKey="windPowerPlantCapacitySelect"
           prompt="Power Plant Capacity"
-          titles={["Nominal Capacity", "Oversize Ratio"]}
+          titles={["Oversize Ratio", "Nominal Capacity"]}
           selectClass="powerCapacityConfiguration"
           helperText="Wind farm capacity in MW or as a ratio of electrolyser capacity"
-          // formState={props.formState}
+          formState={props.formState}
           buttonChildren={[
             [
               <InputNumberField
-                key="windNominalCapacity"
-                inputKey="windNominalCapacity"
+                key="powerPlantOversizeRatio"
+                inputKey="powerPlantOversizeRatio"
                 formState={props.formState}
               />,
             ],
             [
               <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
+                key="windNominalCapacity"
+                inputKey="windNominalCapacity"
                 formState={props.formState}
               />,
             ],
@@ -90,23 +90,22 @@ function getPowerPlantCards(props: Props) {
           key="solarPowerPlantCapacitySelect"
           selectKey="solarPowerPlantCapacitySelect"
           prompt="Power Plant Capacity"
-          titles={["Nominal Capacity", "Oversize Ratio"]}
+          titles={["Oversize Ratio", "Nominal Capacity"]}
           selectClass="powerCapacityConfiguration"
           helperText="Solar farm capacity in MW or as a ratio of electrolyser capacity"
-          // TODO Work out intended default state
-          // formState={props.formState}
+          formState={props.formState}
           buttonChildren={[
             [
               <InputNumberField
-                key="solarNominalCapacity"
-                inputKey="solarNominalCapacity"
+                key="powerPlantOversizeRatio"
+                inputKey="powerPlantOversizeRatio"
                 formState={props.formState}
               />,
             ],
             [
               <InputNumberField
-                key="powerPlantOversizeRatio"
-                inputKey="powerPlantOversizeRatio"
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
                 formState={props.formState}
               />,
             ],
@@ -124,22 +123,10 @@ function getPowerPlantCards(props: Props) {
           selectKey="hybridPowerPlantCapacitySelect"
           prompt="Power Plant Capacity"
           selectClass="powerCapacityConfiguration"
-          titles={["Nominal Capacity", "Oversize Ratio"]}
+          titles={["Oversize Ratio", "Nominal Capacity"]}
           helperText="Solar and Wind farm capacity in MW as a ratio of electrolyser capacity"
-          // formState={props.formState}
+          formState={props.formState}
           buttonChildren={[
-            [
-              <InputNumberField
-                key="windNominalCapacity"
-                inputKey="windNominalCapacity"
-                formState={props.formState}
-              />,
-              <InputNumberField
-                key="solarNominalCapacity"
-                inputKey="solarNominalCapacity"
-                formState={props.formState}
-              />,
-            ],
             [
               <InputNumberField
                 key="powerPlantOversizeRatio"
@@ -149,6 +136,18 @@ function getPowerPlantCards(props: Props) {
               <InputNumberField
                 key="solarToWindPercentage"
                 inputKey="solarToWindPercentage"
+                formState={props.formState}
+              />,
+            ],
+            [
+              <InputNumberField
+                key="windNominalCapacity"
+                inputKey="windNominalCapacity"
+                formState={props.formState}
+              />,
+              <InputNumberField
+                key="solarNominalCapacity"
+                inputKey="solarNominalCapacity"
                 formState={props.formState}
               />,
             ],
