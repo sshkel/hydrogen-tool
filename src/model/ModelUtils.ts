@@ -1128,3 +1128,22 @@ export function carbonCaptureSourceToPlantCost(
   }
   return 0;
 }
+
+export function carbonCaptureSourceToSec(
+  carbonCaptureSource: CarbonCaptureSource
+) {
+  if (carbonCaptureSource === "Direct Air Capture") {
+    return 1.535;
+  } else if (carbonCaptureSource === "Coal Power Plant") {
+    return 0.86;
+  } else if (carbonCaptureSource === "Steel Plant") {
+    return 0.78;
+  } else if (carbonCaptureSource === "Cement Plant") {
+    return 0.78;
+  } else if (carbonCaptureSource === "Fermentation Plant") {
+    return 0;
+  } else if (carbonCaptureSource === "Steam Methane Reforming") {
+    return 0.78;
+  }
+  return 0;
+}

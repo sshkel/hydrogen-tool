@@ -44,6 +44,7 @@ import {
   calculateSolarToWindRatio,
   capacityFactorsWithBattery,
   carbonCaptureSourceToPlantCost,
+  carbonCaptureSourceToSec,
   cc_out,
   cc_plant_CAPEX,
   electrolyser_actual_power_meX,
@@ -712,12 +713,12 @@ export class MethanolModel implements Model {
       this.parameters.methanolPlantSec,
       this.hoursPerYear
     );
-
+    const ccSec =
+      inputConfiguration === "Basic"
+        ? carbonCaptureSourceToSec(this.parameters.carbonCaptureSource!)
+        : this.parameters.ccSec;
     const carbonCapturePlantPowerDemand =
-      this.carbon_capture_plant_power_demand(
-        carbonCapturePlantCapacity,
-        this.parameters.ccSec
-      );
+      this.carbon_capture_plant_power_demand(carbonCapturePlantCapacity, ccSec);
 
     const electrolyserNominalCapacity = nominal_electrolyser_capacity(
       hydrogenOutput,
