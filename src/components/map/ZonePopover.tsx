@@ -210,24 +210,20 @@ export function ZonePopover(props: Props) {
               subheader="Integrated hydrogen production and conversion into ammonia"
             />
           </Grid>
-          {localStorage.getItem("methanol") !== null ? (
-            <Grid item xs={2}>
-              <PowerfuelPathwayCard
-                onClick={() => startDesign("methanol")}
-                title="Methanol"
-                subheader="Integrated hydrogen production, carbon sourcing and conversion into methanol"
-              />
-            </Grid>
-          ) : null}
-          {localStorage.getItem("methanol") !== null ? (
-            <Grid item xs={2}>
-              <PowerfuelPathwayCard
-                onClick={() => startDesign("methane")}
-                title="Methane"
-                subheader="Integrated hydrogen production, carbon sourcing and conversion into methane"
-              />
-            </Grid>
-          ) : null}
+          <Grid item xs={2}>
+            <PowerfuelPathwayCard
+              onClick={() => startDesign("methanol")}
+              title="Methanol"
+              subheader="Integrated hydrogen production, carbon sourcing and conversion into methanol"
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <PowerfuelPathwayCard
+              onClick={() => startDesign("methane")}
+              title="Methane"
+              subheader="Integrated hydrogen production, carbon sourcing and conversion into methane"
+            />
+          </Grid>
         </Grid>
       </CardContent>
     </SideCard>
