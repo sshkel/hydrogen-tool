@@ -192,7 +192,6 @@ const defaults = {
       projectTimeline: 15,
       discountRate: 7,
       inflationRate: 2.5,
-
       ammoniaPlantCapacity: 50,
       ammoniaPlantSec: 0.4,
       asuSec: 0.2,
@@ -203,18 +202,15 @@ const defaults = {
       airSeparationUnitCost: 200,
       ammoniaEpcCosts: 10,
       ammoniaLandProcurementCosts: 0,
-
       ammoniaPlantOMCost: 2,
       ammoniaStorageOMCost: 2,
       asuPlantOMCost: 2,
-
       hydrogenStoragePurchaseCost: 500,
       hydrogenStorageOMCost: 1,
       electrolyserEfficiency: 75,
       ammoniaPlantCapitalCost: 500,
       solarFarmBuildCost: 1200,
       windFarmBuildCost: 1805,
-
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
@@ -288,14 +284,11 @@ const defaults = {
       airSeparationUnitCost: 200,
       ammoniaEpcCosts: 10,
       ammoniaLandProcurementCosts: 0,
-
       ammoniaPlantOMCost: 2,
       ammoniaStorageOMCost: 2,
       asuPlantOMCost: 2,
-
       hydrogenStoragePurchaseCost: 500,
       hydrogenStorageOMCost: 1,
-
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
@@ -350,7 +343,6 @@ const defaults = {
       additionalUpfrontCosts: 0,
       additionalAnnualCosts: 0,
       inflationRate: 2.5,
-
       hydrogenStoragePurchaseCost: 500,
       hydrogenStorageOMCost: 1,
       electrolyserSystemOversizing: 45,
@@ -363,8 +355,7 @@ const defaults = {
       methanolStorageCost: 227,
       methanolPlantOMCost: 5,
       methanolStorageOMCost: 0,
-      // TODO(fix this)
-      ccSec: 0.86, // different per power source:  DAC: 1.535 kWh/kg CO2, Coal: 0.86 kWh/kg CO2, Steel: 0.78 kWh/kg CO2, Cement: 0.78 kWh/kg CO2, Fermentation Plant:  0 kWh/kg CO2, SMR: 0.78 kWh/kg CO2
+      ccSec: 0.86,
       ccPlantCost: 1610,
       ccPlantOMCost: 5,
       ccEpcCosts: 0,
@@ -375,10 +366,8 @@ const defaults = {
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
       waterSupplyCost: 2.7,
-
       solarFarmBuildCost: 1020,
       solarPVCostReductionWithScale: 10,
-
       windFarmBuildCost: 1805,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
@@ -449,8 +438,7 @@ const defaults = {
       methanolStorageCost: 227,
       methanolPlantOMCost: 5,
       methanolStorageOMCost: 0,
-      // TODO(fix this)
-      ccSec: 0.86, // different per power source:  DAC: 1.535 kWh/kg CO2, Coal: 0.86 kWh/kg CO2, Steel: 0.78 kWh/kg CO2, Cement: 0.78 kWh/kg CO2, Fermentation Plant:  0 kWh/kg CO2, SMR: 0.78 kWh/kg CO2
+      ccSec: 0.86,
       ccPlantCost: 1610,
       ccPlantOMCost: 5,
       ccEpcCosts: 0,
@@ -524,8 +512,7 @@ const defaults = {
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
-      // TODO(fix this)
-      ccSec: 0.86, // different per power source:  DAC: 1.535 kWh/kg CO2, Coal: 0.86 kWh/kg CO2, Steel: 0.78 kWh/kg CO2, Cement: 0.78 kWh/kg CO2, Fermentation Plant:  0 kWh/kg CO2, SMR: 0.78 kWh/kg CO2
+      ccSec: 0.86,
       ccPlantCost: 1610,
       ccPlantOMCost: 5,
       ccEpcCosts: 0,
@@ -536,10 +523,8 @@ const defaults = {
       electrolyserCostReductionWithScale: 10,
       electrolyserOMCost: 2.5,
       waterSupplyCost: 2.7,
-
       solarFarmBuildCost: 1020,
       solarPVCostReductionWithScale: 10,
-
       windFarmBuildCost: 1805,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
@@ -618,8 +603,7 @@ const defaults = {
       methanolStorageCost: 227,
       methanolPlantOMCost: 5,
       methanolStorageOMCost: 0,
-      // TODO(fix this)
-      ccSec: 0.86, // different per power source:  DAC: 1.535 kWh/kg CO2, Coal: 0.86 kWh/kg CO2, Steel: 0.78 kWh/kg CO2, Cement: 0.78 kWh/kg CO2, Fermentation Plant:  0 kWh/kg CO2, SMR: 0.78 kWh/kg CO2
+      ccSec: 0.86,
       ccPlantCost: 1610,
       ccPlantOMCost: 5,
       ccEpcCosts: 0,
