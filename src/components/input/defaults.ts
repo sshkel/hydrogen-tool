@@ -72,6 +72,13 @@ const dynamicDefaults = {
       projectTimeline: 15,
       discountRate: 7,
       inflationRate: 2.5,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
     advanced: {
       electrolyserNominalCapacity: 100,
@@ -132,6 +139,13 @@ const dynamicDefaults = {
       projectTimeline: 15,
       discountRate: 7,
       inflationRate: 2.5,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
   },
   ammonia: {
@@ -213,6 +227,13 @@ const dynamicDefaults = {
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
     advanced: {
       electrolyserNominalCapacity: 100,
@@ -291,6 +312,13 @@ const dynamicDefaults = {
       electrolyserSystemOversizing: 45,
       hydrogenStorageCapacity: 50_000,
       minimumHydrogenStorage: 10,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
   },
   methanol: {
@@ -373,6 +401,13 @@ const dynamicDefaults = {
       hydrogenStorageCapacity: 500_000,
       discountRate: 1,
       projectTimeline: 25,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
     advanced: {
       electrolyserNominalCapacity: 100,
@@ -453,6 +488,13 @@ const dynamicDefaults = {
       windFarmBuildCost: 1800,
       windCostReductionWithScale: 10,
       principalPPACost: 65,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
   },
   methane: {
@@ -535,6 +577,13 @@ const dynamicDefaults = {
       methanePlantOMCost: 5,
       methaneStorageCost: 227,
       methaneStorageOMCost: 5,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
     advanced: {
       electrolyserNominalCapacity: 100,
@@ -619,6 +668,13 @@ const dynamicDefaults = {
       methanePlantOMCost: 5,
       methaneStorageCost: 227,
       methaneStorageOMCost: 5,
+      carbonCaptureSource: "Fermentation Plant" as CarbonCaptureSource,
+      stackReplacementType: "Cumulative Hours" as StackReplacementType,
+      powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+      powerPlantType: "Wind" as PowerPlantType,
+      powerSupplyOption: "Self Build" as PowerSupplyOption,
+      powerCapacityConfiguration:
+        "Oversize Ratio" as PowerCapacityConfiguration,
     },
   },
 };
