@@ -349,15 +349,11 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                 key="batteryCapacity"
                 title="Battery Capacity"
                 children={[
-                  <InputNumberField
-                    key="batteryRatedPower"
-                    inputKey="batteryRatedPower"
-                    formState={props.formState}
-                  />,
                   <InputDropdownField
                     id="batteryStorageDuration"
                     key="batteryStorageDuration"
-                    defaultValue="0"
+                    // TODO move this to be read from defaults
+                    defaultValue="8"
                     label="Battery Storage Duration"
                     values={["0", "1", "2", "4", "8"]}
                   />,
