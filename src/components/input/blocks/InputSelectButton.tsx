@@ -6,6 +6,7 @@ import React, { Suspense } from "react";
 import InputCard from "./InputCard";
 
 interface Props {
+  id?: string;
   index: number;
   text: string;
   helperText?: string;
@@ -24,7 +25,7 @@ const StyledButton = styled(Button)({
 });
 
 function InputSelectButton(props: Props) {
-  const { expanded, selected, index, text, children, className } = props;
+  const { id, expanded, selected, index, text, children, className } = props;
 
   const openExpand = () => props.onOpenExpand(index);
   const closeExpand = () => props.onCloseExpand();
@@ -40,6 +41,7 @@ function InputSelectButton(props: Props) {
       {!showCard ? (
         <div style={{ display: "flex" }}>
           <StyledButton
+            aria-label={id}
             variant={selected ? "contained" : "outlined"}
             color={selected ? "success" : "info"}
             fullWidth

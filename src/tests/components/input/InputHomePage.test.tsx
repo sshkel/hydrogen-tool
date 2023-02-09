@@ -118,7 +118,7 @@ describe("InputHomePage", () => {
       powerfuel: "hydrogen",
       powerPlantType: "Wind",
       powerSupplyOption: "Self Build",
-      powerCapacityConfiguration: "Nominal Capacity",
+      powerCapacityConfiguration: "Oversize Ratio",
       powerPlantOversizeRatio: 1.5,
       principalPPACost: 50,
       projectTimeline: 15,
@@ -181,8 +181,8 @@ describe("InputHomePage", () => {
       { timeout: 1000 }
     );
 
-    // Select over size ratio
-    fireEvent.click(getByText(/Oversize Ratio/i));
+    // Select nominal capacity
+    fireEvent.click(getByText(/Nominal Capacity/i));
 
     await waitFor(
       () =>
@@ -241,7 +241,7 @@ describe("InputHomePage", () => {
       powerfuel: "hydrogen",
       powerPlantType: "Hybrid",
       powerSupplyOption: "Self Build",
-      powerCapacityConfiguration: "Oversize Ratio",
+      powerCapacityConfiguration: "Nominal Capacity",
       powerPlantOversizeRatio: 1.5,
       principalPPACost: 50,
       projectTimeline: 15,
@@ -441,7 +441,7 @@ describe("InputHomePage", () => {
       powerfuel: "hydrogen",
       powerPlantType: "Wind",
       powerSupplyOption: "Self Build",
-      powerCapacityConfiguration: "Nominal Capacity",
+      powerCapacityConfiguration: "Oversize Ratio",
       powerPlantOversizeRatio: 1.5,
       principalPPACost: 50,
       projectTimeline: 15,
