@@ -1,8 +1,8 @@
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 
-import HourlyCapacityFactors from "../charts/HourlyCapacityFactors";
 import { StyledCard } from "./Styles";
+import HourlyCapacityFactors from "./charts/HourlyCapacityFactors";
 
 export function HourlyCapacityFactorsPane(hourlyCapFactors: {
   [key: string]: number[];

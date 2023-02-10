@@ -21,7 +21,6 @@ import {
   UserInputFields,
 } from "../../types";
 import DesignStepper from "../DesignStepper";
-import CostBreakdownDoughnutChart from "../charts/CostBreakdownDoughnutChart";
 import { SAPPHIRE } from "../colors";
 import ErrorAlert from "../misc/ErrorAlert";
 import { DurationCurves } from "./DurationCurves";
@@ -31,6 +30,7 @@ import { LcBreakdownPane } from "./LevelisedCost";
 import { OperatingCostsPane } from "./OperatingCosts";
 import { StyledCard } from "./Styles";
 import { SummaryOfResultsPane } from "./SummaryOfResults";
+import CostBreakdownDoughnutChart from "./charts/CostBreakdownDoughnutChart";
 
 export interface Props {
   location?: string;

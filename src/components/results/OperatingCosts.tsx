@@ -1,8 +1,8 @@
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 
-import CostLineChart from "../charts/CostLineChart";
 import { StyledCard } from "./Styles";
+import CostLineChart from "./charts/CostLineChart";
 
 export function OperatingCostsPane(operatingCosts: {
   projectTimeline: number;

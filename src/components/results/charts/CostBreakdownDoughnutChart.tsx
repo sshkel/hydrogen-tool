@@ -3,7 +3,7 @@ import "chart.js/auto";
 import dataLabelsPlugin from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 
-import { colors } from "../colors";
+import { colors } from "../../colors";
 
 interface Props {
   title: string;

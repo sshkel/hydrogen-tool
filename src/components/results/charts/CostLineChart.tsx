@@ -1,9 +1,9 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-import { ChartData } from "../../types";
-import { checkLength } from "../../utils";
-import { costLineColors } from "../colors";
+import { ChartData } from "../../../types";
+import { checkLength } from "../../../utils";
+import { costLineColors } from "../../colors";
 
 interface Props {
   title: string;

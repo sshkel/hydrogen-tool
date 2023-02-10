@@ -1,8 +1,8 @@
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 
-import CostWaterfallBarChart from "../charts/CostWaterfallBarChart";
 import { StyledCard } from "./Styles";
+import CostWaterfallBarChart from "./charts/CostWaterfallBarChart";
 
 type WaterfallPaneData = {
   title: string;

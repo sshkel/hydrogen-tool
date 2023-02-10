@@ -1,7 +1,7 @@
 import { mount } from "enzyme";
 
-import DurationCurve from "../../../components/charts/DurationCurve";
 import WorkingData from "../../../components/results/WorkingData";
+import DurationCurve from "../../../components/results/charts/DurationCurve";
 import { TIMEOUT } from "../../consts";
 import ammoniaSolarAmmoniaDurationCurveWithBattery from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
 import ammoniaSolarAmmoniaDurationCurve from "../../resources/ammonia-solar-ammonia-duration-curve.json";

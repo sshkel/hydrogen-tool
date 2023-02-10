@@ -2,8 +2,8 @@ import "chart.js/auto";
 import dataLabelsPlugin from "chartjs-plugin-datalabels";
 import { Bar } from "react-chartjs-2";
 
-import { ChartData } from "../../types";
-import { ORANGE, TEAL, addAlpha } from "../colors";
+import { ChartData } from "../../../types";
+import { ORANGE, TEAL, addAlpha } from "../../colors";
 
 interface Props {
   title: string;

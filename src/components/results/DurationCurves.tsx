@@ -2,8 +2,8 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
 
-import DurationCurve from "../charts/DurationCurve";
 import { StyledCard } from "./Styles";
+import DurationCurve from "./charts/DurationCurve";
 
 export function DurationCurves(durationCurves: { [key: string]: number[] }) {
   return Object.keys(durationCurves).map((key: string) => {

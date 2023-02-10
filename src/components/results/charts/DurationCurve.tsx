@@ -1,7 +1,7 @@
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-import { TEAL, addAlpha } from "../colors";
+import { TEAL, addAlpha } from "../../colors";
 
 interface Props {
   title: string;
