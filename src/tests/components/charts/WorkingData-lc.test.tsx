@@ -1,8 +1,7 @@
 import { mount } from "enzyme";
 
-import WorkingData, {
-  WaterFallPane,
-} from "../../../components/results/WorkingData";
+import { WaterFallPane } from "../../../components/results/LevelisedCost";
+import WorkingData from "../../../components/results/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {

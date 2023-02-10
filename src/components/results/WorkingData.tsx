@@ -1,6 +1,3 @@
-import FactoryRoundedIcon from "@mui/icons-material/FactoryRounded";
-import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
-import SignalCellularAltRoundedIcon from "@mui/icons-material/SignalCellularAltRounded";
 import { CssBaseline } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -17,7 +14,6 @@ import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import { MethaneData, MethaneModel } from "../../model/MethaneModel";
 import { MethanolData, MethanolModel } from "../../model/MethanolModel";
 import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
-import { roundToNearestInteger } from "../../model/cost-functions";
 import {
   InputConfiguration,
   Inputs,
@@ -26,15 +22,15 @@ import {
 } from "../../types";
 import DesignStepper from "../DesignStepper";
 import CostBreakdownDoughnutChart from "../charts/CostBreakdownDoughnutChart";
-import CostLineChart from "../charts/CostLineChart";
-import CostWaterfallBarChart from "../charts/CostWaterfallBarChart";
-import DurationCurve from "../charts/DurationCurve";
-import HourlyCapacityFactors from "../charts/HourlyCapacityFactors";
-import { BLUE, SAPPHIRE } from "../colors";
-import { zoneInfo } from "../map/ZoneInfo";
+import { SAPPHIRE } from "../colors";
 import ErrorAlert from "../misc/ErrorAlert";
-import { ItemText, ItemTitle, StyledCard } from "./Styles";
-import SummaryOfResultsTable from "./SummaryOfResultsTable";
+import { DurationCurves } from "./DurationCurves";
+import { HourlyCapacityFactorsPane } from "./HourlyCapacityFactors";
+import { KeyInputsPane } from "./KeyInputs";
+import { LcBreakdownPane } from "./LevelisedCost";
+import { OperatingCostsPane } from "./OperatingCosts";
+import { StyledCard } from "./Styles";
+import { SummaryOfResultsPane } from "./SummaryOfResults";
 
 export interface Props {
   location?: string;
@@ -52,23 +48,6 @@ interface DownloadedData {
 
 // setup default fonts for the charts
 Chart.defaults.font.family = "Nunito";
-
-function powerfuelToFormula(powerfuel: string): string {
-  if (powerfuel === "hydrogen") {
-    return "H2";
-  }
-  if (powerfuel === "ammonia") {
-    return "NH3";
-  }
-  if (powerfuel === "methanol") {
-    return "MeOH";
-  }
-  if (powerfuel === "methane") {
-    return "SNG";
-  }
-
-  return "";
-}
 
 export default function WorkingData(props: Props) {
   const [state, setState] = useState<DownloadedData>({
@@ -557,193 +536,6 @@ export default function WorkingData(props: Props) {
   }
 }
 
-function DurationCurves(durationCurves: { [key: string]: number[] }) {
-  return Object.keys(durationCurves).map((key: string) => {
-    return (
-      <Grid item xs={6} key={key}>
-        <StyledCard>
-          <CardHeader
-            title={key}
-            titleTypographyProps={{
-              fontWeight: "bold",
-              fontSize: 20,
-            }}
-          />
-          <CardContent
-            sx={{
-              paddingTop: 0,
-            }}
-          >
-            <DurationCurve title={key} data={durationCurves[key]} />
-          </CardContent>
-        </StyledCard>
-      </Grid>
-    );
-  });
-}
-
-function HourlyCapacityFactorsPane(hourlyCapFactors: {
-  [key: string]: number[];
-}) {
-  return (
-    <StyledCard>
-      <CardHeader
-        title="Hourly Capacity Factors"
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <HourlyCapacityFactors
-          datapoints={Object.keys(hourlyCapFactors).map((key: string) => {
-            return {
-              label: key,
-              data: hourlyCapFactors[key],
-            };
-          })}
-        />
-      </CardContent>
-    </StyledCard>
-  );
-}
-
-function KeyInputsPane(
-  location: string,
-  electrolyserNominalCapacity: number,
-  powerplantCapacity: number
-) {
-  type ObjectKey = keyof typeof zoneInfo;
-  const zone = location as ObjectKey;
-  return (
-    <StyledCard>
-      <CardHeader
-        id="key-inputs"
-        title="Key Inputs"
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <Grid container item>
-          <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"} spacing={2}>
-              <Grid item>
-                <LocationOnRoundedIcon
-                  fontSize="large"
-                  style={{ color: BLUE }}
-                />
-              </Grid>
-              <Grid
-                id="key-inputs-location"
-                container
-                item
-                direction={"column"}
-              >
-                <Grid>
-                  <ItemTitle>Location</ItemTitle>
-                </Grid>
-                <Grid>
-                  <ItemText>{zoneInfo[zone]?.location}</ItemText>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"} spacing={2}>
-              <Grid item>
-                <SignalCellularAltRoundedIcon
-                  fontSize="large"
-                  style={{ color: BLUE }}
-                />
-              </Grid>
-              <Grid
-                id="key-inputs-electrolyser-capacity"
-                container
-                item
-                direction={"column"}
-              >
-                <Grid item>
-                  <ItemTitle>Electrolyster Capacity</ItemTitle>
-                </Grid>
-                <Grid item>
-                  <ItemText>
-                    {roundToNearestInteger(
-                      electrolyserNominalCapacity
-                    ).toLocaleString("en-US") + " MW"}
-                  </ItemText>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid container item flexWrap={"nowrap"} spacing={2}>
-              <Grid item>
-                <FactoryRoundedIcon fontSize="large" style={{ color: BLUE }} />
-              </Grid>
-              <Grid
-                id="key-inputs-power-plant-capacity"
-                container
-                item
-                direction={"column"}
-              >
-                <ItemTitle>Power Plant Capacity</ItemTitle>
-                <Grid item>
-                  <ItemText>
-                    {roundToNearestInteger(powerplantCapacity).toLocaleString(
-                      "en-US"
-                    ) + " MW"}
-                  </ItemText>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </StyledCard>
-  );
-}
-
-function OperatingCostsPane(operatingCosts: {
-  projectTimeline: number;
-  costs: { [key: string]: number[] };
-}) {
-  return (
-    <StyledCard>
-      <CardHeader
-        title="Operating Costs"
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <CostLineChart
-          title="Operating Costs"
-          projectTimeline={operatingCosts.projectTimeline}
-          datapoints={Object.keys(operatingCosts.costs).map((key: string) => {
-            return { label: key, data: operatingCosts.costs[key] };
-          })}
-        />
-      </CardContent>
-    </StyledCard>
-  );
-}
-
 type DoughnutPaneData = {
   title: string;
   items: { [key: string]: number };
@@ -766,93 +558,6 @@ export function DoughnutPane(data: DoughnutPaneData) {
         }}
       >
         <CostBreakdownDoughnutChart title={data.title} items={data.items} />
-      </CardContent>
-    </StyledCard>
-  );
-}
-
-type WaterfallPaneData = {
-  title: string;
-  label: string;
-  items: { [key: string]: number };
-  formula: string;
-};
-
-export function WaterFallPane(data: WaterfallPaneData) {
-  const labels = [];
-  const items = [];
-  for (const [key, val] of Object.entries(data.items)) {
-    if (val !== 0) {
-      labels.push(key);
-      items.push(val);
-    }
-  }
-  const datapoints = [
-    {
-      label: data.label,
-      data: items,
-    },
-  ];
-  return (
-    <StyledCard>
-      <CardHeader
-        title={data.title}
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <CostWaterfallBarChart
-          title={data.title}
-          labels={labels}
-          datapoints={datapoints}
-          formula={data.formula}
-        />
-      </CardContent>
-    </StyledCard>
-  );
-}
-
-function LcBreakdownPane(
-  lcBreakdownData: { [key: string]: number },
-  powerfuel: string
-) {
-  return (
-    <WaterFallPane
-      title={`Breakdown of Cost Components in LC${powerfuelToFormula(
-        powerfuel
-      )}`}
-      label={`Breakdown of Cost Components in Levelised Cost of ${
-        powerfuel.charAt(0).toLocaleUpperCase() + powerfuel.slice(1)
-      }`}
-      formula={powerfuelToFormula(powerfuel)}
-      items={lcBreakdownData}
-    />
-  );
-}
-
-export function SummaryOfResultsPane(summaryTable: { [key: string]: number }) {
-  return (
-    <StyledCard>
-      <CardHeader
-        id="summary-of-results"
-        title="Summary of Results"
-        titleTypographyProps={{
-          fontWeight: "bold",
-          fontSize: 20,
-        }}
-      />
-      <CardContent
-        sx={{
-          paddingTop: 0,
-        }}
-      >
-        <SummaryOfResultsTable title="Summary of Results" data={summaryTable} />
       </CardContent>
     </StyledCard>
   );
