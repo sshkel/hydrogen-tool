@@ -1,12 +1,11 @@
 import FactoryRoundedIcon from "@mui/icons-material/FactoryRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import SignalCellularAltRoundedIcon from "@mui/icons-material/SignalCellularAltRounded";
-import { CssBaseline, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
+import { CssBaseline } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import "chart.js/auto";
 import Chart from "chart.js/auto";
@@ -34,6 +33,7 @@ import HourlyCapacityFactors from "../charts/HourlyCapacityFactors";
 import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import ErrorAlert from "../misc/ErrorAlert";
+import { ItemText, ItemTitle, StyledCard } from "./Styles";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
 
 export interface Props {
@@ -49,21 +49,6 @@ interface DownloadedData {
   windData: any[];
   hoursPerYear: number;
 }
-
-const ItemTitle = styled(Typography)(({ theme }) => ({
-  ...theme.typography.body2,
-  color: "darkgrey",
-}));
-const ItemText = styled(Typography)(({ theme }) => ({
-  ...theme.typography.body2,
-}));
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  ...theme.typography.body2,
-  margin: "15px",
-  padding: "4px",
-  borderRadius: "20px",
-}));
 
 // setup default fonts for the charts
 Chart.defaults.font.family = "Nunito";
