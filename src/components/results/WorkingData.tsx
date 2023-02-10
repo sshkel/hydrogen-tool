@@ -26,14 +26,14 @@ import {
   UserInputFields,
 } from "../../types";
 import DesignStepper from "../DesignStepper";
+import CostBreakdownDoughnutChart from "../charts/CostBreakdownDoughnutChart";
+import CostLineChart from "../charts/CostLineChart";
+import CostWaterfallBarChart from "../charts/CostWaterfallBarChart";
+import DurationCurve from "../charts/DurationCurve";
+import HourlyCapacityFactors from "../charts/HourlyCapacityFactors";
 import { BLUE, SAPPHIRE } from "../colors";
 import { zoneInfo } from "../map/ZoneInfo";
 import ErrorAlert from "../misc/ErrorAlert";
-import CostBreakdownDoughnutChart from "./CostBreakdownDoughnutChart";
-import CostLineChart from "./CostLineChart";
-import CostWaterfallBarChart from "./CostWaterfallBarChart";
-import DurationCurve from "./DurationCurve";
-import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
 
 export interface Props {

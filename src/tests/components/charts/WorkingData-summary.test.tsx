@@ -1,7 +1,7 @@
 import { mount } from "enzyme";
 
-import SummaryOfResultsTable from "../../../components/charts/SummaryOfResultsTable";
-import WorkingData from "../../../components/charts/WorkingData";
+import SummaryOfResultsTable from "../../../components/results/SummaryOfResultsTable";
+import WorkingData from "../../../components/results/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {

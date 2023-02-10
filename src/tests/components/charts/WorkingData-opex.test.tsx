@@ -1,7 +1,7 @@
 import { mount } from "enzyme";
 
 import CostLineChart from "../../../components/charts/CostLineChart";
-import WorkingData from "../../../components/charts/WorkingData";
+import WorkingData from "../../../components/results/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {

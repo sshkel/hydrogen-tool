@@ -2,7 +2,7 @@ import { mount } from "enzyme";
 
 import WorkingData, {
   WaterFallPane,
-} from "../../../components/charts/WorkingData";
+} from "../../../components/results/WorkingData";
 import { TIMEOUT } from "../../consts";
 import { readLocalCsv } from "../../resources/loader";
 import {

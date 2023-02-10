@@ -2,7 +2,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 
 import WorkingData, {
   DoughnutPane,
-} from "../../../components/charts/WorkingData";
+} from "../../../components/results/WorkingData";
 import { UserInputFields } from "../../../types";
 import {
   basicHybridPPAScenario,

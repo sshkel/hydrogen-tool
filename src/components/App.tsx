@@ -10,13 +10,13 @@ import { Route, Routes } from "react-router-dom";
 import { DEFAULT_LOCATION, loadSolar, loadWind } from "../model/DataLoader";
 import { InputConfiguration, UserInputFields } from "../types";
 import { SideBar } from "./SideBar";
-import WorkingData from "./charts/WorkingData";
 import { BLACK, BLUE, ORANGE, WHITE } from "./colors";
 import InputHomePage from "./input/blocks/InputHomePage";
 import Map from "./map/Map";
 import AboutPage from "./misc/AboutPage";
 import ContactPage from "./misc/ContactPage";
 import HomePage from "./misc/HomePage";
+import WorkingData from "./results/WorkingData";
 
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
