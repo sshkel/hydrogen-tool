@@ -3,8 +3,8 @@ import {
   PowerSupplyOption,
   isGridConnected,
   isPPAAgreement,
-} from "../../types";
-import { isSolar, isWind } from "../../utils";
+} from "../types";
+import { isSolar, isWind } from "../utils";
 import { getBaseLog, roundToNearestThousand } from "./cost-functions";
 
 export const calculateCapex = (

@@ -4,8 +4,8 @@ import {
   StackReplacementType,
   isGridConnected,
   isPPAAgreement,
-} from "../../types";
-import { fillYearsArray, isSolar, isWind, projectYears } from "../../utils";
+} from "../types";
+import { fillYearsArray, isSolar, isWind, projectYears } from "../utils";
 import { roundToNearestThousand, roundToTwoDP } from "./cost-functions";
 
 export function getOpex(

@@ -3,8 +3,8 @@ import {
   PowerSupplyOption,
   isGridConnected,
   isPPAAgreement,
-} from "../../types";
-import { fillYearsArray } from "../../utils";
+} from "../types";
+import { fillYearsArray } from "../utils";
 
 export function generateLCBreakdown(
   powerPlantConfiguration: PowerPlantConfiguration,

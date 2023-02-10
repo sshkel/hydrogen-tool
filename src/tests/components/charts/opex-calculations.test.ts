@@ -4,7 +4,7 @@ import {
   getOpexPerYearInflationConstant,
   getOpexPerYearInflationWithAdditionalCost,
   maxDegradationStackReplacementYears,
-} from "../../../components/charts/opex-calculations";
+} from "../../../model/opex-calculations";
 import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 

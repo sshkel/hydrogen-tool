@@ -1,21 +1,3 @@
-import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
-import {
-  calculateP2XProductionLC,
-  roundToNearestInteger,
-  roundToNearestThousand,
-  roundToTwoDP,
-} from "../components/charts/cost-functions";
-import {
-  generateAmmoniaLCH2Breakdown,
-  generateLCBreakdown,
-} from "../components/charts/lch2-calculations";
-import {
-  calculateAmmoniaPerYearOpex,
-  calculatePerYearOpex,
-  getOpex,
-  getP2XOpex,
-  getTotalP2XOpex,
-} from "../components/charts/opex-calculations";
 import {
   InputConfiguration,
   Model,
@@ -47,7 +29,25 @@ import {
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
+import { getCapex, getEpcCosts } from "./capex-calculations";
 import { HOURS_PER_YEAR } from "./consts";
+import {
+  calculateP2XProductionLC,
+  roundToNearestInteger,
+  roundToNearestThousand,
+  roundToTwoDP,
+} from "./cost-functions";
+import {
+  generateAmmoniaLCH2Breakdown,
+  generateLCBreakdown,
+} from "./lch2-calculations";
+import {
+  calculateAmmoniaPerYearOpex,
+  calculatePerYearOpex,
+  getOpex,
+  getP2XOpex,
+  getTotalP2XOpex,
+} from "./opex-calculations";
 
 export type AmmoniaData = {
   ammoniaPlantCapitalCost?: number;

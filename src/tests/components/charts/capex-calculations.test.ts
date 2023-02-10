@@ -3,7 +3,7 @@ import {
   calculateCapex,
   getCapex,
   getIndirectCost,
-} from "../../../components/charts/capex-calculations";
+} from "../../../model/capex-calculations";
 import { Inputs } from "../../../types";
 import { defaultInputData } from "../../scenario";
 

@@ -1,4 +1,4 @@
-import { fillYearsArray, padArray, startup, sum } from "../../utils";
+import { fillYearsArray, padArray, startup, sum } from "../utils";
 
 export const getBaseLog = (n: number, base: number): number =>
   Math.log(n) / Math.log(base);

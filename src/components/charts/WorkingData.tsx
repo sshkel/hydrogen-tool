@@ -18,6 +18,7 @@ import { HydrogenData, HydrogenModel } from "../../model/HydrogenModel";
 import { MethaneData, MethaneModel } from "../../model/MethaneModel";
 import { MethanolData, MethanolModel } from "../../model/MethanolModel";
 import { HOURS_PER_LEAR_YEAR, HOURS_PER_YEAR } from "../../model/consts";
+import { roundToNearestInteger } from "../../model/cost-functions";
 import {
   InputConfiguration,
   Inputs,
@@ -34,7 +35,6 @@ import CostWaterfallBarChart from "./CostWaterfallBarChart";
 import DurationCurve from "./DurationCurve";
 import HourlyCapacityFactors from "./HourlyCapacityFactors";
 import SummaryOfResultsTable from "./SummaryOfResultsTable";
-import { roundToNearestInteger } from "./cost-functions";
 
 export interface Props {
   location?: string;

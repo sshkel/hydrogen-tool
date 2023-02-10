@@ -1,20 +1,4 @@
 import {
-  backCalculateElectrolyserCapacity,
-  backCalculateSolarnAndWindNominalCapacities,
-} from "../components/charts/basic-calculations";
-import { getCapex, getEpcCosts } from "../components/charts/capex-calculations";
-import {
-  calculateH2ProductionLC,
-  roundToNearestInteger,
-  roundToTwoDP,
-} from "../components/charts/cost-functions";
-import { generateLCBreakdown } from "../components/charts/lch2-calculations";
-import {
-  calculatePerYearOpex,
-  getOpex,
-  getTotalHydrogenOpex,
-} from "../components/charts/opex-calculations";
-import {
   InputConfiguration,
   Model,
   PowerCapacityConfiguration,
@@ -43,7 +27,23 @@ import {
   getElectrolyserCapacityFactorsWithBattery,
   getExcessGeneration,
 } from "./ModelUtils";
+import {
+  backCalculateElectrolyserCapacity,
+  backCalculateSolarnAndWindNominalCapacities,
+} from "./basic-calculations";
+import { getCapex, getEpcCosts } from "./capex-calculations";
 import { HOURS_PER_YEAR } from "./consts";
+import {
+  calculateH2ProductionLC,
+  roundToNearestInteger,
+  roundToTwoDP,
+} from "./cost-functions";
+import { generateLCBreakdown } from "./lch2-calculations";
+import {
+  calculatePerYearOpex,
+  getOpex,
+  getTotalHydrogenOpex,
+} from "./opex-calculations";
 
 export type HydrogenData = {
   additionalAnnualCosts: number;

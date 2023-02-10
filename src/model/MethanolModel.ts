@@ -1,24 +1,4 @@
 import {
-  getCapex,
-  getEpcCosts as getIndirectCosts,
-} from "../components/charts/capex-calculations";
-import {
-  calculateP2XProductionLC,
-  roundToNearestInteger,
-  roundToTwoDP,
-} from "../components/charts/cost-functions";
-import {
-  generateLCBreakdown,
-  generateMeLCH2Breakdown as generateMeOHLCBreakdown,
-} from "../components/charts/lch2-calculations";
-import {
-  calculateMePerYearOpex,
-  calculatePerYearOpex,
-  getOpex,
-  getP2XOpex,
-  getTotalP2XOpex,
-} from "../components/charts/opex-calculations";
-import {
   CarbonCaptureSource,
   InputConfiguration,
   Model,
@@ -61,7 +41,27 @@ import {
   nominal_wind_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
+import {
+  getCapex,
+  getEpcCosts as getIndirectCosts,
+} from "./capex-calculations";
 import { HOURS_PER_YEAR } from "./consts";
+import {
+  calculateP2XProductionLC,
+  roundToNearestInteger,
+  roundToTwoDP,
+} from "./cost-functions";
+import {
+  generateLCBreakdown,
+  generateMeLCH2Breakdown as generateMeOHLCBreakdown,
+} from "./lch2-calculations";
+import {
+  calculateMePerYearOpex,
+  calculatePerYearOpex,
+  getOpex,
+  getP2XOpex,
+  getTotalP2XOpex,
+} from "./opex-calculations";
 
 export type MethanolData = {
   additionalAnnualCosts: number;

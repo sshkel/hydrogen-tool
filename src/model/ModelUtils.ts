@@ -1,9 +1,3 @@
-import { backCalculatePowerPlantCapacity } from "../components/charts/basic-calculations";
-import {
-  roundToEightDP,
-  roundToNearestThousand,
-} from "../components/charts/cost-functions";
-import { maxDegradationStackReplacementYears } from "../components/charts/opex-calculations";
 import {
   CarbonCaptureSource,
   PowerPlantType,
@@ -11,6 +5,9 @@ import {
 } from "../types";
 import { mean, sum } from "../utils";
 import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
+import { backCalculatePowerPlantCapacity } from "./basic-calculations";
+import { roundToEightDP, roundToNearestThousand } from "./cost-functions";
+import { maxDegradationStackReplacementYears } from "./opex-calculations";
 
 // returns powerplantCapacityFactors series
 export function calculatePowerPlantCapacityFactors(

@@ -2,7 +2,7 @@ import {
   getBaseLog,
   getInflationFn,
   roundToNearestThousand,
-} from "../../../components/charts/cost-functions";
+} from "../../../model/cost-functions";
 
 describe("Cost function calculations", () => {
   it("calculates log bases", () => {
