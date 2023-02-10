@@ -535,7 +535,7 @@ export default function WorkingData(props: Props) {
     );
   }
 }
-
+// TODO - move these panes into separate file
 type DoughnutPaneData = {
   title: string;
   items: { [key: string]: number };
