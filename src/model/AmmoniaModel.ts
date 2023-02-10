@@ -207,7 +207,6 @@ export class AmmoniaModel implements Model {
     this.elecMaxLoad = parameters.electrolyserMaximumLoad / 100;
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = this.electrolyserEfficiency / 100;
-    // TODO check if this should be replaced by the other calculation.
     this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
     this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEnergy = this.batteryRatedPower * this.batteryStorageDuration;

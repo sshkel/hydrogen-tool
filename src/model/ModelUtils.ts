@@ -869,20 +869,14 @@ function h2_storage_balance(
 }
 
 // should be repeated for multiple cells
-function excess_h2(
-  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
-  hydrogen_output: number
-) {
+function excess_h2(mass_of_hydrogen: number[], hydrogen_output: number) {
   return mass_of_hydrogen.map((v: number) =>
     v > (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
   );
 }
 
 // should be repeated for multiple cells
-function deficit_h2(
-  mass_of_hydrogen: number[], // asu/nh3 cap factor // TODO type?
-  hydrogen_output: number
-) {
+function deficit_h2(mass_of_hydrogen: number[], hydrogen_output: number) {
   return mass_of_hydrogen.map((v: number) =>
     v < (hydrogen_output / 24) * 1000 ? v - (hydrogen_output / 24) * 1000 : 0
   );

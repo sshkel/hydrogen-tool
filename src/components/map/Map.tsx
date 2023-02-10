@@ -33,7 +33,6 @@ export default function Map(props: Props) {
       weight: 1,
     });
   };
-  // TODO: replace back with <GeoJson> if we are not doing anything fancy with polygon styling
   const polygons = geoJson.features.map((feature: any) => {
     return (
       <Polygon
