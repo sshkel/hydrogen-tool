@@ -6,7 +6,6 @@ interface Props {
     state?: { [key: string]: any };
 }
 
-// TODO put the state dump behind a debug flag
 export default function ErrorAlert(props: Props) {
     return (
         <div>
