@@ -352,10 +352,9 @@ export default function AdvancedMethanolInput(props: InputScreenProps) {
                   <InputDropdownField
                     id="batteryStorageDuration"
                     key="batteryStorageDuration"
-                    // TODO move this to be read from defaults
-                    defaultValue="8"
                     label="Battery Storage Duration"
                     values={["0", "1", "2", "4", "8"]}
+                    formState={props.formState}
                   />,
                 ]}
               />,

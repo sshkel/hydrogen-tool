@@ -34,7 +34,6 @@ const methanolCostLabel = (
     A$/T<sub>MeOH</sub>
   </p>
 );
-// TODO check that labels are correct, I yolod theme
 const methaneSECLabel = (
   <p>
     kWh<sub>e</sub>/kg<sub>SNG</sub>
@@ -1004,6 +1003,7 @@ const ADVANCED_HYDROGEN_INPUT_KEYS = [
   "solarOpex",
   "windOpex",
   "principalPPACost",
+  "batteryStorageDuration",
   "batteryRatedPower",
   "batteryEfficiency",
   "batteryMinCharge",
@@ -1101,6 +1101,7 @@ const ADVANCED_AMMONIA_INPUT_KEYS = [
   "solarOpex",
   "windOpex",
   "principalPPACost",
+  "batteryStorageDuration",
   "batteryRatedPower",
   "batteryEfficiency",
   "batteryMinCharge",
@@ -1199,6 +1200,7 @@ const ADVANCED_METHANOL_INPUT_KEYS = [
   "solarOpex",
   "windOpex",
   "principalPPACost",
+  "batteryStorageDuration",
   "batteryRatedPower",
   "batteryEfficiency",
   "batteryMinCharge",
@@ -1297,6 +1299,7 @@ const ADVANCED_METHANE_INPUT_KEYS = [
   "solarOpex",
   "windOpex",
   "principalPPACost",
+  "batteryStorageDuration",
   "batteryRatedPower",
   "batteryEfficiency",
   "batteryMinCharge",

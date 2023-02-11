@@ -701,7 +701,6 @@ export function getDefaultInputs(
       : dynamicDefaults[typedPowerfuel]["advanced"];
 
   const defaults: InputMap = {};
-  // TODO: Pass in powerfuel if defaults differ for each
   inputKeys.forEach((key) => {
     defaults[key] =
       savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];

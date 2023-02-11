@@ -60,9 +60,6 @@ export default function CostBreakdownDoughnutChart(props: Props) {
           weight: "bold",
         },
         formatter: (val) => `$${val.toLocaleString("en-US")}`,
-        // TODO: Highest index wins on overlap, investigate whether
-        // to use a sort on the props for ascending values.
-        // Used to only display one label if overlap occurs
         display: "auto",
       },
       tooltip: {

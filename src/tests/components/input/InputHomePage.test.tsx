@@ -99,6 +99,7 @@ describe("InputHomePage", () => {
       batteryOMCost: 10000,
       batteryRatedPower: 0,
       batteryReplacementCost: 100,
+      batteryStorageDuration: 0,
       discountRate: 7,
       electrolyserCostReductionWithScale: 5,
       electrolyserEpcCosts: 30,
@@ -223,6 +224,7 @@ describe("InputHomePage", () => {
       batteryOMCost: 10000,
       batteryRatedPower: 0,
       batteryReplacementCost: 100,
+      batteryStorageDuration: 0,
       discountRate: 7,
       electrolyserCostReductionWithScale: 5,
       electrolyserEpcCosts: 30,
@@ -384,7 +386,7 @@ describe("InputHomePage", () => {
 
   it("sends expected input fields for advanced offshore", async () => {
     const setState = jest.fn();
-    const { container, getByText, queryByText } = render(
+    const { container, getByText, getByLabelText, queryByText } = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -404,6 +406,8 @@ describe("InputHomePage", () => {
       { timeout: 1000 }
     );
 
+    fireEvent.click(getByLabelText(/power-plant-parameters-show-more/i));
+
     expect(queryByText("Hybrid")).toBeNull();
 
     fireEvent.click(getByText(/Calculate/i));
@@ -422,6 +426,7 @@ describe("InputHomePage", () => {
       batteryOMCost: 10000,
       batteryRatedPower: 0,
       batteryReplacementCost: 100,
+      batteryStorageDuration: 0,
       discountRate: 7,
       electrolyserCostReductionWithScale: 5,
       electrolyserEpcCosts: 30,
@@ -454,6 +459,146 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
+      windNominalCapacity: 150,
+      windDegradation: 0,
+      stackDegradation: 0,
+      stackLifetime: 80000,
+      stackReplacementType: "Cumulative Hours",
+      timeBetweenOverloading: 0,
+      waterRequirementOfElectrolyser: 15,
+      waterSupplyCost: 5,
+      windCostReductionWithScale: 5,
+      windEpcCosts: 30,
+      windFarmBuildCost: 2000,
+      windLandProcurementCosts: 6,
+      windOpex: 25000,
+      windReferenceCapacity: 1000,
+      windReferenceFoldIncrease: 10,
+      inputConfiguration: "Advanced",
+    });
+  });
+
+  it("submits changed dropdown field value as part of form", async () => {
+    const setState = jest.fn();
+    const { container, getByText, getByLabelText, getByRole, getAllByRole } =
+      render(
+        <MemoryRouter>
+          <InputHomePage
+            setState={setState}
+            setInputConfiguration={jest.fn()}
+            location={"Z1"}
+          />
+        </MemoryRouter>
+      );
+
+    fireEvent.click(getByText(/Advanced Input/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(12),
+      { timeout: 1000 }
+    );
+
+    fireEvent.click(getByLabelText(/battery-parameters-show-more/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(12),
+      { timeout: 1000 }
+    );
+
+    fireEvent.click(getByLabelText(/battery-capacity-show-more/i));
+
+    await waitFor(
+      () =>
+        expect(
+          container.querySelectorAll('input[type="number"]').length
+        ).toEqual(21),
+      { timeout: 1000 }
+    );
+
+    fireEvent.mouseDown(
+      getByRole("button", {
+        name: /Battery Storage Duration 0/i,
+      })
+    );
+
+    await waitFor(() => expect(getAllByRole("option").length).toEqual(5), {
+      timeout: 1000,
+    });
+
+    fireEvent.click(
+      getByRole("option", {
+        name: /2/i,
+      })
+    );
+
+    await waitFor(
+      () =>
+        expect(
+          getByRole("button", {
+            name: /Battery Storage Duration 2/i,
+          })
+        ).toBeDefined(),
+      {
+        timeout: 1000,
+      }
+    );
+
+    fireEvent.click(getByText(/Calculate/i));
+
+    expect(setState).toHaveBeenCalledWith({
+      additionalAnnualCosts: 0,
+      additionalTransmissionCharges: 10,
+      additionalUpfrontCosts: 0,
+      batteryCosts: 1000,
+      batteryEfficiency: 85,
+      batteryEpcCosts: 0,
+      batteryLandProcurementCosts: 0,
+      batteryLifetime: 10,
+      batteryMinCharge: 10,
+      batteryOMCost: 10000,
+      batteryRatedPower: 0,
+      batteryReplacementCost: 100,
+      batteryStorageDuration: 2,
+      discountRate: 7,
+      electrolyserCostReductionWithScale: 5,
+      electrolyserEpcCosts: 30,
+      electrolyserLandProcurementCosts: 6,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+      electrolyserNominalCapacity: 100,
+      electrolyserOMCost: 3,
+      electrolyserPurchaseCost: 1500,
+      electrolyserReferenceCapacity: 1000,
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserStackReplacement: 40,
+      gridConnectionCost: 1000000,
+      maximumDegradationBeforeReplacement: 10,
+      maximumLoadWhenOverloading: 100,
+      powerPlantConfiguration: "Standalone",
+      powerfuel: "hydrogen",
+      powerPlantType: "Wind",
+      powerSupplyOption: "Self Build",
+      powerCapacityConfiguration: "Oversize Ratio",
+      powerPlantOversizeRatio: 1.5,
+      principalPPACost: 50,
+      projectTimeline: 15,
+      secAtNominalLoad: 50,
+      solarNominalCapacity: 150,
+      solarDegradation: 0,
+      solarEpcCosts: 30,
+      solarFarmBuildCost: 1200,
+      solarLandProcurementCosts: 6,
+      solarOpex: 17000,
+      solarPVCostReductionWithScale: 5,
+      solarReferenceCapacity: 1000,
+      solarReferenceFoldIncrease: 10,
+      solarToWindPercentage: 0,
       windNominalCapacity: 150,
       windDegradation: 0,
       stackDegradation: 0,

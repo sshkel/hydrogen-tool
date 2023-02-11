@@ -122,7 +122,6 @@ export default function BasicMethaneInput(props: InputScreenProps) {
               <InputDropdownField
                 id="carbonCaptureSource"
                 key="carbonCaptureSource"
-                defaultValue="Coal Power Plant"
                 label="Carbon Capture Source"
                 values={[
                   "Coal Power Plant",
@@ -132,6 +131,7 @@ export default function BasicMethaneInput(props: InputScreenProps) {
                   "Direct Air Capture",
                   "Steam Methane Reforming",
                 ]}
+                formState={props.formState}
               />,
               <InputSelect
                 key="powerSupplyOptionSelect"

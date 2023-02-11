@@ -10,12 +10,15 @@ interface Props {
   id: string;
   label: string;
   values: string[];
-  defaultValue: string;
   onChange?: (val: string) => void;
+  formState?: { [key: string]: number | string };
 }
 
 export default function InputDropdownField(props: Props) {
-  const { id, label, defaultValue, values, onChange } = props;
+  const { id, label, values, formState, onChange } = props;
+
+  const defaultValue =
+    formState && formState[id] ? String(formState[id]) : values[0];
 
   const [value, setValue] = useState(defaultValue);
 
@@ -23,6 +26,9 @@ export default function InputDropdownField(props: Props) {
     setValue(event.target.value);
     if (onChange) {
       onChange(event.target.value);
+    }
+    if (formState) {
+      formState[id] = value;
     }
   };
   const labelId = id + "-label";

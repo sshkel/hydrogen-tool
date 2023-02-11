@@ -347,9 +347,9 @@ export default function AdvancedAmmoniaInput(props: InputScreenProps) {
                   <InputDropdownField
                     id="batteryStorageDuration"
                     key="batteryStorageDuration"
-                    defaultValue="0"
                     label="Battery Storage Duration"
                     values={["0", "1", "2", "4", "8"]}
+                    formState={props.formState}
                   />,
                 ]}
               />,
