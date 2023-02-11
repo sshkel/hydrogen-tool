@@ -74,6 +74,13 @@ export default function CostBarChart(props: Props) {
         },
       },
     },
+    layout: {
+      padding: {
+        left: 20,
+        right: 20,
+        top: 20,
+      },
+    },
   };
 
   return (
