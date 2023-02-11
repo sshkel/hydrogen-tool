@@ -1,8 +1,7 @@
 import { ShallowWrapper, shallow } from "enzyme";
 
-import WorkingData, {
-  DoughnutPane,
-} from "../../../components/results/WorkingData";
+import WorkingData from "../../../components/results/WorkingData";
+import {DoughnutPane} from "../../../components/results/CapitalCostCharts"
 import { UserInputFields } from "../../../types";
 import {
   basicHybridPPAScenario,
