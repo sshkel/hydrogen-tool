@@ -447,6 +447,14 @@ export default function WorkingData(props: Props) {
                         message={
                             "Invalid inputs. Electrolyser capacity was 0. Please check the inputs."
                         }
+                        state={{
+                            validatedInputs: inputs,
+                            rawInputs: {
+                                location: props.location,
+                                inputConfiguration: props.inputConfiguration,
+                                data: props.data,
+                            },
+                        }}
                     />
                 ) : null}
                 <Grid
