@@ -682,10 +682,9 @@ export function getDefaultInputs(
     sessionStorage.getItem("savedData") || "{}"
   );
 
-  // TODO: See if can improve to (sessionStorageData["inputConfiguration"] === "Advanced" &&
-  // inputConfiguration === "Basic")
   const savedData: InputMap =
-    sessionStorageData["inputConfiguration"] !== inputConfiguration
+    sessionStorageData["inputConfiguration"] === "Advanced" &&
+    inputConfiguration === "Basic"
       ? {}
       : sessionStorageData;
 
