@@ -289,14 +289,14 @@ export default function ControlledPowerPlantCard(props: Props) {
           buttonChildren={[
             [
               <HideableInputNumberField
-                key="solarFarmBuildCost"
-                inputKey="solarFarmBuildCost"
+                key="solarReferenceCapacity"
+                inputKey="solarReferenceCapacity"
                 hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
-                key="solarReferenceCapacity"
-                inputKey="solarReferenceCapacity"
+                key="solarFarmBuildCost"
+                inputKey="solarFarmBuildCost"
                 hide={!isSolar(powerPlantType)}
                 formState={props.formState}
               />,
@@ -313,14 +313,14 @@ export default function ControlledPowerPlantCard(props: Props) {
                 formState={props.formState}
               />,
               <HideableInputNumberField
-                key="windFarmBuildCost"
-                inputKey="windFarmBuildCost"
+                key="windReferenceCapacity"
+                inputKey="windReferenceCapacity"
                 hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,
               <HideableInputNumberField
-                key="windReferenceCapacity"
-                inputKey="windReferenceCapacity"
+                key="windFarmBuildCost"
+                inputKey="windFarmBuildCost"
                 hide={!isWind(powerPlantType)}
                 formState={props.formState}
               />,

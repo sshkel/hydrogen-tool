@@ -628,7 +628,7 @@ export class AmmoniaModel implements Model {
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
         roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
+      "Hydrogen Output (TPA)": roundToNearestInteger(mean(hydrogenProduction)),
 
       "Ammonia Output (TPA)": roundToNearestInteger(mean(ammoniaProduction)),
 

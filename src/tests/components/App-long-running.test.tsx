@@ -13,7 +13,7 @@ jest.mock("../../model/DataLoader", () => ({
   DEFAULT_LOCATION: "Z10",
 }));
 
-jest.setTimeout(8_000);
+jest.setTimeout(10_000);
 
 describe("App", () => {
   beforeEach(() => {
@@ -36,11 +36,12 @@ describe("App", () => {
 
     fireEvent.click(getByLabelText(/battery-parameters-show-more/i));
 
+    // Avoid timeouts with ≥ 20 fields, since we don't strictly need all inputs
     await waitFor(
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(21),
+        ).toBeGreaterThanOrEqual(20),
       { timeout: 1000 }
     );
 

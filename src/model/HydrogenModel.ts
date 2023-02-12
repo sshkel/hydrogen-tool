@@ -484,7 +484,7 @@ export class HydrogenModel implements Model {
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
         roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (t/yr)": roundToNearestInteger(mean(hydrogenProduction)),
+      "Hydrogen Output (TPA)": roundToNearestInteger(mean(hydrogenProduction)),
       "LCH2 ($/kg)": roundToTwoDP(lch2),
     };
 
