@@ -45,7 +45,7 @@ export default function CostBarChart(props: Props) {
         clip: false,
         color: "#848484",
         font: {
-          size: 12,
+          size: 11,
           style: "italic",
           weight: "bold",
         },
@@ -76,7 +76,7 @@ export default function CostBarChart(props: Props) {
     },
     layout: {
       padding: {
-        left: 20,
+        left: 10,
         right: 20,
         top: 20,
       },

@@ -25,7 +25,6 @@ export default function InputSelectField(props: Props) {
     buttonChildren,
     selectClass,
     onSelectChange,
-    // selectedIndex = 0,
     formState,
   } = props;
 

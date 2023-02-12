@@ -7,6 +7,7 @@ import { readLocalCsv } from "../../resources/loader";
 import {
   basicHybridPPAScenario,
   basicSolarScenario,
+  gridConnectedMethaneWindWithBatteryAndDegradationScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneAdvancedAmmoniaSolarScenario,
   standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
@@ -644,6 +645,60 @@ describe("Model summary", () => {
         expect(data["Methanol Output (TPA)"]).toEqual(336_250);
         expect(data["LCH2 ($/kg)"]).toEqual(9);
         expect(data["LCMeOH ($/kg)"]).toEqual(2.01);
+
+        done();
+      }, TIMEOUT);
+    });
+
+    it("calculates summary of results for methane wind with battery and degradation", (done) => {
+      const wrapper = mount(
+        <WorkingData
+          data={gridConnectedMethaneWindWithBatteryAndDegradationScenario.data}
+          location={
+            gridConnectedMethaneWindWithBatteryAndDegradationScenario.location
+          }
+          inputConfiguration={
+            gridConnectedMethaneWindWithBatteryAndDegradationScenario.inputConfiguration
+          }
+          loadSolar={loadNSWSolar}
+          loadWind={loadNSWWind}
+        />
+      );
+
+      // Sleep to wait for CSV to load and set state
+      setTimeout(() => {
+        wrapper.update();
+        const summaryTable = wrapper
+          .find(SummaryOfResultsTable)
+          .filterWhere((e) => e.prop("title") === "Summary of Results");
+        expect(summaryTable).toHaveLength(1);
+        const data = summaryTable.at(0).prop("data");
+
+        expect(data["Power Plant Capacity Factor"]).toEqual(37.24);
+        expect(
+          data["Time Electrolyser is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(43.25);
+        expect(
+          data["Total Time Electrolyser is Operating (% of hrs/yr)"]
+        ).toEqual(97.93);
+        expect(
+          data["Time Methane Plant is at its Maximum Capacity (% of hrs/yr)"]
+        ).toEqual(69.49);
+        expect(
+          data["Total Time Methane Plant is Operating (% of hrs/yr)"]
+        ).toEqual(70.58);
+        expect(data["Electrolyser Capacity Factor"]).toEqual(73.57);
+        expect(data["Methane Capacity Factor"]).toEqual(70.51);
+        expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
+          9_604_273
+        );
+        expect(
+          data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
+        ).toEqual(3_710_175);
+        expect(data["Hydrogen Output (t/yr)"]).toEqual(183_611);
+        expect(data["Methane Output (TPA)"]).toEqual(282_816);
+        expect(data["LCH2 ($/kg)"]).toEqual(6.77);
+        expect(data["LCSNG ($/kg)"]).toEqual(4.32);
 
         done();
       }, TIMEOUT);
