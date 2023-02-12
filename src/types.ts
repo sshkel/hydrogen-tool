@@ -143,6 +143,17 @@ export interface UserInputFields {
   ccSec?: number;
   methanolStorageCapacity?: number;
   methanolPlantCapacity?: number;
+  // Methane
+  methaneStorageOMCost?: number;
+  methanePlantOMCost?: number;
+  methaneLandProcurementCosts?: number;
+  methaneEpcCosts?: number;
+  methaneStorageCost?: number;
+  methanePlantUnitCost?: number;
+  methanePlantMinimumTurndown?: number;
+  methanePlantSec?: number;
+  methaneStorageCapacity?: number;
+  methanePlantCapacity?: number;
 }
 
 export interface Inputs {
