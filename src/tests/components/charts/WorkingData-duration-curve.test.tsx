@@ -1,22 +1,31 @@
-import { mount } from "enzyme";
+/* eslint-disable testing-library/no-wait-for-multiple-assertions */
 
 import WorkingData from "../../../components/results/WorkingData";
-import DurationCurve from "../../../components/results/charts/DurationCurve";
-import { TIMEOUT } from "../../consts";
-import ammoniaSolarAmmoniaDurationCurveWithBattery from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
+import * as durationCurves from "../../../components/results/DurationCurves";
+import {TIMEOUT} from "../../consts";
+import ammoniaSolarAmmoniaDurationCurveWithBattery
+    from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
 import ammoniaSolarAmmoniaDurationCurve from "../../resources/ammonia-solar-ammonia-duration-curve.json";
-import ammoniaSolarElectrolyserDurationCurveWithBattery from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
+import ammoniaSolarElectrolyserDurationCurveWithBattery
+    from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
 import ammoniaSolarElectrolyserDurationCurve from "../../resources/ammonia-solar-electrolyser-duration-curve.json";
-import ammoniaSolarGeneratorDurationCurveWithBattery from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
+import ammoniaSolarGeneratorDurationCurveWithBattery
+    from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
 import ammoniaSolarGeneratorDurationCurve from "../../resources/ammonia-solar-generator-duration-curve.json";
-import hybridBatteryOversizeRatioElectrolyserDurationCurve from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
-import hybridBatteryOversizeRatioGeneratorDurationCurve from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
-import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
+import hybridBatteryOversizeRatioElectrolyserDurationCurve
+    from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
+import hybridBatteryOversizeRatioGeneratorDurationCurve
+    from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
+import hybridDegradationElectrolyserDurationCurve
+    from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
 import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
-import { readLocalCsv, writeLocalFile } from "../../resources/loader";
-import methanolHybridBatteryElectrolyserDurationCurve from "../../resources/methanol-hybrid-battery-electrolyser-duration-curve.json";
-import methanolHybridBatteryGeneratorDurationCurve from "../../resources/methanol-hybrid-battery-generator-duration-curve.json";
-import methanolHybridBatteryMethanolDurationCurve from "../../resources/methanol-hybrid-battery-methanol-duration-curve.json";
+import {readLocalCsv} from "../../resources/loader";
+import methanolHybridBatteryElectrolyserDurationCurve
+    from "../../resources/methanol-hybrid-battery-electrolyser-duration-curve.json";
+import methanolHybridBatteryGeneratorDurationCurve
+    from "../../resources/methanol-hybrid-battery-generator-duration-curve.json";
+import methanolHybridBatteryMethanolDurationCurve
+    from "../../resources/methanol-hybrid-battery-methanol-duration-curve.json";
 import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
 import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
 import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
@@ -28,529 +37,354 @@ import windGeneratorDurationCurve from "../../resources/wind-generator-duration-
 import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electrolyser-duration-curve.json";
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
-  hybridBatteryGridOversizeRatioScenario,
-  standaloneAmmoniaSolarScenario,
-  standaloneAmmoniaSolarWithBatteryScenario,
-  standaloneHybridWithDegradationScenario,
-  standaloneMethanolHybridWithBatteryScenario,
-  standaloneSolarScenario,
-  standaloneSolarWithBatteryScenario,
-  standaloneWindScenario,
-  windWithBatteryAndPPAScenario,
-  windWithPPAScenario,
+    hybridBatteryGridOversizeRatioScenario,
+    standaloneAmmoniaSolarScenario,
+    standaloneAmmoniaSolarWithBatteryScenario,
+    standaloneHybridWithDegradationScenario,
+    standaloneMethanolHybridWithBatteryScenario,
+    standaloneSolarScenario,
+    standaloneSolarWithBatteryScenario,
+    standaloneWindScenario,
+    windWithBatteryAndPPAScenario,
+    windWithPPAScenario,
 } from "../../scenario";
+import {render, waitFor} from "@testing-library/react";
 
 describe("Working Data calculations", () => {
-  let loadSolar: () => Promise<any[]>;
-  let loadWind: () => Promise<any[]>;
+    let loadSolar: () => Promise<any[]>;
+    let loadWind: () => Promise<any[]>;
+    let spy: jest.SpyInstance<JSX.Element[], [durationCurves: { [key: string]: number[]; }]>;
 
-  beforeEach(() => {
-    sessionStorage.clear();
-  });
-
-  beforeAll(() => {
-    console.error = function () {};
-    loadSolar = async () =>
-      await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
-    loadWind = async () =>
-      await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
-  });
-
-  describe("Duration Curves", () => {
-    it("Hydrogen model: calculates duration curves as 8760 percentages for solar", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneSolarScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={standaloneSolarScenario.location}
-        />
-      );
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(solarGeneratorDurationCurve[index]);
-          }
-        );
-
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toBeCloseTo(solarElectrolyserDurationCurve[index], 8);
-          }
-        );
-
-        done();
-      }, TIMEOUT);
+    beforeEach(() => {
+        sessionStorage.clear();
+        spy = jest.spyOn(durationCurves, 'DurationCurves')
     });
 
-    it("Hydrogen model: calculates duration curves as 8760 percentages for solar with battery", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneSolarWithBatteryScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={standaloneSolarWithBatteryScenario.location}
-        />
-      );
+    beforeAll(() => {
+        console.error = function () {
+        };
+        loadSolar = async () =>
+            await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
+        loadWind = async () =>
+            await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
+    });
 
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(solarBatteryGeneratorDurationCurve[index]);
-          }
-        );
-
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toBeCloseTo(
-              solarBatteryElectrolyserDurationCurve[index],
-              8
+    describe("Duration Curves", () => {
+        it("Hydrogen model: calculates duration curves as 8760 percentages for solar", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneSolarScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={standaloneSolarScenario.location}
+                />
             );
-          }
-        );
 
-        done();
-      }, TIMEOUT);
-    });
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(solarGeneratorDurationCurve[index]);
+                    }
+                );
 
-    it("Hydrogen model: calculates duration curves as 8760 percentages for wind", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneWindScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={standaloneWindScenario.location}
-        />
-      );
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toBeCloseTo(solarElectrolyserDurationCurve[index], 8);
+                    }
+                );
+            }, {timeout: TIMEOUT})
 
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(windGeneratorDurationCurve[index]);
-          }
-        );
+        });
 
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(windElectrolyserDurationCurve[index]);
-          }
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with PPA agreement", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={windWithPPAScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={windWithPPAScenario.location}
-        />
-      );
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(windPPAGeneratorDurationCurve[index]);
-          }
-        );
-
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(windPPAElectrolyserDurationCurve[index]);
-          }
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={hybridBatteryGridOversizeRatioScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={hybridBatteryGridOversizeRatioScenario.location}
-        />
-      );
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(
-              hybridBatteryOversizeRatioGeneratorDurationCurve[index]
+        it("Hydrogen model: calculates duration curves as 8760 percentages for solar with battery", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneSolarWithBatteryScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={standaloneSolarWithBatteryScenario.location}
+                />
             );
-          }
-        );
 
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(solarBatteryGeneratorDurationCurve[index]);
+                    }
+                );
 
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toBeCloseTo(
-              hybridBatteryOversizeRatioElectrolyserDurationCurve[index],
-              8
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toBeCloseTo(solarBatteryElectrolyserDurationCurve[index], 8);
+                    }
+                );
+            }, {timeout: TIMEOUT})
+
+        });
+
+        it("Hydrogen model: calculates duration curves as 8760 percentages for wind", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneWindScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={standaloneWindScenario.location}
+                />
             );
-          }
-        );
 
-        done();
-      }, TIMEOUT);
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(windGeneratorDurationCurve[index]);
+                    }
+                );
+
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(windElectrolyserDurationCurve[index]);
+                    }
+                );
+            }, {timeout: TIMEOUT})
+        });
+
+        it("Hydrogen model: calculates duration curves as 8760 percentages for wind with PPA agreement", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={windWithPPAScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={windWithPPAScenario.location}
+                />
+            );
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(windPPAGeneratorDurationCurve[index]);
+                    }
+                );
+
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(windPPAElectrolyserDurationCurve[index]);
+                    }
+                );
+            }, {timeout: TIMEOUT})
+        });
+
+        it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with battery and surplus retail", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={hybridBatteryGridOversizeRatioScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={hybridBatteryGridOversizeRatioScenario.location}
+                />
+            );
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(hybridBatteryOversizeRatioGeneratorDurationCurve[index]);
+                    }
+                );
+
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toBeCloseTo(hybridBatteryOversizeRatioElectrolyserDurationCurve[index], 8);
+                    }
+                );
+            }, {timeout: TIMEOUT})
+        });
+
+        it("Hydrogen model: calculates duration curves as 8760 percentages for wind with battery and ppa agreement", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={windWithBatteryAndPPAScenario.data}
+                    loadSolar={loadSolar}
+                    loadWind={loadWind}
+                    location={windWithBatteryAndPPAScenario.location}
+                />
+            );
+
+            await waitFor(() => {
+                expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+                const curves = spy.mock.calls[0][0];
+                expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+                curves["Power Plant Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toEqual(windBatteryPPAGeneratorDurationCurve[index]);
+                    }
+                );
+
+                expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+                curves["Electrolyser Duration Curve"].forEach(
+                    (val, index) => {
+                        expect(val).toBeCloseTo(windBatteryPPAElectrolyserDurationCurve[index], 8);
+                    }
+                );
+            }, {timeout: TIMEOUT})
+        });
     });
 
-    it("Hydrogen model: calculates duration curves as 8760 percentages for wind with battery and ppa agreement", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={windWithBatteryAndPPAScenario.data}
-          loadSolar={loadSolar}
-          loadWind={loadWind}
-          location={windWithBatteryAndPPAScenario.location}
-        />
-      );
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const generatorDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-        expect(generatorDurationCurve).toHaveLength(1);
-        expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-        (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toEqual(windBatteryPPAGeneratorDurationCurve[index]);
-          }
+    it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with degradation", async () => {
+        render(
+            <WorkingData
+                inputConfiguration="Advanced"
+                data={standaloneHybridWithDegradationScenario.data}
+                loadSolar={loadSolar}
+                loadWind={loadWind}
+                location={standaloneHybridWithDegradationScenario.location}
+            />
         );
-
-        const electrolyserDurationCurve = wrapper
-          .find(DurationCurve)
-          .filterWhere(
-            (e) => e.prop("title") === "Electrolyser Duration Curve"
-          );
-        expect(electrolyserDurationCurve).toHaveLength(1);
-        expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-        (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-          (val, index) => {
-            expect(val).toBeCloseTo(
-              windBatteryPPAElectrolyserDurationCurve[index],
-              8
+        await waitFor(() => {
+            expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(2);
+            const curves = spy.mock.calls[0][0];
+            expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+            curves["Power Plant Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toEqual(hybridDegradationGeneratorDurationCurve[index]);
+                }
             );
-          }
-        );
 
-        done();
-      }, TIMEOUT);
+            expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+            curves["Electrolyser Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toEqual(hybridDegradationElectrolyserDurationCurve[index]);
+                }
+            );
+        }, {timeout: TIMEOUT})
     });
-  });
 
-  it("Hydrogen model: calculates duration curves as 8760 percentages for hybrid with degradation", (done) => {
-    const wrapper = mount(
-      <WorkingData
-        inputConfiguration="Advanced"
-        data={standaloneHybridWithDegradationScenario.data}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
-        location={standaloneHybridWithDegradationScenario.location}
-      />
-    );
+    it("Ammonia model: calculates duration curves as 8760 percentages for solar", async () => {
+        render(
+            <WorkingData
+                inputConfiguration="Advanced"
+                data={standaloneAmmoniaSolarScenario.data}
+                loadSolar={loadSolar}
+                loadWind={loadWind}
+                location={standaloneAmmoniaSolarScenario.location}
+            />
+        );
+        await waitFor(() => {
+            expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(3);
+            const curves = spy.mock.calls[0][0];
+            expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+            curves["Power Plant Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toEqual(ammoniaSolarGeneratorDurationCurve[index]);
+                }
+            );
 
-    // Sleep to wait for CSV to load and set state
-    setTimeout(() => {
-      wrapper.update();
-      const generatorDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-      expect(generatorDurationCurve).toHaveLength(1);
-      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
+            expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+            curves["Electrolyser Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(ammoniaSolarElectrolyserDurationCurve[index], 8);
+                }
+            );
 
-      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toEqual(hybridDegradationGeneratorDurationCurve[index]);
-        }
-      );
+            expect(curves["Ammonia Duration Curve"]).toHaveLength(8760);
+            curves["Ammonia Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurve[index], 8);
+                }
+            );
+        }, {timeout: TIMEOUT})
+    });
 
-      const electrolyserDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-      expect(electrolyserDurationCurve).toHaveLength(1);
-      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toEqual(
-            hybridDegradationElectrolyserDurationCurve[index]
-          );
-        }
-      );
+    it("Ammonia model: calculates duration curves as 8760 percentages for solar with battery", async () => {
+        render(
+            <WorkingData
+                inputConfiguration="Advanced"
+                data={standaloneAmmoniaSolarWithBatteryScenario.data}
+                loadSolar={loadSolar}
+                loadWind={loadWind}
+                location={standaloneAmmoniaSolarWithBatteryScenario.location}
+            />
+        );
+        await waitFor(() => {
+            expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(3);
+            const curves = spy.mock.calls[0][0];
+            expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+            curves["Power Plant Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toEqual(ammoniaSolarGeneratorDurationCurveWithBattery[index]);
+                }
+            );
 
-      done();
-    }, TIMEOUT);
-  });
+            expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+            curves["Electrolyser Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(ammoniaSolarElectrolyserDurationCurveWithBattery[index], 8);
+                }
+            );
+            expect(curves["Ammonia Duration Curve"]).toHaveLength(8760);
+            curves["Ammonia Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurveWithBattery[index], 8);
+                }
+            );
+        }, {timeout: TIMEOUT})
+    });
 
-  it("Ammonia model: calculates duration curves as 8760 percentages for solar", (done) => {
-    const wrapper = mount(
-      <WorkingData
-        inputConfiguration="Advanced"
-        data={standaloneAmmoniaSolarScenario.data}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
-        location={standaloneAmmoniaSolarScenario.location}
-      />
-    );
+    it("Methanol model: calculates duration curves as 8760 percentages for hybrid with battery", async () => {
+        render(
+            <WorkingData
+                inputConfiguration="Advanced"
+                data={standaloneMethanolHybridWithBatteryScenario.data}
+                loadSolar={loadSolar}
+                loadWind={loadWind}
+                location={"South West NSW"}
+            />
+        );
+        await waitFor(() => {
+            expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(3);
+            const curves = spy.mock.calls[0][0];
+            expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+            curves["Power Plant Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toEqual(methanolHybridBatteryGeneratorDurationCurve[index]);
+                }
+            );
 
-    // Sleep to wait for CSV to load and set state
-    setTimeout(() => {
-      wrapper.update();
-      const generatorDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-
-      expect(generatorDurationCurve).toHaveLength(1);
-      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toEqual(ammoniaSolarGeneratorDurationCurve[index]);
-        }
-      );
-
-      const electrolyserDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-
-      expect(electrolyserDurationCurve).toHaveLength(1);
-      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(
-            ammoniaSolarElectrolyserDurationCurve[index],
-            8
-          );
-        }
-      );
-
-      const ammoniaDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
-
-      expect(ammoniaDurationCurve).toHaveLength(1);
-      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurve[index], 8);
-        }
-      );
-
-      done();
-    }, TIMEOUT);
-  });
-
-  it("Ammonia model: calculates duration curves as 8760 percentages for solar with battery", (done) => {
-    const wrapper = mount(
-      <WorkingData
-        inputConfiguration="Advanced"
-        data={standaloneAmmoniaSolarWithBatteryScenario.data}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
-        location={standaloneAmmoniaSolarWithBatteryScenario.location}
-      />
-    );
-
-    // Sleep to wait for CSV to load and set state
-    setTimeout(() => {
-      wrapper.update();
-      const generatorDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-      expect(generatorDurationCurve).toHaveLength(1);
-      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toEqual(
-            ammoniaSolarGeneratorDurationCurveWithBattery[index]
-          );
-        }
-      );
-
-      const electrolyserDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-      expect(electrolyserDurationCurve).toHaveLength(1);
-      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(
-            ammoniaSolarElectrolyserDurationCurveWithBattery[index],
-            8
-          );
-        }
-      );
-
-      const ammoniaDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Ammonia Duration Curve");
-
-      expect(ammoniaDurationCurve).toHaveLength(1);
-      expect(ammoniaDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (ammoniaDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(
-            ammoniaSolarAmmoniaDurationCurveWithBattery[index],
-            8
-          );
-        }
-      );
-
-      done();
-    }, TIMEOUT);
-  });
-
-  it("Methanol model: calculates duration curves as 8760 percentages for hybrid with battery", (done) => {
-    const wrapper = mount(
-      <WorkingData
-        inputConfiguration="Advanced"
-        data={standaloneMethanolHybridWithBatteryScenario.data}
-        loadSolar={loadSolar}
-        loadWind={loadWind}
-        location={"South West NSW"}
-      />
-    );
-
-    // Sleep to wait for CSV to load and set state
-    setTimeout(() => {
-      wrapper.update();
-      const generatorDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Power Plant Duration Curve");
-
-      expect(generatorDurationCurve).toHaveLength(1);
-      expect(generatorDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-      (generatorDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toEqual(
-            methanolHybridBatteryGeneratorDurationCurve[index]
-          );
-        }
-      );
-
-      const electrolyserDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Electrolyser Duration Curve");
-
-      expect(electrolyserDurationCurve).toHaveLength(1);
-      expect(electrolyserDurationCurve.at(0).prop("data")).toHaveLength(8760);
-      (electrolyserDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(
-            methanolHybridBatteryElectrolyserDurationCurve[index],
-            8
-          );
-        }
-      );
-
-      const methanolDurationCurve = wrapper
-        .find(DurationCurve)
-        .filterWhere((e) => e.prop("title") === "Methanol Duration Curve");
-
-      expect(methanolDurationCurve).toHaveLength(1);
-      expect(methanolDurationCurve.at(0).prop("data")).toHaveLength(8760);
-
-      (methanolDurationCurve.at(0).prop("data") as number[]).forEach(
-        (val, index) => {
-          expect(val).toBeCloseTo(
-            methanolHybridBatteryMethanolDurationCurve[index],
-            8
-          );
-        }
-      );
-
-      done();
-    }, TIMEOUT);
-  });
+            expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+            curves["Electrolyser Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(methanolHybridBatteryElectrolyserDurationCurve[index], 8);
+                }
+            );
+            expect(curves["Methanol Duration Curve"]).toHaveLength(8760);
+            curves["Methanol Duration Curve"].forEach(
+                (val, index) => {
+                    expect(val).toBeCloseTo(methanolHybridBatteryMethanolDurationCurve[index], 8);
+                }
+            );
+        }, {timeout: TIMEOUT})
+    });
 });
 
 //
