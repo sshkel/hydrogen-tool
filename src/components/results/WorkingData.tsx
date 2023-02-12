@@ -27,6 +27,7 @@ import { HourlyCapacityFactorsPane } from "./HourlyCapacityFactors";
 import HoverChip from "./HoverChip";
 import { KeyInputsPane } from "./KeyInputs";
 import { LcBreakdownPane } from "./LevelisedCost";
+import LoadingResultsPage from "./LoadingResultsPage";
 import { OperatingCostsPane } from "./OperatingCosts";
 import { SummaryOfResultsPane } from "./SummaryOfResults";
 
@@ -87,7 +88,7 @@ export default function WorkingData(props: Props) {
   }
 
   if (state.solarData.length === 0 || state.windData.length === 0) {
-    return null;
+    return <LoadingResultsPage />;
   }
 
   const {
