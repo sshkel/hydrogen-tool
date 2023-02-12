@@ -26,9 +26,13 @@ import windBatteryPPAElectrolyserDurationCurve from "../../resources/wind-batter
 import windBatteryPPAGeneratorDurationCurve from "../../resources/wind-battery-ppa-generator-duration-curve.json";
 import windElectrolyserDurationCurve from "../../resources/wind-electrolyser-duration-curve.json";
 import windGeneratorDurationCurve from "../../resources/wind-generator-duration-curve.json";
+import methaneWindMethaneDurationCurve from "../../resources/wind-methane-duration-curve.json";
+import methaneWindElectrolyserDurationCurve from "../../resources/wind-methane-electrolyser-duration-curve.json";
+import methaneWindGeneratorDurationCurve from "../../resources/wind-methane-generator-duration-curve.json";
 import windPPAElectrolyserDurationCurve from "../../resources/wind-ppa-electrolyser-duration-curve.json";
 import windPPAGeneratorDurationCurve from "../../resources/wind-ppa-generator-duration-curve.json";
 import {
+  gridConnectedMethaneWindWithBatteryAndDegradationScenario,
   hybridBatteryGridOversizeRatioScenario,
   standaloneAmmoniaSolarScenario,
   standaloneAmmoniaSolarWithBatteryScenario,
@@ -392,16 +396,54 @@ describe("Working Data calculations", () => {
       { timeout: TIMEOUT }
     );
   });
+
+  it("Methane model: calculates duration curves as 8760 percentages for hybrid with battery", async () => {
+    render(
+      <WorkingData
+        inputConfiguration="Advanced"
+        data={gridConnectedMethaneWindWithBatteryAndDegradationScenario.data}
+        loadSolar={loadSolar}
+        loadWind={loadWind}
+        location={"Central West NSW"}
+      />
+    );
+    await waitFor(
+      () => {
+        expect(Object.keys(spy.mock.calls[0][0])).toHaveLength(3);
+        const curves = spy.mock.calls[0][0];
+        expect(curves["Power Plant Duration Curve"]).toHaveLength(8760);
+        curves["Power Plant Duration Curve"].forEach((val, index) => {
+          expect(val).toEqual(methaneWindGeneratorDurationCurve[index]);
+        });
+
+        expect(curves["Electrolyser Duration Curve"]).toHaveLength(8760);
+        curves["Electrolyser Duration Curve"].forEach((val, index) => {
+          expect(val).toBeCloseTo(
+            methaneWindElectrolyserDurationCurve[index],
+            8
+          );
+        });
+        expect(curves["Methane Duration Curve"]).toHaveLength(8760);
+        curves["Methane Duration Curve"].forEach((val, index) => {
+          expect(val).toBeCloseTo(methaneWindMethaneDurationCurve[index], 8);
+        });
+      },
+      { timeout: TIMEOUT }
+    );
+  });
 });
 
-//
-// writeLocalFile(
-//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/hybrid-battery-oversize-ratio-generator-duration-curve.json",
-//   JSON.stringify(generatorDurationCurve.at(0).prop("data"))
-// );
+//   writeLocalFile(
+//     "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/wind-methane-electrolyser-duration-curve.json",
+//     JSON.stringify(curves["Electrolyser Duration Curve"])
+//   );
 
-//
-// writeLocalFile(
-//   "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json",
-//   JSON.stringify(electrolyserDurationCurve.at(0).prop("data"))
-// );
+//   writeLocalFile(
+//     "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/wind-methane-electrolyser-duration-curve.json",
+//     JSON.stringify(curves["Power Plant Duration Curve"])
+//   );
+
+//   writeLocalFile(
+//     "/Users/ttjandra/Documents/projects/hydrogen-tool/src/tests/resources/wind-methane-duration-curve.json",
+//     JSON.stringify(curves["Methane Duration Curve"])
+//   );
