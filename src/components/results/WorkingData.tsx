@@ -24,6 +24,7 @@ import ErrorAlert from "../misc/ErrorAlert";
 import { CapitalCostCharts } from "./CapitalCostCharts";
 import { DurationCurves } from "./DurationCurves";
 import { HourlyCapacityFactorsPane } from "./HourlyCapacityFactors";
+import HoverChip from "./HoverChip";
 import { KeyInputsPane } from "./KeyInputs";
 import { LcBreakdownPane } from "./LevelisedCost";
 import { OperatingCostsPane } from "./OperatingCosts";
@@ -490,6 +491,7 @@ export default function WorkingData(props: Props) {
               </Grid>
             </Grid>
           </Grid>
+          <HoverChip />
           <Grid container item xs={6}>
             <Grid item xs={6}>
               {OperatingCostsPane(results.operatingCosts)}

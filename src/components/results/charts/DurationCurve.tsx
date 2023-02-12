@@ -44,6 +44,12 @@ export default function DurationCurve(props: Props) {
         display: false,
       },
     },
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+      },
+    },
   };
 
   return (

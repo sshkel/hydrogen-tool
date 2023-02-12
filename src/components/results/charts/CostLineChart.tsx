@@ -33,6 +33,12 @@ export default function CostLineChart(props: Props) {
   };
 
   const options = {
+    layout: {
+      padding: {
+        left: 20,
+        right: 20,
+      },
+    },
     scales: {
       x: {
         title: {
