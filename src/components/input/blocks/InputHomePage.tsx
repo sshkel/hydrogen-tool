@@ -36,6 +36,8 @@ export default function InputHomePage(props: Props) {
   const [tab, setTab] = React.useState<InputConfiguration>("Basic");
   const offshore = isOffshore(props.location);
 
+  let isCalculateLoading: boolean = false;
+
   const { setInputConfiguration } = props;
 
   useEffect(() => {
@@ -112,6 +114,8 @@ export default function InputHomePage(props: Props) {
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     let form: any = { ...formState };
+    // TODO: Reintroduce when trace loaders are moved to App
+    // isCalculateLoading = true;
 
     form["powerfuel"] = powerfuel;
     form["inputConfiguration"] = tab;
@@ -171,7 +175,7 @@ export default function InputHomePage(props: Props) {
             General {powerfuel} production cost for region.​
           </Typography>
         </Grid>
-        <InputCalculateButton />
+        <InputCalculateButton loading={isCalculateLoading} />
       </Grid>
       <TabContext value={tab}>
         <TabList
