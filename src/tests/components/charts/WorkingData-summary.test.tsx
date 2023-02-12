@@ -80,7 +80,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(7_180);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(681);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(681);
           expect(data["LCH2 ($/kg)"]).toEqual(4.46);
         },
         { timeout: TIMEOUT }
@@ -116,7 +116,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(1517);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(696);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(696);
           expect(data["LCH2 ($/kg)"]).toEqual(5.6);
         },
         { timeout: TIMEOUT }
@@ -152,7 +152,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(1559);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(782);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(782);
           expect(data["LCH2 ($/kg)"]).toEqual(3.81);
         },
         { timeout: TIMEOUT }
@@ -188,7 +188,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(3619);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(677);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(677);
           expect(data["LCH2 ($/kg)"]).toEqual(2.31);
         },
         { timeout: TIMEOUT }
@@ -224,7 +224,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(484);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(845);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(845);
           expect(data["LCH2 ($/kg)"]).toEqual(5.55);
         },
         { timeout: TIMEOUT }
@@ -260,7 +260,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(2124);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(801);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(801);
           expect(data["LCH2 ($/kg)"]).toEqual(2.67);
         },
         { timeout: TIMEOUT }
@@ -296,7 +296,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(462);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(100);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(100);
           expect(data["LCH2 ($/kg)"]).toEqual(4.79);
         },
         { timeout: TIMEOUT }
@@ -332,7 +332,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(633_065);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(100_000);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(100_000);
           expect(data["LCH2 ($/kg)"]).toEqual(2.08);
         },
         { timeout: TIMEOUT }
@@ -368,7 +368,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(251);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(418);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(418);
           expect(data["LCH2 ($/kg)"]).toEqual(5.81);
         },
         { timeout: TIMEOUT }
@@ -404,7 +404,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(12_118);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(1038);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(1038);
           expect(data["LCH2 ($/kg)"]).toEqual(4.43);
         },
         { timeout: TIMEOUT }
@@ -440,7 +440,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(3_018);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(867);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(867);
           expect(data["LCH2 ($/kg)"]).toEqual(3.84);
         },
         { timeout: TIMEOUT }
@@ -485,7 +485,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(165_552);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(4991);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(4991);
           expect(data["Ammonia Output (TPA)"]).toEqual(28_338);
           expect(data["LCH2 ($/kg)"]).toEqual(9.99);
           expect(data["LCNH3 ($/kg)"]).toEqual(1.76);
@@ -534,7 +534,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(-12_026_316);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(256_449);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(256_449);
           expect(data["Ammonia Output (TPA)"]).toEqual(95_810);
           expect(data["LCH2 ($/kg)"]).toEqual(0.54);
           expect(data["LCNH3 ($/kg)"]).toEqual(1.45);
@@ -581,7 +581,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(2_120_876);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(74_938);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(74_938);
           expect(data["Methanol Output (TPA)"]).toEqual(336_250);
           expect(data["LCH2 ($/kg)"]).toEqual(9);
           expect(data["LCMeOH ($/kg)"]).toEqual(2.01);
@@ -630,7 +630,7 @@ describe("Model summary", () => {
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
           ).toEqual(3_710_175);
-          expect(data["Hydrogen Output (t/yr)"]).toEqual(183_611);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(183_611);
           expect(data["Methane Output (TPA)"]).toEqual(282_816);
           expect(data["LCH2 ($/kg)"]).toEqual(6.77);
           expect(data["LCSNG ($/kg)"]).toEqual(4.32);

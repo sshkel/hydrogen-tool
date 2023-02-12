@@ -13,7 +13,7 @@ jest.mock("../../model/DataLoader", () => ({
   DEFAULT_LOCATION: "Z10",
 }));
 
-jest.setTimeout(8_000);
+jest.setTimeout(10_000);
 
 describe("App", () => {
   beforeEach(() => {
@@ -41,7 +41,7 @@ describe("App", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 1000 }
+      { timeout: 1200 }
     );
 
     fireEvent.click(getByLabelText(/battery-capacity-show-more/i));

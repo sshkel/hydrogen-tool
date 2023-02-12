@@ -46,11 +46,13 @@ describe("App", () => {
       { timeout: 2000 }
     );
     await waitFor(
-        () =>
-    expect(
-      container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("136 MW"),{ timeout: 2000 }
-  );
+      () =>
+        expect(
+          container.querySelector("#key-inputs-electrolyser-capacity")
+            ?.textContent
+        ).toContain("136 MW"),
+      { timeout: 2000 }
+    );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
@@ -63,7 +65,7 @@ describe("App", () => {
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output (t/yr)",
+      "Hydrogen Output (TPA)",
       "LCH2 ($/kg)",
     ];
 
@@ -115,11 +117,14 @@ describe("App", () => {
         ).not.toEqual("0"),
       { timeout: 2000 }
     );
-      await waitFor(
-          () =>
-    expect(
-      container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("100 MW"),{ timeout: 2000 });
+    await waitFor(
+      () =>
+        expect(
+          container.querySelector("#key-inputs-electrolyser-capacity")
+            ?.textContent
+        ).toContain("100 MW"),
+      { timeout: 2000 }
+    );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
@@ -132,7 +137,7 @@ describe("App", () => {
       "Electrolyser Capacity Factor",
       "Energy Consumed by Electrolyser (MWh/yr)",
       "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output (t/yr)",
+      "Hydrogen Output (TPA)",
       "LCH2 ($/kg)",
     ];
 
@@ -328,7 +333,7 @@ describe("App", () => {
   //     "Methanol Capacity Factor",
   //     "Energy Consumed by Electrolyser (MWh/yr)",
   //     "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-  //     "Hydrogen Output (t/yr)",
+  //     "Hydrogen Output (TPA)",
   //     "Methanol Output (TPA)",
   //     "LCH2 ($/kg)",
   //     "LCMeOH ($/kg)",

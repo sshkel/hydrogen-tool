@@ -282,7 +282,7 @@ function compareToModel(
     electricityProduced: "Surplus Energy [MWh/yr]",
     electricityConsumedByBattery: "Total Battery Output [MWh/yr]",
     totalOperatingTime: "Total Time Electrolyser is Operating",
-    hydrogenProduction: "Hydrogen Output [t/yr]",
+    hydrogenProduction: "Hydrogen Output [TPA]",
     powerPlantCapacityFactors: "Generator Capacity Factor",
     ratedCapacityTime: "Time Electrolyser is at its Rated Capacity",
     electrolyserCapacityFactors: "Achieved Electrolyser Capacity Factor",

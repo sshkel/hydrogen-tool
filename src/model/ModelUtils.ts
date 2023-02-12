@@ -493,7 +493,7 @@ export function calculateSnapshotForYear(
   const surplus =
     sum(powerPlantCapacityFactors) * powerPlantNominalCapacity -
     sum(electrolyserCapacityFactors) * electrolyserNominalCapacity;
-  // Hydrogen Output [t/yr]
+  // Hydrogen Output [TPA]
   const hydrogenFixed =
     sum(hydrogenProduction) * electrolyserNominalCapacity * kgToTonne;
   // Total Battery Output (MWh/yr)
