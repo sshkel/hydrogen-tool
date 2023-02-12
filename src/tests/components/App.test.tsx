@@ -45,10 +45,12 @@ describe("App", () => {
         ).not.toEqual("0"),
       { timeout: 2000 }
     );
-
+    await waitFor(
+        () =>
     expect(
       container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("136 MW");
+    ).toContain("136 MW"),{ timeout: 2000 }
+  );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
@@ -113,10 +115,11 @@ describe("App", () => {
         ).not.toEqual("0"),
       { timeout: 2000 }
     );
-
+      await waitFor(
+          () =>
     expect(
       container.querySelector("#key-inputs-electrolyser-capacity")?.textContent
-    ).toContain("100 MW");
+    ).toContain("100 MW"),{ timeout: 2000 });
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent

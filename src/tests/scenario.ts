@@ -1020,6 +1020,7 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     powerPlantType: "Solar",
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
+    solarToWindPercentage: 100,
   },
 };
 

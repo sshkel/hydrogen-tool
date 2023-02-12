@@ -80,6 +80,10 @@ export default function WorkingData(props: Props) {
         return null;
     }
 
+    if(state.solarData.length === 0 || state.windData.length === 0){
+        return null;
+    }
+
     const {
         inputConfiguration,
         data: {projectScale = 0, powerfuel = "hydrogen"},
@@ -494,7 +498,7 @@ export default function WorkingData(props: Props) {
                         {DurationCurves(results.durationCurves)}
                     </Grid>
 
-                    <Grid container item wrap="nowrap">
+                    <Grid container className="cost breakdown" item wrap="nowrap">
                         {CapitalCostCharts([{
                             title: "Capital Cost Breakdown",
                             items: results.capitalCostBreakdown
