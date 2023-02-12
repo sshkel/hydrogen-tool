@@ -1,581 +1,552 @@
-import { mount } from "enzyme";
-
-import { WaterFallPane } from "../../../components/results/LevelisedCost";
+/* eslint-disable testing-library/no-wait-for-multiple-assertions */
+import * as levelisedCost from "../../../components/results/LevelisedCost";
 import WorkingData from "../../../components/results/WorkingData";
-import { TIMEOUT } from "../../consts";
-import { readLocalCsv } from "../../resources/loader";
+import {TIMEOUT} from "../../consts";
+import {readLocalCsv} from "../../resources/loader";
 import {
-  basicHybridPPAScenario,
-  basicSolarScenario,
-  hybridBatteryGridOversizeRatioScenario,
-  standaloneAdvancedAmmoniaSolarScenario,
-  standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
-  standaloneHybridWithDegradationScenario,
-  standaloneMethanolHybridWithBatteryScenario,
-  standaloneSolarScenario,
-  standaloneSolarWithBatteryScenario,
-  standaloneSolarWithStackDegradationScenario,
-  standaloneWindScenario,
-  standaloneWindWithBatteryAndDegradationScenario,
-  windWithBatteryAndPPAScenario,
-  windWithPPAScenario,
+    basicHybridPPAScenario,
+    basicSolarScenario,
+    hybridBatteryGridOversizeRatioScenario,
+    standaloneAdvancedAmmoniaSolarScenario,
+    standaloneAmmoniaHybridWithBatteryAndDegradationScenario,
+    standaloneHybridWithDegradationScenario,
+    standaloneMethanolHybridWithBatteryScenario,
+    standaloneSolarScenario,
+    standaloneSolarWithBatteryScenario,
+    standaloneSolarWithStackDegradationScenario,
+    standaloneWindScenario,
+    standaloneWindWithBatteryAndDegradationScenario,
+    windWithBatteryAndPPAScenario,
+    windWithPPAScenario,
 } from "../../scenario";
+import {render, waitFor} from "@testing-library/react";
 
 describe("Working Data calculations", () => {
-  let loadNationalSolar: () => Promise<any[]>;
-  let loadNationalWind: () => Promise<any[]>;
-  let loadNSWSolar: () => Promise<any[]>;
-  let loadNSWWind: () => Promise<any[]>;
-
-  beforeEach(() => {
-    sessionStorage.clear();
-  });
-
-  beforeAll(() => {
-    console.error = function () {};
-    loadNationalSolar = async () =>
-      await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
-    loadNationalWind = async () =>
-      await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
-
-    loadNSWSolar = async () =>
-      await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
-    loadNSWWind = async () =>
-      await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
-  });
-
-  describe("LC", () => {
-    it("calculates lch2 for solar", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneSolarScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneSolarScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        2.078, 1.385, 0, 0.374, 0.367, 0, 0.201, 0.05, 0, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
+    let loadNationalSolar: () => Promise<any[]>;
+    let loadNationalWind: () => Promise<any[]>;
+    let loadNSWSolar: () => Promise<any[]>;
+    let loadNSWWind: () => Promise<any[]>;
+    let spy: jest.SpyInstance<JSX.Element, [lcBreakdownData: { [key: string]: number; }, powerfuel: string]>;
+    beforeEach(() => {
+        sessionStorage.clear();
+        spy = jest.spyOn(levelisedCost, 'LcBreakdownPane')
     });
 
-    it("calculates lch2 for solar with battery", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneSolarWithBatteryScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneSolarWithBatteryScenario.location}
-        />
-      );
+    beforeAll(() => {
+        console.error = function () {
+        };
+        loadNationalSolar = async () =>
+            await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
+        loadNationalWind = async () =>
+            await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
 
-      const costBreakdown = [
-        1.62, 1.41, 0.03, 0.37, 0.37, 0, 0.23, 0.05, 1.44, 0, 0.03,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
+        loadNSWSolar = async () =>
+            await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
+        loadNSWWind = async () =>
+            await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
     });
 
-    it("calculates lch2 for wind", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneWindScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneWindScenario.location}
-        />
-      );
+    describe("LC", () => {
+        it("calculates lch2 for solar", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneSolarScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneSolarScenario.location}
+                />
+            );
 
-      const costBreakdown = [1.45, 1.21, 0, 0.38, 0.32, 0, 0.41, 0.05, 0, 0, 0];
+            const costBreakDown: { [key: string]: number } = {
+                "Additional Costs": 0,
+                "Battery Cost": 0,
+                "Electricity Purchase": 0,
+                "Electrolyser CAPEX": 1.385,
+                "Electrolyser O&M": 0.367,
+                "Grid Connection Cost": 0,
+                "Indirect Costs": 0,
+                "Power Plant CAPEX": 2.078,
+                "Power Plant OPEX": 0.374,
+                "Stack Replacement": 0.201,
+                "Water Cost": 0.05,
+            }
 
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
+            await waitFor(() => {
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
 
-        done();
-      }, TIMEOUT);
+        it("calculates lch2 for solar with battery", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneSolarWithBatteryScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneSolarWithBatteryScenario.location}
+                />
+            );
+
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 1.62,
+                'Electrolyser CAPEX': 1.41,
+                'Indirect Costs': 0.03,
+                'Power Plant OPEX': 0.37,
+                'Electrolyser O&M': 0.37,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.23,
+                'Water Cost': 0.05,
+                'Battery Cost': 1.44,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0.03
+            }
+
+            await waitFor(() => {
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for wind", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneWindScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneWindScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 1.45,
+                'Electrolyser CAPEX': 1.21,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.38,
+                'Electrolyser O&M': 0.32,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.41,
+                'Water Cost': 0.05,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for wind with ppa agreement", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={windWithPPAScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={windWithPPAScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0,
+                'Electrolyser CAPEX': 1.393,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0,
+                'Electrolyser O&M': 0.369,
+                'Electricity Purchase': 0.15,
+                'Stack Replacement': 0.283,
+                'Water Cost': 0.05,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0.014,
+                'Additional Costs': 0
+            }
+
+            await waitFor(() => {
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for hybrid with battery, grid and oversize ratio", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={hybridBatteryGridOversizeRatioScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={hybridBatteryGridOversizeRatioScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 1.676,
+                'Electrolyser CAPEX': 1.117,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.349,
+                'Electrolyser O&M': 0.296,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.385,
+                'Water Cost': 0.05,
+                'Battery Cost': 1.617,
+                'Grid Connection Cost': 0.064,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for wind with battery and PPA agreement", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={windWithBatteryAndPPAScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={windWithBatteryAndPPAScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0,
+                'Electrolyser CAPEX': 1.178,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0,
+                'Electrolyser O&M': 0.312,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.396,
+                'Water Cost': 0.05,
+                'Battery Cost': 0.681,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for solar with basic configuration", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration={basicSolarScenario.inputConfiguration}
+                    data={basicSolarScenario.data}
+                    loadSolar={loadNSWSolar}
+                    loadWind={loadNSWWind}
+                    location={basicSolarScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 1.779,
+                'Electrolyser CAPEX': 1.208,
+                'Indirect Costs': 1.076,
+                'Power Plant OPEX': 0.33,
+                'Electrolyser O&M': 0.32,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0,
+                'Water Cost': 0.075,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+
+        });
+
+        it("calculates lch2 for solar with stack degradation", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneSolarWithStackDegradationScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneSolarWithStackDegradationScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 2.24,
+                'Electrolyser CAPEX': 2.24,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.4,
+                'Electrolyser O&M': 0.59,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.28,
+                'Water Cost': 0.05,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for hybrid with degradation", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneHybridWithDegradationScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneHybridWithDegradationScenario.location}
+                />
+            );
+
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 2.402,
+                'Electrolyser CAPEX': 0.89,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.523,
+                'Electrolyser O&M': 0.236,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.328,
+                'Water Cost': 0.05,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+
+        });
+
+        it("calculates lch2 for wind with battery and degradation", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration="Advanced"
+                    data={standaloneWindWithBatteryAndDegradationScenario.data}
+                    loadSolar={loadNationalSolar}
+                    loadWind={loadNationalWind}
+                    location={standaloneWindWithBatteryAndDegradationScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 1.451,
+                'Electrolyser CAPEX': 0.967,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.423,
+                'Electrolyser O&M': 0.282,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.271,
+                'Water Cost': 0.05,
+                'Battery Cost': 0.392,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lch2 for basic hybrid with ppa agreement", async () => {
+            render(
+                <WorkingData
+                    inputConfiguration={basicHybridPPAScenario.inputConfiguration}
+                    data={basicHybridPPAScenario.data}
+                    loadSolar={loadNSWSolar}
+                    loadWind={loadNSWWind}
+                    location={basicHybridPPAScenario.location}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0,
+                'Electrolyser CAPEX': 0.733,
+                'Indirect Costs': 0.264,
+                'Power Plant OPEX': 0,
+                'Electrolyser O&M': 0.194,
+                'Electricity Purchase': 0.667,
+                'Stack Replacement': 0.149,
+                'Water Cost': 0.075,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
+
+        it("calculates lcnh3 for ammonia solar", async () => {
+            render(
+                <WorkingData
+                    data={standaloneAdvancedAmmoniaSolarScenario.data}
+                    location={standaloneAdvancedAmmoniaSolarScenario.location}
+                    inputConfiguration={
+                        standaloneAdvancedAmmoniaSolarScenario.inputConfiguration
+                    }
+                    loadSolar={loadNSWSolar}
+                    loadWind={loadNSWWind}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0.75,
+                'Electrolyser CAPEX': 0.4,
+                'H2 Storage CAPEX': 0.14,
+                'Ammonia Plant CAPEX': 0.14,
+                'Indirect Costs': 0,
+                'Power Plant OPEX': 0.09,
+                'Electrolyser OPEX': 0.11,
+                'H2 Storage OPEX': 0.03,
+                'Ammonia Plant OPEX': 0.03,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.06,
+                'Water Cost': 0.01,
+                'Battery Cost': 0,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+
+        });
+
+        it("calculates lch2 for ammonia hybrid with battery and degradation", async () => {
+            render(
+                <WorkingData
+                    data={standaloneAmmoniaHybridWithBatteryAndDegradationScenario.data}
+                    location={
+                        standaloneAmmoniaHybridWithBatteryAndDegradationScenario.location
+                    }
+                    inputConfiguration={
+                        standaloneAmmoniaHybridWithBatteryAndDegradationScenario.inputConfiguration
+                    }
+                    loadSolar={loadNSWSolar}
+                    loadWind={loadNSWWind}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0.572,
+                'Electrolyser CAPEX': 0.115,
+                'H2 Storage CAPEX': 0.049,
+                'Ammonia Plant CAPEX': 0.084,
+                'Indirect Costs': 0.222,
+                'Power Plant OPEX': 0.102,
+                'Electrolyser OPEX': 0.03,
+                'H2 Storage OPEX': 0.01,
+                'Ammonia Plant OPEX': 0.018,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.036,
+                'Water Cost': 0.201,
+                'Battery Cost': 0.007,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+
+        });
+
+        it("calculates lch2 for methanol hybrid with battery", async () => {
+            render(
+                <WorkingData
+                    data={standaloneMethanolHybridWithBatteryScenario.data}
+                    location={standaloneMethanolHybridWithBatteryScenario.location}
+                    inputConfiguration={
+                        standaloneMethanolHybridWithBatteryScenario.inputConfiguration
+                    }
+                    loadSolar={loadNSWSolar}
+                    loadWind={loadNSWWind}
+                />
+            );
+
+            const costBreakDown: { [key: string]: number } = {
+                'Power Plant CAPEX': 0.65,
+                'Electrolyser CAPEX': 0.38,
+                'H2 Storage CAPEX': 0.01,
+                'Methanol Plant CAPEX': 0.03,
+                'Carbon Capture CAPEX': 0.06,
+                'Indirect Costs': 0.31,
+                'Power Plant OPEX': 0.12,
+                'Electrolyser OPEX': 0.11,
+                'H2 Storage OPEX': 0,
+                'Methanol Plant OPEX': 0.01,
+                'Carbon Capture OPEX': 0.03,
+                'Electricity Purchase': 0,
+                'Stack Replacement': 0.18,
+                'Water Cost': 0.01,
+                'Battery Cost': 0.1,
+                'Grid Connection Cost': 0,
+                'Additional Costs': 0
+            }
+            await waitFor(() => {
+
+                expect(spy.mock.calls[0]).toHaveLength(2)
+                const actualCost = spy.mock.calls[0][0];
+                Object.keys(actualCost).forEach((key: string) =>
+                    expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(costBreakDown[key], 2)
+                );
+            }, {timeout: TIMEOUT});
+        });
     });
-
-    it("calculates lch2 for wind with ppa agreement", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={windWithPPAScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={windWithPPAScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        0, 1.393, 0, 0, 0.369, 0.15, 0.283, 0.05, 0, 0.014, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for hybrid with battery, grid and oversize ratio", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={hybridBatteryGridOversizeRatioScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={hybridBatteryGridOversizeRatioScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        1.676, 1.117, 0, 0.349, 0.296, 0, 0.385, 0.05, 1.617, 0.064, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for wind with battery and PPA agreement", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={windWithBatteryAndPPAScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={windWithBatteryAndPPAScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        0, 1.178, 0, 0, 0.312, 0, 0.396, 0.05, 0.681, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for solar with basic configuration", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration={basicSolarScenario.inputConfiguration}
-          data={basicSolarScenario.data}
-          loadSolar={loadNSWSolar}
-          loadWind={loadNSWWind}
-          location={basicSolarScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        1.779, 1.208, 1.076, 0.33, 0.32, 0, 0, 0.075, 0, 0, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for solar with stack degradation", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneSolarWithStackDegradationScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneSolarWithStackDegradationScenario.location}
-        />
-      );
-
-      const costBreakdown = [2.24, 2.24, 0, 0.4, 0.59, 0, 0.28, 0.05, 0, 0, 0];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for hybrid with degradation", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneHybridWithDegradationScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneHybridWithDegradationScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        2.402, 0.89, 0, 0.523, 0.236, 0, 0.328, 0.05, 0, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for wind with battery and degradation", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration="Advanced"
-          data={standaloneWindWithBatteryAndDegradationScenario.data}
-          loadSolar={loadNationalSolar}
-          loadWind={loadNationalWind}
-          location={standaloneWindWithBatteryAndDegradationScenario.location}
-        />
-      );
-
-      const costBreakdown = [
-        1.451, 0.967, 0, 0.423, 0.282, 0, 0.271, 0.05, 0.392, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for basic hybrid with ppa agreement", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          inputConfiguration={basicHybridPPAScenario.inputConfiguration}
-          data={basicHybridPPAScenario.data}
-          loadSolar={loadNSWSolar}
-          loadWind={loadNSWWind}
-          location={basicHybridPPAScenario.location}
-        />
-      );
-
-      // lcPowerPlantCAPEX,
-      // lcElectrolyserCAPEX,
-      // lcIndirectCosts,
-      // lcPowerPlantOPEX,
-      // lcElectrolyserOPEX,
-      // lcElectricityPurchase,
-      // lcStackReplacement,
-      // lcWater,
-      // lcBattery,
-      // lcGridConnection,
-      // lcAdditionalCosts,
-      const costBreakdown = [
-        0, 0.733, 0.264, 0, 0.194, 0.667, 0.149, 0.075, 0, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCH2"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lcnh3 for ammonia solar", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          data={standaloneAdvancedAmmoniaSolarScenario.data}
-          location={standaloneAdvancedAmmoniaSolarScenario.location}
-          inputConfiguration={
-            standaloneAdvancedAmmoniaSolarScenario.inputConfiguration
-          }
-          loadSolar={loadNSWSolar}
-          loadWind={loadNSWWind}
-        />
-      );
-
-      // lcPowerPlantCAPEX
-      // lcElectrolyserCAPEX
-      // lcH2StorageCAPEX
-      // lcAmmoniaPlantCAPEX
-      // lcIndirectCosts
-      // lcPowerPlantOPEX
-      // lcElectrolyserOPEX
-      // lcH2StorageOPEX
-      // lcAmmoniaPlantOPEX
-      // lcElectricityPurchase
-      // lcStackReplacement
-      // lcWater
-      // lcBattery
-      // lcGridConnection
-      // lcAdditionalCosts
-      const costBreakdown = [
-        0.75, 0.4, 0.14, 0.14, 0, 0.09, 0.11, 0.03, 0.03, 0, 0.06, 0.008, 0, 0,
-        0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCNH3"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 2)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for ammonia hybrid with battery and degradation", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          data={standaloneAmmoniaHybridWithBatteryAndDegradationScenario.data}
-          location={
-            standaloneAmmoniaHybridWithBatteryAndDegradationScenario.location
-          }
-          inputConfiguration={
-            standaloneAmmoniaHybridWithBatteryAndDegradationScenario.inputConfiguration
-          }
-          loadSolar={loadNSWSolar}
-          loadWind={loadNSWWind}
-        />
-      );
-
-      // lcPowerPlantCAPEX
-      // lcElectrolyserCAPEX
-      // lcH2StorageCAPEX
-      // lcAmmoniaPlantCAPEX
-      // lcIndirectCosts
-      // lcPowerPlantOPEX
-      // lcElectrolyserOPEX
-      // lcH2StorageOPEX
-      // lcAmmoniaPlantOPEX
-      // lcElectricityPurchase
-      // lcStackReplacement
-      // lcWater
-      // lcBattery
-      // lcGridConnection
-      // lcAdditionalCosts
-      const costBreakdown = [
-        0.572, 0.115, 0.049, 0.084, 0.222, 0.102, 0.03, 0.01, 0.018, 0, 0.036,
-        0.201, 0.007, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCNH3"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 3)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-
-    it("calculates lch2 for methanol hybrid with battery", (done) => {
-      const wrapper = mount(
-        <WorkingData
-          data={standaloneMethanolHybridWithBatteryScenario.data}
-          location={standaloneMethanolHybridWithBatteryScenario.location}
-          inputConfiguration={
-            standaloneMethanolHybridWithBatteryScenario.inputConfiguration
-          }
-          loadSolar={loadNSWSolar}
-          loadWind={loadNSWWind}
-        />
-      );
-
-      // lcPowerPlantCAPEX
-      // lcElectrolyserCAPEX
-      // lcH2StorageCAPEX
-      // lcMethanolPlantCAPEX
-      // lcCCCAPEX
-      // lcIndirectCosts
-      // lcPowerPlantOPEX
-      // lcElectrolyserOPEX
-      // lcH2StorageOPEX
-      // lcMethanolPlantOPEX
-      // lcCCOPEX
-      // lcElectricityPurchase
-      // lcStackReplacement
-      // lcWater
-      // lcBattery
-      // lcGridConnection
-      // lcAdditionalCosts
-      const costBreakdown = [
-        0.6478, 0.383, 0.0112, 0.025, 0.0566, 0.3058, 0.1208, 0.1116, 0.0033,
-        0.0146, 0.033, 0, 0.1792, 0.0111, 0.1034, 0, 0,
-      ];
-
-      // Sleep to wait for CSV to load and set state
-      setTimeout(() => {
-        wrapper.update();
-        const cashFlowChart = wrapper
-          .find(WaterFallPane)
-          .filterWhere(
-            (e) => e.prop("title") === "Breakdown of Cost Components in LCMeOH"
-          );
-        expect(cashFlowChart).toHaveLength(1);
-        const datapoints = cashFlowChart.at(0).prop("items");
-        Object.values(datapoints).forEach((cost, i) =>
-          expect(cost).toBeCloseTo(costBreakdown[i], 3)
-        );
-
-        done();
-      }, TIMEOUT);
-    });
-  });
 });
