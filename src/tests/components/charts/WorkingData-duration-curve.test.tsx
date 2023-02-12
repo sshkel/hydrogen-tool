@@ -1,5 +1,4 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
-import {mount} from "enzyme";
 
 import WorkingData from "../../../components/results/WorkingData";
 import * as durationCurves from "../../../components/results/DurationCurves";
@@ -318,7 +317,7 @@ describe("Working Data calculations", () => {
     });
 
     it("Ammonia model: calculates duration curves as 8760 percentages for solar with battery", async () => {
-        const wrapper = mount(
+        render(
             <WorkingData
                 inputConfiguration="Advanced"
                 data={standaloneAmmoniaSolarWithBatteryScenario.data}
@@ -353,7 +352,7 @@ describe("Working Data calculations", () => {
     });
 
     it("Methanol model: calculates duration curves as 8760 percentages for hybrid with battery", async () => {
-        const wrapper = mount(
+        render(
             <WorkingData
                 inputConfiguration="Advanced"
                 data={standaloneMethanolHybridWithBatteryScenario.data}
