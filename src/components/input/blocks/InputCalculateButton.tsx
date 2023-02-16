@@ -1,7 +1,7 @@
-import LoadingButton from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
-const StyledButton = styled(LoadingButton)({
+const StyledButton = styled(Button)({
   textTransform: "none",
   height: "fit-content",
   fontWeight: "bold",
@@ -12,13 +12,9 @@ const StyledButton = styled(LoadingButton)({
   width: 180,
 });
 
-interface Props {
-  loading?: boolean;
-}
-
-export default function InputCalculateButton({ loading }: Props) {
+export default function InputCalculateButton() {
   return (
-    <StyledButton loading={loading} variant="contained" type="submit">
+    <StyledButton variant="contained" type="submit">
       Calculate
     </StyledButton>
   );

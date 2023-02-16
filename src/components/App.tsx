@@ -18,6 +18,32 @@ import ContactPage from "./misc/ContactPage";
 import HomePage from "./misc/HomePage";
 import WorkingData from "./results/WorkingData";
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "Nunito",
+  },
+  palette: {
+    primary: {
+      main: BLUE,
+      contrastText: WHITE,
+    },
+    secondary: {
+      main: "#F2F2F2",
+      contrastText: BLACK,
+    },
+    info: {
+      main: "rgba(0, 0, 0, 0.54)",
+      contrastText: BLACK,
+    },
+    success: {
+      main: ORANGE,
+      light: "#f5b58a",
+      dark: "#d35f12",
+      contrastText: WHITE,
+    },
+  },
+});
+
 function App() {
   const [state, setState] = useState<UserInputFields | undefined>();
   const [location, setLocation] = useState<string | undefined>(

@@ -108,6 +108,12 @@ export default function HourlyCapacityFactors(props: Props) {
         },
       },
     },
+    layout: {
+      padding: {
+        left: 20,
+        right: 20,
+      },
+    },
   };
 
   return (
