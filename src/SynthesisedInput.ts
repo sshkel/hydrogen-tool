@@ -1,10 +1,8 @@
-import {
-  UserInputFields,
-} from "./types";
+import {UserInputFields,} from "./types";
 // TODO remove this or use for validaiton
 export default class SynthesisedInputs {
   constructor(userInputs: UserInputFields) {
-    let sanitisedUserInputFields: any = { ...userInputs };
+    let sanitisedUserInputFields: any = {...userInputs};
 
     Object.keys(sanitisedUserInputFields).forEach((key) => {
       if (sanitisedUserInputFields[key] === undefined) {

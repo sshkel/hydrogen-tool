@@ -96,7 +96,7 @@ export default function WorkingData(props: Props) {
     data: { projectScale = 0, powerfuel = "hydrogen" },
   } = props;
 
-  let inputs: Inputs = new SynthesisedInputs(props.data);
+  let inputs = new SynthesisedInputs(props.data) as Inputs;
 
   const location = props.location;
 
