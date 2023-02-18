@@ -1138,6 +1138,7 @@ const BASIC_METHANOL_INPUT_KEYS = [
   "discountRate",
   "projectTimeline",
   "powerSupplyOption",
+  "carbonCaptureSource"
 ];
 
 const ADVANCED_METHANOL_INPUT_KEYS = [
@@ -1236,6 +1237,7 @@ const BASIC_METHANE_INPUT_KEYS = [
   "discountRate",
   "projectTimeline",
   "powerSupplyOption",
+  "carbonCaptureSource"
 ];
 
 const ADVANCED_METHANE_INPUT_KEYS = [
