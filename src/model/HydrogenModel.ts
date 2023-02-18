@@ -542,7 +542,8 @@ export class HydrogenModel implements Model {
         this.parameters.projectScale,
         this.elecEff,
         mean(hourlyOperations.electrolyserCapacityFactors),
-        this.hoursPerYear
+        this.hoursPerYear,
+        this.secAtNominalLoad
       );
 
       const { powerPlantOversizeRatio = 1, solarToWindPercentage = 0 } =

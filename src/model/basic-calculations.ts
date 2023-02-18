@@ -22,7 +22,8 @@ export function backCalculateElectrolyserCapacity(
   projectScale: number, // kTPA
   electrolyserEfficiency: number, // value should be a decimal
   electrolyserCf: number,
-  hoursPerYear: number // in theory should always be 8760, but we have leap years
+  hoursPerYear: number, // in theory should always be 8760, but we have leap years
+  secAtNominalLoad: number
 ): number {
   return (
     projectScale *

@@ -17,7 +17,7 @@ const dynamicDefaults = {
       electrolyserPurchaseCost: 1500, // assuming this is electrolyser capital cost
       principalPPACost: 50,
       electrolyserNominalCapacity: 1,
-      secAtNominalLoad: 33.33,
+      secAtNominalLoad: 39.38,
       electrolyserEfficiency: 70,
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,

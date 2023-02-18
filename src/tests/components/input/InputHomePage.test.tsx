@@ -80,7 +80,7 @@ describe("InputHomePage", () => {
 
       powerPlantType: "Wind",
 
-      secAtNominalLoad: 33.33,
+      secAtNominalLoad: 39.38,
       solarDegradation: 0,
       solarEpcCosts: 30,
 
@@ -445,7 +445,7 @@ describe("InputHomePage", () => {
 
       powerPlantType: "Wind",
 
-      secAtNominalLoad: 33.33,
+      secAtNominalLoad: 39.38,
       solarDegradation: 0,
       solarEpcCosts: 30,
 
@@ -545,7 +545,7 @@ describe("InputHomePage", () => {
 
       powerPlantType: "Wind",
 
-      secAtNominalLoad: 33.33,
+      secAtNominalLoad: 39.38,
       solarDegradation: 0,
       solarEpcCosts: 30,
 
