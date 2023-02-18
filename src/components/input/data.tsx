@@ -117,7 +117,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
   },
   electrolyserSystemOversizing: {
     min: 0,
-    max: 100,
+    max: 500,
     step: 2.5,
     title: "Electrolyser System Oversizing",
     helperText:
