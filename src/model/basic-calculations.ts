@@ -27,7 +27,7 @@ export function backCalculateElectrolyserCapacity(
   return (
     projectScale *
     1000 *
-    33.33 *
+    39.38 *
     (1 / electrolyserEfficiency) *
     (1 / hoursPerYear) *
     (1 / electrolyserCf)

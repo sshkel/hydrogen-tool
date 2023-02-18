@@ -291,13 +291,13 @@ describe("Model summary", () => {
           ).toEqual(42.67);
           expect(data["Electrolyser Capacity Factor"]).toEqual(29.29);
           expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
-            3_333
+              3938
           );
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-          ).toEqual(462);
-          expect(data["Hydrogen Output (TPA)"]).toEqual(100);
-          expect(data["LCH2 ($/kg)"]).toEqual(4.79);
+          ).toEqual(546);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(118);
+          expect(data["LCH2 ($/kg)"]).toEqual(4.76);
         },
         { timeout: TIMEOUT }
       );
@@ -327,13 +327,13 @@ describe("Model summary", () => {
           ).toEqual(95.62);
           expect(data["Electrolyser Capacity Factor"]).toEqual(71);
           expect(data["Energy Consumed by Electrolyser (MWh/yr)"]).toEqual(
-            6_666_000
+              7876000
           );
           expect(
             data["Excess Energy Not Utilised by Electrolyser (MWh/yr)"]
-          ).toEqual(633_065);
-          expect(data["Hydrogen Output (TPA)"]).toEqual(100_000);
-          expect(data["LCH2 ($/kg)"]).toEqual(2.08);
+          ).toEqual(747978);
+          expect(data["Hydrogen Output (TPA)"]).toEqual(118152);
+          expect(data["LCH2 ($/kg)"]).toEqual(2.07);
         },
         { timeout: TIMEOUT }
       );

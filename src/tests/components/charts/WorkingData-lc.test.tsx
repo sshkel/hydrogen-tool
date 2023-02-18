@@ -300,9 +300,9 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        "Power Plant CAPEX": 1.779,
-        "Electrolyser CAPEX": 1.208,
-        "Indirect Costs": 1.076,
+        "Power Plant CAPEX": 1.765,
+        "Electrolyser CAPEX": 1.199,
+        "Indirect Costs": 1.067,
         "Power Plant OPEX": 0.33,
         "Electrolyser O&M": 0.32,
         "Electricity Purchase": 0,
@@ -457,7 +457,7 @@ describe("Working Data calculations", () => {
 
       const costBreakDown: { [key: string]: number } = {
         "Power Plant CAPEX": 0,
-        "Electrolyser CAPEX": 0.733,
+        "Electrolyser CAPEX": 0.727,
         "Indirect Costs": 0.264,
         "Power Plant OPEX": 0,
         "Electrolyser O&M": 0.194,

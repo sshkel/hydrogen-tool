@@ -50,13 +50,13 @@ describe("App", () => {
         expect(
           container.querySelector("#key-inputs-electrolyser-capacity")
             ?.textContent
-        ).toContain("136 MW"),
+        ).toContain("161 MW"),
       { timeout: 2000 }
     );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("204 MW");
+    ).toContain("241 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
@@ -74,10 +74,10 @@ describe("App", () => {
       "23.99",
       "90.52",
       "59.76",
-      "714,214",
-      "69,999",
-      "15,000",
-      "5.72",
+      "843,857",
+      "82,705",
+      "17,723",
+      "5.68",
     ];
 
     const EXPECTED_RESULTS = 11;

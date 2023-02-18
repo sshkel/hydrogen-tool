@@ -113,7 +113,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 2.5,
     title: "Electrolyser Efficiency (%)",
     helperText:
-      "Electrolyser efficiency relative to 33.33 kWh/kg of H2 required.",
+      "Electrolyser efficiency relative to 39.38 kWh/kg of H2 required.",
   },
   electrolyserSystemOversizing: {
     min: 0,
