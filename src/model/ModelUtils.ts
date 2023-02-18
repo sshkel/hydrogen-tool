@@ -3,11 +3,11 @@ import {
   PowerPlantType,
   StackReplacementType,
 } from "../types";
-import { mean, sum } from "../utils";
-import { CsvRow, ModelSummaryPerYear } from "./ModelTypes";
-import { backCalculatePowerPlantCapacity } from "./basic-calculations";
-import { roundToEightDP, roundToNearestThousand } from "./cost-functions";
-import { maxDegradationStackReplacementYears } from "./opex-calculations";
+import {mean, sum} from "../utils";
+import {CsvRow, ModelSummaryPerYear} from "./ModelTypes";
+import {backCalculatePowerPlantCapacity} from "./basic-calculations";
+import {roundToEightDP, roundToNearestThousand} from "./cost-functions";
+import {maxDegradationStackReplacementYears} from "./opex-calculations";
 
 // returns powerplantCapacityFactors series
 export function calculatePowerPlantCapacityFactors(
@@ -94,15 +94,15 @@ function batteryPower(
     if (
       electroylserCapacityFactorCur === 0 &&
       excessEnergyCur +
-        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
-          batteryLosses >
-        elecMinLoad * elecCapacity &&
+      Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+      batteryLosses >
+      elecMinLoad * elecCapacity &&
       (electrolyserCapacityFactorPrev > 0 || netBatteryFlowPrev < 0)
     ) {
       if (
         excessEnergyCur +
-          Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
-            batteryLosses >
+        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+        batteryLosses >
         elecMaxLoad * elecCapacity
       ) {
         return -Math.min(
@@ -115,7 +115,7 @@ function batteryPower(
     } else if (
       excessEnergyCur > 0 &&
       batterySocPrev + (excessEnergyCur / battCapacity) * batteryLosses >
-        battMax
+      battMax
     ) {
       return Math.min(
         battPower,
@@ -125,8 +125,8 @@ function batteryPower(
       return Math.min(battPower, excessEnergyCur * batteryLosses);
     } else if (
       electroylserCapacityFactorCur * elecCapacity +
-        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
-          batteryLosses <
+      Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+      batteryLosses <
       elecMinLoad * elecCapacity
     ) {
       return 0;
@@ -138,7 +138,7 @@ function batteryPower(
         electroylserCapacityFactorCur > 0 ||
         netBatteryFlowPrev < 0) &&
       (elecMaxLoad - electroylserCapacityFactorCur) * elecCapacity >
-        (batterySocPrev - battMin) * batteryLosses * battCapacity
+      (batterySocPrev - battMin) * batteryLosses * battCapacity
     ) {
       return -Math.min(battPower, (batterySocPrev - battMin) * battCapacity);
     } else if (
@@ -150,7 +150,7 @@ function batteryPower(
       return -Math.min(
         battPower,
         ((elecMaxLoad - electroylserCapacityFactorCur) * elecCapacity) /
-          batteryLosses
+        batteryLosses
       );
     } else if (excessEnergyCur === 0) {
       return 0;
@@ -178,11 +178,11 @@ function batteryPowerMeth(
   if (battCapacity > 0) {
     if (
       generatorActualPowerCurr <
-        (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown &&
+      (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown &&
       excessGenerationCurr +
-        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
-          batteryLosses >
-        (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown
+      Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+      batteryLosses >
+      (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown
     ) {
       return (
         excessGenerationCurr -
@@ -191,7 +191,7 @@ function batteryPowerMeth(
     } else if (
       excessGenerationCurr > 0 &&
       batterySocPrev + (excessGenerationCurr / battCapacity) * batteryLosses >
-        battMax
+      battMax
     ) {
       return Math.min(
         battPower,
@@ -201,8 +201,8 @@ function batteryPowerMeth(
       return Math.min(battPower, excessGenerationCurr * batteryLosses);
     } else if (
       generatorActualPowerCurr +
-        Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
-          batteryLosses <
+      Math.min(battPower, (batterySocPrev - battMin) * battCapacity) *
+      batteryLosses <
       (co2_PowDem + meOH_PowDem) * methanolPlantMinimumTurndown
     ) {
       return 0;
@@ -290,7 +290,7 @@ export function calculateNetBatteryFlowPython(
     } else if (
       spill === 0 &&
       elecMax - elecCons >
-        (battSoc - batteryMinCharge) * batteryLosses * batteryEnergy &&
+      (battSoc - batteryMinCharge) * batteryLosses * batteryEnergy &&
       elecJustOperating
     ) {
       //  When the electrolyser is operating and the energy to get to max capacity is more than what is stored
@@ -694,7 +694,7 @@ export function backCalculateSolarAndWindCapacities(
     calculatedWindNominalCapacity =
       powerPlantNominalCapacity * (1 - solarToWindPercentage / 100);
   }
-  return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
+  return {calculatedSolarNominalCapacity, calculatedWindNominalCapacity};
 }
 
 // TODO recheck if all of this are used more than one place.
@@ -724,7 +724,7 @@ export function getElectrolyserCapacityFactorsWithBattery(
       return (
         electrolyserCapacityFactors[i] +
         (-1 * netBatteryFlow[i] * batteryLosses + excessGeneration[i]) /
-          electrolyserNominalCapacity
+        electrolyserNominalCapacity
       );
     } else {
       return electrolyserCapacityFactors[i];
@@ -852,20 +852,20 @@ function h2_storage_balance(
     } else {
       from_h2_store[i] =
         h2_storage_balance_result[i - 1] + deficit_h2[i] >
-          hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
+        hydrogen_storage_capacity * minimum_hydrogen_storage_percentage &&
         deficit_h2[i] < 0
           ? deficit_h2[i]
           : 0;
       to_h2_store[i] =
         h2_storage_balance_result[i - 1] + excess_h2[i] <
-          hydrogen_storage_capacity && excess_h2[i] > 0
+        hydrogen_storage_capacity && excess_h2[i] > 0
           ? excess_h2[i]
           : 0;
       h2_storage_balance_result[i] =
         to_h2_store[i] + from_h2_store[i] + h2_storage_balance_result[i - 1];
     }
   }
-  return { from_h2_store, h2_storage_balance_result };
+  return {from_h2_store, h2_storage_balance_result};
 }
 
 // should be repeated for multiple cells
@@ -906,13 +906,13 @@ function h2_to_powerfuel(
     } else if (
       h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
       mass_of_hydrogen[i] >
-        (hydrogen_output / 24) * 1000 * plant_minimum_turndown
+      (hydrogen_output / 24) * 1000 * plant_minimum_turndown
     ) {
       return mass_of_hydrogen[i];
     } else if (
       h2_store_balance[i] < hydrogen_storage_capacity * 0.1 &&
       mass_of_hydrogen[i] <
-        (hydrogen_output / 24) * 1000 * plant_minimum_turndown
+      (hydrogen_output / 24) * 1000 * plant_minimum_turndown
     ) {
       return 0;
     }
@@ -935,7 +935,7 @@ export function calculateH2ToPowerfuelUnit(
   const excess_h2_result = excess_h2(mass_of_hydrogen, hydrogen_output);
   const deficit_h2_result = deficit_h2(mass_of_hydrogen, hydrogen_output);
 
-  const { from_h2_store, h2_storage_balance_result } = h2_storage_balance(
+  const {from_h2_store, h2_storage_balance_result} = h2_storage_balance(
     deficit_h2_result,
     excess_h2_result,
     hydrogen_storage_capacity,
@@ -972,10 +972,10 @@ export function electrolyser_actual_power_meX(
     nominal_electrolyser_capacity
       ? nominal_electrolyser_capacity
       : Math.max(
-          generator_actual_power[i] -
-            (carbonCapturePowerDemand + mePowerDemand),
-          0
-        )
+        generator_actual_power[i] -
+        (carbonCapturePowerDemand + mePowerDemand),
+        0
+      )
   );
 }
 
@@ -1025,8 +1025,8 @@ export function me_plant_CAPEX(
 ) {
   return roundToNearestThousand(
     me_plant_capacity * 1000 * me_synthesis_unit_purchase_cost +
-      ((me_storage_capacity * (me_plant_capacity * 1000)) / 365) *
-        me_storage_purchase_cost
+    ((me_storage_capacity * (me_plant_capacity * 1000)) / 365) *
+    me_storage_purchase_cost
   );
 }
 
@@ -1066,7 +1066,7 @@ export function nominal_solar_capacity(
 ) {
   return (
     (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
+    (renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
 }
@@ -1081,7 +1081,7 @@ export function nominal_wind_capacity(
 ) {
   return (
     (meOH_PowDem + co2_PowDem + nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
+    (renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
 }
@@ -1091,9 +1091,9 @@ export function calculateSolarToWindRatio(
   solarToWindPercentage: number
 ) {
   if (powerPlantType === "Solar") {
-    return { solarRatio: 1, windRatio: 0 };
+    return {solarRatio: 1, windRatio: 0};
   } else if (powerPlantType === "Wind") {
-    return { solarRatio: 0, windRatio: 1 };
+    return {solarRatio: 0, windRatio: 1};
   }
   return {
     solarRatio: solarToWindPercentage / 100,

@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-wait-for-multiple-assertions */
 import { render, waitFor } from "@testing-library/react";
 
 import * as costs from "../../../components/results/CapitalCostCharts";
@@ -460,7 +461,7 @@ describe("Working Data calculations", () => {
         expect(result[0].items["Electrolyser System"]).toEqual(119_746_000);
         expect(result[0].items["Ammonia"]).toEqual(41_960_000);
         expect(result[0].items["H2 Storage"]).toEqual(43_022_000);
-        expect(result[0].items["Power Plant"]).toEqual(225_359_000);
+        expect(result[0].items["Power Plant"]).toEqual(150240000);
         expect(result[0].items["Battery"]).toEqual(0);
         expect(result[0].items["Grid Connection"]).toEqual(0);
         expect(result[0].items["Additional Upfront Costs"]).toEqual(0);
@@ -486,14 +487,15 @@ describe("Working Data calculations", () => {
           (value: any) => value.title === "Capital Cost Breakdown"
         );
         expect(result).toHaveLength(1);
+
         expect(result[0].items["Electrolyser System"]).toEqual(116_546_000);
         expect(result[0].items["Ammonia"]).toEqual(85_241_000);
         expect(result[0].items["H2 Storage"]).toEqual(50_000_000);
-        expect(result[0].items["Power Plant"]).toEqual(581_005_000);
+        expect(result[0].items["Power Plant"]).toEqual(394590000);
         expect(result[0].items["Battery"]).toEqual(4_336_000);
         expect(result[0].items["Grid Connection"]).toEqual(0);
         expect(result[0].items["Additional Upfront Costs"]).toEqual(0);
-        expect(result[0].items["Indirect Costs"]).toEqual(225_544_000);
+        expect(result[0].items["Indirect Costs"]).toEqual(172415000);
       });
     });
 
@@ -518,12 +520,12 @@ describe("Working Data calculations", () => {
         expect(result[0].items["Electrolyser System"]).toEqual(1_595_878_000);
         expect(result[0].items["Methane"]).toEqual(167_397_000);
         expect(result[0].items["H2 Storage"]).toEqual(50_000_000);
-        expect(result[0].items["Power Plant"]).toEqual(4_517_324_000);
+        expect(result[0].items["Power Plant"]).toEqual(2815512000);
         expect(result[0].items["Carbon Capture"]).toEqual(1_859_984_000);
         expect(result[0].items["Battery"]).toEqual(215_713_000);
         expect(result[0].items["Grid Connection"]).toEqual(1_000_000);
         expect(result[0].items["Additional Upfront Costs"]).toEqual(0);
-        expect(result[0].items["Indirect Costs"]).toEqual(1_551_093_250);
+        expect(result[0].items["Indirect Costs"]).toEqual(1380913250);
       });
     });
   });
@@ -850,8 +852,8 @@ describe("Working Data calculations", () => {
       expect(chartData["Ammonia Land"]).toEqual(0);
       expect(chartData["Electrolyser EPC"]).toEqual(49_964_000);
       expect(chartData["Electrolyser Land"]).toEqual(9_993_000);
-      expect(chartData["Power Plant EPC"]).toEqual(137_989_000);
-      expect(chartData["Power Plant Land"]).toEqual(27_598_000);
+      expect(chartData["Power Plant EPC"]).toEqual(93715000);
+      expect(chartData["Power Plant Land"]).toEqual(18743000);
       expect(chartData["Battery EPC"]).toEqual(0);
       expect(chartData["Battery Land"]).toEqual(0);
     });
@@ -882,8 +884,8 @@ describe("Working Data calculations", () => {
       expect(chartData["CC Land"]).toEqual(92_999_200);
       expect(chartData["Electrolyser EPC"]).toEqual(493_763_000);
       expect(chartData["Electrolyser Land"]).toEqual(98_753_000);
-      expect(chartData["Power Plant EPC"]).toEqual(225_866_000);
-      expect(chartData["Power Plant Land"]).toEqual(225_866_000);
+      expect(chartData["Power Plant EPC"]).toEqual(140776000);
+      expect(chartData["Power Plant Land"]).toEqual(140776000);
       expect(chartData["Battery EPC"]).toEqual(10_786_000);
       expect(chartData["Battery Land"]).toEqual(10_786_000);
     });

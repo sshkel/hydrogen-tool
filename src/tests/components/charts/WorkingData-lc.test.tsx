@@ -1,10 +1,10 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
-import { render, waitFor } from "@testing-library/react";
+import {render, waitFor} from "@testing-library/react";
 
 import * as levelisedCost from "../../../components/results/LevelisedCost";
 import WorkingData from "../../../components/results/WorkingData";
-import { TIMEOUT } from "../../consts";
-import { readLocalCsv } from "../../resources/loader";
+import {TIMEOUT} from "../../consts";
+import {readLocalCsv} from "../../resources/loader";
 import {
   basicHybridPPAScenario,
   basicSolarScenario,
@@ -28,17 +28,16 @@ describe("Working Data calculations", () => {
   let loadNationalWind: () => Promise<any[]>;
   let loadNSWSolar: () => Promise<any[]>;
   let loadNSWWind: () => Promise<any[]>;
-  let spy: jest.SpyInstance<
-    JSX.Element,
-    [lcBreakdownData: { [key: string]: number }, powerfuel: string]
-  >;
+  let spy: jest.SpyInstance<JSX.Element,
+    [lcBreakdownData: { [key: string]: number }, powerfuel: string]>;
   beforeEach(() => {
     sessionStorage.clear();
     spy = jest.spyOn(levelisedCost, "LcBreakdownPane");
   });
 
   beforeAll(() => {
-    console.error = function () {};
+    console.error = function () {
+    };
     loadNationalSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
     loadNationalWind = async () =>
@@ -87,7 +86,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -127,7 +126,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -166,7 +165,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -206,7 +205,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -245,7 +244,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -284,7 +283,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -323,7 +322,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -362,7 +361,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -401,7 +400,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -440,7 +439,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -479,7 +478,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -497,21 +496,21 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        "Power Plant CAPEX": 0.75,
-        "Electrolyser CAPEX": 0.4,
-        "H2 Storage CAPEX": 0.14,
-        "Ammonia Plant CAPEX": 0.14,
-        "Indirect Costs": 0,
-        "Power Plant OPEX": 0.09,
-        "Electrolyser OPEX": 0.11,
-        "H2 Storage OPEX": 0.03,
-        "Ammonia Plant OPEX": 0.03,
-        "Electricity Purchase": 0,
-        "Stack Replacement": 0.06,
-        "Water Cost": 0.01,
-        "Battery Cost": 0,
-        "Grid Connection Cost": 0,
-        "Additional Costs": 0,
+        'Power Plant CAPEX': 0.56,
+        'Electrolyser CAPEX': 0.446,
+        'H2 Storage CAPEX': 0.16,
+        'Ammonia Plant CAPEX': 0.156,
+        'Indirect Costs': 0,
+        'Power Plant OPEX': 0.07,
+        'Electrolyser OPEX': 0.118,
+        'H2 Storage OPEX': 0.034,
+        'Ammonia Plant OPEX': 0.033,
+        'Electricity Purchase': 0,
+        'Stack Replacement': 0.065,
+        'Water Cost': 0.009,
+        'Battery Cost': 0,
+        'Grid Connection Cost': 0,
+        'Additional Costs': 0
       };
       await waitFor(
         () => {
@@ -524,7 +523,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -544,21 +543,21 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        "Power Plant CAPEX": 0.572,
-        "Electrolyser CAPEX": 0.115,
-        "H2 Storage CAPEX": 0.049,
-        "Ammonia Plant CAPEX": 0.084,
-        "Indirect Costs": 0.222,
-        "Power Plant OPEX": 0.102,
-        "Electrolyser OPEX": 0.03,
-        "H2 Storage OPEX": 0.01,
-        "Ammonia Plant OPEX": 0.018,
-        "Electricity Purchase": 0,
-        "Stack Replacement": 0.036,
-        "Water Cost": 0.201,
-        "Battery Cost": 0.007,
-        "Grid Connection Cost": 0,
-        "Additional Costs": 0,
+        'Power Plant CAPEX': 0.516,
+        'Electrolyser CAPEX': 0.152,
+        'H2 Storage CAPEX': 0.065,
+        'Ammonia Plant CAPEX': 0.111,
+        'Indirect Costs': 0.225,
+        'Power Plant OPEX': 0.09,
+        'Electrolyser OPEX': 0.04,
+        'H2 Storage OPEX': 0.014,
+        'Ammonia Plant OPEX': 0.024,
+        'Electricity Purchase': 0,
+        'Stack Replacement': 0.048,
+        'Water Cost': 0.212,
+        'Battery Cost': 0.009,
+        'Grid Connection Cost': 0,
+        'Additional Costs': 0
       };
       await waitFor(
         () => {
@@ -571,7 +570,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -589,28 +588,29 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        "Power Plant CAPEX": 0.65,
-        "Electrolyser CAPEX": 0.38,
-        "H2 Storage CAPEX": 0.01,
-        "Methanol Plant CAPEX": 0.03,
-        "Carbon Capture CAPEX": 0.06,
-        "Indirect Costs": 0.31,
-        "Power Plant OPEX": 0.12,
-        "Electrolyser OPEX": 0.11,
-        "H2 Storage OPEX": 0,
-        "Methanol Plant OPEX": 0.01,
-        "Carbon Capture OPEX": 0.03,
-        "Electricity Purchase": 0,
-        "Stack Replacement": 0.18,
-        "Water Cost": 0.01,
-        "Battery Cost": 0.1,
-        "Grid Connection Cost": 0,
-        "Additional Costs": 0,
-      };
+        'Power Plant CAPEX': 0.688,
+        'Electrolyser CAPEX': 0.631,
+        'H2 Storage CAPEX': 0.018,
+        'Methanol Plant CAPEX': 0.041,
+        'Carbon Capture CAPEX': 0.093,
+        'Indirect Costs': 0.427,
+        'Power Plant OPEX': 0.127,
+        'Electrolyser OPEX': 0.184,
+        'H2 Storage OPEX': 0.005,
+        'Methanol Plant OPEX': 0.024,
+        'Carbon Capture OPEX': 0.054,
+        'Electricity Purchase': 0,
+        'Stack Replacement': 0.296,
+        'Water Cost': 0.014,
+        'Battery Cost': 0.17,
+        'Grid Connection Cost': 0,
+        'Additional Costs': 0
+      }
       await waitFor(
         () => {
           expect(spy.mock.calls[0]).toHaveLength(2);
           const actualCost = spy.mock.calls[0][0];
+
           Object.keys(actualCost).forEach((key: string) =>
             expect(actualCost[key as keyof typeof actualCost]).toBeCloseTo(
               costBreakDown[key],
@@ -618,7 +618,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -638,24 +638,24 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        "Power Plant CAPEX": 1.354,
-        "Electrolyser CAPEX": 0.4784,
-        "H2 Storage CAPEX": 0.015,
-        "Methane Plant CAPEX": 0.0502,
-        "Carbon Capture CAPEX": 0.5575,
-        "Indirect Costs": 0.4649,
-        "Power Plant OPEX": 0.3434,
-        "Electrolyser OPEX": 0.1346,
-        "H2 Storage OPEX": 0.0017,
-        "Methane Plant OPEX": 0.0282,
-        "Carbon Capture OPEX": 0.3138,
-        "Electricity Purchase": 0,
-        "Stack Replacement": 0.1173,
-        "Water Cost": 0.0399,
-        "Battery Cost": 0.0854,
-        "Grid Connection Cost": 0.3328,
-        "Additional Costs": 0,
-      };
+        'Power Plant CAPEX': 1.865,
+        'Electrolyser CAPEX': 1.057,
+        'H2 Storage CAPEX': 0.033,
+        'Methane Plant CAPEX': 0.111,
+        'Carbon Capture CAPEX': 1.232,
+        'Indirect Costs': 0.915,
+        'Power Plant OPEX': 0.455,
+        'Electrolyser OPEX': 0.298,
+        'H2 Storage OPEX': 0.004,
+        'Methane Plant OPEX': 0.062,
+        'Carbon Capture OPEX': 0.694,
+        'Electricity Purchase': 0,
+        'Stack Replacement': 0.259,
+        'Water Cost': 0.062,
+        'Battery Cost': 0.189,
+        'Grid Connection Cost': 0.52,
+        'Additional Costs': 0
+      }
       await waitFor(
         () => {
           expect(spy.mock.calls[0]).toHaveLength(2);
@@ -667,7 +667,7 @@ describe("Working Data calculations", () => {
             )
           );
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
   });

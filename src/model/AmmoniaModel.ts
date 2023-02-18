@@ -1216,7 +1216,7 @@ function nominal_solar_capacity(
     (ammonia_plant_power_demand +
       air_separation_unit_power_demand +
       nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
+    (renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
 }
@@ -1233,7 +1233,7 @@ function nominal_wind_capacity(
     (ammonia_plant_power_demand +
       air_separation_unit_power_demand +
       nominal_electrolyser_capacity) *
-    (1 + renewable_energy_plant_oversizing) *
+    (renewable_energy_plant_oversizing) *
     hybrid_generator_split
   );
 }
