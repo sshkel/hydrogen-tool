@@ -1,3 +1,4 @@
+import ExpandCircleIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -22,6 +23,7 @@ const StyledButton = styled(Button)({
   textTransform: "none",
   justifyContent: "space-between",
   boxShadow: "0px 0px 0px 1.5px rgba(0,0,0,0.2)",
+  paddingRight: "12px",
 });
 
 function InputSelectButton(props: Props) {
@@ -39,7 +41,7 @@ function InputSelectButton(props: Props) {
   return (
     <Grid item xs={12} paddingX={3}>
       {!showCard ? (
-        <div style={{ display: "flex" }}>
+        <Grid item>
           <StyledButton
             aria-label={id}
             variant={selected ? "contained" : "outlined"}
@@ -48,8 +50,9 @@ function InputSelectButton(props: Props) {
             onClick={openExpand}
           >
             {text}
+            <ExpandCircleIcon />
           </StyledButton>
-        </div>
+        </Grid>
       ) : null}
       <Suspense fallback={null}>
         <InputCollapse

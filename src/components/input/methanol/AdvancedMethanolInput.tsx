@@ -121,17 +121,46 @@ export default function AdvancedMethanolInput(props: InputScreenProps) {
                 subtitle
                 mountOnEnter
                 key="ccCostAndSec"
-                title="Carbon Capture Plant Cost and Specific Energy Consumption"
+                title="Carbon Capture Plant Cost and SEC"
                 children={[
-                  <InputNumberField
-                    key="ccSec"
-                    inputKey="ccSec"
+                  <InputSelect
+                    key="carbonCaptureSourceConfigurationSelect"
+                    selectKey="carbonCaptureSourceConfigurationSelect"
+                    prompt="Source Configuration"
+                    selectClass="ccSourceConfiguration"
+                    titles={["Preset Source", "Self Configured"]}
+                    helperText="Select Preset Source if values should come from a set CC source"
                     formState={props.formState}
-                  />,
-                  <InputNumberField
-                    key="ccPlantCost"
-                    inputKey="ccPlantCost"
-                    formState={props.formState}
+                    buttonChildren={[
+                      [
+                        <InputDropdownField
+                          id="carbonCaptureSource"
+                          key="carbonCaptureSource"
+                          label="Carbon Capture Source"
+                          values={[
+                            "Cement Plant",
+                            "Fermentation Plant",
+                            "Coal Power Plant",
+                            "Steel Plant",
+                            "Direct Air Capture",
+                            "Steam Methane Reforming",
+                          ]}
+                          formState={props.formState}
+                        />,
+                      ],
+                      [
+                        <InputNumberField
+                          key="ccPlantCost"
+                          inputKey="ccPlantCost"
+                          formState={props.formState}
+                        />,
+                        <InputNumberField
+                          key="ccSec"
+                          inputKey="ccSec"
+                          formState={props.formState}
+                        />,
+                      ],
+                    ]}
                   />,
                 ]}
               />,

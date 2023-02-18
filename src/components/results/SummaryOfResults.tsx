@@ -10,8 +10,8 @@ import {
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 
-import {BLUE} from "../colors";
-import {StyledCard} from "./Styles";
+import { BLUE } from "../colors";
+import { StyledCard } from "./Styles";
 
 interface Props {
   title?: string;
@@ -38,7 +38,7 @@ export function SummaryOfResultsPane(summaryTable: { [key: string]: number }) {
           paddingTop: 0,
         }}
       >
-        <SummaryOfResultsTable title="Summary of Results" data={summaryTable}/>
+        <SummaryOfResultsTable title="Summary of Results" data={summaryTable} />
       </CardContent>
     </StyledCard>
   );
@@ -62,7 +62,9 @@ export function SummaryOfResultsTable(props: Props) {
               </TableCell>
               <TableCell>
                 <Typography id={generateId(i, "value")} fontWeight="bold">
-                  {`${props.data[k].toLocaleString("en-US")}${rowNameToLabel(k)}`}
+                  {`${props.data[k].toLocaleString("en-US")}${rowNameToLabel(
+                    k
+                  )}`}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -76,15 +78,14 @@ export function SummaryOfResultsTable(props: Props) {
 // TODO Make results return units as part of summaryTableData.
 function rowNameToLabel(name: string) {
   if (name.includes("Capacity Factor")) {
-    return "%"
-
+    return "%";
   } else if (name.includes("Time")) {
-    return "% of hrs/yr"
+    return "% of hrs/yr";
   } else if (name.includes("Energy")) {
-    return " MWh/yr"
+    return " MWh/yr";
   } else if (name.includes("Output")) {
-    return " TPA"
+    return " TPA";
   } else if (name.startsWith("LC")) {
-    return " $/kg"
+    return " $/kg";
   }
 }

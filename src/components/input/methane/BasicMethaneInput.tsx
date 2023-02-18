@@ -125,9 +125,9 @@ export default function BasicMethaneInput(props: InputScreenProps) {
                 label="Carbon Capture Source"
                 values={[
                   "Cement Plant",
+                  "Fermentation Plant",
                   "Coal Power Plant",
                   "Steel Plant",
-                  "Fermentation Plant",
                   "Direct Air Capture",
                   "Steam Methane Reforming",
                 ]}
