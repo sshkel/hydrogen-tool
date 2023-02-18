@@ -1,5 +1,6 @@
 import {
   CarbonCaptureSource,
+  CarbonCaptureSourceConfiguration,
   InputConfiguration,
   PowerCapacityConfiguration,
   PowerPlantConfiguration,
@@ -395,6 +396,8 @@ const dynamicDefaults = {
       discountRate: 1,
       projectTimeline: 25,
       carbonCaptureSource: "Cement Plant" as CarbonCaptureSource,
+      ccSourceConfiguration:
+        "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
       powerPlantType: "Wind" as PowerPlantType,
@@ -481,6 +484,8 @@ const dynamicDefaults = {
       windCostReductionWithScale: 10,
       principalPPACost: 65,
       carbonCaptureSource: "Cement Plant" as CarbonCaptureSource,
+      ccSourceConfiguration:
+        "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
       powerPlantType: "Wind" as PowerPlantType,
@@ -569,6 +574,8 @@ const dynamicDefaults = {
       methaneStorageCost: 227,
       methaneStorageOMCost: 5,
       carbonCaptureSource: "Cement Plant" as CarbonCaptureSource,
+      ccSourceConfiguration:
+        "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
       powerPlantType: "Wind" as PowerPlantType,
@@ -657,6 +664,8 @@ const dynamicDefaults = {
       methaneStorageCost: 227,
       methaneStorageOMCost: 5,
       carbonCaptureSource: "Cement Plant" as CarbonCaptureSource,
+      ccSourceConfiguration:
+        "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
       powerPlantType: "Wind" as PowerPlantType,

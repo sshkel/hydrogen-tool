@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 
+import { InputScreenProps } from "../../../types";
 import ControlledPowerPlantCard from "../blocks/ControlledPowerPlantCard";
 import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputNumberField from "../blocks/InputNumberField";
 import InputSelect from "../blocks/InputSelect";
-import { InputScreenProps } from "../types";
 
 export default function AdvancedMethaneInput(props: InputScreenProps) {
   return (
@@ -120,27 +120,56 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
               <InputCard
                 subtitle
                 mountOnEnter
-                key="ccPlantSec"
-                title="Carbon Capture SEC"
+                key="ccCostAndSec"
+                title="Carbon Capture Plant Cost and SEC"
                 children={[
-                  <InputNumberField
-                    key="ccSec"
-                    inputKey="ccSec"
+                  <InputSelect
+                    key="carbonCaptureSourceConfigurationSelect"
+                    selectKey="carbonCaptureSourceConfigurationSelect"
+                    prompt="Source Configuration"
+                    selectClass="ccSourceConfiguration"
+                    titles={["Preset Source", "Self Configured"]}
+                    helperText="Select Preset Source if values should come from a set CC source"
                     formState={props.formState}
+                    buttonChildren={[
+                      [
+                        <InputDropdownField
+                          id="carbonCaptureSource"
+                          key="carbonCaptureSource"
+                          label="Carbon Capture Source"
+                          values={[
+                            "Coal Power Plant",
+                            "Steel Plant",
+                            "Cement Plant",
+                            "Fermentation Plant",
+                            "Direct Air Capture",
+                            "Steam Methane Reforming",
+                          ]}
+                          formState={props.formState}
+                        />,
+                      ],
+                      [
+                        <InputNumberField
+                          key="ccPlantCost"
+                          inputKey="ccPlantCost"
+                          formState={props.formState}
+                        />,
+                        <InputNumberField
+                          key="ccSec"
+                          inputKey="ccSec"
+                          formState={props.formState}
+                        />,
+                      ],
+                    ]}
                   />,
                 ]}
               />,
               <InputCard
                 subtitle
                 mountOnEnter
-                key="ccCapitalAndOperatingCosts"
-                title="Carbon Capture Capital and Operating Costs"
+                key="ccInstallationAndOperatingCosts"
+                title="Carbon Capture Installation and Operating Costs"
                 children={[
-                  <InputNumberField
-                    key="ccPlantCost"
-                    inputKey="ccPlantCost"
-                    formState={props.formState}
-                  />,
                   <InputNumberField
                     key="ccEpcCosts"
                     inputKey="ccEpcCosts"

@@ -1,5 +1,6 @@
 import {
   CarbonCaptureSource,
+  CarbonCaptureSourceConfiguration,
   InputConfiguration,
   Model,
   PowerPlantConfiguration,
@@ -132,6 +133,7 @@ export type MethanolData = {
   methanolPlantSec: number;
   ccSec: number;
   carbonCaptureSource?: CarbonCaptureSource;
+  ccSourceConfiguration?: CarbonCaptureSourceConfiguration;
   methanolPlantMinimumTurndown: number;
 
   electrolyserSystemOversizing: number;
@@ -320,7 +322,7 @@ export class MethanolModel implements Model {
       this.parameters.hydrogenStoragePurchaseCost
     );
     const ccPlantCost =
-      this.parameters.inputConfiguration === "Basic"
+      this.parameters.ccSourceConfiguration === "Preset Source"
         ? carbonCaptureSourceToPlantCost(this.parameters.carbonCaptureSource!)
         : this.parameters.ccPlantCost;
 
@@ -643,15 +645,17 @@ export class MethanolModel implements Model {
         mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity":
-        roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
+      "Time Electrolyser is at its Maximum Capacity": roundToTwoDP(
+        mean(ratedCapacityTime.map((x) => x * 100))
+      ),
 
       "Total Time Electrolyser is Operating": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Methanol Plant is at its Maximum Capacity":
-        roundToTwoDP(mean(methanolRatedCapacityTime.map((x) => x * 100))),
+      "Time Methanol Plant is at its Maximum Capacity": roundToTwoDP(
+        mean(methanolRatedCapacityTime.map((x) => x * 100))
+      ),
 
       "Total Time Methanol Plant is Operating": roundToTwoDP(
         mean(totalMethanolOperatingTime.map((x) => x * 100))
@@ -668,16 +672,17 @@ export class MethanolModel implements Model {
         mean(electricityConsumed)
       ),
 
-      "Excess Energy Not Utilised by Electrolyser":
-        roundToNearestInteger(mean(electricityProduced)),
+      "Excess Energy Not Utilised by Electrolyser": roundToNearestInteger(
+        mean(electricityProduced)
+      ),
 
       "Hydrogen Output": roundToNearestInteger(mean(hydrogenProduction)),
 
       "Methanol Output": roundToNearestInteger(mean(methanolProduction)),
 
-      "LCH2": roundToTwoDP(lch2),
+      LCH2: roundToTwoDP(lch2),
 
-      "LCMeOH": roundToTwoDP(lcmeoh),
+      LCMeOH: roundToTwoDP(lcmeoh),
     };
 
     return {
@@ -713,7 +718,7 @@ export class MethanolModel implements Model {
       this.hoursPerYear
     );
     const ccSec =
-      inputConfiguration === "Basic"
+      this.parameters.ccSourceConfiguration === "Preset Source"
         ? carbonCaptureSourceToSec(this.parameters.carbonCaptureSource!)
         : this.parameters.ccSec;
     const carbonCapturePlantPowerDemand =

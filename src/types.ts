@@ -10,6 +10,11 @@ export type CarbonCaptureSource =
   | "Cement Plant"
   | "Fermentation Plant"
   | "Steam Methane Reforming";
+
+export type CarbonCaptureSourceConfiguration =
+  | "Preset Source"
+  | "Self Configured";
+
 export type PowerPlantConfiguration = "Standalone" | "Grid Connected";
 
 export type PowerSupplyOption = "Self Build" | "Power Purchase Agreement (PPA)";
@@ -28,6 +33,11 @@ export const isGridConnected = (
 
 export interface DefaultInput {
   [k: string]: InputProps;
+}
+
+export interface InputScreenProps {
+  location: string;
+  formState: { [key: string]: number | string };
 }
 
 export interface InputProps {
@@ -143,6 +153,7 @@ export interface UserInputFields {
   ccSec?: number;
   methanolStorageCapacity?: number;
   methanolPlantCapacity?: number;
+  ccSourceConfiguration?: CarbonCaptureSourceConfiguration;
   // Methane
   methaneStorageOMCost?: number;
   methanePlantOMCost?: number;
@@ -275,6 +286,7 @@ export interface Inputs {
   methanolPlantSec?: number;
   methanolStorageCapacity?: number;
   methanolPlantCapacity?: number;
+  ccSourceConfiguration?: CarbonCaptureSourceConfiguration;
 
   // Methane
   methaneStorageOMCost?: number;

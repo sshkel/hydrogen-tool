@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 
+import { InputScreenProps } from "../../../types";
 import ControlledPowerPlantCard from "../blocks/ControlledPowerPlantCard";
 import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputNumberField from "../blocks/InputNumberField";
 import InputSelect from "../blocks/InputSelect";
-import { InputScreenProps } from "../types";
 
 export default function AdvancedAmmoniaInput(props: InputScreenProps) {
   return (

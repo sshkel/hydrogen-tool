@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 
+import { InputScreenProps } from "../../../types";
 import ControlledPowerPlantCard from "../blocks/ControlledPowerPlantCard";
 import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputNumberField from "../blocks/InputNumberField";
 import InputSelect from "../blocks/InputSelect";
-import { InputScreenProps } from "../types";
 
 export default function AdvancedMethanolInput(props: InputScreenProps) {
   return (
@@ -120,12 +120,17 @@ export default function AdvancedMethanolInput(props: InputScreenProps) {
               <InputCard
                 subtitle
                 mountOnEnter
-                key="ccPlantSec"
-                title="Carbon Capture SEC"
+                key="ccCostAndSec"
+                title="Carbon Capture Plant Cost and Specific Energy Consumption"
                 children={[
                   <InputNumberField
                     key="ccSec"
                     inputKey="ccSec"
+                    formState={props.formState}
+                  />,
+                  <InputNumberField
+                    key="ccPlantCost"
+                    inputKey="ccPlantCost"
                     formState={props.formState}
                   />,
                 ]}
@@ -133,14 +138,9 @@ export default function AdvancedMethanolInput(props: InputScreenProps) {
               <InputCard
                 subtitle
                 mountOnEnter
-                key="ccCapitalAndOperatingCosts"
-                title="Carbon Capture Capital and Operating Costs"
+                key="ccInstallationAndOperatingCosts"
+                title="Carbon Capture Installation and Operating Costs"
                 children={[
-                  <InputNumberField
-                    key="ccPlantCost"
-                    inputKey="ccPlantCost"
-                    formState={props.formState}
-                  />,
                   <InputNumberField
                     key="ccEpcCosts"
                     inputKey="ccEpcCosts"

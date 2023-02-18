@@ -1,8 +1,8 @@
 import React from "react";
 
 import { PowerPlantType } from "../../../types";
+import { InputScreenProps } from "../../../types";
 import { isOffshore, isSolar, isWind } from "../../../utils";
-import { InputScreenProps } from "../types";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
