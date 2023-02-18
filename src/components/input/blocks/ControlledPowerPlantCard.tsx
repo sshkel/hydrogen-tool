@@ -1,8 +1,8 @@
 import React from "react";
 
-import { PowerPlantType } from "../../../types";
-import { isOffshore, isSolar, isWind } from "../../../utils";
-import { InputScreenProps } from "../types";
+import {PowerPlantType} from "../../../types";
+import {isOffshore, isSolar, isWind} from "../../../utils";
+import {InputScreenProps} from "../types";
 import HideableInputNumberField from "./HideableInputNumberField";
 import InputCard from "./InputCard";
 import InputNumberField from "./InputNumberField";
@@ -235,7 +235,7 @@ function getPowerPlantCards(props: Props) {
 
 export default function ControlledPowerPlantCard(props: Props) {
   const [powerPlantType, setPowerPlantType] =
-    React.useState<PowerPlantType>("Wind");
+    React.useState<PowerPlantType>(isOffshore(props.location) ? "Wind" : "Hybrid");
 
   const onSelectChange = (index: number) => {
     setPowerPlantType(POWER_PLANT_TYPES[index]);

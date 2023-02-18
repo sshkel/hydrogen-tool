@@ -50,13 +50,13 @@ describe("App", () => {
         expect(
           container.querySelector("#key-inputs-electrolyser-capacity")
             ?.textContent
-        ).toContain("161 MW"),
+        ).toContain("196 MW"),
       { timeout: 2000 }
     );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("241 MW");
+    ).toContain("294 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
@@ -70,14 +70,14 @@ describe("App", () => {
     ];
 
     const expectedValues: string[] = [
-      "43.75%",
-      "23.99% of hrs/yr",
-      "90.52% of hrs/yr",
-      "59.76%",
+      "33.45%",
+      "5.74% of hrs/yr",
+      "95.04% of hrs/yr",
+      "49.05%",
       "843,857 MWh/yr",
-      "82,705 MWh/yr",
+      "19,421 MWh/yr",
       "15,000 TPA",
-      "7.6 $/kg",
+      "8.18 $/kg",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -106,7 +106,7 @@ describe("App", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(12),
+        ).toEqual(21),
       { timeout: 2000 }
     );
     fireEvent.click(getByText(/Calculate/i));
@@ -142,14 +142,14 @@ describe("App", () => {
     ];
 
     const expectedValues: string[] = [
-      "43.75%",
-      "23.99% of hrs/yr",
-      "90.52% of hrs/yr",
-      "59.76%",
-      "524,955 MWh/yr",
-      "51,450 MWh/yr",
-      "7,349 TPA",
-      "9.72 $/kg",
+      "33.45%",
+      "5.74% of hrs/yr",
+      "95.04% of hrs/yr",
+      "49.05%",
+      "430,863 MWh/yr",
+      "9,916 MWh/yr",
+      "6,032 TPA",
+      "10.52 $/kg",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -263,7 +263,7 @@ describe("App", () => {
     const content: (string | null)[] = [];
     options.forEach((o) => content.push(o.textContent));
 
-    expect(content).toHaveLength(5);
+    expect(content).toHaveLength(4);
 
     expect(content).toContain("Nominal Capacity");
 
