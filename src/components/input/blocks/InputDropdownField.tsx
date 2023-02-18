@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -12,10 +13,11 @@ interface Props {
   values: string[];
   onChange?: (val: string) => void;
   formState?: { [key: string]: number | string };
+  helperText?: string;
 }
 
 export default function InputDropdownField(props: Props) {
-  const { id, label, values, formState, onChange } = props;
+  const { id, label, values, formState, helperText, onChange } = props;
 
   const defaultValue =
     formState && formState[id] ? String(formState[id]) : values[0];
@@ -34,15 +36,15 @@ export default function InputDropdownField(props: Props) {
   const labelId = id + "-label";
 
   return (
-    <Box
+    <Grid
+      container
       sx={{
         display: "flex",
-        flewidth: "inherit",
+        flexWidth: "inherit",
         flexDirection: "column",
-        paddingLeft: 0.5,
       }}
     >
-      <InputTitle id={labelId} title={label} />
+      <InputTitle id={labelId} title={label} helperText={helperText} />
       <Select
         id={id}
         labelId={labelId}
@@ -95,6 +97,6 @@ export default function InputDropdownField(props: Props) {
           </MenuItem>
         ))}
       </Select>
-    </Box>
+    </Grid>
   );
 }

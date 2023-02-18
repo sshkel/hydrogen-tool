@@ -679,8 +679,7 @@ const dynamicDefaults = {
 export function getDefaultInputs(
   powerfuel: string,
   inputConfiguration: InputConfiguration,
-  offshore: boolean,
-  inputKeys: string[]
+  offshore: boolean
 ): InputMap {
   // fetch saved data or {}
   // if inputConfiguration === 'Basic' and savedData.inputConfiguration === 'Advanced', drop saved state as we don't want advanced state corruping basic case
@@ -704,10 +703,6 @@ export function getDefaultInputs(
       : dynamicDefaults[typedPowerfuel]["advanced"];
 
   const defaults: InputMap = {};
-  // inputKeys.forEach((key) => {
-  //   defaults[key] =
-  //     savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];
-  // });
 
   Object.keys(powerfuelDefaults).forEach((key: string | number) => {
     defaults[key] =
@@ -715,8 +710,8 @@ export function getDefaultInputs(
   });
 
   if (offshore) {
-    defaults["powerPlantType"] = "Wind"
-    defaults["solarToWindPercentage"] = 0
+    defaults["powerPlantType"] = "Wind";
+    defaults["solarToWindPercentage"] = 0;
   }
 
   return defaults;

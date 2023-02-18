@@ -69,6 +69,9 @@ export const powerPlantConfigurationData: string[] = [
   "Grid Connected with Surplus Retailed",
 ];
 
+export const CARBON_CAPTURE_SOURCE_HELPER_TEXT =
+  "SEC value for sources - DAC: 1.535, Coal: 0.86, Steel: 0.78, Cement: 0.78, Fermentation Plant: 0, SMR: 0.78";
+
 export function isPowerPlantConfiguration(
   value: string
 ): value is PowerPlantConfiguration {
@@ -90,7 +93,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 50,
     title: "Ammonia Plant Capacity (kTPA)",
     helperText:
-      "Small Scale Ammonia Plants: <100 kiloton/yr and Large Scale Ammonia Plants: >1,000 kiloton/yr ",
+      "Small Scale Ammonia Plants: <100 ktpa and Large Scale Ammonia Plants: >1,000 ktpa",
   },
   methanolPlantCapacity: {
     min: 50,
@@ -98,7 +101,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 50,
     title: "Methanol Plant Capacity (kTPA)",
     helperText:
-      "Small Scale Methanol Plants: <100 kiloton/yr and Large Scale Methanol Plants: >1,000 kiloton/yr ",
+      "Small Scale Methanol Plants: <100 ktpa and Large Scale Methanol Plants: >1,000 ktpa",
   },
   methanePlantCapacity: {
     min: 50,
@@ -106,7 +109,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 50,
     title: "Methane Plant Capacity (kTPA)",
     helperText:
-      "Small Scale Methane Plants: <100 kiloton/yr and Large Scale Methane Plants: >1,000 kiloton/yr ",
+      "Small Scale Methane Plants: <100 ktpa and Large Scale Methane Plants: >1,000 ktpa",
   },
   electrolyserEfficiency: {
     min: 50,
@@ -130,7 +133,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 50_000,
     title: "Hydrogen Storage Capacity",
     helperText:
-      "Add hydrogen storage to improve ammonia production flexibility",
+      "Add hydrogen storage to improve powerfuel production flexibility",
   },
   powerPlantOversizeRatio: {
     min: 1,
@@ -323,6 +326,8 @@ export const numberFieldDefaultInputs: DefaultInput = {
   methanolPlantCapacity: {
     title: "Methanol Plant Capacity",
     adornmentLabel: "kTPA",
+    helperText:
+      "Small Scale Methane Plants: <100 ktpa and Large Scale Methane Plants: >1,000 ktpa",
   },
   methanolStorageCapacity: {
     title: "Methanol Storage Capacity",
@@ -364,6 +369,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   ccSec: {
     title: "Carbon Capture Unit Specific Energy Consumption",
     adornmentLabel: ccSECLabel,
+    helperText: CARBON_CAPTURE_SOURCE_HELPER_TEXT,
   },
   ccPlantCost: {
     title: "Carbon Capture Plant Cost",
@@ -887,435 +893,3 @@ export const numberFieldDefaultInputs: DefaultInput = {
     step: 0.1,
   },
 };
-
-function dropKeys(
-  inputKeys: string[],
-  offshore: boolean,
-  key: string
-): string[] {
-  let keys = [...inputKeys];
-  if (offshore) {
-    keys.splice(keys.indexOf(key), 1);
-  }
-  return keys;
-}
-
-function dropOffshoreKeys(inputKeys: string[], offshore: boolean): string[] {
-  return dropKeys(inputKeys, offshore, "solarToWindPercentage");
-}
-
-export function getInputKeysForConfiguration(
-  powerfuel: string,
-  inputConfiguration: InputConfiguration,
-  offshore: boolean
-): string[] {
-  if (powerfuel === "hydrogen") {
-    if (inputConfiguration === "Basic") {
-      return dropOffshoreKeys(BASIC_HYDROGEN_INPUT_KEYS, offshore);
-    }
-    // Hydrogen is the only one that has the ability to input nominal capacity
-    let advancedHydrogenInputKeys = dropKeys(
-      ADVANCED_HYDROGEN_INPUT_KEYS,
-      offshore,
-      "solarToWindPercentage"
-    );
-    return dropKeys(
-      advancedHydrogenInputKeys,
-      offshore,
-      "solarNominalCapacity"
-    );
-  }
-  if (powerfuel === "ammonia") {
-    if (inputConfiguration === "Basic") {
-      return dropOffshoreKeys(BASIC_AMMONIA_INPUT_KEYS, offshore);
-    }
-    return dropOffshoreKeys(ADVANCED_AMMONIA_INPUT_KEYS, offshore);
-  }
-  if (powerfuel === "methanol") {
-    if (inputConfiguration === "Basic") {
-      return dropOffshoreKeys(BASIC_METHANOL_INPUT_KEYS, offshore);
-    }
-    return dropOffshoreKeys(ADVANCED_METHANOL_INPUT_KEYS, offshore);
-  }
-  if (powerfuel === "methane") {
-    if (inputConfiguration === "Basic") {
-      return dropOffshoreKeys(BASIC_METHANE_INPUT_KEYS, offshore);
-    }
-    return dropOffshoreKeys(ADVANCED_METHANE_INPUT_KEYS, offshore);
-  }
-  return [];
-}
-// TODO remove these as they are not used any longer
-const BASIC_HYDROGEN_INPUT_KEYS = [
-  "projectScale",
-  "electrolyserEfficiency",
-  "powerPlantOversizeRatio",
-  "solarToWindPercentage",
-  "electrolyserPurchaseCost",
-  "solarFarmBuildCost",
-  "windFarmBuildCost",
-  "principalPPACost",
-  "waterSupplyCost",
-  "discountRate",
-  "projectTimeline",
-  "powerSupplyOption",
-];
-
-const ADVANCED_HYDROGEN_INPUT_KEYS = [
-  "electrolyserNominalCapacity",
-  "secAtNominalLoad",
-  "waterRequirementOfElectrolyser",
-  "electrolyserMaximumLoad",
-  "electrolyserMinimumLoad",
-  "maximumLoadWhenOverloading",
-  "timeBetweenOverloading",
-  "stackLifetime",
-  "stackDegradation",
-  "maximumDegradationBeforeReplacement",
-  "electrolyserReferenceCapacity",
-  "electrolyserPurchaseCost",
-  "electrolyserCostReductionWithScale",
-  "electrolyserReferenceFoldIncrease",
-  "electrolyserEpcCosts",
-  "electrolyserLandProcurementCosts",
-  "electrolyserOMCost",
-  "electrolyserStackReplacement",
-  "waterSupplyCost",
-  "windNominalCapacity",
-  "powerPlantOversizeRatio",
-  "windDegradation",
-  "solarNominalCapacity",
-  "solarDegradation",
-  "solarToWindPercentage",
-  "gridConnectionCost",
-  "additionalTransmissionCharges",
-  "solarFarmBuildCost",
-  "solarReferenceCapacity",
-  "solarPVCostReductionWithScale",
-  "solarReferenceFoldIncrease",
-  "windFarmBuildCost",
-  "windReferenceCapacity",
-  "windCostReductionWithScale",
-  "windReferenceFoldIncrease",
-  "solarEpcCosts",
-  "solarLandProcurementCosts",
-  "windEpcCosts",
-  "windLandProcurementCosts",
-  "solarOpex",
-  "windOpex",
-  "principalPPACost",
-  "batteryStorageDuration",
-  "batteryRatedPower",
-  "batteryEfficiency",
-  "batteryMinCharge",
-  "batteryLifetime",
-  "batteryCosts",
-  "batteryEpcCosts",
-  "batteryLandProcurementCosts",
-  "batteryOMCost",
-  "batteryReplacementCost",
-  "additionalUpfrontCosts",
-  "additionalAnnualCosts",
-  "projectTimeline",
-  "discountRate",
-  "stackReplacementType",
-  "powerCapacityConfiguration",
-  "powerPlantType",
-  "powerPlantConfiguration",
-  "powerSupplyOption",
-];
-
-const BASIC_AMMONIA_INPUT_KEYS = [
-  "ammoniaPlantCapacity",
-  "electrolyserEfficiency",
-  "electrolyserSystemOversizing",
-  "hydrogenStorageCapacity",
-  "powerPlantOversizeRatio",
-  "solarToWindPercentage",
-  "electrolyserPurchaseCost",
-  "ammoniaPlantCapitalCost",
-  "windFarmBuildCost",
-  "solarFarmBuildCost",
-  "windFarmBuildCost",
-  "principalPPACost",
-  "waterSupplyCost",
-  "discountRate",
-  "projectTimeline",
-  "powerSupplyOption",
-];
-
-const ADVANCED_AMMONIA_INPUT_KEYS = [
-  "ammoniaPlantCapacity",
-  "ammoniaStorageCapacity",
-  "ammoniaPlantMinimumTurndown",
-  "ammoniaPlantSec",
-  "asuSec",
-  "ammoniaSynthesisUnitCost",
-  "ammoniaStorageCost",
-  "airSeparationUnitCost",
-  "ammoniaEpcCosts",
-  "ammoniaLandProcurementCosts",
-  "ammoniaPlantOMCost",
-  "ammoniaStorageOMCost",
-  "asuPlantOMCost",
-  "electrolyserSystemOversizing",
-  "secAtNominalLoad",
-  "waterRequirementOfElectrolyser",
-  "electrolyserMaximumLoad",
-  "electrolyserMinimumLoad",
-  "maximumLoadWhenOverloading",
-  "timeBetweenOverloading",
-  "stackLifetime",
-  "stackDegradation",
-  "maximumDegradationBeforeReplacement",
-  "hydrogenStorageCapacity",
-  "minimumHydrogenStorage",
-  "electrolyserReferenceCapacity",
-  "electrolyserPurchaseCost",
-  "electrolyserCostReductionWithScale",
-  "electrolyserReferenceFoldIncrease",
-  "hydrogenStoragePurchaseCost",
-  "electrolyserEpcCosts",
-  "electrolyserLandProcurementCosts",
-  "electrolyserOMCost",
-  "hydrogenStorageOMCost",
-  "electrolyserStackReplacement",
-  "waterSupplyCost",
-  "powerPlantOversizeRatio",
-  "windDegradation",
-  "solarDegradation",
-  "solarToWindPercentage",
-  "gridConnectionCost",
-  "additionalTransmissionCharges",
-  "solarFarmBuildCost",
-  "solarReferenceCapacity",
-  "solarPVCostReductionWithScale",
-  "solarReferenceFoldIncrease",
-  "windFarmBuildCost",
-  "windReferenceCapacity",
-  "windCostReductionWithScale",
-  "windReferenceFoldIncrease",
-  "solarEpcCosts",
-  "solarLandProcurementCosts",
-  "windEpcCosts",
-  "windLandProcurementCosts",
-  "solarOpex",
-  "windOpex",
-  "principalPPACost",
-  "batteryStorageDuration",
-  "batteryRatedPower",
-  "batteryEfficiency",
-  "batteryMinCharge",
-  "batteryLifetime",
-  "batteryCosts",
-  "batteryEpcCosts",
-  "batteryLandProcurementCosts",
-  "batteryOMCost",
-  "batteryReplacementCost",
-  "additionalUpfrontCosts",
-  "additionalAnnualCosts",
-  "projectTimeline",
-  "discountRate",
-  "stackReplacementType",
-  "powerPlantType",
-  "powerPlantConfiguration",
-  "powerSupplyOption",
-];
-
-const BASIC_METHANOL_INPUT_KEYS = [
-  "methanolPlantCapacity",
-  "electrolyserEfficiency",
-  "electrolyserSystemOversizing",
-  "hydrogenStorageCapacity",
-  "powerPlantOversizeRatio",
-  "solarToWindPercentage",
-  "electrolyserPurchaseCost",
-  "methanolPlantUnitCost",
-  "windFarmBuildCost",
-  "solarFarmBuildCost",
-  "windFarmBuildCost",
-  "principalPPACost",
-  "waterSupplyCost",
-  "discountRate",
-  "projectTimeline",
-  "powerSupplyOption",
-  "carbonCaptureSource"
-];
-
-const ADVANCED_METHANOL_INPUT_KEYS = [
-  "methanolPlantCapacity",
-  "methanolStorageCapacity",
-  "methanolPlantMinimumTurndown",
-  "methanolPlantSec",
-  "ccSec",
-  "methanolPlantUnitCost",
-  "methanolStorageCost",
-  "ccPlantCost",
-  "methanolEpcCosts",
-  "methanolLandProcurementCosts",
-  "ccEpcCosts",
-  "ccLandProcurementCosts",
-  "methanolPlantOMCost",
-  "methanolStorageOMCost",
-  "ccPlantOMCost",
-  "electrolyserSystemOversizing",
-  "secAtNominalLoad",
-  "waterRequirementOfElectrolyser",
-  "electrolyserMaximumLoad",
-  "electrolyserMinimumLoad",
-  "maximumLoadWhenOverloading",
-  "timeBetweenOverloading",
-  "stackLifetime",
-  "maximumDegradationBeforeReplacement",
-  "stackDegradation",
-  "hydrogenStorageCapacity",
-  "minimumHydrogenStorage",
-  "electrolyserReferenceCapacity",
-  "electrolyserPurchaseCost",
-  "electrolyserCostReductionWithScale",
-  "electrolyserReferenceFoldIncrease",
-  "hydrogenStoragePurchaseCost",
-  "electrolyserEpcCosts",
-  "electrolyserLandProcurementCosts",
-  "electrolyserOMCost",
-  "hydrogenStorageOMCost",
-  "electrolyserStackReplacement",
-  "waterSupplyCost",
-  "powerPlantOversizeRatio",
-  "windDegradation",
-  "solarDegradation",
-  "solarToWindPercentage",
-  "gridConnectionCost",
-  "additionalTransmissionCharges",
-  "solarFarmBuildCost",
-  "solarReferenceCapacity",
-  "solarPVCostReductionWithScale",
-  "solarReferenceFoldIncrease",
-  "windFarmBuildCost",
-  "windReferenceCapacity",
-  "windCostReductionWithScale",
-  "windReferenceFoldIncrease",
-  "solarEpcCosts",
-  "solarLandProcurementCosts",
-  "windEpcCosts",
-  "windLandProcurementCosts",
-  "solarOpex",
-  "windOpex",
-  "principalPPACost",
-  "batteryStorageDuration",
-  "batteryEfficiency",
-  "batteryMinCharge",
-  "batteryLifetime",
-  "batteryCosts",
-  "batteryEpcCosts",
-  "batteryLandProcurementCosts",
-  "batteryOMCost",
-  "batteryReplacementCost",
-  "additionalUpfrontCosts",
-  "additionalAnnualCosts",
-  "projectTimeline",
-  "discountRate",
-  "stackReplacementType",
-  "powerPlantType",
-  "powerPlantConfiguration",
-  "powerSupplyOption",
-];
-
-const BASIC_METHANE_INPUT_KEYS = [
-  "methanePlantCapacity",
-  "electrolyserEfficiency",
-  "electrolyserSystemOversizing",
-  "hydrogenStorageCapacity",
-  "powerPlantOversizeRatio",
-  "solarToWindPercentage",
-  "electrolyserPurchaseCost",
-  "methanePlantUnitCost",
-  "windFarmBuildCost",
-  "solarFarmBuildCost",
-  "windFarmBuildCost",
-  "principalPPACost",
-  "waterSupplyCost",
-  "discountRate",
-  "projectTimeline",
-  "powerSupplyOption",
-  "carbonCaptureSource"
-];
-
-const ADVANCED_METHANE_INPUT_KEYS = [
-  "methanePlantCapacity",
-  "methaneStorageCapacity",
-  "methanePlantMinimumTurndown",
-  "methanePlantSec",
-  "ccSec",
-  "methanePlantUnitCost",
-  "methaneStorageCost",
-  "ccPlantCost",
-  "methaneEpcCosts",
-  "methaneLandProcurementCosts",
-  "ccEpcCosts",
-  "ccLandProcurementCosts",
-  "methanePlantOMCost",
-  "methaneStorageOMCost",
-  "ccPlantOMCost",
-  "electrolyserSystemOversizing",
-  "secAtNominalLoad",
-  "waterRequirementOfElectrolyser",
-  "electrolyserMaximumLoad",
-  "electrolyserMinimumLoad",
-  "maximumLoadWhenOverloading",
-  "timeBetweenOverloading",
-  "stackLifetime",
-  "stackDegradation",
-  "maximumDegradationBeforeReplacement",
-  "hydrogenStorageCapacity",
-  "minimumHydrogenStorage",
-  "electrolyserReferenceCapacity",
-  "electrolyserPurchaseCost",
-  "electrolyserCostReductionWithScale",
-  "electrolyserReferenceFoldIncrease",
-  "hydrogenStoragePurchaseCost",
-  "electrolyserEpcCosts",
-  "electrolyserLandProcurementCosts",
-  "electrolyserOMCost",
-  "hydrogenStorageOMCost",
-  "electrolyserStackReplacement",
-  "waterSupplyCost",
-  "powerPlantOversizeRatio",
-  "windDegradation",
-  "solarDegradation",
-  "solarToWindPercentage",
-  "gridConnectionCost",
-  "additionalTransmissionCharges",
-  "solarFarmBuildCost",
-  "solarReferenceCapacity",
-  "solarPVCostReductionWithScale",
-  "solarReferenceFoldIncrease",
-  "windFarmBuildCost",
-  "windReferenceCapacity",
-  "windCostReductionWithScale",
-  "windReferenceFoldIncrease",
-  "solarEpcCosts",
-  "solarLandProcurementCosts",
-  "windEpcCosts",
-  "windLandProcurementCosts",
-  "solarOpex",
-  "windOpex",
-  "principalPPACost",
-  "batteryStorageDuration",
-  "batteryEfficiency",
-  "batteryMinCharge",
-  "batteryLifetime",
-  "batteryCosts",
-  "batteryEpcCosts",
-  "batteryLandProcurementCosts",
-  "batteryOMCost",
-  "batteryReplacementCost",
-  "additionalUpfrontCosts",
-  "additionalAnnualCosts",
-  "projectTimeline",
-  "discountRate",
-  "stackReplacementType",
-  "powerPlantType",
-  "powerPlantConfiguration",
-  "powerSupplyOption",
-];
