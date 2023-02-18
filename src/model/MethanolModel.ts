@@ -643,17 +643,17 @@ export class MethanolModel implements Model {
         mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)":
+      "Time Electrolyser is at its Maximum Capacity":
         roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Electrolyser is Operating": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Methanol Plant is at its Maximum Capacity (% of hrs/yr)":
+      "Time Methanol Plant is at its Maximum Capacity":
         roundToTwoDP(mean(methanolRatedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Methanol Plant is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Methanol Plant is Operating": roundToTwoDP(
         mean(totalMethanolOperatingTime.map((x) => x * 100))
       ),
 
@@ -664,20 +664,20 @@ export class MethanolModel implements Model {
         mean(methanolCapacityFactors.map((x) => x * 100))
       ),
 
-      "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      "Energy Consumed by Electrolyser": roundToNearestInteger(
         mean(electricityConsumed)
       ),
 
-      "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      "Excess Energy Not Utilised by Electrolyser":
         roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (TPA)": roundToNearestInteger(mean(hydrogenProduction)),
+      "Hydrogen Output": roundToNearestInteger(mean(hydrogenProduction)),
 
-      "Methanol Output (TPA)": roundToNearestInteger(mean(methanolProduction)),
+      "Methanol Output": roundToNearestInteger(mean(methanolProduction)),
 
-      "LCH2 ($/kg)": roundToTwoDP(lch2),
+      "LCH2": roundToTwoDP(lch2),
 
-      "LCMeOH ($/kg)": roundToTwoDP(lcmeoh),
+      "LCMeOH": roundToTwoDP(lcmeoh),
     };
 
     return {

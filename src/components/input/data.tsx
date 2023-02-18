@@ -433,7 +433,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     max: 100_000,
     step: 100,
     helperText:
-      "Hydrogen production rate - Standard 175 ton/yr (TPA) per MW of electrolyser capacity at full load",
+      "Hydrogen production rate - Standard 175 ton/yr per MW of electrolyser capacity at full load",
     title: "Project Scale (kTPA)",
     adornmentLabel: "kTPA",
   },

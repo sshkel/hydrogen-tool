@@ -467,9 +467,9 @@ export class HydrogenModel implements Model {
         mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)":
+      "Time Electrolyser is at its Maximum Capacity":
         roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
-      "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Electrolyser is Operating": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
@@ -477,15 +477,15 @@ export class HydrogenModel implements Model {
         mean(electrolyserCapacityFactors.map((x) => x * 100))
       ),
 
-      "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      "Energy Consumed by Electrolyser": roundToNearestInteger(
         mean(electricityConsumed)
       ),
 
-      "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      "Excess Energy Not Utilised by Electrolyser":
         roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (TPA)": roundToNearestInteger(mean(hydrogenProduction)),
-      "LCH2 ($/kg)": roundToTwoDP(lch2),
+      "Hydrogen Output": roundToNearestInteger(mean(hydrogenProduction)),
+      "LCH2": roundToTwoDP(lch2),
     };
 
     return {
