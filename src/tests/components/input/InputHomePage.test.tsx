@@ -58,14 +58,14 @@ describe("InputHomePage", () => {
       batteryReplacementCost: 0,
       batteryStorageDuration: 0,
 
-      electrolyserCostReductionWithScale: 10,
+      electrolyserCostReductionWithScale: 5,
 
       electrolyserEpcCosts: 30,
       electrolyserLandProcurementCosts: 6,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
       electrolyserNominalCapacity: 1,
-      electrolyserOMCost: 2.5,
+      electrolyserOMCost: 3,
 
       electrolyserReferenceCapacity: 1000,
       electrolyserReferenceFoldIncrease: 10,
@@ -73,7 +73,7 @@ describe("InputHomePage", () => {
       gridConnectionCost: 1000000,
       inflationRate: 2.5,
 
-      maximumDegradationBeforeReplacement: 0,
+      maximumDegradationBeforeReplacement: 10,
       maximumLoadWhenOverloading: 0,
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantConfiguration: "Standalone",
@@ -86,7 +86,7 @@ describe("InputHomePage", () => {
 
       solarLandProcurementCosts: 6,
       solarOpex: 17000,
-      solarPVCostReductionWithScale: 10,
+      solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
 
@@ -96,7 +96,7 @@ describe("InputHomePage", () => {
       timeBetweenOverloading: 0,
       waterRequirementOfElectrolyser: 15,
 
-      windCostReductionWithScale: 10,
+      windCostReductionWithScale: 5,
       windDegradation: 0,
       windEpcCosts: 30,
 
@@ -211,7 +211,7 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 100,
+      electrolyserEfficiency: 70,
       inflationRate:2.5
     });
   });
@@ -337,7 +337,7 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 100,
+      electrolyserEfficiency: 70,
       inflationRate:2.5
     });
   });
@@ -423,14 +423,14 @@ describe("InputHomePage", () => {
       batteryReplacementCost: 0,
       batteryStorageDuration: 0,
 
-      electrolyserCostReductionWithScale: 10,
+      electrolyserCostReductionWithScale: 5,
 
       electrolyserEpcCosts: 30,
       electrolyserLandProcurementCosts: 6,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
       electrolyserNominalCapacity: 1,
-      electrolyserOMCost: 2.5,
+      electrolyserOMCost: 3,
 
       electrolyserReferenceCapacity: 1000,
       electrolyserReferenceFoldIncrease: 10,
@@ -438,7 +438,7 @@ describe("InputHomePage", () => {
       gridConnectionCost: 1000000,
       inflationRate: 2.5,
 
-      maximumDegradationBeforeReplacement: 0,
+      maximumDegradationBeforeReplacement: 10,
       maximumLoadWhenOverloading: 0,
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantConfiguration: "Standalone",
@@ -451,7 +451,7 @@ describe("InputHomePage", () => {
 
       solarLandProcurementCosts: 6,
       solarOpex: 17000,
-      solarPVCostReductionWithScale: 10,
+      solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
 
@@ -461,7 +461,7 @@ describe("InputHomePage", () => {
       timeBetweenOverloading: 0,
       waterRequirementOfElectrolyser: 15,
 
-      windCostReductionWithScale: 10,
+      windCostReductionWithScale: 5,
       windDegradation: 0,
       windEpcCosts: 30,
 
@@ -523,14 +523,14 @@ describe("InputHomePage", () => {
       batteryReplacementCost: 0,
       batteryStorageDuration: 0,
 
-      electrolyserCostReductionWithScale: 10,
+      electrolyserCostReductionWithScale: 5,
 
       electrolyserEpcCosts: 30,
       electrolyserLandProcurementCosts: 6,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
       electrolyserNominalCapacity: 1,
-      electrolyserOMCost: 2.5,
+      electrolyserOMCost: 3,
 
       electrolyserReferenceCapacity: 1000,
       electrolyserReferenceFoldIncrease: 10,
@@ -538,7 +538,7 @@ describe("InputHomePage", () => {
       gridConnectionCost: 1000000,
       inflationRate: 2.5,
 
-      maximumDegradationBeforeReplacement: 0,
+      maximumDegradationBeforeReplacement: 10,
       maximumLoadWhenOverloading: 0,
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantConfiguration: "Standalone",
@@ -551,7 +551,7 @@ describe("InputHomePage", () => {
 
       solarLandProcurementCosts: 6,
       solarOpex: 17000,
-      solarPVCostReductionWithScale: 10,
+      solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
 
@@ -561,7 +561,7 @@ describe("InputHomePage", () => {
       timeBetweenOverloading: 0,
       waterRequirementOfElectrolyser: 15,
 
-      windCostReductionWithScale: 10,
+      windCostReductionWithScale: 5,
       windDegradation: 0,
       windEpcCosts: 30,
 
@@ -569,7 +569,7 @@ describe("InputHomePage", () => {
       windOpex: 25000,
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
-      "solarToWindPercentage": 0,
+      solarToWindPercentage: 0,
     });
   });
 
@@ -664,7 +664,7 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 100,
+      electrolyserEfficiency: 70,
       inflationRate: 2.5,
       solarNominalCapacity: 150,
       solarToWindPercentage: 0
@@ -808,7 +808,7 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 100,
+      electrolyserEfficiency: 70,
       inflationRate: 2.5,
     });
   });
