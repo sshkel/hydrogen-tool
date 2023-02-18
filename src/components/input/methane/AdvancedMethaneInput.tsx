@@ -6,6 +6,7 @@ import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputNumberField from "../blocks/InputNumberField";
 import InputSelect from "../blocks/InputSelect";
+import { CARBON_CAPTURE_SOURCE_HELPER_TEXT } from "../data";
 
 export default function AdvancedMethaneInput(props: InputScreenProps) {
   return (
@@ -146,6 +147,7 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                             "Steam Methane Reforming",
                           ]}
                           formState={props.formState}
+                          helperText={CARBON_CAPTURE_SOURCE_HELPER_TEXT}
                         />,
                       ],
                       [

@@ -7,6 +7,7 @@ import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputSelect from "../blocks/InputSelect";
 import InputSlider from "../blocks/InputSlider";
+import { CARBON_CAPTURE_SOURCE_HELPER_TEXT } from "../data";
 
 export default function BasicMethanolInput(props: InputScreenProps) {
   return (
@@ -132,6 +133,7 @@ export default function BasicMethanolInput(props: InputScreenProps) {
                   "Steam Methane Reforming",
                 ]}
                 formState={props.formState}
+                helperText={CARBON_CAPTURE_SOURCE_HELPER_TEXT}
               />,
               <InputSelect
                 key="powerSupplyOptionSelect"
