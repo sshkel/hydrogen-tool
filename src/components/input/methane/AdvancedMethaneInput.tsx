@@ -70,11 +70,6 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                     inputKey="methanePlantSec"
                     formState={props.formState}
                   />,
-                  <InputNumberField
-                    key="ccSec"
-                    inputKey="ccSec"
-                    formState={props.formState}
-                  />,
                 ]}
               />,
               <InputCard
@@ -94,11 +89,6 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                     formState={props.formState}
                   />,
                   <InputNumberField
-                    key="ccPlantCost"
-                    inputKey="ccPlantCost"
-                    formState={props.formState}
-                  />,
-                  <InputNumberField
                     key="methaneEpcCosts"
                     inputKey="methaneEpcCosts"
                     formState={props.formState}
@@ -106,6 +96,49 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                   <InputNumberField
                     key="methaneLandProcurementCosts"
                     inputKey="methaneLandProcurementCosts"
+                    formState={props.formState}
+                  />,
+                  <InputNumberField
+                    key="methanePlantOMCost"
+                    inputKey="methanePlantOMCost"
+                    formState={props.formState}
+                  />,
+                  <InputNumberField
+                    key="methaneStorageOMCost"
+                    inputKey="methaneStorageOMCost"
+                    formState={props.formState}
+                  />,
+                ]}
+              />,
+            ]}
+          />
+        </Grid>
+        <Grid item>
+          <InputCard
+            title="Carbon Capture Parameters"
+            children={[
+              <InputCard
+                subtitle
+                mountOnEnter
+                key="ccPlantSec"
+                title="Carbon Capture SEC"
+                children={[
+                  <InputNumberField
+                    key="ccSec"
+                    inputKey="ccSec"
+                    formState={props.formState}
+                  />,
+                ]}
+              />,
+              <InputCard
+                subtitle
+                mountOnEnter
+                key="ccCapitalAndOperatingCosts"
+                title="Carbon Capture Capital and Operating Costs"
+                children={[
+                  <InputNumberField
+                    key="ccPlantCost"
+                    inputKey="ccPlantCost"
                     formState={props.formState}
                   />,
                   <InputNumberField
@@ -119,16 +152,6 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                     formState={props.formState}
                   />,
                   <InputNumberField
-                    key="methanePlantOMCost"
-                    inputKey="methanePlantOMCost"
-                    formState={props.formState}
-                  />,
-                  <InputNumberField
-                    key="methaneStorageOMCost"
-                    inputKey="methaneStorageOMCost"
-                    formState={props.formState}
-                  />,
-                  <InputNumberField
                     key="ccPlantOMCost"
                     inputKey="ccPlantOMCost"
                     formState={props.formState}
@@ -138,6 +161,15 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
             ]}
           />
         </Grid>
+      </Grid>
+      <Grid
+        container
+        item
+        flexDirection="column"
+        rowSpacing={1}
+        xs={4}
+        flexWrap="nowrap"
+      >
         <Grid item>
           <InputCard
             title="Electrolyser & Hydrogen Parameters"
@@ -312,16 +344,6 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
             ]}
           />
         </Grid>
-      </Grid>
-
-      <Grid
-        container
-        item
-        flexDirection="column"
-        rowSpacing={1}
-        xs={4}
-        flexWrap="nowrap"
-      >
         <Grid item>
           <ControlledPowerPlantCard
             location={props.location}
