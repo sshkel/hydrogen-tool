@@ -277,6 +277,7 @@ export default function WorkingData(props: Props) {
       hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!,
       hydrogenStorageOMCost: inputs.hydrogenStorageOMCost!,
       carbonCaptureSource: inputs.carbonCaptureSource,
+      ccSourceConfiguration: inputs.ccSourceConfiguration,
     };
 
     model = new MethanolModel(dataModel, state.solarData, state.windData);
@@ -367,6 +368,7 @@ export default function WorkingData(props: Props) {
       hydrogenStoragePurchaseCost: inputs.hydrogenStoragePurchaseCost!,
       hydrogenStorageOMCost: inputs.hydrogenStorageOMCost!,
       carbonCaptureSource: inputs.carbonCaptureSource,
+      ccSourceConfiguration: inputs.ccSourceConfiguration,
     };
 
     model = new MethaneModel(dataModel, state.solarData, state.windData);

@@ -52,6 +52,7 @@ export const configurationTypes = [
   "stackReplacementType",
   "powerSupplyOption",
   "powerCapacityConfiguration",
+  "ccSourceConfiguration",
 ];
 
 export const powerPlantTypeData: string[] = ["Solar", "Wind", "Hybrid"];

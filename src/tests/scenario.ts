@@ -1414,6 +1414,7 @@ export const standaloneMethanolHybridWithBatteryScenario: {
     projectTimeline: 25,
     discountRate: 7,
     stackReplacementType: "Cumulative Hours",
+    ccSourceConfiguration: "Self Configured",
     powerPlantType: "Hybrid",
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
@@ -1520,6 +1521,7 @@ export const gridConnectedMethaneWindWithBatteryAndDegradationScenario: {
     powerPlantType: "Wind",
     powerPlantConfiguration: "Grid Connected",
     powerSupplyOption: "Self Build",
+    ccSourceConfiguration: "Self Configured",
     powerfuel: "methane",
     // pick from synthesized inputs
     // Electrolyser

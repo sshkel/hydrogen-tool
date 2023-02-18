@@ -1,12 +1,12 @@
 import Grid from "@mui/material/Grid";
 
 import "../../../input.css";
+import { InputScreenProps } from "../../../types";
 import { isOffshore } from "../../../utils";
 import InputCard from "../blocks/InputCard";
 import InputDropdownField from "../blocks/InputDropdownField";
 import InputSelect from "../blocks/InputSelect";
 import InputSlider from "../blocks/InputSlider";
-import { InputScreenProps } from "../types";
 
 export default function BasicMethaneInput(props: InputScreenProps) {
   return (
@@ -125,9 +125,9 @@ export default function BasicMethaneInput(props: InputScreenProps) {
                 label="Carbon Capture Source"
                 values={[
                   "Cement Plant",
+                  "Fermentation Plant",
                   "Coal Power Plant",
                   "Steel Plant",
-                  "Fermentation Plant",
                   "Direct Air Capture",
                   "Steam Methane Reforming",
                 ]}
