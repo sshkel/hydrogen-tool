@@ -130,7 +130,7 @@ export type MethaneData = {
   methanePlantSec: number;
   ccSec: number;
   carbonCaptureSource?: CarbonCaptureSource;
-  ccSourceConfiguration: CarbonCaptureSourceConfiguration;
+  ccSourceConfiguration?: CarbonCaptureSourceConfiguration;
   methanePlantMinimumTurndown: number;
 
   electrolyserSystemOversizing: number;
