@@ -138,7 +138,7 @@ export default function InputHomePage(props: Props) {
 
     props.setState(form);
 
-    sessionStorage.setItem("savedData", JSON.stringify(form));
+    sessionStorage.setItem(`${powerfuel}${tab}`, JSON.stringify(form));
     navigate("/result");
   };
 

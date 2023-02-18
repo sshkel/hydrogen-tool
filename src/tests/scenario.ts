@@ -1,4 +1,10 @@
-import { InputConfiguration, Inputs, UserInputFields } from "../types";
+import {
+  InputConfiguration,
+  Inputs, PowerCapacityConfiguration,
+  PowerPlantConfiguration,
+  PowerPlantType, StackReplacementType,
+  UserInputFields
+} from "../types";
 
 export const defaultInputData: {
   location: string;
@@ -234,6 +240,14 @@ export const standaloneAmmoniaSolarWithBatteryScenario: {
     asuPlantOMCost: 2,
     hydrogenStoragePurchaseCost: 878,
     hydrogenStorageOMCost: 2.5,
+
+
+    // pick from synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
   },
 };
 
@@ -398,6 +412,10 @@ export const standaloneAmmoniaSolarScenario: {
     asuPlantOMCost: 2,
     hydrogenStoragePurchaseCost: 878,
     hydrogenStorageOMCost: 2.5,
+    // synthesized
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
   },
 };
 
@@ -618,6 +636,9 @@ export const hybridBatteryGridOversizeRatioScenario: {
     projectTimeline: 20,
     discountRate: 7,
     inflationRate: 2.5,
+    // pick from synthesized inputs
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
   },
 };
 
@@ -715,6 +736,79 @@ export const basicSolarScenario: {
     windFarmBuildCost: 2000,
     projectTimeline: 20,
     discountRate: 7,
+    // synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+
+    electrolyserReferenceCapacity: 1000,
+    electrolyserCostReductionWithScale: 10,
+    electrolyserReferenceFoldIncrease: 10,
+    electrolyserEpcCosts: 30,
+    electrolyserLandProcurementCosts: 6,
+
+    electrolyserOMCost: 2.5,
+    electrolyserStackReplacement: 40,
+    electrolyserMaximumLoad: 100,
+    electrolyserMinimumLoad: 10,
+    timeBetweenOverloading: 0,
+    maximumLoadWhenOverloading: 0,
+    waterRequirementOfElectrolyser: 15,
+    secAtNominalLoad: 33.33,
+
+    // Battery
+    batteryEpcCosts: 0,
+    batteryEfficiency: 0,
+    batteryMinCharge: 0,
+    batteryLandProcurementCosts: 0,
+    batteryRatedPower: 0,
+    batteryCosts: 0,
+    batteryOMCost: 0,
+    batteryReplacementCost: 0,
+    batteryLifetime: 0,
+    batteryStorageDuration: 0,
+    //
+    // Power Plant
+
+    powerPlantType: "Wind" as PowerPlantType,
+
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+    solarReferenceCapacity: 1000,
+    windReferenceCapacity: 1000,
+
+    solarEpcCosts: 30,
+    solarLandProcurementCosts: 6,
+    solarPVCostReductionWithScale: 10,
+    solarReferenceFoldIncrease: 10,
+    solarOpex: 17_000,
+    windCostReductionWithScale: 10,
+    windEpcCosts: 30,
+    windLandProcurementCosts: 6,
+    windReferenceFoldIncrease: 10,
+    windOpex: 25_000,
+    solarDegradation: 0,
+    windDegradation: 0,
+
+    // Stack
+    stackReplacementType: "Cumulative Hours" as StackReplacementType,
+    stackLifetime: 80_000,
+    stackDegradation: 0,
+    maximumDegradationBeforeReplacement: 0,
+
+    // Grid connection and PPA
+    additionalTransmissionCharges: 0,
+    principalPPACost: 0,
+    gridConnectionCost: 0,
+
+
+    // Additional costs
+    additionalUpfrontCosts: 0,
+    additionalAnnualCosts: 0,
+
+    // Cost analysis
+    inflationRate: 2.5,
   },
 };
 
@@ -935,6 +1029,9 @@ export const standaloneWindWithBatteryAndDegradationScenario: {
     projectTimeline: 25,
     discountRate: 7,
     inflationRate: 2.5,
+    // synthesised
+    powerPlantOversizeRatio: 1,
+    solarToWindPercentage: 0,
   },
 };
 
@@ -956,6 +1053,81 @@ export const basicHybridPPAScenario: {
     principalPPACost: 10,
     projectTimeline: 20,
     discountRate: 7,
+    // synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+
+    electrolyserReferenceCapacity: 1000,
+    electrolyserCostReductionWithScale: 10,
+    electrolyserReferenceFoldIncrease: 10,
+    electrolyserEpcCosts: 30,
+    electrolyserLandProcurementCosts: 6,
+
+    electrolyserOMCost: 2.5,
+    electrolyserStackReplacement: 40,
+    electrolyserMaximumLoad: 100,
+    electrolyserMinimumLoad: 10,
+    timeBetweenOverloading: 0,
+    maximumLoadWhenOverloading: 0,
+    waterRequirementOfElectrolyser: 15,
+    secAtNominalLoad: 33.33,
+
+    // Battery
+    batteryEpcCosts: 0,
+    batteryEfficiency: 0,
+    batteryMinCharge: 0,
+    batteryLandProcurementCosts: 0,
+    batteryRatedPower: 0,
+    batteryCosts: 0,
+    batteryOMCost: 0,
+    batteryReplacementCost: 0,
+    batteryLifetime: 0,
+    batteryStorageDuration: 0,
+    //
+    // Power Plant
+    powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
+    powerPlantType: "Wind" as PowerPlantType,
+
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+    solarReferenceCapacity: 1000,
+    windReferenceCapacity: 1000,
+    solarFarmBuildCost: 1200,
+    windFarmBuildCost: 2000,
+    solarEpcCosts: 30,
+    solarLandProcurementCosts: 6,
+    solarPVCostReductionWithScale: 10,
+    solarReferenceFoldIncrease: 10,
+    solarOpex: 17_000,
+    windCostReductionWithScale: 10,
+    windEpcCosts: 30,
+    windLandProcurementCosts: 6,
+    windReferenceFoldIncrease: 10,
+    windOpex: 25_000,
+    solarDegradation: 0,
+    windDegradation: 0,
+
+    // Stack
+    stackReplacementType: "Cumulative Hours" as StackReplacementType,
+    stackLifetime: 80_000,
+    stackDegradation: 0,
+    maximumDegradationBeforeReplacement: 0,
+
+    // Grid connection and PPA
+    additionalTransmissionCharges: 0,
+
+    gridConnectionCost: 0,
+
+
+    // Additional costs
+    additionalUpfrontCosts: 0,
+    additionalAnnualCosts: 0,
+
+    // Cost analysis
+
+    inflationRate: 2.5,
   },
 };
 
@@ -1021,6 +1193,49 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
     solarToWindPercentage: 100,
+    // pick from synthesized inputs
+    // synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+    electrolyserEfficiency: 100,
+
+    // Battery
+    batteryEpcCosts: 0,
+    batteryEfficiency: 0,
+    batteryMinCharge: 0,
+    batteryLandProcurementCosts: 0,
+    batteryRatedPower: 0,
+    batteryCosts: 0,
+    batteryOMCost: 0,
+    batteryReplacementCost: 0,
+    batteryLifetime: 0,
+    batteryStorageDuration: 0,
+    //
+    // Power Plant
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+
+    windReferenceCapacity: 1000,
+
+    windFarmBuildCost: 2000,
+    windCostReductionWithScale: 10,
+    windEpcCosts: 30,
+    windLandProcurementCosts: 6,
+    windReferenceFoldIncrease: 10,
+    windOpex: 25_000,
+    windDegradation: 0,
+
+    // Stack
+
+    maximumDegradationBeforeReplacement: 0,
+
+    // Grid connection and PPA
+    additionalTransmissionCharges: 0,
+    principalPPACost: 0,
+    gridConnectionCost: 0,
+
+    inflationRate: 2.5,
   },
 };
 
@@ -1104,6 +1319,19 @@ export const standaloneAmmoniaHybridWithBatteryAndDegradationScenario: {
     powerPlantType: "Hybrid",
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
+
+    // pick from synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+    electrolyserEfficiency: 100,
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+    maximumDegradationBeforeReplacement: 0,
+    // Grid connection and PPA
+    additionalTransmissionCharges: 0,
+    principalPPACost: 0,
+    gridConnectionCost: 0,
+    inflationRate: 2.5,
   },
 };
 
@@ -1189,6 +1417,22 @@ export const standaloneMethanolHybridWithBatteryScenario: {
     powerPlantType: "Hybrid",
     powerPlantConfiguration: "Standalone",
     powerSupplyOption: "Self Build",
+    // pick from synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+    electrolyserEfficiency: 100,
+
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+    maximumDegradationBeforeReplacement: 0,
+
+    // Grid connection and PPA
+    additionalTransmissionCharges: 0,
+    principalPPACost: 0,
+    gridConnectionCost: 0,
+    inflationRate: 2.5,
   },
 };
 
@@ -1277,5 +1521,14 @@ export const gridConnectedMethaneWindWithBatteryAndDegradationScenario: {
     powerPlantConfiguration: "Grid Connected",
     powerSupplyOption: "Self Build",
     powerfuel: "methane",
+    // pick from synthesized inputs
+    // Electrolyser
+    electrolyserNominalCapacity: 1,
+    electrolyserEfficiency: 100,
+    batteryRatedPower: 0,
+    powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
+    solarNominalCapacity: 0,
+    windNominalCapacity: 0,
+    inflationRate: 2.5,
   },
 };

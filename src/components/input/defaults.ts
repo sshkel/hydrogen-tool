@@ -16,38 +16,36 @@ const dynamicDefaults = {
       projectScale: 15,
       electrolyserPurchaseCost: 1500, // assuming this is electrolyser capital cost
       principalPPACost: 50,
-      electrolyserNominalCapacity: 100,
-      secAtNominalLoad: 50,
+      electrolyserNominalCapacity: 1,
+      secAtNominalLoad: 33.33,
       electrolyserEfficiency: 70,
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
-      maximumLoadWhenOverloading: 100,
+      maximumLoadWhenOverloading: 0,
       timeBetweenOverloading: 0,
       stackDegradation: 0.0,
       stackLifetime: 80_000,
-      maximumDegradationBeforeReplacement: 10,
+      maximumDegradationBeforeReplacement: 0,
       electrolyserReferenceCapacity: 1000,
-      electrolyserCostReductionWithScale: 5,
+      electrolyserCostReductionWithScale: 10,
       electrolyserReferenceFoldIncrease: 10,
       electrolyserEpcCosts: 30,
       electrolyserLandProcurementCosts: 6,
-      electrolyserOMCost: 3,
+      electrolyserOMCost: 2.5,
       electrolyserStackReplacement: 40,
       waterSupplyCost: 5,
-      solarNominalCapacity: 150,
-      windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
       solarToWindPercentage: 0,
       solarDegradation: 0,
       windDegradation: 0,
       solarFarmBuildCost: 1200,
       solarReferenceCapacity: 1000,
-      solarPVCostReductionWithScale: 5,
+      solarPVCostReductionWithScale: 10,
       solarReferenceFoldIncrease: 10,
       windFarmBuildCost: 2000,
       windReferenceCapacity: 1000,
-      windCostReductionWithScale: 5,
+      windCostReductionWithScale: 10,
       windReferenceFoldIncrease: 10,
       solarEpcCosts: 30,
       solarLandProcurementCosts: 6,
@@ -59,14 +57,14 @@ const dynamicDefaults = {
       additionalTransmissionCharges: 10,
       batteryRatedPower: 0,
       batteryStorageDuration: 0,
-      batteryEfficiency: 85,
-      batteryMinCharge: 10,
-      batteryLifetime: 10,
-      batteryCosts: 1_000,
+      batteryEfficiency: 0,
+      batteryMinCharge: 0,
+      batteryLifetime: 0,
+      batteryCosts: 0,
       batteryEpcCosts: 0,
       batteryLandProcurementCosts: 0,
-      batteryOMCost: 10_000,
-      batteryReplacementCost: 100,
+      batteryOMCost: 0,
+      batteryReplacementCost: 0,
       additionalUpfrontCosts: 0,
       additionalAnnualCosts: 0,
       projectTimeline: 15,
@@ -82,7 +80,7 @@ const dynamicDefaults = {
     advanced: {
       electrolyserNominalCapacity: 100,
       secAtNominalLoad: 50,
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
@@ -176,7 +174,7 @@ const dynamicDefaults = {
       solarReferenceCapacity: 1000,
       solarPVCostReductionWithScale: 5,
       solarReferenceFoldIncrease: 10,
-      windReferenceCapacity: 1000,
+      windReferenceCapacity: 1200,
       windCostReductionWithScale: 5,
       windReferenceFoldIncrease: 10,
       solarEpcCosts: 30,
@@ -679,7 +677,7 @@ export function getDefaultInputs(
   // given powerfuel, get from saved data or fall back to map indexed by powerfuel
 
   const sessionStorageData: InputMap = JSON.parse(
-    sessionStorage.getItem("savedData") || "{}"
+    sessionStorage.getItem(`${powerfuel}${inputConfiguration}`) || "{}"
   );
 
   const savedData: InputMap =
@@ -696,7 +694,12 @@ export function getDefaultInputs(
       : dynamicDefaults[typedPowerfuel]["advanced"];
 
   const defaults: InputMap = {};
-  inputKeys.forEach((key) => {
+  // inputKeys.forEach((key) => {
+  //   defaults[key] =
+  //     savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];
+  // });
+
+  Object.keys(powerfuelDefaults).forEach((key: string | number) => {
     defaults[key] =
       savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];
   });

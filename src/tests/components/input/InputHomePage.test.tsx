@@ -1,5 +1,5 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import {fireEvent, render, waitFor} from "@testing-library/react";
+import {MemoryRouter} from "react-router-dom";
 
 import InputHomePage from "../../../components/input/blocks/InputHomePage";
 
@@ -10,7 +10,7 @@ describe("InputHomePage", () => {
 
   it("sends expected input fields for basic configuration", async () => {
     const setState = jest.fn();
-    const { container, getByText } = render(
+    const {container, getByText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -43,12 +43,73 @@ describe("InputHomePage", () => {
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
       inputConfiguration: "Basic",
+      // might not need all of these
+      additionalAnnualCosts: 0,
+      additionalTransmissionCharges: 10,
+      additionalUpfrontCosts: 0,
+      batteryCosts: 0,
+      batteryEfficiency: 0,
+      batteryEpcCosts: 0,
+      batteryLandProcurementCosts: 0,
+      batteryLifetime: 0,
+      batteryMinCharge: 0,
+      batteryOMCost: 0,
+      batteryRatedPower: 0,
+      batteryReplacementCost: 0,
+      batteryStorageDuration: 0,
+
+      electrolyserCostReductionWithScale: 10,
+
+      electrolyserEpcCosts: 30,
+      electrolyserLandProcurementCosts: 6,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+      electrolyserNominalCapacity: 1,
+      electrolyserOMCost: 2.5,
+
+      electrolyserReferenceCapacity: 1000,
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserStackReplacement: 40,
+      gridConnectionCost: 1000000,
+      inflationRate: 2.5,
+
+      maximumDegradationBeforeReplacement: 0,
+      maximumLoadWhenOverloading: 0,
+      powerCapacityConfiguration: "Oversize Ratio",
+      powerPlantConfiguration: "Standalone",
+
+      powerPlantType: "Wind",
+
+      secAtNominalLoad: 33.33,
+      solarDegradation: 0,
+      solarEpcCosts: 30,
+
+      solarLandProcurementCosts: 6,
+      solarOpex: 17000,
+      solarPVCostReductionWithScale: 10,
+      solarReferenceCapacity: 1000,
+      solarReferenceFoldIncrease: 10,
+
+      stackDegradation: 0,
+      stackLifetime: 80000,
+      stackReplacementType: "Cumulative Hours",
+      timeBetweenOverloading: 0,
+      waterRequirementOfElectrolyser: 15,
+
+      windCostReductionWithScale: 10,
+      windDegradation: 0,
+      windEpcCosts: 30,
+
+      windLandProcurementCosts: 6,
+      windOpex: 25000,
+      windReferenceCapacity: 1000,
+      windReferenceFoldIncrease: 10,
     });
   });
 
   it("calls setInputConfiguration on tab switch", () => {
     const setInputConfiguration = jest.fn();
-    const { getByText } = render(
+    const {getByText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={jest.fn()}
@@ -65,7 +126,7 @@ describe("InputHomePage", () => {
 
   it("sends expected input fields for advanced configuration", async () => {
     const setState = jest.fn();
-    const { container, getByText } = render(
+    const {container, getByText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -82,7 +143,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(12),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
     fireEvent.click(getByText(/Calculate/i));
 
@@ -150,12 +211,14 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
+      electrolyserEfficiency: 100,
+      inflationRate:2.5
     });
   });
 
   it("sends expected input fields for advanced configuration with hybrid", async () => {
     const setState = jest.fn();
-    const { container, getByText, getByLabelText } = render(
+    const {container, getByText, getByLabelText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -179,7 +242,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     // Select nominal capacity
@@ -190,7 +253,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.click(getByText(/Grid Connected/i));
@@ -200,7 +263,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(23),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.click(getByLabelText(/hybrid-show-more/i));
@@ -274,12 +337,14 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
+      electrolyserEfficiency: 100,
+      inflationRate:2.5
     });
   });
 
   it("sends expected input fields for basic configuration with PPA", async () => {
     const setState = jest.fn();
-    const { container, getByText, getByLabelText } = render(
+    const {container, getByText, getByLabelText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -308,12 +373,12 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(9),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     // Set PPA cost of 10
     fireEvent.change(getByLabelText(/principalPPACost/i), {
-      target: { value: 10 },
+      target: {value: 10},
     });
 
     fireEvent.click(getByLabelText(/power-purchase-agreement-.*-show-more/i));
@@ -343,12 +408,73 @@ describe("InputHomePage", () => {
       solarFarmBuildCost: 1200,
       windFarmBuildCost: 2000,
       inputConfiguration: "Basic",
+      // might not need all of these
+      additionalAnnualCosts: 0,
+      additionalTransmissionCharges: 10,
+      additionalUpfrontCosts: 0,
+      batteryCosts: 0,
+      batteryEfficiency: 0,
+      batteryEpcCosts: 0,
+      batteryLandProcurementCosts: 0,
+      batteryLifetime: 0,
+      batteryMinCharge: 0,
+      batteryOMCost: 0,
+      batteryRatedPower: 0,
+      batteryReplacementCost: 0,
+      batteryStorageDuration: 0,
+
+      electrolyserCostReductionWithScale: 10,
+
+      electrolyserEpcCosts: 30,
+      electrolyserLandProcurementCosts: 6,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+      electrolyserNominalCapacity: 1,
+      electrolyserOMCost: 2.5,
+
+      electrolyserReferenceCapacity: 1000,
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserStackReplacement: 40,
+      gridConnectionCost: 1000000,
+      inflationRate: 2.5,
+
+      maximumDegradationBeforeReplacement: 0,
+      maximumLoadWhenOverloading: 0,
+      powerCapacityConfiguration: "Oversize Ratio",
+      powerPlantConfiguration: "Standalone",
+
+      powerPlantType: "Wind",
+
+      secAtNominalLoad: 33.33,
+      solarDegradation: 0,
+      solarEpcCosts: 30,
+
+      solarLandProcurementCosts: 6,
+      solarOpex: 17000,
+      solarPVCostReductionWithScale: 10,
+      solarReferenceCapacity: 1000,
+      solarReferenceFoldIncrease: 10,
+
+      stackDegradation: 0,
+      stackLifetime: 80000,
+      stackReplacementType: "Cumulative Hours",
+      timeBetweenOverloading: 0,
+      waterRequirementOfElectrolyser: 15,
+
+      windCostReductionWithScale: 10,
+      windDegradation: 0,
+      windEpcCosts: 30,
+
+      windLandProcurementCosts: 6,
+      windOpex: 25000,
+      windReferenceCapacity: 1000,
+      windReferenceFoldIncrease: 10,
     });
   });
 
   it("sends expected input fields for basic offshore", async () => {
     const setState = jest.fn();
-    const { container, getByText } = render(
+    const {container, getByText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -381,12 +507,75 @@ describe("InputHomePage", () => {
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
       inputConfiguration: "Basic",
+
+      // might not need all of these
+      additionalAnnualCosts: 0,
+      additionalTransmissionCharges: 10,
+      additionalUpfrontCosts: 0,
+      batteryCosts: 0,
+      batteryEfficiency: 0,
+      batteryEpcCosts: 0,
+      batteryLandProcurementCosts: 0,
+      batteryLifetime: 0,
+      batteryMinCharge: 0,
+      batteryOMCost: 0,
+      batteryRatedPower: 0,
+      batteryReplacementCost: 0,
+      batteryStorageDuration: 0,
+
+      electrolyserCostReductionWithScale: 10,
+
+      electrolyserEpcCosts: 30,
+      electrolyserLandProcurementCosts: 6,
+      electrolyserMaximumLoad: 100,
+      electrolyserMinimumLoad: 10,
+      electrolyserNominalCapacity: 1,
+      electrolyserOMCost: 2.5,
+
+      electrolyserReferenceCapacity: 1000,
+      electrolyserReferenceFoldIncrease: 10,
+      electrolyserStackReplacement: 40,
+      gridConnectionCost: 1000000,
+      inflationRate: 2.5,
+
+      maximumDegradationBeforeReplacement: 0,
+      maximumLoadWhenOverloading: 0,
+      powerCapacityConfiguration: "Oversize Ratio",
+      powerPlantConfiguration: "Standalone",
+
+      powerPlantType: "Wind",
+
+      secAtNominalLoad: 33.33,
+      solarDegradation: 0,
+      solarEpcCosts: 30,
+
+      solarLandProcurementCosts: 6,
+      solarOpex: 17000,
+      solarPVCostReductionWithScale: 10,
+      solarReferenceCapacity: 1000,
+      solarReferenceFoldIncrease: 10,
+
+      stackDegradation: 0,
+      stackLifetime: 80000,
+      stackReplacementType: "Cumulative Hours",
+      timeBetweenOverloading: 0,
+      waterRequirementOfElectrolyser: 15,
+
+      windCostReductionWithScale: 10,
+      windDegradation: 0,
+      windEpcCosts: 30,
+
+      windLandProcurementCosts: 6,
+      windOpex: 25000,
+      windReferenceCapacity: 1000,
+      windReferenceFoldIncrease: 10,
+      "solarToWindPercentage": 0,
     });
   });
 
   it("sends expected input fields for advanced offshore", async () => {
     const setState = jest.fn();
-    const { container, getByText, getByLabelText, queryByText } = render(
+    const {container, getByText, getByLabelText, queryByText} = render(
       <MemoryRouter>
         <InputHomePage
           setState={setState}
@@ -403,7 +592,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(12),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.click(getByLabelText(/power-plant-parameters-show-more/i));
@@ -475,12 +664,16 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
+      electrolyserEfficiency: 100,
+      inflationRate: 2.5,
+      solarNominalCapacity: 150,
+      solarToWindPercentage: 0
     });
   });
 
   it("submits changed dropdown field value as part of form", async () => {
     const setState = jest.fn();
-    const { container, getByText, getByLabelText, getByRole, getAllByRole } =
+    const {container, getByText, getByLabelText, getByRole, getAllByRole} =
       render(
         <MemoryRouter>
           <InputHomePage
@@ -498,7 +691,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(12),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.click(getByLabelText(/battery-parameters-show-more/i));
@@ -508,7 +701,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(12),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.click(getByLabelText(/battery-capacity-show-more/i));
@@ -518,7 +711,7 @@ describe("InputHomePage", () => {
         expect(
           container.querySelectorAll('input[type="number"]').length
         ).toEqual(21),
-      { timeout: 1000 }
+      {timeout: 1000}
     );
 
     fireEvent.mouseDown(
@@ -615,6 +808,8 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
+      electrolyserEfficiency: 100,
+      inflationRate: 2.5,
     });
   });
 });
