@@ -1,23 +1,32 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
-import { render, waitFor } from "@testing-library/react";
+import {render, waitFor} from "@testing-library/react";
 
 import * as durationCurves from "../../../components/results/DurationCurves";
 import WorkingData from "../../../components/results/WorkingData";
-import { TIMEOUT } from "../../consts";
-import ammoniaSolarAmmoniaDurationCurveWithBattery from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
+import {TIMEOUT} from "../../consts";
+import ammoniaSolarAmmoniaDurationCurveWithBattery
+  from "../../resources/ammonia-solar-ammonia-duration-curve-with-battery.json";
 import ammoniaSolarAmmoniaDurationCurve from "../../resources/ammonia-solar-ammonia-duration-curve.json";
-import ammoniaSolarElectrolyserDurationCurveWithBattery from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
+import ammoniaSolarElectrolyserDurationCurveWithBattery
+  from "../../resources/ammonia-solar-electrolyser-duration-curve-with-battery.json";
 import ammoniaSolarElectrolyserDurationCurve from "../../resources/ammonia-solar-electrolyser-duration-curve.json";
-import ammoniaSolarGeneratorDurationCurveWithBattery from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
+import ammoniaSolarGeneratorDurationCurveWithBattery
+  from "../../resources/ammonia-solar-generator-duration-curve-with-battery.json";
 import ammoniaSolarGeneratorDurationCurve from "../../resources/ammonia-solar-generator-duration-curve.json";
-import hybridBatteryOversizeRatioElectrolyserDurationCurve from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
-import hybridBatteryOversizeRatioGeneratorDurationCurve from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
-import hybridDegradationElectrolyserDurationCurve from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
+import hybridBatteryOversizeRatioElectrolyserDurationCurve
+  from "../../resources/hybrid-battery-oversize-ratio-electrolyser-duration-curve.json";
+import hybridBatteryOversizeRatioGeneratorDurationCurve
+  from "../../resources/hybrid-battery-oversize-ratio-generator-duration-curve.json";
+import hybridDegradationElectrolyserDurationCurve
+  from "../../resources/hybrid-degradation-electrolyser-duration-curve.json";
 import hybridDegradationGeneratorDurationCurve from "../../resources/hybrid-degradation-generator-duration-curve.json";
-import { readLocalCsv } from "../../resources/loader";
-import methanolHybridBatteryElectrolyserDurationCurve from "../../resources/methanol-hybrid-battery-electrolyser-duration-curve.json";
-import methanolHybridBatteryGeneratorDurationCurve from "../../resources/methanol-hybrid-battery-generator-duration-curve.json";
-import methanolHybridBatteryMethanolDurationCurve from "../../resources/methanol-hybrid-battery-methanol-duration-curve.json";
+import {readLocalCsv, writeLocalFile} from "../../resources/loader";
+import methanolHybridBatteryElectrolyserDurationCurve
+  from "../../resources/methanol-hybrid-battery-electrolyser-duration-curve.json";
+import methanolHybridBatteryGeneratorDurationCurve
+  from "../../resources/methanol-hybrid-battery-generator-duration-curve.json";
+import methanolHybridBatteryMethanolDurationCurve
+  from "../../resources/methanol-hybrid-battery-methanol-duration-curve.json";
 import solarBatteryElectrolyserDurationCurve from "../../resources/solar-battery-electrolyser-duration-curve.json";
 import solarBatteryGeneratorDurationCurve from "../../resources/solar-battery-generator-duration-curve.json";
 import solarElectrolyserDurationCurve from "../../resources/solar-electrolyser-duration-curve.json";
@@ -48,10 +57,8 @@ import {
 describe("Working Data calculations", () => {
   let loadSolar: () => Promise<any[]>;
   let loadWind: () => Promise<any[]>;
-  let spy: jest.SpyInstance<
-    JSX.Element[],
-    [durationCurves: { [key: string]: number[] }]
-  >;
+  let spy: jest.SpyInstance<JSX.Element[],
+    [durationCurves: { [key: string]: number[] }]>;
 
   beforeEach(() => {
     sessionStorage.clear();
@@ -59,7 +66,8 @@ describe("Working Data calculations", () => {
   });
 
   beforeAll(() => {
-    console.error = function () {};
+    console.error = function () {
+    };
     loadSolar = async () =>
       await readLocalCsv(__dirname + "/../../resources/solar-traces.csv");
     loadWind = async () =>
@@ -92,7 +100,7 @@ describe("Working Data calculations", () => {
             expect(val).toBeCloseTo(solarElectrolyserDurationCurve[index], 8);
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -124,7 +132,7 @@ describe("Working Data calculations", () => {
             );
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -153,7 +161,7 @@ describe("Working Data calculations", () => {
             expect(val).toEqual(windElectrolyserDurationCurve[index]);
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -181,7 +189,7 @@ describe("Working Data calculations", () => {
             expect(val).toEqual(windPPAElectrolyserDurationCurve[index]);
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -214,7 +222,7 @@ describe("Working Data calculations", () => {
             );
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
 
@@ -246,7 +254,7 @@ describe("Working Data calculations", () => {
             );
           });
         },
-        { timeout: TIMEOUT }
+        {timeout: TIMEOUT}
       );
     });
   });
@@ -277,7 +285,7 @@ describe("Working Data calculations", () => {
           );
         });
       },
-      { timeout: TIMEOUT }
+      {timeout: TIMEOUT}
     );
   });
 
@@ -313,7 +321,7 @@ describe("Working Data calculations", () => {
           expect(val).toBeCloseTo(ammoniaSolarAmmoniaDurationCurve[index], 8);
         });
       },
-      { timeout: TIMEOUT }
+      {timeout: TIMEOUT}
     );
   });
 
@@ -353,7 +361,7 @@ describe("Working Data calculations", () => {
           );
         });
       },
-      { timeout: TIMEOUT }
+      {timeout: TIMEOUT}
     );
   });
 
@@ -385,6 +393,7 @@ describe("Working Data calculations", () => {
             8
           );
         });
+
         expect(curves["Methanol Duration Curve"]).toHaveLength(8760);
         curves["Methanol Duration Curve"].forEach((val, index) => {
           expect(val).toBeCloseTo(
@@ -393,7 +402,7 @@ describe("Working Data calculations", () => {
           );
         });
       },
-      { timeout: TIMEOUT }
+      {timeout: TIMEOUT}
     );
   });
 
@@ -428,7 +437,7 @@ describe("Working Data calculations", () => {
           expect(val).toBeCloseTo(methaneWindMethaneDurationCurve[index], 8);
         });
       },
-      { timeout: TIMEOUT }
+      {timeout: TIMEOUT}
     );
   });
 });

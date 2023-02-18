@@ -137,7 +137,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
   },
   powerPlantOversizeRatio: {
     min: 1,
-    max: 3,
+    max: 5,
     step: 0.1,
     title: "Power Plant Oversize Ratio",
     helperText:
@@ -611,9 +611,9 @@ export const numberFieldDefaultInputs: DefaultInput = {
   },
   powerPlantOversizeRatio: {
     title: "Power Plant Oversize Ratio",
-    step: 0.5,
-    min: 0,
-    max: 3,
+    step: 0.1,
+    min: 1,
+    max: 5,
   },
   solarToWindPercentage: {
     title: "Solar to Wind Capacity Ratio",
