@@ -944,7 +944,7 @@ export function getInputKeysForConfiguration(
   }
   return [];
 }
-
+// TODO remove these as they are not used any longer
 const BASIC_HYDROGEN_INPUT_KEYS = [
   "projectScale",
   "electrolyserEfficiency",
