@@ -4,17 +4,17 @@ import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {useEffect} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 
 import "../../../input.css";
-import { InputConfiguration } from "../../../types";
-import { isOffshore } from "../../../utils";
+import {InputConfiguration} from "../../../types";
+import {isOffshore} from "../../../utils";
 import DesignStepper from "../../DesignStepper";
 import AdvancedAmmoniaInput from "../ammonia/AdvancedAmmoniaInput";
 import BasicAmmoniaInput from "../ammonia/BasicAmmoniaInput";
-import { configurationTypes, getInputKeysForConfiguration } from "../data";
-import { getDefaultInputs } from "../defaults";
+import {configurationTypes, getInputKeysForConfiguration} from "../data";
+import {getDefaultInputs} from "../defaults";
 import AdvancedHydrogenInput from "../hydrogen/AdvancedHydrogenInput";
 import BasicHydrogenInput from "../hydrogen/BasicHydrogenInput";
 import AdvancedMethaneInput from "../methane/AdvancedMethaneInput";
@@ -32,11 +32,11 @@ interface Props {
 
 export default function InputHomePage(props: Props) {
   const navigate = useNavigate();
-  const { powerfuel = "hydrogen" } = useParams();
+  const {powerfuel = "hydrogen"} = useParams();
   const [tab, setTab] = React.useState<InputConfiguration>("Basic");
   const offshore = isOffshore(props.location);
 
-  const { setInputConfiguration } = props;
+  const {setInputConfiguration} = props;
 
   useEffect(() => {
     setInputConfiguration("Basic");
@@ -45,6 +45,7 @@ export default function InputHomePage(props: Props) {
   let formState: { [key: string]: number | string } = getDefaultInputs(
     powerfuel,
     tab,
+    offshore,
     getInputKeysForConfiguration(powerfuel, tab, offshore)
   );
 
@@ -53,6 +54,7 @@ export default function InputHomePage(props: Props) {
     formState = getDefaultInputs(
       powerfuel,
       tab,
+      offshore,
       getInputKeysForConfiguration(powerfuel, tab, offshore)
     );
   };
@@ -67,28 +69,28 @@ export default function InputHomePage(props: Props) {
   function getBasicInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
       return (
-        <BasicAmmoniaInput location={props.location} formState={formState} />
+        <BasicAmmoniaInput location={props.location} formState={formState}/>
       );
     }
     if (powerfuel === "methanol") {
       return (
-        <BasicMethanolInput location={props.location} formState={formState} />
+        <BasicMethanolInput location={props.location} formState={formState}/>
       );
     }
     if (powerfuel === "methane") {
       return (
-        <BasicMethaneInput location={props.location} formState={formState} />
+        <BasicMethaneInput location={props.location} formState={formState}/>
       );
     }
     return (
-      <BasicHydrogenInput location={props.location} formState={formState} />
+      <BasicHydrogenInput location={props.location} formState={formState}/>
     );
   }
 
   function getAdvancedInputs(powerfuel: string): JSX.Element {
     if (powerfuel === "ammonia") {
       return (
-        <AdvancedAmmoniaInput location={props.location} formState={formState} />
+        <AdvancedAmmoniaInput location={props.location} formState={formState}/>
       );
     }
     if (powerfuel === "methanol") {
@@ -101,22 +103,22 @@ export default function InputHomePage(props: Props) {
     }
     if (powerfuel === "methane") {
       return (
-        <AdvancedMethaneInput location={props.location} formState={formState} />
+        <AdvancedMethaneInput location={props.location} formState={formState}/>
       );
     }
     return (
-      <AdvancedHydrogenInput location={props.location} formState={formState} />
+      <AdvancedHydrogenInput location={props.location} formState={formState}/>
     );
   }
 
   const onSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    let form: any = { ...formState };
+    let form: any = {...formState};
 
     form["powerfuel"] = powerfuel;
     form["inputConfiguration"] = tab;
     for (let input of e.target.getElementsByTagName("input")) {
-      const { id, name, value } = input;
+      const {id, name, value} = input;
       const key = id || name;
       if (key) {
         form[key] = isNaN(value) ? value : Number(value);
@@ -151,7 +153,7 @@ export default function InputHomePage(props: Props) {
       autoComplete="off"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
     >
-      <DesignStepper activeStep={2} />
+      <DesignStepper activeStep={2}/>
       <Grid
         container
         padding={4}
@@ -171,7 +173,7 @@ export default function InputHomePage(props: Props) {
             General {powerfuel} production cost for region.​
           </Typography>
         </Grid>
-        <InputCalculateButton />
+        <InputCalculateButton/>
       </Grid>
       <TabContext value={tab}>
         <TabList
@@ -194,10 +196,10 @@ export default function InputHomePage(props: Props) {
             active={tab === "Advanced"}
           />
         </TabList>
-        <TabPanel value="Basic" sx={{ background: "#F2F2F2" }}>
+        <TabPanel value="Basic" sx={{background: "#F2F2F2"}}>
           {getBasicInputs(powerfuel)}
         </TabPanel>
-        <TabPanel value="Advanced" sx={{ background: "#F2F2F2" }}>
+        <TabPanel value="Advanced" sx={{background: "#F2F2F2"}}>
           {getAdvancedInputs(powerfuel)}
         </TabPanel>
       </TabContext>

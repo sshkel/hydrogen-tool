@@ -37,7 +37,7 @@ const dynamicDefaults = {
       electrolyserStackReplacement: 40,
       waterSupplyCost: 5,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarFarmBuildCost: 1200,
@@ -73,7 +73,7 @@ const dynamicDefaults = {
       inflationRate: 2.5,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -102,7 +102,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarFarmBuildCost: 1200,
@@ -139,7 +139,7 @@ const dynamicDefaults = {
       inflationRate: 2.5,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -169,7 +169,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarReferenceCapacity: 1000,
@@ -226,7 +226,7 @@ const dynamicDefaults = {
       minimumHydrogenStorage: 10,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -255,7 +255,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarFarmBuildCost: 1200,
@@ -310,7 +310,7 @@ const dynamicDefaults = {
       minimumHydrogenStorage: 10,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -337,7 +337,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarReferenceCapacity: 1000,
@@ -400,7 +400,7 @@ const dynamicDefaults = {
         "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -425,7 +425,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarReferenceCapacity: 1000,
@@ -488,7 +488,7 @@ const dynamicDefaults = {
         "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -515,7 +515,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarReferenceCapacity: 1000,
@@ -578,7 +578,7 @@ const dynamicDefaults = {
         "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -603,7 +603,7 @@ const dynamicDefaults = {
       solarNominalCapacity: 150,
       windNominalCapacity: 150,
       powerPlantOversizeRatio: 1.5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarDegradation: 0,
       windDegradation: 0,
       solarReferenceCapacity: 1000,
@@ -668,7 +668,7 @@ const dynamicDefaults = {
         "Preset Source" as CarbonCaptureSourceConfiguration,
       stackReplacementType: "Cumulative Hours" as StackReplacementType,
       powerPlantConfiguration: "Standalone" as PowerPlantConfiguration,
-      powerPlantType: "Wind" as PowerPlantType,
+      powerPlantType: "Hybrid" as PowerPlantType,
       powerSupplyOption: "Self Build" as PowerSupplyOption,
       powerCapacityConfiguration:
         "Oversize Ratio" as PowerCapacityConfiguration,
@@ -679,6 +679,7 @@ const dynamicDefaults = {
 export function getDefaultInputs(
   powerfuel: string,
   inputConfiguration: InputConfiguration,
+  offshore: boolean,
   inputKeys: string[]
 ): InputMap {
   // fetch saved data or {}
@@ -712,6 +713,11 @@ export function getDefaultInputs(
     defaults[key] =
       savedData[key] === undefined ? powerfuelDefaults[key] : savedData[key];
   });
+
+  if (offshore) {
+    defaults["powerPlantType"] = "Wind"
+    defaults["solarToWindPercentage"] = 0
+  }
 
   return defaults;
 }

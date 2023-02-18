@@ -38,7 +38,7 @@ describe("InputHomePage", () => {
       projectTimeline: 15,
       principalPPACost: 50,
       solarFarmBuildCost: 1200,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       windFarmBuildCost: 2000,
       powerSupplyOption: "Self Build",
       waterSupplyCost: 5,
@@ -78,7 +78,7 @@ describe("InputHomePage", () => {
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantConfiguration: "Standalone",
 
-      powerPlantType: "Wind",
+      powerPlantType: "Hybrid",
 
       secAtNominalLoad: 39.38,
       solarDegradation: 0,
@@ -142,7 +142,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(12),
+        ).toEqual(21),
       {timeout: 1000}
     );
     fireEvent.click(getByText(/Calculate/i));
@@ -178,7 +178,7 @@ describe("InputHomePage", () => {
       maximumLoadWhenOverloading: 100,
       powerPlantConfiguration: "Standalone",
       powerfuel: "hydrogen",
-      powerPlantType: "Wind",
+      powerPlantType: "Hybrid",
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantOversizeRatio: 1.5,
@@ -194,7 +194,7 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       windNominalCapacity: 150,
       windDegradation: 0,
       stackDegradation: 0,
@@ -320,7 +320,7 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       windNominalCapacity: 150,
       windCostReductionWithScale: 5,
       windEpcCosts: 30,
@@ -404,7 +404,7 @@ describe("InputHomePage", () => {
       principalPPACost: 10,
       powerSupplyOption: "Power Purchase Agreement (PPA)",
       waterSupplyCost: 5,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       solarFarmBuildCost: 1200,
       windFarmBuildCost: 2000,
       inputConfiguration: "Basic",
@@ -443,7 +443,7 @@ describe("InputHomePage", () => {
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantConfiguration: "Standalone",
 
-      powerPlantType: "Wind",
+      powerPlantType: "Hybrid",
 
       secAtNominalLoad: 39.38,
       solarDegradation: 0,
@@ -690,7 +690,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(12),
+        ).toEqual(21),
       {timeout: 1000}
     );
 
@@ -700,7 +700,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(12),
+        ).toEqual(30),
       {timeout: 1000}
     );
 
@@ -710,7 +710,7 @@ describe("InputHomePage", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(21),
+        ).toEqual(30),
       {timeout: 1000}
     );
 
@@ -775,7 +775,7 @@ describe("InputHomePage", () => {
       maximumLoadWhenOverloading: 100,
       powerPlantConfiguration: "Standalone",
       powerfuel: "hydrogen",
-      powerPlantType: "Wind",
+      powerPlantType: "Hybrid",
       powerSupplyOption: "Self Build",
       powerCapacityConfiguration: "Oversize Ratio",
       powerPlantOversizeRatio: 1.5,
@@ -791,7 +791,7 @@ describe("InputHomePage", () => {
       solarPVCostReductionWithScale: 5,
       solarReferenceCapacity: 1000,
       solarReferenceFoldIncrease: 10,
-      solarToWindPercentage: 0,
+      solarToWindPercentage: 50,
       windNominalCapacity: 150,
       windDegradation: 0,
       stackDegradation: 0,

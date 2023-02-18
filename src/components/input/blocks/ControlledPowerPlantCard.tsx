@@ -234,8 +234,9 @@ function getPowerPlantCards(props: Props) {
 }
 
 export default function ControlledPowerPlantCard(props: Props) {
-  const [powerPlantType, setPowerPlantType] =
-    React.useState<PowerPlantType>("Wind");
+  const [powerPlantType, setPowerPlantType] = React.useState<PowerPlantType>(
+    isOffshore(props.location) ? "Wind" : "Hybrid"
+  );
 
   const onSelectChange = (index: number) => {
     setPowerPlantType(POWER_PLANT_TYPES[index]);

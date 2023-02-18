@@ -51,7 +51,7 @@ describe("App", () => {
       () =>
         expect(
           container.querySelectorAll('input[type="number"]').length
-        ).toEqual(21),
+        ).toEqual(30),
       { timeout: 1000 }
     );
 
@@ -104,7 +104,7 @@ describe("App", () => {
       () =>
         expect(
           containerRefreshed.querySelectorAll('input[type="number"]').length
-        ).toEqual(21),
+        ).toEqual(30),
       { timeout: 1000 }
     );
 
