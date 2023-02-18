@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";

@@ -1,8 +1,4 @@
-import {
-  DefaultInput,
-  InputConfiguration,
-  PowerPlantConfiguration,
-} from "../../types";
+import { DefaultInput, PowerPlantConfiguration } from "../../types";
 
 const secAtNominalLoadLabel = (
   <p>
