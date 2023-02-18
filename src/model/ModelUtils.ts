@@ -1138,3 +1138,32 @@ export function carbonCaptureSourceToSec(
   }
   return 0;
 }
+
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isEnoughHydrogenProduced(
+  hourlyCapacityFactors: number[],
+  combinedPowerDemand: number,
+  ratedElectrolyserCapacity: number,
+  minElectrolyserLoading: number,
+  hydOutput: number,
+  h2Out: number
+) {
+  const totalPower = sum(hourlyCapacityFactors.map((v: number, index: number) => {
+    const powerAfterDemand = Math.max(0, hourlyCapacityFactors[index] - combinedPowerDemand)
+    if (powerAfterDemand >= minElectrolyserLoading) {
+      if (powerAfterDemand < ratedElectrolyserCapacity) {
+        return powerAfterDemand
+      } else {
+        return ratedElectrolyserCapacity
+      }
+    }
+    return 0;
+
+  }));
+  const producedH2 = totalPower * hydOutput;
+  const daysInYear = (hourlyCapacityFactors.length/24)
+  const demandH2 = h2Out * daysInYear;
+  return producedH2 > demandH2;
+
+}
