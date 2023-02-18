@@ -113,11 +113,11 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 2.5,
     title: "Electrolyser Efficiency (%)",
     helperText:
-      "Electrolyser efficiency relative to 33.33 kWh/kg of H2 required.",
+      "Electrolyser efficiency relative to 39.38 kWh/kg of H2 required.",
   },
   electrolyserSystemOversizing: {
     min: 0,
-    max: 100,
+    max: 500,
     step: 2.5,
     title: "Electrolyser System Oversizing",
     helperText:
@@ -433,7 +433,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     max: 100_000,
     step: 100,
     helperText:
-      "Hydrogen production rate - Standard 175 ton/yr (TPA) per MW of electrolyser capacity at full load",
+      "Hydrogen production rate - Standard 175 ton/yr per MW of electrolyser capacity at full load",
     title: "Project Scale (kTPA)",
     adornmentLabel: "kTPA",
   },

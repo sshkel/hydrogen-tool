@@ -600,17 +600,17 @@ export class AmmoniaModel implements Model {
         mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)":
+      "Time Electrolyser is at its Maximum Capacity":
         roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Electrolyser is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Electrolyser is Operating": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Ammonia Plant is at its Maximum Capacity (% of hrs/yr)":
+      "Time Ammonia Plant is at its Maximum Capacity":
         roundToTwoDP(mean(ammoniaRatedCapacityTime.map((x) => x * 100))),
 
-      "Total Time Ammonia Plant is Operating (% of hrs/yr)": roundToTwoDP(
+      "Total Time Ammonia Plant is Operating": roundToTwoDP(
         mean(totalAmmoniaOperatingTime.map((x) => x * 100))
       ),
 
@@ -621,20 +621,20 @@ export class AmmoniaModel implements Model {
         mean(ammoniaCapacityFactors.map((x) => x * 100))
       ),
 
-      "Energy Consumed by Electrolyser (MWh/yr)": roundToNearestInteger(
+      "Energy Consumed by Electrolyser": roundToNearestInteger(
         mean(electricityConsumed)
       ),
 
-      "Excess Energy Not Utilised by Electrolyser (MWh/yr)":
+      "Excess Energy Not Utilised by Electrolyser":
         roundToNearestInteger(mean(electricityProduced)),
 
-      "Hydrogen Output (TPA)": roundToNearestInteger(mean(hydrogenProduction)),
+      "Hydrogen Output": roundToNearestInteger(mean(hydrogenProduction)),
 
-      "Ammonia Output (TPA)": roundToNearestInteger(mean(ammoniaProduction)),
+      "Ammonia Output": roundToNearestInteger(mean(ammoniaProduction)),
 
-      "LCH2 ($/kg)": roundToTwoDP(lch2),
+      "LCH2": roundToTwoDP(lch2),
 
-      "LCNH3 ($/kg)": roundToTwoDP(lcnh3),
+      "LCNH3": roundToTwoDP(lcnh3),
     };
 
     return {

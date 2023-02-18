@@ -496,7 +496,7 @@ export function calculateSnapshotForYear(
   // Hydrogen Output [TPA]
   const hydrogenFixed =
     sum(hydrogenProduction) * electrolyserNominalCapacity * kgToTonne;
-  // Total Battery Output (MWh/yr)
+  // Total Battery Output
   const totalBatteryOutput =
     sum(netBatteryFlow.filter((num) => num < 0)) *
     -1 *

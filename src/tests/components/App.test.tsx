@@ -50,34 +50,34 @@ describe("App", () => {
         expect(
           container.querySelector("#key-inputs-electrolyser-capacity")
             ?.textContent
-        ).toContain("136 MW"),
+        ).toContain("161 MW"),
       { timeout: 2000 }
     );
 
     expect(
       container.querySelector("#key-inputs-power-plant-capacity")?.textContent
-    ).toContain("204 MW");
+    ).toContain("241 MW");
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)",
-      "Total Time Electrolyser is Operating (% of hrs/yr)",
+      "Time Electrolyser is at its Maximum Capacity",
+      "Total Time Electrolyser is Operating",
       "Electrolyser Capacity Factor",
-      "Energy Consumed by Electrolyser (MWh/yr)",
-      "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output (TPA)",
-      "LCH2 ($/kg)",
+      "Energy Consumed by Electrolyser",
+      "Excess Energy Not Utilised by Electrolyser",
+      "Hydrogen Output",
+      "LCH2",
     ];
 
     const expectedValues: string[] = [
-      "43.75",
-      "23.99",
-      "90.52",
-      "59.76",
-      "714,214",
-      "69,999",
-      "15,000",
-      "5.72",
+      "43.75%",
+      "23.99% of hrs/yr",
+      "90.52% of hrs/yr",
+      "59.76%",
+      "843,857 MWh/yr",
+      "82,705 MWh/yr",
+      "17,723 TPA",
+      "5.68 $/kg",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -132,24 +132,24 @@ describe("App", () => {
 
     const expectedKeys: string[] = [
       "Power Plant Capacity Factor",
-      "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)",
-      "Total Time Electrolyser is Operating (% of hrs/yr)",
+      "Time Electrolyser is at its Maximum Capacity",
+      "Total Time Electrolyser is Operating",
       "Electrolyser Capacity Factor",
-      "Energy Consumed by Electrolyser (MWh/yr)",
-      "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-      "Hydrogen Output (TPA)",
-      "LCH2 ($/kg)",
+      "Energy Consumed by Electrolyser",
+      "Excess Energy Not Utilised by Electrolyser",
+      "Hydrogen Output",
+      "LCH2",
     ];
 
     const expectedValues: string[] = [
-      "43.75",
-      "23.99",
-      "90.52",
-      "59.76",
-      "524,955",
-      "51,450",
-      "10,499",
-      "6.83",
+      "43.75%",
+      "23.99% of hrs/yr",
+      "90.52% of hrs/yr",
+      "59.76%",
+      "524,955 MWh/yr",
+      "51,450 MWh/yr",
+      "10,499 TPA",
+      "6.83 $/kg",
     ];
 
     const EXPECTED_RESULTS = 11;
@@ -325,18 +325,18 @@ describe("App", () => {
 
   //   const expectedKeys: string[] = [
   //     "Power Plant Capacity Factor",
-  //     "Time Electrolyser is at its Maximum Capacity (% of hrs/yr)",
-  //     "Total Time Electrolyser is Operating (% of hrs/yr)",
-  //     "Time Methanol Plant is at its Maximum Capacity (% of hrs/yr)",
-  //     "Total Time Methanol Plant is Operating (% of hrs/yr)",
+  //     "Time Electrolyser is at its Maximum Capacity",
+  //     "Total Time Electrolyser is Operating",
+  //     "Time Methanol Plant is at its Maximum Capacity",
+  //     "Total Time Methanol Plant is Operating",
   //     "Electrolyser Capacity Factor",
   //     "Methanol Capacity Factor",
-  //     "Energy Consumed by Electrolyser (MWh/yr)",
-  //     "Excess Energy Not Utilised by Electrolyser (MWh/yr)",
-  //     "Hydrogen Output (TPA)",
-  //     "Methanol Output (TPA)",
-  //     "LCH2 ($/kg)",
-  //     "LCMeOH ($/kg)",
+  //     "Energy Consumed by Electrolyser",
+  //     "Excess Energy Not Utilised by Electrolyser",
+  //     "Hydrogen Output",
+  //     "Methanol Output",
+  //     "LCH2",
+  //     "LCMeOH",
   //   ];
 
   //   const expectedValues: string[] = [
