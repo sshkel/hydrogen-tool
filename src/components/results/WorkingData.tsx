@@ -136,7 +136,6 @@ export default function WorkingData(props: Props) {
       inflationRate: inputs.inflationRate,
       maximumDegradationBeforeReplacement:
         inputs.maximumDegradationBeforeReplacement,
-      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
       powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
       powerPlantType: inputs.powerPlantType,
@@ -156,7 +155,6 @@ export default function WorkingData(props: Props) {
       stackDegradation: inputs.stackDegradation,
       stackLifetime: inputs.stackLifetime,
       stackReplacementType: inputs.stackReplacementType,
-      timeBetweenOverloading: inputs.timeBetweenOverloading,
       waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
       waterSupplyCost: inputs.waterSupplyCost,
       windDegradation: inputs.windDegradation,
@@ -225,7 +223,6 @@ export default function WorkingData(props: Props) {
       inflationRate: inputs.inflationRate,
       maximumDegradationBeforeReplacement:
         inputs.maximumDegradationBeforeReplacement,
-      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
       powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
       powerPlantType: inputs.powerPlantType,
@@ -245,7 +242,6 @@ export default function WorkingData(props: Props) {
       stackDegradation: inputs.stackDegradation,
       stackLifetime: inputs.stackLifetime,
       stackReplacementType: inputs.stackReplacementType,
-      timeBetweenOverloading: inputs.timeBetweenOverloading,
       waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
       waterSupplyCost: inputs.waterSupplyCost,
       windDegradation: inputs.windDegradation,
@@ -316,7 +312,6 @@ export default function WorkingData(props: Props) {
       inflationRate: inputs.inflationRate,
       maximumDegradationBeforeReplacement:
         inputs.maximumDegradationBeforeReplacement,
-      maximumLoadWhenOverloading: inputs.maximumLoadWhenOverloading,
       powerPlantConfiguration: inputs.powerPlantConfiguration,
       powerPlantOversizeRatio: inputs.powerPlantOversizeRatio,
       powerPlantType: inputs.powerPlantType,
@@ -336,7 +331,6 @@ export default function WorkingData(props: Props) {
       stackDegradation: inputs.stackDegradation,
       stackLifetime: inputs.stackLifetime,
       stackReplacementType: inputs.stackReplacementType,
-      timeBetweenOverloading: inputs.timeBetweenOverloading,
       waterRequirementOfElectrolyser: inputs.waterRequirementOfElectrolyser,
       waterSupplyCost: inputs.waterSupplyCost,
       windDegradation: inputs.windDegradation,

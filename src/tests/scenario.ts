@@ -1158,8 +1158,6 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     waterRequirementOfElectrolyser: 10,
     electrolyserMaximumLoad: 100,
     electrolyserMinimumLoad: 0,
-    maximumLoadWhenOverloading: 100,
-    timeBetweenOverloading: 0,
     stackLifetime: 60000,
     stackDegradation: 0,
     hydrogenStorageCapacity: 49000,
@@ -1196,7 +1194,6 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     // pick from synthesized inputs
     // synthesized inputs
     // Electrolyser
-    electrolyserNominalCapacity: 1,
     electrolyserEfficiency: 100,
 
     // Battery
@@ -1213,9 +1210,6 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     //
     // Power Plant
     powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
-    solarNominalCapacity: 0,
-    windNominalCapacity: 0,
-
     windReferenceCapacity: 1000,
 
     windFarmBuildCost: 2000,
@@ -1227,7 +1221,6 @@ export const standaloneAdvancedAmmoniaSolarScenario: {
     windDegradation: 0,
 
     // Stack
-
     maximumDegradationBeforeReplacement: 0,
 
     // Grid connection and PPA
@@ -1266,8 +1259,6 @@ export const standaloneAmmoniaHybridWithBatteryAndDegradationScenario: {
     waterRequirementOfElectrolyser: 15,
     electrolyserMaximumLoad: 100,
     electrolyserMinimumLoad: 10,
-    maximumLoadWhenOverloading: 100,
-    timeBetweenOverloading: 0,
     stackLifetime: 80000,
     stackDegradation: 1,
     hydrogenStorageCapacity: 50000,
@@ -1322,10 +1313,7 @@ export const standaloneAmmoniaHybridWithBatteryAndDegradationScenario: {
 
     // pick from synthesized inputs
     // Electrolyser
-    electrolyserNominalCapacity: 1,
     electrolyserEfficiency: 100,
-    solarNominalCapacity: 0,
-    windNominalCapacity: 0,
     maximumDegradationBeforeReplacement: 0,
     // Grid connection and PPA
     additionalTransmissionCharges: 0,
@@ -1364,8 +1352,6 @@ export const standaloneMethanolHybridWithBatteryScenario: {
     waterRequirementOfElectrolyser: 10,
     electrolyserMaximumLoad: 100,
     electrolyserMinimumLoad: 0,
-    maximumLoadWhenOverloading: 100,
-    timeBetweenOverloading: 0,
     stackLifetime: 60000,
     stackDegradation: 0,
     hydrogenStorageCapacity: 50000,
@@ -1420,15 +1406,10 @@ export const standaloneMethanolHybridWithBatteryScenario: {
     powerSupplyOption: "Self Build",
     // pick from synthesized inputs
     // Electrolyser
-    electrolyserNominalCapacity: 1,
     electrolyserEfficiency: 100,
 
     powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
-
-    solarNominalCapacity: 0,
-    windNominalCapacity: 0,
     maximumDegradationBeforeReplacement: 0,
-
     // Grid connection and PPA
     additionalTransmissionCharges: 0,
     principalPPACost: 0,
@@ -1465,8 +1446,6 @@ export const gridConnectedMethaneWindWithBatteryAndDegradationScenario: {
     waterRequirementOfElectrolyser: 25,
     electrolyserMaximumLoad: 100,
     electrolyserMinimumLoad: 0,
-    maximumLoadWhenOverloading: 100,
-    timeBetweenOverloading: 0,
     stackLifetime: 80000,
     stackDegradation: 1,
     maximumDegradationBeforeReplacement: 10,
@@ -1525,12 +1504,8 @@ export const gridConnectedMethaneWindWithBatteryAndDegradationScenario: {
     powerfuel: "methane",
     // pick from synthesized inputs
     // Electrolyser
-    electrolyserNominalCapacity: 1,
     electrolyserEfficiency: 100,
-    batteryRatedPower: 0,
     powerCapacityConfiguration: "Oversize Ratio" as PowerCapacityConfiguration,
-    solarNominalCapacity: 0,
-    windNominalCapacity: 0,
     inflationRate: 2.5,
   },
 };

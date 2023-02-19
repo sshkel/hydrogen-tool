@@ -244,16 +244,6 @@ export default function AdvancedMethaneInput(props: InputScreenProps) {
                     inputKey="electrolyserMinimumLoad"
                     formState={props.formState}
                   />,
-                  <InputNumberField
-                    key="maximumLoadWhenOverloading"
-                    inputKey="maximumLoadWhenOverloading"
-                    formState={props.formState}
-                  />,
-                  <InputNumberField
-                    key="timeBetweenOverloading"
-                    inputKey="timeBetweenOverloading"
-                    formState={props.formState}
-                  />,
                 ]}
               />,
               <InputSelect

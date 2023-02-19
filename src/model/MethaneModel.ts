@@ -91,7 +91,6 @@ export type MethaneData = {
   inputConfiguration: InputConfiguration;
   location: string;
   maximumDegradationBeforeReplacement: number;
-  maximumLoadWhenOverloading: number;
   powerPlantConfiguration: PowerPlantConfiguration;
   powerPlantOversizeRatio: number;
   powerPlantType: PowerPlantType;
@@ -112,7 +111,6 @@ export type MethaneData = {
   stackDegradation: number;
   stackLifetime: number;
   stackReplacementType: StackReplacementType;
-  timeBetweenOverloading: number;
   waterRequirementOfElectrolyser: number;
   waterSupplyCost: number;
   windCostReductionWithScale: number;
@@ -182,7 +180,6 @@ export class MethaneModel implements Model {
   private readonly elecEff: number;
   private readonly hydOutput: number;
   private readonly parameters: MethaneData;
-  private readonly elecOverload: number;
   private readonly batteryEfficiency: number;
   // data from renewables
   private readonly solarData: CsvRow[];
@@ -204,7 +201,6 @@ export class MethaneModel implements Model {
     this.batteryLifetime = parameters.batteryLifetime ?? 0;
     this.batteryOMCost = parameters.batteryOMCost ?? 0;
     this.batteryReplacementCost = parameters.batteryReplacementCost ?? 0;
-    // this.batteryRatedPower = parameters.batteryRatedPower ?? 0;
     this.batteryStorageDuration = parameters.batteryStorageDuration ?? 0;
     this.electrolyserEfficiency = parameters.electrolyserEfficiency ?? 0;
     this.gridConnectionCost = parameters.gridConnectionCost ?? 0;
@@ -222,7 +218,6 @@ export class MethaneModel implements Model {
     this.elecMinLoad = parameters.electrolyserMinimumLoad / 100;
     this.elecEff = this.electrolyserEfficiency / 100;
     this.hydOutput = this.h2VolToMass * this.mwToKw * this.elecEff; // kg.kWh/m3.MWh
-    this.elecOverload = parameters.maximumLoadWhenOverloading / 100;
     this.batteryEfficiency = parameters.batteryEfficiency / 100;
     this.batteryMinCharge = (parameters.batteryMinCharge ?? 0) / 100;
     this.specCons = this.secAtNominalLoad * this.h2VolToMass;
