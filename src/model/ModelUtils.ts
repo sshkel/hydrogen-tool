@@ -1142,27 +1142,30 @@ export function carbonCaptureSourceToSec(
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isEnoughHydrogenProduced(
-  hourlyCapacityFactors: number[],
-  combinedPowerDemand: number,
-  ratedElectrolyserCapacity: number,
-  minElectrolyserLoading: number,
-  hydOutput: number,
+  generatorActualPower: number[],
+  p2XcombinedPowerDemand: number,
+  electrolyserNominalCapacity: number,
+  electrolyserMinimumLoad: number,
+  secAtNominalLoad: number,
   h2Out: number
 ) {
-  const totalPower = sum(hourlyCapacityFactors.map((v: number, index: number) => {
-    const powerAfterDemand = Math.max(0, hourlyCapacityFactors[index] - combinedPowerDemand)
-    if (powerAfterDemand >= minElectrolyserLoading) {
-      if (powerAfterDemand < ratedElectrolyserCapacity) {
+  const totalPower = sum(generatorActualPower.map((v: number, index: number) => {
+
+    const Emin = electrolyserMinimumLoad * electrolyserNominalCapacity;
+
+    const powerAfterDemand = Math.max(0, generatorActualPower[index] - p2XcombinedPowerDemand)
+    if (powerAfterDemand >= Emin) {
+      if (powerAfterDemand < electrolyserNominalCapacity) {
         return powerAfterDemand
       } else {
-        return ratedElectrolyserCapacity
+        return electrolyserNominalCapacity
       }
     }
     return 0;
 
   }));
-  const producedH2 = totalPower * hydOutput;
-  const daysInYear = (hourlyCapacityFactors.length/24)
+  const producedH2 = totalPower * (1 / secAtNominalLoad);
+  const daysInYear = (generatorActualPower.length / 24)
   const demandH2 = h2Out * daysInYear;
   return producedH2 > demandH2;
 
