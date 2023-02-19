@@ -26,6 +26,7 @@ import {
   generator_actual_power,
   getBatteryLosses,
   hydrogen_storage_CAPEX,
+  notEnoughHydrogenProduced,
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
@@ -600,15 +601,17 @@ export class AmmoniaModel implements Model {
         mean(powerPlantCapacityFactors.map((x) => x * 100))
       ),
 
-      "Time Electrolyser is at its Maximum Capacity":
-        roundToTwoDP(mean(ratedCapacityTime.map((x) => x * 100))),
+      "Time Electrolyser is at its Maximum Capacity": roundToTwoDP(
+        mean(ratedCapacityTime.map((x) => x * 100))
+      ),
 
       "Total Time Electrolyser is Operating": roundToTwoDP(
         mean(totalOperatingTime.map((x) => x * 100))
       ),
 
-      "Time Ammonia Plant is at its Maximum Capacity":
-        roundToTwoDP(mean(ammoniaRatedCapacityTime.map((x) => x * 100))),
+      "Time Ammonia Plant is at its Maximum Capacity": roundToTwoDP(
+        mean(ammoniaRatedCapacityTime.map((x) => x * 100))
+      ),
 
       "Total Time Ammonia Plant is Operating": roundToTwoDP(
         mean(totalAmmoniaOperatingTime.map((x) => x * 100))
@@ -625,16 +628,17 @@ export class AmmoniaModel implements Model {
         mean(electricityConsumed)
       ),
 
-      "Excess Energy Not Utilised by Electrolyser":
-        roundToNearestInteger(mean(electricityProduced)),
+      "Excess Energy Not Utilised by Electrolyser": roundToNearestInteger(
+        mean(electricityProduced)
+      ),
 
       "Hydrogen Output": roundToNearestInteger(mean(hydrogenProduction)),
 
       "Ammonia Output": roundToNearestInteger(mean(ammoniaProduction)),
 
-      "LCH2": roundToTwoDP(lch2),
+      LCH2: roundToTwoDP(lch2),
 
-      "LCNH3": roundToTwoDP(lcnh3),
+      LCNH3: roundToTwoDP(lcnh3),
     };
 
     return {
@@ -726,6 +730,25 @@ export class AmmoniaModel implements Model {
           airSeparationUnitCapacity,
           1
         );
+
+      // if (
+      //   notEnoughHydrogenProduced(
+      //     // TODO reuse already calculated value
+      //     generator_actual_power(
+      //       powerPlantNominalCapacity,
+      //       hourlyOperations.powerplantCapacityFactors
+      //     ),
+      //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
+      //     electrolyserNominalCapacity,
+      //     this.elecMinLoad,
+      //     this.secAtNominalLoad,
+      //     hydrogenOutput
+      //   )
+      // ) {
+      //   throw new Error(
+      //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
+      //   );
+      // }
 
       const hydrogenProduction = calculateHydrogenProduction(
         hourlyOperations.electrolyserCapacityFactors,
@@ -840,6 +863,25 @@ export class AmmoniaModel implements Model {
           airSeparationUnitCapacity,
           year
         );
+
+        // if (
+        //   notEnoughHydrogenProduced(
+        //     // TODO reuse already calculated value
+        //     generator_actual_power(
+        //       powerPlantNominalCapacity,
+        //       powerplantCapacityFactors
+        //     ),
+        //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
+        //     electrolyserNominalCapacity,
+        //     this.elecMinLoad,
+        //     this.secAtNominalLoad,
+        //     hydrogenOutput
+        //   )
+        // ) {
+        //   throw new Error(
+        //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
+        //   );
+        // }
 
         const hydrogenProduction = calculateHydrogenProduction(
           electrolyserCapacityFactors,
@@ -973,6 +1015,25 @@ export class AmmoniaModel implements Model {
             airSeparationUnitCapacity,
             year
           );
+
+          // if (
+          //   notEnoughHydrogenProduced(
+          //     // TODO reuse already calculated value
+          //     generator_actual_power(
+          //       powerPlantNominalCapacity,
+          //       powerplantCapacityFactors
+          //     ),
+          //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
+          //     electrolyserNominalCapacity,
+          //     this.elecMinLoad,
+          //     this.secAtNominalLoad,
+          //     hydrogenOutput
+          //   )
+          // ) {
+          //   throw new Error(
+          //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
+          //   );
+          // }
 
           const yearlyDegradationRate =
             degradationCalculator.getStackDegradation(
@@ -1203,6 +1264,7 @@ function hydrogen_output(
 ) {
   return ammonia_plant_capacity * (1000 / 365) * (6.047 / 34.181);
 }
+
 // TODO lots of these functions can be simplified like methanol and methane
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
 function nominal_solar_capacity(
@@ -1216,7 +1278,7 @@ function nominal_solar_capacity(
     (ammonia_plant_power_demand +
       air_separation_unit_power_demand +
       nominal_electrolyser_capacity) *
-    (renewable_energy_plant_oversizing) *
+    renewable_energy_plant_oversizing *
     hybrid_generator_split
   );
 }
@@ -1233,7 +1295,7 @@ function nominal_wind_capacity(
     (ammonia_plant_power_demand +
       air_separation_unit_power_demand +
       nominal_electrolyser_capacity) *
-    (renewable_energy_plant_oversizing) *
+    renewable_energy_plant_oversizing *
     hybrid_generator_split
   );
 }

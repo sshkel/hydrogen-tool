@@ -1141,13 +1141,13 @@ export function carbonCaptureSourceToSec(
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function isEnoughHydrogenProduced(
+export function notEnoughHydrogenProduced(
   generatorActualPower: number[],
   p2XcombinedPowerDemand: number,
   electrolyserNominalCapacity: number,
   electrolyserMinimumLoad: number,
   secAtNominalLoad: number,
-  h2Out: number
+  hydrogenOutput: number
 ) {
   const totalPower = sum(generatorActualPower.map((v: number, index: number) => {
 
@@ -1166,7 +1166,7 @@ function isEnoughHydrogenProduced(
   }));
   const producedH2 = totalPower * (1 / secAtNominalLoad);
   const daysInYear = (generatorActualPower.length / 24)
-  const demandH2 = h2Out * daysInYear;
-  return producedH2 > demandH2;
+  const demandH2 = hydrogenOutput * daysInYear;
+  return producedH2 < demandH2;
 
 }
