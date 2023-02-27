@@ -26,7 +26,6 @@ import {
   generator_actual_power,
   getBatteryLosses,
   hydrogen_storage_CAPEX,
-  notEnoughHydrogenProduced,
   nominal_electrolyser_capacity,
   powerfuel_plant_power_demand,
 } from "./ModelUtils";
