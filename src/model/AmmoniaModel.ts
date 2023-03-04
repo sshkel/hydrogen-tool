@@ -1323,9 +1323,9 @@ function electrolyser_with_battery_capacity_factor(
   return net_battery_flow.map((_: number, i: number) => {
     if (net_battery_flow[i] < 0) {
       return (
-        electrolyser_actual_power[i] +
+        (electrolyser_actual_power[i] +
         -1 * net_battery_flow[i] * (1 - (1 - battery_efficiency) / 2) -
-        (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i]) /
+        (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i])) /
           electrolyser_capacity
       );
     }

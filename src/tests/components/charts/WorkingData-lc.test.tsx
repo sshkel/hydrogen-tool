@@ -543,7 +543,7 @@ describe("Working Data calculations", () => {
       );
 
       const costBreakDown: { [key: string]: number } = {
-        'Power Plant CAPEX': 0.516,
+        'Power Plant CAPEX': 0.507,
         'Electrolyser CAPEX': 0.152,
         'H2 Storage CAPEX': 0.065,
         'Ammonia Plant CAPEX': 0.111,
@@ -554,7 +554,7 @@ describe("Working Data calculations", () => {
         'Ammonia Plant OPEX': 0.024,
         'Electricity Purchase': 0,
         'Stack Replacement': 0.048,
-        'Water Cost': 0.212,
+        'Water Cost': 0.014,
         'Battery Cost': 0.009,
         'Grid Connection Cost': 0,
         'Additional Costs': 0

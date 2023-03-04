@@ -516,28 +516,28 @@ describe("Model summary", () => {
           expect(data["Power Plant Capacity Factor"]).toEqual(32.21);
           expect(
             data["Time Electrolyser is at its Maximum Capacity"]
-          ).toEqual(16.91);
+          ).toEqual(17.63);
           expect(
             data["Total Time Electrolyser is Operating"]
           ).toEqual(99.64);
           expect(
             data["Time Ammonia Plant is at its Maximum Capacity"]
-          ).toEqual(61.17); // check why ammonia is mismatched
+          ).toEqual(62.82); // check why ammonia is mismatched
           expect(
             data["Total Time Ammonia Plant is Operating"]
-          ).toEqual(77.12);
-          expect(data["Electrolyser Capacity Factor"]).toEqual(821.42);
-          expect(data["Ammonia Capacity Factor"]).toEqual(71.76);
+          ).toEqual(77.88);
+          expect(data["Electrolyser Capacity Factor"]).toEqual(56.99);
+          expect(data["Ammonia Capacity Factor"]).toEqual(72.84);
           expect(data["Energy Consumed by Electrolyser"]).toEqual(
-            10564435
+            732924
           );
           expect(
             data["Excess Energy Not Utilised by Electrolyser"]
-          ).toEqual(-9685697);
-          expect(data["Hydrogen Output"]).toEqual(203024);
-          expect(data["Ammonia Output"]).toEqual(71928);
-          expect(data["LCH2"]).toEqual(0.53);
-          expect(data["LCNH3"]).toEqual(1.51);
+          ).toEqual(145813);
+          expect(data["Hydrogen Output"]).toEqual(14085);
+          expect(data["Ammonia Output"]).toEqual(73014);
+          expect(data["LCH2"]).toEqual(6.69);
+          expect(data["LCNH3"]).toEqual(1.29);
         },
         { timeout: TIMEOUT }
       );
