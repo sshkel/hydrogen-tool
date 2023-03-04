@@ -374,6 +374,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
         A$/T<sub>CO2</sub>
       </p>
     ),
+    helperText: "Pre-set values for carbon capture CAPEX can be found in the supporting guide."
   },
   ccEpcCosts: {
     title: "Carbon Capture EPC Costs",
@@ -614,6 +615,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   solarToWindPercentage: {
     title: "Power Plant Capacity Mix – Percentage Solar",
     adornmentLabel: "%",
+    helperText: "Split of solar and wind farm share in the power plant output.",
     step: 5,
     min: 0,
     max: 100,
