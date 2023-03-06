@@ -144,7 +144,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     max: 100,
     step: 10,
     title: "Power Plant Capacity Mix – Percentage Solar",
-    helperText: "Split of solar and wind farm share in the power plant output.",
+    helperText: "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
   },
   electrolyserPurchaseCost: {
     min: 100,
@@ -615,7 +615,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   solarToWindPercentage: {
     title: "Power Plant Capacity Mix – Percentage Solar",
     adornmentLabel: "%",
-    helperText: "Split of solar and wind farm share in the power plant output.",
+    helperText: "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
     step: 5,
     min: 0,
     max: 100,
