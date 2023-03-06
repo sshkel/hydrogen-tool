@@ -81,7 +81,7 @@ const dynamicDefaults = {
     advanced: {
       electrolyserNominalCapacity: 100,
       secAtNominalLoad: 50,
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
@@ -228,7 +228,7 @@ const dynamicDefaults = {
     },
     advanced: {
       secAtNominalLoad: 50,
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       waterRequirementOfElectrolyser: 15,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
@@ -392,7 +392,7 @@ const dynamicDefaults = {
     },
     advanced: {
       secAtNominalLoad: 50,
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
       stackDegradation: 0.0,
@@ -562,7 +562,7 @@ const dynamicDefaults = {
     },
     advanced: {
       secAtNominalLoad: 50,
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
       stackDegradation: 0.0,

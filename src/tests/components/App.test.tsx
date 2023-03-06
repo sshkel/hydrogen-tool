@@ -148,8 +148,8 @@ describe("App", () => {
       "49.05%",
       "430,863 MWh/yr",
       "9,916 MWh/yr",
-      "6,032 TPA",
-      "10.52 $/kg",
+      "8,617 TPA",
+      "7.39 $/kg",
     ];
 
     const EXPECTED_RESULTS = 11;

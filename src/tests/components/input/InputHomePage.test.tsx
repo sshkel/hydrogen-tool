@@ -211,7 +211,7 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       inflationRate:2.5
     });
   });
@@ -337,7 +337,7 @@ describe("InputHomePage", () => {
       waterRequirementOfElectrolyser: 15,
       waterSupplyCost: 5,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       inflationRate:2.5
     });
   });
@@ -664,7 +664,7 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       inflationRate: 2.5,
       solarNominalCapacity: 150,
       solarToWindPercentage: 0
@@ -808,7 +808,7 @@ describe("InputHomePage", () => {
       windReferenceCapacity: 1000,
       windReferenceFoldIncrease: 10,
       inputConfiguration: "Advanced",
-      electrolyserEfficiency: 70,
+      electrolyserEfficiency: 100,
       inflationRate: 2.5,
     });
   });
