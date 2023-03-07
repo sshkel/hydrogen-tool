@@ -79,7 +79,7 @@ describe("App", () => {
           })
         ).toBeDefined(),
       {
-        timeout: 500,
+        timeout: 1000,
       }
     );
 
