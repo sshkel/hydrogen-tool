@@ -113,13 +113,13 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 2.5,
     title: "Electrolyser Efficiency (%)",
     helperText:
-      "Electrolyser efficiency relative to 39.38 kWh/kg of H2 required.",
+      "Electrolyser Efficiency relative to 39.4 kWh/kg of H2 required (HHV of H2).",
   },
   electrolyserSystemOversizing: {
     min: 0,
     max: 500,
     step: 2.5,
-    title: "Electrolyser System Oversizing",
+    title: "Electrolyser System Oversizing (%)",
     helperText:
       "Oversize the electrolyser to optimize excess hydrogen production for storage",
   },
@@ -127,7 +127,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     min: 0,
     max: 500_000,
     step: 50_000,
-    title: "Hydrogen Storage Capacity",
+    title: "Hydrogen Storage Capacity (kg)",
     helperText:
       "Add hydrogen storage to improve powerfuel production flexibility",
   },
@@ -143,9 +143,9 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     min: 0,
     max: 100,
     step: 10,
-    title: "Power Plant Capacity Mix – Percentage Solar",
+    title: "Power Plant Capacity Mix – Share of Solar Input",
     helperText:
-      "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
+      "Share of Solar in the power plant output. Provide 100% for solar only and 0% for wind only.",
   },
   electrolyserPurchaseCost: {
     min: 100,
@@ -201,7 +201,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     step: 10,
     title: "PPA Cost ($/MWh)",
     helperText:
-      "Cost of PPA - Electricity consumption and transmission/grid usage charges.",
+      "Cost of PPA including electricity consumed and transmission charges.",
   },
   waterSupplyCost: {
     min: 0,
@@ -615,10 +615,10 @@ export const numberFieldDefaultInputs: DefaultInput = {
     max: 5,
   },
   solarToWindPercentage: {
-    title: "Power Plant Capacity Mix – Percentage Solar",
+    title: "Power Plant Capacity Mix – Share of Solar Input",
     adornmentLabel: "%",
     helperText:
-      "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
+      "Share of Solar in the power plant output. Provide 100% for solar only and 0% for wind only.",
     step: 5,
     min: 0,
     max: 100,
@@ -743,7 +743,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
   principalPPACost: {
     title: "Principal PPA Cost",
     adornmentLabel: "$/MWh",
-    helperText: "Fixed price for electricity bought from the grid.",
+    helperText: "Unit price of electricity purchased from power supplier.",
     step: 10,
     min: 0,
     max: 1000,
