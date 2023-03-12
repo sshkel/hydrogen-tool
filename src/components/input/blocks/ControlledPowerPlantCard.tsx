@@ -284,6 +284,7 @@ export default function ControlledPowerPlantCard(props: Props) {
           key="powerSupplyOptionSelect"
           selectKey="powerSupplyOptionSelect"
           prompt="Power Supply Option"
+          helperText="Select 'Self Build' for a new power plant built in conjunction with electrolyser. Select 'PPA' for electricity purchase from a power supplier."
           selectClass="powerSupplyOption"
           titles={["Self Build", "Power Purchase Agreement (PPA)"]}
           formState={props.formState}
