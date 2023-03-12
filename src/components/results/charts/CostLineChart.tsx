@@ -7,6 +7,7 @@ import { costLineColors } from "../../colors";
 
 interface Props {
   title: string;
+  subtitle?: string;
   projectTimeline: number;
   datapoints: ChartData[];
 }
@@ -33,6 +34,27 @@ export default function CostLineChart(props: Props) {
   };
 
   const options = {
+    plugins: {
+      subtitle: {
+        display: !!props.subtitle,
+        text: props.subtitle,
+        padding: {
+          bottom: 4,
+        },
+        align: "start" as "start",
+        font: {
+          size: 12,
+          weight: "bold",
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            return context.raw.toFixed(2);
+          },
+        },
+      },
+    },
     layout: {
       padding: {
         left: 20,

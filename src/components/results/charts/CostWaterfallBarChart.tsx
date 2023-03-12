@@ -45,17 +45,17 @@ export default function CostBarChart(props: Props) {
         clip: false,
         color: "#848484",
         font: {
-          size: 11,
+          size: 13,
           style: "italic",
           weight: "bold",
         },
-        formatter: (val: number[]) => `${(val[1] - val[0]).toFixed(4)}`,
+        formatter: (val: number[]) => `${(val[1] - val[0]).toFixed(2)}`,
       },
       // override label to display the length of the bar rather than coordinates
       tooltip: {
         callbacks: {
           label: function (context: any) {
-            return (context.raw[1] - context.raw[0]).toLocaleString("en-US");
+            return (context.raw[1] - context.raw[0]).toFixed(2);
           },
         },
       },

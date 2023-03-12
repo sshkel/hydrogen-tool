@@ -631,7 +631,7 @@ export class AmmoniaModel implements Model {
 
       "Ammonia Output": roundToNearestInteger(mean(ammoniaProduction)),
 
-      LCH2: roundToTwoDP(lch2),
+      "Levelised Cost of Hydrogen (LCH2)": roundToTwoDP(lch2),
 
       LCNH3: roundToTwoDP(lcnh3),
     };
@@ -1324,9 +1324,9 @@ function electrolyser_with_battery_capacity_factor(
     if (net_battery_flow[i] < 0) {
       return (
         (electrolyser_actual_power[i] +
-        -1 * net_battery_flow[i] * (1 - (1 - battery_efficiency) / 2) -
-        (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i])) /
-          electrolyser_capacity
+          -1 * net_battery_flow[i] * (1 - (1 - battery_efficiency) / 2) -
+          (ammonia_power_demand + asu_power_demand - asu_nh3_actual_power[i])) /
+        electrolyser_capacity
       );
     }
 

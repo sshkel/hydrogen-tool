@@ -144,7 +144,8 @@ export const sliderFieldDefaultInputs: DefaultInput = {
     max: 100,
     step: 10,
     title: "Power Plant Capacity Mix – Percentage Solar",
-    helperText: "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
+    helperText:
+      "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
   },
   electrolyserPurchaseCost: {
     min: 100,
@@ -374,7 +375,8 @@ export const numberFieldDefaultInputs: DefaultInput = {
         A$/T<sub>CO2</sub>
       </p>
     ),
-    helperText: "Pre-set values for carbon capture CAPEX can be found in the supporting guide."
+    helperText:
+      "Pre-set values for carbon capture CAPEX can be found in the supporting guide.",
   },
   ccEpcCosts: {
     title: "Carbon Capture EPC Costs",
@@ -615,7 +617,8 @@ export const numberFieldDefaultInputs: DefaultInput = {
   solarToWindPercentage: {
     title: "Power Plant Capacity Mix – Percentage Solar",
     adornmentLabel: "%",
-    helperText: "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
+    helperText:
+      "Split of Solar share in the power plant. 100% for solar only, 0% for wind only.",
     step: 5,
     min: 0,
     max: 100,

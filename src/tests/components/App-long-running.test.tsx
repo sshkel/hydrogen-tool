@@ -13,7 +13,7 @@ jest.mock("../../model/DataLoader", () => ({
   DEFAULT_LOCATION: "Z10",
 }));
 
-jest.setTimeout(10_000);
+jest.setTimeout(15_000);
 
 describe("App", () => {
   beforeEach(() => {

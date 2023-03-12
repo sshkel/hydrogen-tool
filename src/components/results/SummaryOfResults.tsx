@@ -85,7 +85,7 @@ function rowNameToLabel(name: string) {
     return " MWh/yr";
   } else if (name.includes("Output")) {
     return " TPA";
-  } else if (name.startsWith("LC")) {
+  } else if (name.startsWith("LC") || name.startsWith("Levelised Cost")) {
     return " $/kg";
   }
 }

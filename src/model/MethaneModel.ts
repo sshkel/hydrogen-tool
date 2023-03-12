@@ -673,7 +673,7 @@ export class MethaneModel implements Model {
 
       "Methane Output": roundToNearestInteger(mean(methaneProduction)),
 
-      LCH2: roundToTwoDP(lch2),
+      "Levelised Cost of Hydrogen (LCH2)": roundToTwoDP(lch2),
 
       LCSNG: roundToTwoDP(lcsng),
     };

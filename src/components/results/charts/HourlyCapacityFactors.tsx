@@ -90,6 +90,18 @@ export default function HourlyCapacityFactors(props: Props) {
       legend: {
         position: "top",
       },
+      subtitle: {
+        display: true,
+        text: "The capacity factors shown here are relative to the nominal rated capacity of power plant and electrolyser (including firming due to battery supplementation) respectively.",
+        padding: {
+          bottom: 8,
+        },
+        align: "start",
+        font: {
+          size: 14,
+          weight: "bold",
+        },
+      },
       zoom: {
         limits: {
           x: { min: 0, max: samplesToPlot },

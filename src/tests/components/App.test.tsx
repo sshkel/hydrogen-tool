@@ -66,7 +66,7 @@ describe("App", () => {
       "Energy Consumed by Electrolyser",
       "Excess Energy Not Utilised by Electrolyser",
       "Hydrogen Output",
-      "LCH2",
+      "Levelised Cost of Hydrogen (LCH2)",
     ];
 
     const expectedValues: string[] = [
@@ -138,7 +138,7 @@ describe("App", () => {
       "Energy Consumed by Electrolyser",
       "Excess Energy Not Utilised by Electrolyser",
       "Hydrogen Output",
-      "LCH2",
+      "Levelised Cost of Hydrogen (LCH2)",
     ];
 
     const expectedValues: string[] = [
@@ -335,7 +335,7 @@ describe("App", () => {
   //     "Excess Energy Not Utilised by Electrolyser",
   //     "Hydrogen Output",
   //     "Methanol Output",
-  //     "LCH2",
+  //     "Levelised Cost of Hydrogen (LCH2)",
   //     "LCMeOH",
   //   ];
 

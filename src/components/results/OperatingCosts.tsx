@@ -24,6 +24,7 @@ export function OperatingCostsPane(operatingCosts: {
       >
         <CostLineChart
           title="Operating Costs"
+          subtitle="Spike in values of battery and electrolyser OPEX due to replacement of battery and stack at their end of their lifetime."
           projectTimeline={operatingCosts.projectTimeline}
           datapoints={Object.keys(operatingCosts.costs).map((key: string) => {
             return { label: key, data: operatingCosts.costs[key] };
