@@ -44,9 +44,8 @@ export default function AboutPage() {
             <ItemText>
               Targeting a broad range of stakeholders, the tool can be used to
               evaluate the opportunity and potential costs of generating
-              hydrogen and a selection of key powerfuels (ammonia, methanol,
-              synthetic natural gas, and sustainable aviation fuel) using
-              renewable power sources across NSW.
+              hydrogen and a selection of key powerfuels (ammonia, methanol, and
+              synthetic natural gas) using renewable power sources across NSW.
             </ItemText>
             <ItemText>
               A key function of the tool is to generate a levelized cost for

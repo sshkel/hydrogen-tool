@@ -633,7 +633,7 @@ export class AmmoniaModel implements Model {
 
       "Levelised Cost of Hydrogen (LCH2)": roundToTwoDP(lch2),
 
-      LCNH3: roundToTwoDP(lcnh3),
+      "Levelised Cost of Ammonia (LCNH3)": roundToTwoDP(lcnh3),
     };
 
     return {

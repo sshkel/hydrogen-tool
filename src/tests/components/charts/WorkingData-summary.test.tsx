@@ -438,7 +438,7 @@ describe("Model summary", () => {
           expect(data["Hydrogen Output"]).toEqual(4479);
           expect(data["Ammonia Output"]).toEqual(25331);
           expect(data["Levelised Cost of Hydrogen (LCH2)"]).toEqual(9.34);
-          expect(data["LCNH3"]).toEqual(1.65);
+          expect(data["Levelised Cost of Ammonia (LCNH3)"]).toEqual(1.65);
         },
         { timeout: TIMEOUT }
       );
@@ -481,7 +481,7 @@ describe("Model summary", () => {
           expect(data["Hydrogen Output"]).toEqual(14085);
           expect(data["Ammonia Output"]).toEqual(73014);
           expect(data["Levelised Cost of Hydrogen (LCH2)"]).toEqual(6.69);
-          expect(data["LCNH3"]).toEqual(1.29);
+          expect(data["Levelised Cost of Ammonia (LCNH3)"]).toEqual(1.29);
         },
         { timeout: TIMEOUT }
       );

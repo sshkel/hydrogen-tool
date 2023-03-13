@@ -134,7 +134,7 @@ export default function HomePage() {
           <br />
           <b>Distribution License</b>
           <br />
-          Copyright 2022 University of New South Wales (UNSW)
+          Copyright 2023 University of New South Wales (UNSW)
           <br />
           Permission is hereby granted, free of charge, to any person using this
           web-based tool and associated documentation files (the "Software"), to
