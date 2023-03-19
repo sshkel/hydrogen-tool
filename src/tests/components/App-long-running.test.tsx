@@ -7,9 +7,9 @@ import { readLocalCsv as mockReadLocalCsv } from "../resources/loader";
 jest.mock("../../model/DataLoader", () => ({
   __esModule: true,
   loadSolar: async () =>
-    await mockReadLocalCsv(__dirname + "/../../../assets/solar.csv"),
+    await mockReadLocalCsv(__dirname + "/../../../public/assets/solar.csv"),
   loadWind: async () =>
-    await mockReadLocalCsv(__dirname + "/../../../assets/wind.csv"),
+    await mockReadLocalCsv(__dirname + "/../../../public/assets/wind.csv"),
   DEFAULT_LOCATION: "Z10",
 }));
 

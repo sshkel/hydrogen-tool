@@ -46,9 +46,9 @@ describe("Model summary", () => {
       await readLocalCsv(__dirname + "/../../resources/wind-traces.csv");
 
     loadNSWSolar = async () =>
-      await readLocalCsv(__dirname + "/../../../../assets/solar.csv");
+      await readLocalCsv(__dirname + "/../../../../public/assets/solar.csv");
     loadNSWWind = async () =>
-      await readLocalCsv(__dirname + "/../../../../assets/wind.csv");
+      await readLocalCsv(__dirname + "/../../../../public/assets/wind.csv");
   });
 
   describe("Summary of Results", () => {
