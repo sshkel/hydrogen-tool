@@ -37,3 +37,11 @@ jobs:
           aws-region: ap-southeast-2
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./build/ s3://nswp2xtool --delete
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 590097874b29ebe75a7e1a952961713b
+          projectName: nswp2xtool
+          directory: build
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
