@@ -41,7 +41,7 @@ jobs:
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 590097874b29ebe75a7e1a952961713b
+          accountId: 0364a3323bfef6416e3a4da5c07d5e97
           projectName: nswp2xtool
           directory: build
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
