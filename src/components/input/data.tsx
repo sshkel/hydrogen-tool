@@ -458,7 +458,7 @@ export const numberFieldDefaultInputs: DefaultInput = {
     title: "Specific Energy Consumption at Nominal Load",
     adornmentLabel: secAtNominalLoadLabel,
     step: 5,
-    min: 39.41,
+    min: 39.4,
     max: 100,
   },
   waterRequirementOfElectrolyser: {
