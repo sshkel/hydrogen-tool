@@ -4,12 +4,12 @@ export const DEFAULT_LOCATION = "Z1";
 
 export async function loadSolar() {
   return await read_csv(
-    "https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/solar.csv"
+    "assets/solar.csv"
   );
 }
 export async function loadWind() {
   return await read_csv(
-    "https://nswp2xtool.s3.ap-southeast-2.amazonaws.com/assets/wind.csv"
+    "assets/wind.csv"
   );
 }
 // to use these run

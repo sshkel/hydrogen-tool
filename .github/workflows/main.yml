@@ -29,8 +29,6 @@ jobs:
       - run: npm install
       - run: npm test
       - run: npm run build
-      - name: Copy assets into build directory
-        run: cp -r ./assets ./build
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -39,3 +37,11 @@ jobs:
           aws-region: ap-southeast-2
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./build/ s3://nswp2xtool --delete
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 0364a3323bfef6416e3a4da5c07d5e97
+          projectName: nswp2xtool
+          directory: build
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
