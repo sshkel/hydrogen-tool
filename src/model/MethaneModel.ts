@@ -1,65 +1,13 @@
-import {
-  CarbonCaptureSource,
-  CarbonCaptureSourceConfiguration,
-  InputConfiguration,
-  Model,
-  PowerPlantConfiguration,
-  PowerPlantType,
-  PowerSupplyOption,
-  StackReplacementType,
-} from "../types";
+import { CarbonCaptureSource, CarbonCaptureSourceConfiguration, InputConfiguration, Model, PowerPlantConfiguration, PowerPlantType, PowerSupplyOption, StackReplacementType } from "../types";
 import { isOffshore, mean, projectYears } from "../utils";
-import {
-  CsvRow,
-  MethaneProjectModelSummary,
-  ModelHourlyOperation,
-} from "./ModelTypes";
-import {
-  CumulativeDegradation,
-  MaxDegradation,
-  calculateH2ToPowerfuelUnit,
-  calculateHydrogenProduction,
-  calculateMethaneSnapshotForYear,
-  calculateNetBatteryFlowMeth,
-  calculatePowerPlantCapacityFactors,
-  calculateSolarToWindRatio,
-  capacityFactorsWithBattery,
-  carbonCaptureSourceToPlantCost,
-  carbonCaptureSourceToSec,
-  cc_out,
-  cc_plant_CAPEX,
-  electrolyser_actual_power_meX,
-  excess_generation,
-  generator_actual_power,
-  getBatteryLosses,
-  getEpcIndirectCost,
-  getLandProcurementIndirectCost,
-  hydrogen_storage_CAPEX,
-  me_plant_CAPEX,
-  me_unit_capacity_factor,
-  nominal_electrolyser_capacity,
-  nominal_solar_capacity,
-  nominal_wind_capacity,
-  powerfuel_plant_power_demand,
-} from "./ModelUtils";
+import { CsvRow, MethaneProjectModelSummary, ModelHourlyOperation } from "./ModelTypes";
+import { CumulativeDegradation, MaxDegradation, basic_nominal_electrolyser_capacity, calculateH2ToPowerfuelUnit, calculateHydrogenProduction, calculateMethaneSnapshotForYear, calculateNetBatteryFlowMeth, calculatePowerPlantCapacityFactors, calculateSolarToWindRatio, capacityFactorsWithBattery, carbonCaptureSourceToPlantCost, carbonCaptureSourceToSec, cc_out, cc_plant_CAPEX, electrolyser_actual_power_meX, excess_generation, generator_actual_power, getBatteryLosses, getEpcIndirectCost, getLandProcurementIndirectCost, hydrogen_storage_CAPEX, me_plant_CAPEX, me_unit_capacity_factor, nominal_electrolyser_capacity, nominal_solar_capacity, nominal_wind_capacity, powerfuel_plant_power_demand } from "./ModelUtils";
 import { getCapex, getEpcCosts } from "./capex-calculations";
 import { HOURS_PER_YEAR } from "./consts";
-import {
-  calculateP2XProductionLC,
-  roundToNearestInteger,
-  roundToTwoDP,
-} from "./cost-functions";
-import {
-  generateLCBreakdown,
-  generateMeLCH2Breakdown as generateSNGLCBreakdown,
-} from "./lch2-calculations";
-import {
-  calculateMePerYearOpex,
-  calculatePerYearOpex,
-  getOpex,
-  getP2XOpex,
-  getTotalP2XOpex,
-} from "./opex-calculations";
+import { calculateP2XProductionLC, roundToNearestInteger, roundToTwoDP } from "./cost-functions";
+import { generateLCBreakdown, generateMeLCH2Breakdown as generateSNGLCBreakdown } from "./lch2-calculations";
+import { calculateMePerYearOpex, calculatePerYearOpex, getOpex, getP2XOpex, getTotalP2XOpex } from "./opex-calculations";
+
 
 export type MethaneData = {
   additionalAnnualCosts: number;
@@ -717,11 +665,20 @@ export class MethaneModel implements Model {
     const carbonCapturePlantPowerDemand =
       this.carbon_capture_plant_power_demand(carbonCapturePlantCapacity, ccSec);
 
-    const electrolyserNominalCapacity = nominal_electrolyser_capacity(
-      hydrogenOutput,
-      this.secAtNominalLoad,
-      this.parameters.electrolyserSystemOversizing / 100
-    );
+    const electrolyserNominalCapacity =
+      inputConfiguration === "Basic"
+        ? basic_nominal_electrolyser_capacity(
+            hydrogenOutput,
+            this.secAtNominalLoad,
+            this.parameters.electrolyserSystemOversizing / 100,
+            this.electrolyserEfficiency / 100
+          )
+        : nominal_electrolyser_capacity(
+            hydrogenOutput,
+            this.secAtNominalLoad,
+            this.parameters.electrolyserSystemOversizing / 100
+          );
+
     const { solarRatio, windRatio } = calculateSolarToWindRatio(
       this.parameters.powerPlantType,
       this.parameters.solarToWindPercentage
@@ -766,8 +723,6 @@ export class MethaneModel implements Model {
         this.calculatePowerplantAndElectrolyserHourlyOperation(
           solarToWindRatio,
           1 - solarToWindRatio,
-          this.parameters.powerPlantOversizeRatio,
-          // default for the first calculation
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
           methanePlantPowerDemand,
@@ -884,7 +839,6 @@ export class MethaneModel implements Model {
         } = this.calculatePowerplantAndElectrolyserHourlyOperation(
           solarNominalCapacity / powerPlantNominalCapacity,
           windNominalCapacity / powerPlantNominalCapacity,
-          this.parameters.powerPlantOversizeRatio,
           electrolyserNominalCapacity,
           powerPlantNominalCapacity,
           methanePlantPowerDemand,
@@ -1020,7 +974,6 @@ export class MethaneModel implements Model {
           } = this.calculatePowerplantAndElectrolyserHourlyOperation(
             solarNominalCapacity / powerPlantNominalCapacity,
             windNominalCapacity / powerPlantNominalCapacity,
-            this.parameters.powerPlantOversizeRatio,
             electrolyserNominalCapacity,
             powerPlantNominalCapacity,
             methanePlantPowerDemand,
@@ -1121,7 +1074,6 @@ export class MethaneModel implements Model {
   private calculatePowerplantAndElectrolyserHourlyOperation(
     solarRatio: number,
     windRatio: number,
-    powerPlantOversizeRatio: number,
     electrolyserNominalCapacity: number,
     powerPlantNominalCapacity: number,
     methanePlantPowerDemand: number,
