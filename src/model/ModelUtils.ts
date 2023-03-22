@@ -803,6 +803,19 @@ export function nominal_electrolyser_capacity(
   );
 }
 
+export function basic_nominal_electrolyser_capacity(
+  hydrogen_output: number, // quantity of Hydrogen required per day
+  sec_at_nominal_load: number, // amount of electricity required to produce 1kg of hydrogen
+  electrolyser_system_oversizing: number, // % electrolyser is oversized against minimum required
+  electrolyser_efficiency: number // % of efficiency relative to amount of H2 required
+) {
+  return (
+    (hydrogen_output / 24) *
+    (sec_at_nominal_load / electrolyser_efficiency) *
+    (1 + electrolyser_system_oversizing)
+  );
+}
+
 // // MWh
 // // should be repeated for multiple cells
 export function excess_generation(

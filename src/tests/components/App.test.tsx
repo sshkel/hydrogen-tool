@@ -336,7 +336,7 @@ describe("App", () => {
   //     "Hydrogen Output",
   //     "Methanol Output",
   //     "Levelised Cost of Hydrogen (LCH2)",
-  //     "LCMeOH",
+  //     "Levelised Cost of Methanol (LCMeOH)",
   //   ];
 
   //   const expectedValues: string[] = [

@@ -15,6 +15,7 @@ import {
 import {
   CumulativeDegradation,
   MaxDegradation,
+  basic_nominal_electrolyser_capacity,
   calculateAmmoniaSnapshotForYear,
   calculateH2ToPowerfuelUnit,
   calculateHydrogenProduction,
@@ -674,11 +675,19 @@ export class AmmoniaModel implements Model {
       this.parameters.asuSec
     );
 
-    const electrolyserNominalCapacity = nominal_electrolyser_capacity(
-      hydrogenOutput,
-      this.secAtNominalLoad,
-      this.parameters.electrolyserSystemOversizing / 100
-    );
+    const electrolyserNominalCapacity =
+      inputConfiguration === "Basic"
+        ? basic_nominal_electrolyser_capacity(
+            hydrogenOutput,
+            this.secAtNominalLoad,
+            this.parameters.electrolyserSystemOversizing / 100,
+            this.electrolyserEfficiency / 100
+          )
+        : nominal_electrolyser_capacity(
+            hydrogenOutput,
+            this.secAtNominalLoad,
+            this.parameters.electrolyserSystemOversizing / 100
+          );
 
     const { solarRatio, windRatio } = calculateSolarToWindRatio(
       this.parameters.powerPlantType,

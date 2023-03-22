@@ -677,7 +677,7 @@ export class MethanolModel implements Model {
 
       "Levelised Cost of Hydrogen (LCH2)": roundToTwoDP(lch2),
 
-      LCMeOH: roundToTwoDP(lcmeoh),
+      "Levelised Cost of Methanol (LCMeOH)": roundToTwoDP(lcmeoh),
     };
 
     return {

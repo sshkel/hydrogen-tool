@@ -522,7 +522,7 @@ describe("Model summary", () => {
           expect(data["Hydrogen Output"]).toEqual(57357);
           expect(data["Methanol Output"]).toEqual(203917);
           expect(data["Levelised Cost of Hydrogen (LCH2)"]).toEqual(9.86);
-          expect(data["LCMeOH"]).toEqual(2.77);
+          expect(data["Levelised Cost of Methanol (LCMeOH)"]).toEqual(2.77);
         },
         { timeout: TIMEOUT }
       );
@@ -565,7 +565,7 @@ describe("Model summary", () => {
           expect(data["Hydrogen Output"]).toEqual(126291);
           expect(data["Methane Output"]).toEqual(113172);
           expect(data["Levelised Cost of Hydrogen (LCH2)"]).toEqual(7.79);
-          expect(data["LCSNG"]).toEqual(7.77);
+          expect(data["Levelised Cost of Methane (LCSNG)"]).toEqual(7.77);
         },
         { timeout: TIMEOUT }
       );

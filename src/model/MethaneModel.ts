@@ -675,7 +675,7 @@ export class MethaneModel implements Model {
 
       "Levelised Cost of Hydrogen (LCH2)": roundToTwoDP(lch2),
 
-      LCSNG: roundToTwoDP(lcsng),
+      "Levelised Cost of Methane (LCSNG)": roundToTwoDP(lcsng),
     };
 
     return {
