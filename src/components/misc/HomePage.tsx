@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
 import GLOBH2E_LOGO from "../../assets/globh2e-logo.png";
-import NSW_GOV_LOGO from "../../assets/nsw-gov-logo.png";
+import POWERFUELS_LOGO from "../../assets/powerfuels-logo.png";
 import NSW_OCSE_LOGO from "../../assets/nsw-ocse-logo.png";
 import { BLACK, BLUE, NAVY, OFF_WHITE, WHITE } from "../colors";
 
@@ -36,8 +36,8 @@ export default function HomePage() {
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="center">
           <img
-            alt="NSW Government logo"
-            src={NSW_GOV_LOGO}
+            alt="Powerfuels logo"
+            src={POWERFUELS_LOGO}
             height={LOGO_HEIGHT}
           />
         </Grid>

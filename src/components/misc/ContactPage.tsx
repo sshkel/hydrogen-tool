@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 import GLOBH2E_LOGO from "../../assets/globh2e-logo.png";
-import NSW_GOV_LOGO from "../../assets/nsw-gov-logo.png";
+import POWERFUELS_LOGO from "../../assets/powerfuels-logo.png";
 import NSW_OCSE_LOGO from "../../assets/nsw-ocse-logo.png";
 import { NAVY, OFF_WHITE, WHITE } from "../colors";
 
@@ -40,7 +40,7 @@ export default function ContactPage() {
         <Grid item xs={4} display="flex" justifyContent="center">
           <img
             alt="NSW Government logo"
-            src={NSW_GOV_LOGO}
+            src={POWERFUELS_LOGO}
             height={LOGO_HEIGHT}
           />
         </Grid>
@@ -50,8 +50,6 @@ export default function ContactPage() {
 
         <Grid item xs={12} paddingLeft={4}>
           <Typography fontSize={18} fontStyle="Nunito">
-            NSW Powerfuels including Hydrogen Network
-            <br />
             NSW Decarbonisation Innovation Hub
           </Typography>
         </Grid>
@@ -63,7 +61,7 @@ export default function ContactPage() {
           background:
             "radial-gradient(circle at center, rgba(88,115,166,255) 1%, rgba(0,34,78,255))",
         }}
-        padding={16}
+        padding={20}
       >
         <Typography
           align="center"
