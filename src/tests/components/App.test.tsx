@@ -1,8 +1,11 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
+
+
 import App from "../../components/App";
 import { readLocalCsv as mockReadLocalCsv } from "../resources/loader";
+
 
 jest.mock("../../model/DataLoader", () => ({
   __esModule: true,
@@ -177,7 +180,9 @@ describe("App", () => {
     fireEvent.click(getByLabelText(/power-plant-parameters-show-more/i));
 
     // Open hybrid panel
-    await waitFor(() => expect(getByText(/Hybrid/i)).toBeDefined());
+    await waitFor(() => expect(getByText(/Hybrid/i)).toBeDefined(), {
+      timeout: 1000,
+    });
 
     fireEvent.click(getByText(/Hybrid/i));
 
