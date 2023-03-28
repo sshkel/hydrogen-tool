@@ -164,7 +164,10 @@ export default function InputHomePage(props: Props) {
             {powerfuelTitle}
           </Typography>
           <Typography variant="subtitle1">
-            General {powerfuel} production cost for region.​
+            General {powerfuel} production cost for region.
+            <br />
+            Value recommendations for each input are available in the user
+            guide.
           </Typography>
         </Grid>
         <InputCalculateButton />

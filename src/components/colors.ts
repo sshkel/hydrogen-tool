@@ -8,6 +8,7 @@ export const WHITE = "#FFFFFF";
 export const BLACK = "#000000";
 export const OFF_WHITE = "#F4F9FA";
 export const NAVY = "#284069";
+export const PEARL = "#EBEDF2";
 export const colors = [
   "#F17D23", // orange
   "#2397F1", // light blue
