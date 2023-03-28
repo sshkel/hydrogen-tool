@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
 import GLOBH2E_LOGO from "../../assets/globh2e-logo.png";
-import POWERFUELS_LOGO from "../../assets/powerfuels-logo.png";
 import NSW_OCSE_LOGO from "../../assets/nsw-ocse-logo.png";
+import POWERFUELS_LOGO from "../../assets/powerfuels-logo.png";
 import { BLACK, BLUE, NAVY, OFF_WHITE, WHITE } from "../colors";
 
 const LOGO_HEIGHT = 80;
@@ -87,24 +87,55 @@ export default function HomePage() {
             developing their own Power-to-X projects in various locations across
             NSW.
           </Typography>
-          <Button
-            variant="contained"
-            onClick={() => startDesign()}
-            sx={{
-              marginY: 4,
-              width: 120,
-              backgroundColor: BLUE,
-              textTransform: "none",
-              color: WHITE,
-              borderRadius: 20,
-              marginBottom: 24,
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              minWidth: "40px",
-            }}
+          <Grid
+            container
+            item
+            justifyContent="center"
+            flexDirection="row"
+            spacing={2}
           >
-            Start
-          </Button>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => startDesign()}
+                sx={{
+                  marginY: 4,
+                  width: 120,
+                  backgroundColor: BLUE,
+                  textTransform: "none",
+                  color: WHITE,
+                  borderRadius: 20,
+                  marginBottom: 24,
+                  fontSize: "0.9rem",
+                  fontWeight: "bold",
+                  minWidth: "40px",
+                }}
+              >
+                Start
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                href="./assets/NSW P2X Tool Documentation.pdf"
+                target="_blank"
+                sx={{
+                  marginY: 4,
+                  width: 120,
+                  backgroundColor: BLUE,
+                  textTransform: "none",
+                  color: WHITE,
+                  borderRadius: 20,
+                  marginBottom: 24,
+                  fontSize: "0.9rem",
+                  fontWeight: "bold",
+                  minWidth: "40px",
+                }}
+              >
+                User Guide
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <Grid
