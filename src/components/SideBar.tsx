@@ -1,6 +1,7 @@
 import "@fontsource/nunito/700.css";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import MuiDrawer from "@mui/material/Drawer";
@@ -150,6 +151,17 @@ export function SideBar() {
           >
             <EmailRoundedIcon sx={iconStyle} />
             <StyledListItemText primary="Contact Us" open={open} />
+          </StyledListItemButton>
+        </StyledListItem>
+        <StyledListItem disableGutters>
+          <StyledListItemButton
+            onClick={() =>
+              window.open("./assets/NSW P2X Tool Documentation.pdf")
+            }
+            open={open}
+          >
+            <MenuBookRoundedIcon sx={iconStyle} />
+            <StyledListItemText primary="User Guide" open={open} />
           </StyledListItemButton>
         </StyledListItem>
       </List>
