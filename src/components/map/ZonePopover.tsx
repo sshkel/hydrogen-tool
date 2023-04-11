@@ -134,10 +134,10 @@ export function ZonePopover(props: Props) {
           </Grid>
           <Grid container item justifyContent="space-between" flexWrap="nowrap">
             <Grid item xs>
-              <ItemTitle>Water availability:</ItemTitle>
+              <ItemTitle> Infrastructure:</ItemTitle>
             </Grid>
             <Grid item xs>
-              <ItemText>{zoneInfo[zone].waterAvailability}</ItemText>
+              <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
             </Grid>
           </Grid>
           <Grid item xs={12}>
@@ -149,13 +149,59 @@ export function ZonePopover(props: Props) {
             justifyContent="space-between"
             direction="column"
           >
-            <Grid item>
-              <ItemTitle> Infrastructure:</ItemTitle>
+            <Grid item xs>
+              <ItemTitle>Water availability:</ItemTitle>
             </Grid>
-            <Grid item>
-              <ItemText>{zoneInfo[zone].infrastructure}</ItemText>
+            <Grid item xs>
+              <ItemText>
+                Details of regional water availability can be found in the{" "}
+                <a
+                  href={
+                    "https://water.dpie.nsw.gov.au/science-data-and-modelling/data"
+                  }
+                >
+                  NSW DPIE Water Database
+                </a>
+                . Further analysis from a P2X scaling perspective is available
+                in the accompanying NSW P2X Industry Feasibility Study
+              </ItemText>
             </Grid>
           </Grid>
+
+          {zoneInfo[zone].electricityNetworkPrompt && (
+            <div>
+              <Grid item xs={12}>
+                <Divider flexItem />
+              </Grid>
+              <Grid
+                container
+                item
+                justifyContent="space-between"
+                direction="column"
+              >
+                <Grid item>
+                  <ItemTitle> Note:</ItemTitle>
+                </Grid>
+                <Grid item>
+                  <ItemText>
+                    {" "}
+                    This region currently has no/limited existing electricity
+                    transmission networks; thus, special transmission would be
+                    required to connect with the NEM or specific powerplants
+                    that are offsite. A map of NSW’s electricity grid can be
+                    found{" "}
+                    <a
+                      href={
+                        "https://www.aemo.com.au/aemo/apps/visualisations/map.html"
+                      }
+                    >
+                      here.
+                    </a>
+                  </ItemText>
+                </Grid>
+              </Grid>
+            </div>
+          )}
         </Grid>
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>

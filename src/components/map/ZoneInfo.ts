@@ -5,7 +5,7 @@ export const zoneInfo = {
     solarCapFactor: "26%",
     windCapFactor: "50%",
     mainIndustries: "Agriculture, Tourism, Government Services",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Natural Gas Transmission Pipeline, Small Airport, Local Roads ",
   },
@@ -15,7 +15,7 @@ export const zoneInfo = {
     solarCapFactor: "26%",
     windCapFactor: "51%",
     mainIndustries: "Agriculture, Mining, Health Care, Retail",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Barrier & Silver City Highways, Railway Lines, Airport, 220kV Transmission Line",
   },
@@ -25,7 +25,7 @@ export const zoneInfo = {
     solarCapFactor: "24%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture, Mining, Health Care, Education",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Silver City & Sturt Highways, Railway Lines, Airport, 220kV Transmission Line",
   },
@@ -35,7 +35,7 @@ export const zoneInfo = {
     solarCapFactor: "26%",
     windCapFactor: "49%",
     mainIndustries: "Agriculture",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure: "Local Roads",
   },
   Z5: {
@@ -44,7 +44,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "48%",
     mainIndustries: "Agriculture, Mining, Education, Government Services",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Cobb & Barrier Highways, Railway Lines, Airport, Natural Gas Transmission Pipeline, 132 kV Transmission Line",
   },
@@ -54,7 +54,7 @@ export const zoneInfo = {
     solarCapFactor: "24%",
     windCapFactor: "48%",
     mainIndustries: "Agriculture, Mining, Tourism",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure: "Cobb Highway, Railway Lines, 132 kV Transmission Line",
   },
   Z7: {
@@ -63,7 +63,7 @@ export const zoneInfo = {
     solarCapFactor: "23%",
     windCapFactor: "47%",
     mainIndustries: "Agriculture, Education, Retail, Government Services",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Cobb, Sturt & Mid Western Highways, Airport, 132 kV Transmission Line",
   },
@@ -73,7 +73,7 @@ export const zoneInfo = {
     solarCapFactor: "25%",
     windCapFactor: "46%",
     mainIndustries: "Agriculture, Education, Government Services, Health Care",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Castlereagh, Gwydir & Kamilaroy Highways, Railway Line, Airport",
   },
@@ -84,7 +84,7 @@ export const zoneInfo = {
     windCapFactor: "49%",
     mainIndustries:
       "Health Care, Education, Retail, Agriculture, Government Services, Mining",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Newell, Mitchell, Oxley & Barrier Highways, Railway Lines, Airports, 132 kV Transmission Lines",
   },
@@ -95,7 +95,7 @@ export const zoneInfo = {
     windCapFactor: "43%",
     mainIndustries:
       "Mining, Health Care, Retail, Education, Government Services, Agriculture",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Newell Highway, Railway Lines, Airports, Natural Gas Transmission Pipeline, 132 kV Transmission Line",
   },
@@ -105,7 +105,7 @@ export const zoneInfo = {
     solarCapFactor: "22%",
     windCapFactor: "33%",
     mainIndustries: "Health Care, Defence, Retail, Education, Agriculture",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Natural Gas Transmission Line, Airports, Railway Lines, Sturt, Olympic, Hume, Riverina, Newell Highways, 132 & 330 kV Transmission Lines",
   },
@@ -116,7 +116,7 @@ export const zoneInfo = {
     windCapFactor: "41%",
     mainIndustries:
       "Education, Government Services, Retail, Health Care, Agriculture",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Carnarvon and Gwydir Highways, 132 kV Transmission Line,  Airport, Railway Line, ",
   },
@@ -127,7 +127,7 @@ export const zoneInfo = {
     windCapFactor: "37%",
     mainIndustries:
       "Mining, Government Services, Retail, Education, Agriculture, Health Care, Manufacturing",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Airports, Newell, New England, Oxley, Kamilaroy, Gwydir Highways, 330 & 132 kV Transmission Lines",
   },
@@ -139,7 +139,7 @@ export const zoneInfo = {
     windCapFactor: "41%",
     mainIndustries:
       "Mining, Health Care, Government Services, Education, Retail, Agriculture, Hospitality",
-    waterAvailability: "Desalinated Water, Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "500, 330 & 132 kV Transmission Lines, Natural Gas Transmission Pipeline, Catlereagh, Mid Western, Pacific, Mitchell, New England, Golden Highways, Airports, Railway Lines, Major Sea Ports",
   },
@@ -151,7 +151,7 @@ export const zoneInfo = {
     windCapFactor: "34%",
     mainIndustries:
       "Health Care, Education, Hospitality, Defence, Retail, Manufacturing",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "500, 330 & 132 kV Transmission Lines, Airports, Natural Gas Pipelines, Railway Lines, Princes, Hume, Kings Highways, Major Sea Port",
   },
@@ -162,7 +162,7 @@ export const zoneInfo = {
     windCapFactor: "37%",
     mainIndustries:
       "Manufacuring, Retail, Government Services, Retail, Hospitality, Agriculture, Tourism",
-    waterAvailability: "Fresh Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Monaro & Princes Highway, Natural Gas Pipeline, 132 & 66 kV Transmission Line",
   },
@@ -173,7 +173,7 @@ export const zoneInfo = {
     windCapFactor: "33%",
     mainIndustries:
       "Health Care, Retail, Education, Government Services, Hospitality, Agriculture, Tourism",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "Railway Line, Airports, Pacific, Bruxner, & Gwydir Highways, 330, 132 & 66 kV Transmission Lines ",
   },
@@ -183,7 +183,7 @@ export const zoneInfo = {
     solarCapFactor: "23%",
     windCapFactor: "42%",
     mainIndustries: "Health Care, Retail, Education",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: false,
     infrastructure:
       "132 kV Transmission Line, Pacific & Oxley Highways, Airports, Railway Lines",
   },
@@ -194,7 +194,7 @@ export const zoneInfo = {
     windCapFactor: "53%",
     mainIndustries:
       "Health Care, Retail, Education, Government Services, Hospitality, Agriculture, Tourism",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "Railway Line, Airports, Pacific, Bruxner, & Gwydir Highways, 330, 132 & 66 kV Transmission Lines ",
   },
@@ -204,7 +204,7 @@ export const zoneInfo = {
     solarCapFactor: "-%",
     windCapFactor: "55%",
     mainIndustries: "Health Care, Retail, Education",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "132 kV Transmission Line, Pacific & Oxley Highways, Airports, Railway Lines",
   },
@@ -215,7 +215,7 @@ export const zoneInfo = {
     windCapFactor: "54%",
     mainIndustries:
       "Mining, Health Care, Government Services, Education, Retail, Agriculture, Hospitality",
-    waterAvailability: "Desalinated Water, Fresh Water, Recycled Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "500, 330 & 132 kV Transmission Lines, Natural Gas Transmission Pipeline, Catlereagh, Mid Western, Pacific, Mitchell, New England, Golden Highways, Airports, Railway Lines, Major Sea Ports",
   },
@@ -226,7 +226,7 @@ export const zoneInfo = {
     windCapFactor: "55%",
     mainIndustries:
       "Health Care, Education, Hospitality, Defence, Retail, Manufacturing",
-    waterAvailability: "Fresh Water, Recycled Water",
+    electricityNetworkPrompt: true,
     infrastructure:
       "500, 330 & 132 kV Transmission Lines, Airports, Natural Gas Pipelines, Railway Lines, Princes, Hume, Kings Highways, Major Sea Port",
   },
