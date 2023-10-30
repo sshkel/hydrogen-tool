@@ -308,7 +308,7 @@ const dynamicDefaults = {
   },
   methanol: {
     basic: {
-      secAtNominalLoad: 50,
+      secAtNominalLoad: 39.4,
       electrolyserEfficiency: 70,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
@@ -476,7 +476,7 @@ const dynamicDefaults = {
   },
   methane: {
     basic: {
-      secAtNominalLoad: 50,
+      secAtNominalLoad: 39.4,
       electrolyserEfficiency: 70,
       electrolyserMaximumLoad: 100,
       electrolyserMinimumLoad: 10,
