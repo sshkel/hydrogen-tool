@@ -580,7 +580,6 @@ export class MethaneModel implements Model {
       "Grid Connection Cost": lcGridConnection,
       "Additional Costs": lcAdditionalCosts,
     };
-    // TODO why are we doing a map and then mean, we can just multiply by a hundie after mean
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
         mean(powerPlantCapacityFactors.map((x) => x * 100))

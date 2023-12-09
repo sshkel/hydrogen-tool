@@ -1,6 +1,5 @@
 import { UserInputFields } from "./types";
 
-// TODO remove this or use for validaiton
 export default class SynthesisedInputs {
   constructor(userInputs: UserInputFields) {
     let sanitisedUserInputFields: any = { ...userInputs };

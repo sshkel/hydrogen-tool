@@ -323,7 +323,6 @@ export function calculateNetBatteryFlowMeth(
   generatorActualPower: number[],
   mePlantMinimumTurnDown: number
 ): number[] {
-  //TODO Fix model running with empty params
   if (excessGeneration.length === 0) {
     return [];
   }
@@ -697,7 +696,6 @@ export function backCalculateSolarAndWindCapacities(
   return { calculatedSolarNominalCapacity, calculatedWindNominalCapacity };
 }
 
-// TODO recheck if all of this are used more than one place.
 export function getExcessGeneration(
   powerplantCapacityFactors: number[],
   oversizeRatio: number,
@@ -828,7 +826,6 @@ export function excess_generation(
       generator_actual_power[i] -
       electrolyser_actual_power[i] -
       powerfuel_actual_power[i];
-    // TODO check if this okay, otherwise battery model throws exceptions
     // it might've been just old battery model and the new one is fine
     return excess > 0 ? excess : 0;
   });
@@ -1054,7 +1051,6 @@ export function cc_out(
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (cc_capacity / 24) * 1000;
     }
-    // TODO check if this is okay
     throw new Error("Unsupported calculation for cc out");
   });
 }

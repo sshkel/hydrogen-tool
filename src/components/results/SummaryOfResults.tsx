@@ -75,7 +75,6 @@ export function SummaryOfResultsTable(props: Props) {
   );
 }
 
-// TODO Make results return units as part of summaryTableData.
 function rowNameToLabel(name: string) {
   if (name.includes("Capacity Factor")) {
     return "%";

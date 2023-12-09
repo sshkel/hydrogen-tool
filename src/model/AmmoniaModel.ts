@@ -591,7 +591,6 @@ export class AmmoniaModel implements Model {
       "Grid Connection Cost": lcGridConnection,
       "Additional Costs": lcAdditionalCosts,
     };
-    // TODO why are we doing a map and then mean, we can just multiply by a hundie after mean
     const summaryTableData: { [key: string]: number } = {
       "Power Plant Capacity Factor": roundToTwoDP(
         mean(powerPlantCapacityFactors.map((x) => x * 100))
@@ -735,25 +734,6 @@ export class AmmoniaModel implements Model {
           1
         );
 
-      // if (
-      //   notEnoughHydrogenProduced(
-      //     // TODO reuse already calculated value
-      //     generator_actual_power(
-      //       powerPlantNominalCapacity,
-      //       hourlyOperations.powerplantCapacityFactors
-      //     ),
-      //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
-      //     electrolyserNominalCapacity,
-      //     this.elecMinLoad,
-      //     this.secAtNominalLoad,
-      //     hydrogenOutput
-      //   )
-      // ) {
-      //   throw new Error(
-      //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
-      //   );
-      // }
-
       const hydrogenProduction = calculateHydrogenProduction(
         hourlyOperations.electrolyserCapacityFactors,
         this.hydOutput,
@@ -867,25 +847,6 @@ export class AmmoniaModel implements Model {
           airSeparationUnitCapacity,
           year
         );
-
-        // if (
-        //   notEnoughHydrogenProduced(
-        //     // TODO reuse already calculated value
-        //     generator_actual_power(
-        //       powerPlantNominalCapacity,
-        //       powerplantCapacityFactors
-        //     ),
-        //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
-        //     electrolyserNominalCapacity,
-        //     this.elecMinLoad,
-        //     this.secAtNominalLoad,
-        //     hydrogenOutput
-        //   )
-        // ) {
-        //   throw new Error(
-        //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
-        //   );
-        // }
 
         const hydrogenProduction = calculateHydrogenProduction(
           electrolyserCapacityFactors,
@@ -1019,25 +980,6 @@ export class AmmoniaModel implements Model {
             airSeparationUnitCapacity,
             year
           );
-
-          // if (
-          //   notEnoughHydrogenProduced(
-          //     // TODO reuse already calculated value
-          //     generator_actual_power(
-          //       powerPlantNominalCapacity,
-          //       powerplantCapacityFactors
-          //     ),
-          //     ammoniaPlantPowerDemand + airSeparationUnitPowerDemand,
-          //     electrolyserNominalCapacity,
-          //     this.elecMinLoad,
-          //     this.secAtNominalLoad,
-          //     hydrogenOutput
-          //   )
-          // ) {
-          //   throw new Error(
-          //     "Electrolyser oversizing is to small for the current configuration. Please increase and try again."
-          //   );
-          // }
 
           const yearlyDegradationRate =
             degradationCalculator.getStackDegradation(
@@ -1269,7 +1211,6 @@ function hydrogen_output(
   return ammonia_plant_capacity * (1000 / 365) * (6.047 / 34.181);
 }
 
-// TODO lots of these functions can be simplified like methanol and methane
 // if hybrid we multiply by the split otherwise we leave it out or we can make it 1
 function nominal_solar_capacity(
   ammonia_plant_power_demand: number, // power required for ammonia plant
@@ -1355,7 +1296,6 @@ function asu_out(
     } else if (v < (hydrogen_output / 24) * 1000) {
       return (v / ((hydrogen_output / 24) * 1000)) * (asu_capacity / 24) * 1000;
     }
-    // TODO check if this is okay
     throw new Error("Unsupported calculation for asu out");
   });
 }
