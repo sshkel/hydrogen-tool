@@ -378,7 +378,7 @@ const dynamicDefaults = {
       windCostReductionWithScale: 5,
       principalPPACost: 65,
       hydrogenStorageCapacity: 500_000,
-      discountRate: 1,
+      discountRate: 7,
       projectTimeline: 25,
       carbonCaptureSource: "Cement Plant" as CarbonCaptureSource,
       ccSourceConfiguration:
