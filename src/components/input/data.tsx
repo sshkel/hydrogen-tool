@@ -125,7 +125,7 @@ export const sliderFieldDefaultInputs: DefaultInput = {
   },
   hydrogenStorageCapacity: {
     min: 0,
-    max: 500_000,
+    max: 1_000_000,
     step: 50_000,
     title: "Hydrogen Storage Capacity (kg)",
     helperText:
